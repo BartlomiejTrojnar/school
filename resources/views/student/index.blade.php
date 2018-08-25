@@ -1,0 +1,55 @@
+@extends('layouts.app')
+
+@section('header')
+  <h1>Uczniowie</h1>
+@endsection
+
+@section('main-content')
+{{ $students->links() }}
+  <table id="students">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th><a href="{{ url('/uczen/sortuj/first_name') }}">imię</a></th>
+        <th><a href="{{ url('/uczen/sortuj/second_name') }}">drugie imię</a></th>
+        <th><a href="{{ url('/uczen/sortuj/last_name') }}">nazwisko</a></th>
+        <th>rodowe</th>
+        <th>płeć</th>
+        <th><a href="{{ url('/uczen/sortuj/pesel') }}">PESEL</a></th>
+        <th><a href="{{ url('/uczen/sortuj/place_of_birth') }}">miejsce urodzenia</a></th>
+        <th>wpis</th>
+        <th>aktualizacja</th>
+        <th colspan="2">+/-</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    @foreach($students as $student)
+      <tr>
+        <td>{{ $student->id }}</td>
+        <td>{{ $student->first_name }}</td>
+        <td>{{ $student->second_name }}</td>
+        <td><a href="{{ route('uczen.show', $student->id) }}">{{ $student->last_name }}</a></td>
+        <td>{{ $student->family_name }}</td>
+        <td>{{ $student->sex }}</td>
+        <td>{{ $student->PESEL }}</td>
+        <td>{{ $student->place_of_birth }}</td>
+        <td>{{ $student->created_at }}</td>
+        <td>{{ $student->updated_at }}</td>
+        <td><a href="{{ route('uczen.edit', $student->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
+        <td>
+          <form action="{{ route('uczen.destroy', $student->id) }}" method="post" id="delete-form-{{$student->id}}">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+          </form>
+        </td>
+      </tr>
+    @endforeach
+
+      <tr class="create">
+        <td colspan="12"><a href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
+      </tr>
+    </tbody>
+  </table>
+@endsection
