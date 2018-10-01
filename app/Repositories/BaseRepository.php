@@ -11,6 +11,29 @@ abstract class BaseRepository {
               ->orderBy($orderBy[0], $orderBy[1])
               ->orderBy($orderBy[2], $orderBy[3])
               ->orderBy($orderBy[4], $orderBy[5])
+              ->get();
+        elseif(!empty($orderBy[2]))
+          $records = $this->model
+              ->orderBy($orderBy[0], $orderBy[1])
+              ->orderBy($orderBy[2], $orderBy[3])
+              ->get();
+        elseif(!empty($orderBy[0]))
+          $records = $this->model
+              ->orderBy($orderBy[0], $orderBy[1])
+              ->get();
+        else
+          $records = $this->model
+              ->get();
+
+        return $records;
+    }
+
+    public function getPaginate($orderBy=array(), $columns=array('*')) {
+        if(!empty($orderBy[4]))
+          $records = $this->model
+              ->orderBy($orderBy[0], $orderBy[1])
+              ->orderBy($orderBy[2], $orderBy[3])
+              ->orderBy($orderBy[4], $orderBy[5])
               ->paginate(20);
         elseif(!empty($orderBy[2]))
           $records = $this->model

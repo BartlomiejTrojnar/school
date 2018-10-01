@@ -9,7 +9,7 @@
   <table id="teachers">
     <thead>
       <tr>
-        <th>id</th>
+        <th><a href="{{ url('/nauczyciel/sortuj/id') }}">id</a></th>
         <th><a href="{{ url('/nauczyciel/sortuj/first_name') }}">imię</a></th>
         <th><a href="{{ url('/nauczyciel/sortuj/last_name') }}">nazwisko</a></th>
         <th>rodowe</th>
@@ -34,8 +34,8 @@
         <td>{{ $teacher->short }}</td>
         <td>{{ $teacher->degree }}</td>
         <td>@if($teacher->classroom_id) {{ $teacher->classroom($teacher->classroom_id) }} @endif</td>
-        <td>{{ $teacher->first_year_id }}</td>
-        <td>{{ $teacher->last_year_id }}</td>
+        <td>{{ substr($teacher->first_year->date_start, 0, 4) }}</td>
+        <td>{{ substr($teacher->last_year->date_end, 0, 4) }}</td>
         <td>{{ $teacher->order }}</td>
         <td>{{ $teacher->updated_at }}</td>
         <td><a href="{{ route('nauczyciel.edit', $teacher->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>

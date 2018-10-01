@@ -37,7 +37,7 @@ class TaughtSubjectController extends Controller
     public function create(TeacherRepository $teacherRepo, SubjectRepository $subjectRepo)
     {
         $teachers = $teacherRepo->getAll();
-        $subjects = $subjectRepo->getAll();
+        $subjects = $subjectRepo->getActualSubjects();
         return view('taughtSubject.create')
              ->nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "selectedTeacher"=>0])
              ->nest('subjectSelectField', 'subject.selectField', ["subjects"=>$subjects, "selectedSubject"=>0]);
@@ -54,8 +54,10 @@ class TaughtSubjectController extends Controller
         $taughtSubject->teacher_id = $request->teacher_id;
         $taughtSubject->subject_id = $request->subject_id;
         $taughtSubject->save();
-
-        return redirect($request->history_view);
+        $record = TaughtSubject::orderBy('id', 'desc')->first();
+        if(!empty($request->history_view))
+          return redirect($request->history_view);
+        return $record->id;
     }
 
     public function show(TaughtSubject $nauczany_przedmiot, TaughtSubjectRepository $taughtSubjectRepo)
@@ -86,6 +88,11 @@ class TaughtSubjectController extends Controller
         $nauczany_przedmiot->save();
 
         return redirect($request->history_view);
+    }
+
+    public function delete($id, TaughtSubjectRepository $taughtSubjectRepo)
+    {
+        $taughtSubjectRepo -> delete($id);
     }
 
     public function destroy(TaughtSubject $nauczany_przedmiot)

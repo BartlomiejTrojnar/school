@@ -9,7 +9,7 @@
     <table>
       <tr>
         <th><label for="year_of_beginning">rok rozpoczecia</label></th>
-        <td><input type="number" name="year_of_beginning" min="1900" required /></td>
+        <td><input type="number" name="year_of_beginning" min="1900" required autofocus /></td>
       </tr>
       <tr>
         <th><label for="year_of_graduation">rok ukonczenia</label></th>

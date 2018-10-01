@@ -11,7 +11,7 @@ class SubjectController extends Controller
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("SubjectOrderBy[$i]");
 
-        $subjects = $subjectRepo->getAll($orderBy);
+        $subjects = $subjectRepo->getPaginate($orderBy);
         return view('subject.index', ["subjects"=>$subjects]);
     }
 

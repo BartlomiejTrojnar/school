@@ -12,10 +12,7 @@
 
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script>!window.jQuery && document.write(\'<script src="/bazy/jquery.min.js"><\/script>\')</script>
-
-  @section('java-script')
+  @section('css')
     @show
 </head>
 
@@ -133,5 +130,9 @@
 
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}"></script>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+  @section('java-script')
+    @show
 </body>
 </html>

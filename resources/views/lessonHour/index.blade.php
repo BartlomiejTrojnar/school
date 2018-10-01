@@ -23,10 +23,9 @@
           <td>{{ substr($lessonHours[$i]->start_time, 0, 5) }} - {{ substr($lessonHours[$i]->end_time, 0, 5) }}</td>
           <td><a href="{{ route('godzina.show', $lessonHours[$i]->id) }}">{{ $lessonHours[$i]->id }}</a></td>
           <td><a href="{{ route('godzina.show', $lessonHours[$i+9]->id) }}">{{ $lessonHours[$i+9]->id }}</a></td>
-<?php /*          <td><a href="{{ route('godzina.show', $lessonHours[$i+18]->id) }}">{{ $lessonHours[$i+18]->id }}</a></td>
+          <td><a href="{{ route('godzina.show', $lessonHours[$i+18]->id) }}">{{ $lessonHours[$i+18]->id }}</a></td>
           <td><a href="{{ route('godzina.show', $lessonHours[$i+27]->id) }}">{{ $lessonHours[$i+27]->id }}</a></td>
           <td><a href="{{ route('godzina.show', $lessonHours[$i+36]->id) }}">{{ $lessonHours[$i+36]->id }}</a></td>
-*/ ?>
         </tr>
       @endfor
 

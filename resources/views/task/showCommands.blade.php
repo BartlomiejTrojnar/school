@@ -22,31 +22,24 @@
     <p>{{ $task->created_at }}</p>
     <p>{{ $task->updated_at }}</p>
 
-  <h2>oceny zadania</h2>
+  <h2>polecenia</h2>
   <table>
     <tr>
-      <th>uczeń</th>
-      <th>termin</th>
-      <th>data realizacji</th>
-      <th>wersja</th>
-      <th>waga</th>
-      <th>data oceny</th>
+      <th>numer</th>
+      <th>polecenie</th>
+      <th>opis</th>
       <th>punkty</th>
-      <th>ocena</th>
-      <th>uwagi</th>
-      <th>dziennik?</th>
-      <th>data dziennika</th>
       <th colspan="2">+/-</th>
     </tr>
 
-    @foreach($taskRatings as $taskRating)
+    @foreach($commands as $command)
     <tr>
-      <td><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">
-        {{ $command->student_id }}
+      <td><a href="{{ route('polecenie.show', $command->id) }}">
+        {{ $command->name }}
       </a></td>
-      <td><a href="{{ route('ocena_zadania.edit', $taskRating->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
+      <td><a href="{{ route('polecenie.edit', $command->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
       <td>
-        <form action="{{ route('ocena_zadania.destroy', $taskRating->id) }}" method="post" id="delete-form-{{$taskRating->id}}">
+        <form action="{{ route('polecenie.destroy', $command->id) }}" method="post" id="delete-form-{{$command->id}}">
           {{ csrf_field() }}
           {{ method_field('DELETE') }}
           <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
@@ -55,9 +48,9 @@
     </tr>
     @endforeach
 
-    <tr class="create"><td colspan="12">
-      <a href="{{ route('ocena_zadania.create') }}">
-        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj ocenę zadania
+    <tr class="create"><td colspan="7">
+      <a href="{{ route('polecenie.create') }}">
+        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj polecenie
       </a>
     </td></tr>
   </table>

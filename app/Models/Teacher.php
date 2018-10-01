@@ -6,17 +6,15 @@ class Teacher extends Model
 {
     public function classroom($id=0)
     {
-        $classroom = Classroom::find($id);
-        return $classroom->name;
-          return $this->belongsTo(Classroom::class);
+        return $this->belongsTo(Classroom::class);
     }
 
-    public function first_year_id()
+    public function first_year()
     {
         return $this->belongsTo(SchoolYear::class, 'first_year_id');
     }
 
-    public function last_year_id()
+    public function last_year()
     {
         return $this->belongsTo(SchoolYear::class, 'last_year_id');
     }

@@ -4,6 +4,8 @@ use App\Models\Grade;
 use App\Repositories\GradeRepository;
 use App\Repositories\SchoolRepository;
 use App\Repositories\StudentClassRepository;
+use App\Models\GroupClass;
+use App\Repositories\GroupClassRepository;
 use Illuminate\Http\Request;
 
 class GradeController extends Controller
@@ -13,7 +15,7 @@ class GradeController extends Controller
         for($i=0; $i<4; $i++)
           $orderBy[$i] = session()->get("GradeOrderBy[$i]");
 
-        $grades = $gradeRepo->getAll($orderBy);
+        $grades = $gradeRepo->getPaginate($orderBy);
         return view('grade.index', ["grades"=>$grades]);
     }
 
@@ -60,12 +62,91 @@ class GradeController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Grade $klasa, GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
+
+    public function show($id, $view, GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
     {
-        $studentClasses = $studentClassRepo->getAll()->where('grade_id', $klasa->id);
+        $grade = $gradeRepo -> find($id);
+        $previous = $gradeRepo->PreviousRecordId($id);
+        $next = $gradeRepo->NextRecordId($id);
+
+        switch($view) {
+             case 'showGroups':
+               $class = 'groupClass';
+               $recordNames = 'groupClasses';
+//               $records = $groupClassRepo -> getAll() -> where('class_id', $id);
+                 $c = new GroupClass();
+               $repo = new GroupClassRepository($c);
+               //$records = $this -> getGroups($id, $repo);
+               exit;
+             break;
+             default:
+               $class = 'studentClass';
+               $recordNames = 'studentClasses';
+               $records = $studentClassRepo -> getAll() -> where('grade_id', $id);
+             break;
+        }
+
+        return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+             ->nest('nestView', $class.'.index', ["$recordNames"=>$records]);
+    }
+    public function getGroups(GroupClassRepository $groupClassRepo)
+    {
+        $id=100;
+         return $groupClassRepo -> getAll() -> where('class_id', $id);
+    }
+
+
+
+    public function show2(Grade $klasa, GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
+    {
+        $studentClasses = $studentClassRepo -> getAll() -> where('grade_id', $klasa->id);
         $previous = $gradeRepo->PreviousRecordId($klasa->id);
         $next = $gradeRepo->NextRecordId($klasa->id);
-        return view('grade.show', ["grade"=>$klasa, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+        return view('grade.show', ["grade"=>$klasa, "previous"=>$previous, "next"=>$next])
+             ->nest('nestView', 'studentClass.index', ["studentClasses"=>$studentClasses]);
+    }
+    public function showGroups($id, GradeRepository $gradeRepo, GroupClassRepository $groupClassRepo)
+    {
+        $groupClasses = $groupClassRepo -> getAll() -> where('class_id', $id);
+        $grade = $gradeRepo -> find($id);
+        $previous = $gradeRepo->PreviousRecordId($id);
+        $next = $gradeRepo->NextRecordId($id);
+        return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+             ->nest('nestView', 'groupClass.index', ["groupClasses"=>$groupClasses]);
+    }
+    public function showTeachers($id, GroupClassRepository $groupClassRepo)
+    {
+        $groupClasses = $groupClassRepo -> getAll() -> where('class_id', $id);
+        return view('groupClass.index', ["groupClasses"=>$groupClasses]);
+    }
+    public function showLessonPlans($id, GroupClassRepository $groupClassRepo)
+    {
+        $groupClasses = $groupClassRepo -> getAll() -> where('class_id', $id);
+        return view('groupClass.index', ["groupClasses"=>$groupClasses]);
+    }
+    public function showStudents($id, GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
+    {
+        $studentClasses = $studentClassRepo -> getAll() -> where('grade_id', $id);
+        $grade = $gradeRepo -> find($id);
+        $previous = $gradeRepo->PreviousRecordId($id);
+        $next = $gradeRepo->NextRecordId($id);
+        return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+             ->nest('nestView', 'studentClass.index', ["studentClasses"=>$studentClasses]);
+    }
+    public function showEnlargements($id, StudentClassRepository $studentClassRepo)
+    {
+        $studentClasses = $studentClassRepo -> getAll() -> where('class_id', $id);
+        return view('studentClass.index', ["studentClasses"=>$studentClasses]);
+    }
+    public function showRatings($id, StudentClassRepository $studentClassRepo)
+    {
+        $studentClasses = $studentClassRepo -> getAll() -> where('class_id', $id);
+        return view('studentClass.index', ["studentClasses"=>$studentClasses]);
+    }
+    public function showTasks($id, StudentClassRepository $studentClassRepo)
+    {
+        $studentClasses = $studentClassRepo -> getAll() -> where('class_id', $id);
+        return view('studentClass.index', ["studentClasses"=>$studentClasses]);
     }
 
     public function edit(Grade $klasa, SchoolRepository $schoolRepo)

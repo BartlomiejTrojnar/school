@@ -4,6 +4,7 @@ use App\Models\Teacher;
 use App\Repositories\ClassroomRepository;
 use App\Repositories\SchoolYearRepository;
 use App\Repositories\TeacherRepository;
+use App\Models\TaughtSubject;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
@@ -13,7 +14,7 @@ class TeacherController extends Controller
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("TeacherOrderBy[$i]");
 
-        $teachers = $teacherRepo->getAll($orderBy);
+        $teachers = $teacherRepo->getPaginate($orderBy);
         return view('teacher.index', ["teachers"=>$teachers]);
     }
 
@@ -72,11 +73,14 @@ class TeacherController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Teacher $nauczyciel, TeacherRepository $teacherRepo)
+    public function show(Teacher $nauczyciel, TeacherRepository $teacherRepo, TaughtSubject $taughtSubject)
     {
         $previous = $teacherRepo->previousRecordId($nauczyciel->id);
         $next = $teacherRepo->nextRecordId($nauczyciel->id);
-        return view('teacher.show', ["teacher"=>$nauczyciel, "previous"=>$previous, "next"=>$next]);
+        $taughtSubjects = TaughtSubject::where('teacher_id', $nauczyciel->id)->get();
+        $nonTaughtSubjects = $taughtSubject->nonTaughtSubjects($taughtSubjects);
+        return view('teacher.show', ["teacher"=>$nauczyciel, "previous"=>$previous, "next"=>$next,
+               "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
     }
 
     public function edit(Teacher $nauczyciel, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo)

@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Task;
+use App\Models\Command;
+use App\Models\TaskRating;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 
@@ -60,9 +62,17 @@ class TaskController extends Controller
 
     public function show(Task $zadanie, TaskRepository $taskRepo)
     {
+        $taskRatings = TaskRating::all()->where('task_id', $zadanie->id);
         $previous = $taskRepo->previousRecordId($zadanie->id);
         $next = $taskRepo->nextRecordId($zadanie->id);
-        return view('task.show', ["task"=>$zadanie, "previous"=>$previous, "next"=>$next]);
+        return view('task.show', ["task"=>$zadanie, "taskRatings"=>$taskRatings, "previous"=>$previous, "next"=>$next]);
+    }
+    public function showCommands(Task $zadanie, TaskRepository $taskRepo)
+    {
+        $commands = Command::all()->where('task_id', $zadanie->id);
+        $previous = $taskRepo->previousRecordId($zadanie->id);
+        $next = $taskRepo->nextRecordId($zadanie->id);
+        return view('task.show', ["task"=>$zadanie, "commands"=>$commands, "previous"=>$previous, "next"=>$next]);
     }
 
     public function edit(Task $zadanie)
