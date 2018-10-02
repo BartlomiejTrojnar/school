@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Session;
+use App\Models\ExamDescription;
 use App\Repositories\SessionRepository;
 use Illuminate\Http\Request;
 
@@ -56,9 +57,10 @@ class SessionController extends Controller
 
     public function show(Session $sesja, SessionRepository $sessionRepo)
     {
+        $examDescriptions = ExamDescription::all()->where('session_id', $sesja->id);
         $previous = $sessionRepo->previousRecordId($sesja->id);
         $next = $sessionRepo->nextRecordId($sesja->id);
-        return view('session.show', ["session"=>$sesja, "previous"=>$previous, "next"=>$next]);
+        return view('session.show', ["session"=>$sesja, "examDescriptions"=>$examDescriptions, "previous"=>$previous, "next"=>$next]);
     }
 
     public function edit(Session $sesja)

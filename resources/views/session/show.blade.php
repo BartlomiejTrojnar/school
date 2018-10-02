@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>Sesja maturalna: {{ $session->year }} {{$session->type}}</h1>
   <aside id="strzalka_l">
@@ -14,5 +15,40 @@
 @endsection
 
 @section('main-content')
-  <p>Uzupełnić!</p>
+  <h2>opisy egzaminów</h2>
+  <table>
+    <tr>
+      <th>przedmiot</th>
+      <th>typ egzaminu</th>
+      <th>poziom</th>
+      <th>max punktów</th>
+      <th>utworzono</th>
+      <th>data aktualizacji</th>
+      <th colspan="2">+/-</th>
+    </tr>
+
+    @foreach($examDescriptions as $examDescription)
+    <tr>
+      <td><a href="{{ route('opis_egzaminu.show', $examDescriptions->id) }}">
+        {{ $command->student_id }}
+      </a></td>
+      <td><a href="{{ route('opis_egzaminu.edit', $examDescriptions->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
+      <td>
+        <form action="{{ route('opis_egzaminu.destroy', $examDescriptions->id) }}" method="post" id="delete-form-{{$examDescriptions->id}}">
+          {{ csrf_field() }}
+          {{ method_field('DELETE') }}
+          <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+        </form>
+      </td>
+    </tr>
+    @endforeach
+
+    <tr class="create"><td colspan="7">
+      <a href="{{ route('opis_egzaminu.create') }}">
+        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj opis egzaminu
+      </a>
+    </td></tr>
+  </table>
+
+    <p><a href="{{ route('sesja.index') }}">powrót</a></p>
 @endsection
