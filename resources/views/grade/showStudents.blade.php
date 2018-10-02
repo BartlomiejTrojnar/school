@@ -1,31 +1,29 @@
 @extends('layouts.app')
 
 @section('header')
-  <h1>{{ $student->first_name }} {{ $student->second_name }} {{ $student->last_name }}</h1>
+  <h1>{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</h1>
   <aside id="strzalka_l">
-    <a href="{{ route('uczen.show', $previous) }}">
-      <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzedni">
+    <a href="{{ route('klasa.show', $previous) }}">
+      <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
     </a>
   </aside>
   <aside id="strzalka_p">
-    <a href="{{ route('uczen.show', $next) }}">
-      <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepny">
+    <a href="{{ route('klasa.show', $next) }}">
+      <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
     </a>
   </aside>
 @endsection
 
 @section('main-content')
-    <p>{{ $student->family_name }}</p>
-    <p>{{ $student->sex }}</p>
-    <p>{{ $student->pesel }}</p>
-    <p>{{ $student->place_of_birth }}</p>
-    <p>{{ $student->created_at }}</p>
-    <p>{{ $student->updated_at }}</p>
+  <p><a href="{{ route('szkola.show', $grade->school_id) }}">{{ $grade->school->name }}</a></p>
+  <?php
+    echo $gradeMenu;
+  ?>
 
-  <h2>klasy ucznia</h2>
+  <h2>uczniowie w klasie</h2>
   <table>
     <tr>
-      <th>klasa</th>
+      <th>uczeń</th>
       <th>od</th>
       <th>do</th>
       <th>numer</th>
@@ -35,8 +33,8 @@
 
     @foreach($studentClasses as $sc)
     <tr>
-      <td><a href="{{ route('klasa.show', $sc->grade_id) }}">
-        {{ $sc->grade->year_of_beginning }}-{{ $sc->grade->year_of_graduation }}{{ $sc->grade->symbol }}
+      <td><a href="{{ route('uczen.show', $sc->student_id) }}">
+        {{ $sc->student->first_name }} {{ $sc->student->second_name }} {{ $sc->student->last_name }}
       </a></td>
       @if($sc->confirmation_date_start==1) <td>{{ $sc->date_start }}</td>
       @else <td class="not_confirmation">{{ $sc->date_start }}</td>
@@ -50,9 +48,9 @@
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
       @endif
-      <td><a href="{{ route('klasy_uczniow.edit', $sc->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
+      <td><a href="{{ route('klasy_ucznia.edit', $sc->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
       <td>
-        <form action="{{ route('klasy_uczniow.destroy', $sc->id) }}" method="post" id="delete-form-{{$sc->id}}">
+        <form action="{{ route('klasy_ucznia.destroy', $sc->id) }}" method="post" id="delete-form-{{$sc->id}}">
           {{ csrf_field() }}
           {{ method_field('DELETE') }}
           <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
@@ -62,11 +60,9 @@
     @endforeach
 
     <tr class="create"><td colspan="7">
-      <a href="{{ route('klasy_uczniow.create', 'student_id='.$student->id) }}">
-        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj klasę
+      <a href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
+        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj ucznia
       </a>
     </td></tr>
   </table>
-
-    <p><a href="{{ route('uczen.index') }}">powrót</a></p>
 @endsection
