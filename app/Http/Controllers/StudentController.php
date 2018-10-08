@@ -12,7 +12,7 @@ class StudentController extends Controller
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("StudentOrderBy[$i]");
 
-        $students = $studentRepo->getAll($orderBy);
+        $students = $studentRepo->getPaginate($orderBy);
         return view('student.index', ["students"=>$students]);
     }
 

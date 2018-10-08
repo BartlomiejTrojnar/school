@@ -29,7 +29,7 @@
       <tr>
         <td>{{ $teacher->id }}</td>
         <td>{{ $teacher->first_name }}</td>
-        <td><a href="{{ route('nauczyciel.show', $teacher->id) }}">{{ $teacher->last_name }}</a></td>
+        <td><a href="{{ route('nauczyciel.show', $teacher->id.'/showSubjects') }}">{{ $teacher->last_name }}</a></td>
         <td>{{ $teacher->family_name }}</td>
         <td>{{ $teacher->short }}</td>
         <td>{{ $teacher->degree }}</td>

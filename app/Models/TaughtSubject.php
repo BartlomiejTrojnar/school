@@ -17,7 +17,7 @@ class TaughtSubject extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function nonTaughtSubjects($taughtSubjects)
+    public static function nonTaughtSubjects($taughtSubjects)
     {
         $ts = array();
         foreach($taughtSubjects as $taughtSubject)
