@@ -33,9 +33,9 @@
         <td>{{ $teacher->family_name }}</td>
         <td>{{ $teacher->short }}</td>
         <td>{{ $teacher->degree }}</td>
-        <td>@if($teacher->classroom_id) {{ $teacher->classroom($teacher->classroom_id) }} @endif</td>
-        <td>{{ substr($teacher->first_year->date_start, 0, 4) }}</td>
-        <td>{{ substr($teacher->last_year->date_end, 0, 4) }}</td>
+        <td>@if($teacher->classroom) {{ $teacher->classroom->name }} @endif</td>
+        <td>@if($teacher->first_year) {{ substr($teacher->first_year->date_start, 0, 4) }} @endif</td>
+        <td>@if($teacher->last_year) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
         <td>{{ $teacher->order }}</td>
         <td>{{ $teacher->updated_at }}</td>
         <td><a href="{{ route('nauczyciel.edit', $teacher->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>

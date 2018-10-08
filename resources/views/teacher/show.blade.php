@@ -27,8 +27,8 @@
     <p>{{ $teacher->short }}</p>
     <p>{{ $teacher->degree }}</p>
     <p>{{ $teacher->classroom_id }}</p>
-    <p>od {{ substr($teacher->first_year->date_start, 0, 4) }}/{{ substr($teacher->first_year->date_end, 0, 4) }}
-       do {{ substr($teacher->last_year->date_start, 0, 4)}}/{{ substr($teacher->last_year->date_end, 0, 4) }}</p>
+    <p>od @if($teacher->first_year) {{ substr($teacher->first_year->date_start, 0, 4) }}/{{ substr($teacher->first_year->date_end, 0, 4)}} @endif
+       do @if($teacher->last_year) {{ substr($teacher->last_year->date_start, 0, 4)}}/{{ substr($teacher->last_year->date_end, 0, 4) }} @endif</p>
     <p>{{ $teacher->order }}</p>
     <p>{{ $teacher->created_at }}</p>
     <p>{{ $teacher->updated_at }}</p>
