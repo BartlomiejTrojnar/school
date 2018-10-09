@@ -10,7 +10,7 @@ class SchoolYearController extends Controller
     {
         $orderBy[0] = 'id';
         $orderBy[1] = 'desc';
-        $schoolYears = $schoolYearRepo->getAll($orderBy);
+        $schoolYears = $schoolYearRepo->getPaginate($orderBy);
         return view('schoolYear.index', ["schoolYears"=>$schoolYears]);
     }
 
