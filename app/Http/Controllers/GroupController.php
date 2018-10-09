@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Repositories\GroupRepository;
 use App\Repositories\SubjectRepository;
+use Session;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -67,12 +68,39 @@ class GroupController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Group $grupa, GroupRepository $groupRepo)
+    public function show($id, $view='', GroupRepository $groupRepo, Group $group)
     {
-        $previous = $groupRepo->previousRecordId($grupa->id);
-        $next = $groupRepo->nextRecordId($grupa->id);
-        return view('group.show', ["group"=>$grupa, "previous"=>$previous, "next"=>$next]);
+        if(empty(Session::get('groupView')))  Session::put('groupView', 'showInfo');
+        if($view)  Session::put('groupView', $view);
+        $group = $groupRepo -> find($id);
+        $previous = $groupRepo -> PreviousRecordId($id);
+        $next = $groupRepo -> NextRecordId($id);
+
+        switch(Session::get('groupView')) {
+             case 'showInfo':
+               return view('group.showInfo', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showStudents':
+               return view('group.showStudents', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
+               //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+               //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
+               //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
+               //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+               exit;
+             break;
+             case 'showLessonPlan':
+               return view('group.showLessonPlan', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               echo 'Widok nieznany';
+               exit;
+             break;
+        }
     }
+
+
 
     public function edit(Group $grupa, SubjectRepository $subjectRepo)
     {

@@ -42,11 +42,6 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show_old(SchoolYear $rok_szkolny, SchoolYearRepository $schoolYearRepo)
-    {
-        $previous = $schoolYearRepo->PreviousRecordId($rok_szkolny->id);
-        $next = $schoolYearRepo->NextRecordId($rok_szkolny->id);
-    }
     public function show($id, $view, SchoolYearRepository $schoolYearRepo)
     {
         $schoolYear = $schoolYearRepo -> find($id);

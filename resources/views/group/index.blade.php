@@ -24,7 +24,7 @@
 
     @foreach($groups as $group)
       <tr>
-        <td><a href="{{ route('grupa.show', $group->id) }}">{{ $group->id }}</a></td>
+        <td><a href="{{ route('grupa.show', $group->id.'/showInfo') }}">{{ $group->id }}</a></td>
         <td>{{ $group->subject_id }} {{ $group->subject_id }}</td>
         <td>{{ $group->date_start }}</td>
         <td>{{ $group->date_end }}</td>
