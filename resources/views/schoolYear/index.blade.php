@@ -22,7 +22,7 @@
       <tr>
         <td>{{ $sy->id }}</td>
         <td>{{ $sy->date_start }}</td>
-        <td><a href="{{ route('rok_szkolny.show', $sy->id) }}">{{ $sy->date_end }}</a></td>
+        <td><a href="{{ route('rok_szkolny.show', $sy->id.'/showInfo') }}">{{ $sy->date_end }}</a></td>
         <td>{{ $sy->date_of_classification_of_the_last_grade }}</td>
         <td>{{ $sy->date_of_graduation_of_the_last_grade }}</td>
         <td>{{ $sy->date_of_classification }}</td>

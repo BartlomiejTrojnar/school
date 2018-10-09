@@ -9,6 +9,7 @@ Route::get('/szkola/sortuj/{column}', 'SchoolController@orderBy');
 Route::resource('/godzina', 'LessonHourController');
 
 Route::resource('/rok_szkolny', 'SchoolYearController');
+Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
 
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/sortuj/{column}', 'ClassroomController@orderBy');

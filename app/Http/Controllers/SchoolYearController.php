@@ -42,12 +42,54 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(SchoolYear $rok_szkolny, SchoolYearRepository $schoolYearRepo)
+    public function show_old(SchoolYear $rok_szkolny, SchoolYearRepository $schoolYearRepo)
     {
         $previous = $schoolYearRepo->PreviousRecordId($rok_szkolny->id);
         $next = $schoolYearRepo->NextRecordId($rok_szkolny->id);
-        return view('schoolYear.show', ["schoolYear"=>$rok_szkolny, "previous"=>$previous, "next"=>$next]);
     }
+    public function show($id, $view, SchoolYearRepository $schoolYearRepo)
+    {
+        $schoolYear = $schoolYearRepo -> find($id);
+        $previous = $schoolYearRepo -> PreviousRecordId($id);
+        $next = $schoolYearRepo -> NextRecordId($id);
+
+        switch($view) {
+             case 'showInfo':
+               return view('schoolYear.showInfo', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showClasses':
+               return view('schoolYear.showClasses', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+               //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
+               //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
+               //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+               exit;
+             break;
+             case 'showStudents':
+               return view('schoolYear.showStudents', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showTeachers':
+               return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showGroups':
+               return view('schoolYear.showGroups', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showTextbooks':
+               return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               echo 'Widok nieznany';
+               exit;
+             break;
+        }
+    }
+
+
 
     public function edit(SchoolYear $rok_szkolny)
     {
