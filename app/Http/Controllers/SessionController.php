@@ -57,11 +57,13 @@ class SessionController extends Controller
 
     public function show($id, $view, SessionRepository $sessionRepo)
     {
+        if(empty(Session::get('sessionView')))  Session::put('sessionView', 'showInfo');
+        if($view)  Session::put('sessionView', $view);
         $session = $sessionRepo -> find($id);
         $previous = $sessionRepo -> PreviousRecordId($id);
         $next = $sessionRepo -> NextRecordId($id);
 
-        switch($view) {
+        switch(Session::get('sessionView')) {
              case 'showInfo':
                return view('session.showInfo', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
                exit;
