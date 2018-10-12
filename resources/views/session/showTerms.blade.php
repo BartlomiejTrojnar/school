@@ -23,6 +23,6 @@
       <li class="nav-item"><a class="nav-link" href="{{ route('sesja.index') }}">powrót</a></li>
     </ul>
 
-    <h2>Opisy egzaminów</h2>
+    <h2>Terminy egzaminów</h2>
     <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Widok w budowie</div>
 @endsection
