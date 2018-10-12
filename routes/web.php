@@ -82,7 +82,9 @@ Route::resource('/wybor_podrecznika', 'TextbookChoiceController');
 Route::get('/wybor_podrecznika/sortuj/{column}', 'TextbookChoiceController@orderBy');
 
 Route::resource('/sesja', 'SessionController');
+Route::get('/sesja/{id}/{view}', 'SessionController@show');
 Route::get('/sesja/sortuj/{column}', 'SessionController@orderBy');
+
 Route::resource('/deklaracja', 'DeclarationController');
 Route::get('/deklaracja/sortuj/{column}', 'DeclarationController@orderBy');
 Route::resource('/opis_egzaminu', 'ExamDescriptionController');

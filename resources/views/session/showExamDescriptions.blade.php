@@ -15,7 +15,15 @@
 @endsection
 
 @section('main-content')
-  <h2>opisy egzaminów</h2>
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showInfo') }}">informacje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showExamDescriptions') }}">opisy egzaminów</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showDeclarations') }}">deklaracje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showTerms') }}">terminy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('sesja.index') }}">powrót</a></li>
+  </ul>
+
+  <h2>Opisy egzaminów</h2>
   <table>
     <tr>
       <th>przedmiot</th>

@@ -55,12 +55,35 @@ class SessionController extends Controller
         return redirect($request->history_view);
      }
 
-    public function show(Session $sesja, SessionRepository $sessionRepo)
+    public function show($id, $view, SessionRepository $sessionRepo)
     {
-        $examDescriptions = ExamDescription::all()->where('session_id', $sesja->id);
-        $previous = $sessionRepo->previousRecordId($sesja->id);
-        $next = $sessionRepo->nextRecordId($sesja->id);
-        return view('session.show', ["session"=>$sesja, "examDescriptions"=>$examDescriptions, "previous"=>$previous, "next"=>$next]);
+        $session = $sessionRepo -> find($id);
+        $previous = $sessionRepo -> PreviousRecordId($id);
+        $next = $sessionRepo -> NextRecordId($id);
+
+        switch($view) {
+             case 'showInfo':
+               return view('session.showInfo', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showExamDescriptions':
+               $examDescriptions = ExamDescription::all()->where('session_id', $id);
+               return view('session.showExamDescriptions', ["session"=>$session, "examDescriptions"=>$examDescriptions, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showDeclarations':
+               return view('session.showDeclarations', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showTerms':
+               return view('session.showTerms', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
 
     public function edit(Session $sesja)
