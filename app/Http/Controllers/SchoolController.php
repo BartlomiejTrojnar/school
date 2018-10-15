@@ -53,12 +53,33 @@ class SchoolController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(School $szkola, SchoolRepository $schoolRepo)
+    public function show($id, $view='', SchoolRepository $schoolRepo)
     {
-        $grades = School::findOrFail($szkola->id)->grades;
-        $previous = $schoolRepo->PreviousRecordId($szkola->id);
-        $next = $schoolRepo->NextRecordId($szkola->id);
-        return view('school.show', ["school"=>$szkola, "grades"=>$grades, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('schoolView')))  session()->put('schoolView', 'showInfo');
+        if($view)  session()->put('schoolView', $view);
+        $school = $schoolRepo -> find($id);
+        $previous = $schoolRepo->PreviousRecordId($id);
+        $next = $schoolRepo->NextRecordId($id);
+
+        switch(session()->get('schoolView')) {
+             case 'showInfo':
+               return view('school.showInfo', ["school"=>$school, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showStudents':
+               return view('school.showStudents', ["school"=>$school, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showClasses':
+               $grades = School::findOrFail($id)->grades;
+               return view('school.showClasses', ["school"=>$school, "grades"=>$grades, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
 
     public function edit(School $szkola)

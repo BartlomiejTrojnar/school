@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>{{ $school->name }}</h1>
   <aside id="strzalka_l">
@@ -14,6 +15,13 @@
 @endsection
 
 @section('main-content')
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showInfo') }}">informacje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showStudents') }}">uczniowie</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showClasses') }}">klasy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('szkola.index') }}">powrót</a></li>
+  </ul>
+
   <h2>klasy</h2>
   <table>
     <tr>

@@ -5,6 +5,7 @@ Route::get('/', function () {
 
 Route::resource('/szkola', 'SchoolController');
 Route::get('/szkola/sortuj/{column}', 'SchoolController@orderBy');
+Route::get('/szkola/{id}/{view}', 'SchoolController@show');
 
 Route::resource('/godzina', 'LessonHourController');
 
