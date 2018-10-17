@@ -66,8 +66,8 @@ class ExamController extends Controller
           'declaration_id' => 'required',
           'exam_description_id' => 'required',
           'exam_type' => 'required',
-          'points' => 'numeric',
-          'comments' => 'max:15',
+          'points' => 'nullable|numeric',
+          'comments' => 'nullable|max:15',
         ]);
 
         $exam = new Exam;
