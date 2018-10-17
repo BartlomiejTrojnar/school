@@ -87,8 +87,11 @@ Route::get('/sesja/sortuj/{column}', 'SessionController@orderBy');
 
 Route::resource('/deklaracja', 'DeclarationController');
 Route::get('/deklaracja/sortuj/{column}', 'DeclarationController@orderBy');
+
 Route::resource('/opis_egzaminu', 'ExamDescriptionController');
 Route::get('/opis_egzaminu/sortuj/{column}', 'ExamDescriptionController@orderBy');
+Route::get('/opis_egzaminu/{id}/{view}', 'ExamDescriptionController@show');
+
 Route::resource('/termin', 'TermController');
 Route::get('/termin/sortuj/{column}', 'TermController@orderBy');
 Route::resource('/egzamin', 'ExamController');

@@ -82,12 +82,35 @@ class ExamDescriptionController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(ExamDescription $opis_egzaminu, ExamDescriptionRepository $examDescriptionRepo)
+    public function show($id, $view='', ExamDescriptionRepository $examDescriptionRepo)
     {
-        $previous = $examDescriptionRepo->previousRecordId($opis_egzaminu->id);
-        $next = $examDescriptionRepo->nextRecordId($opis_egzaminu->id);
-        return view('examDescription.show', ["examDescription"=>$opis_egzaminu, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('examDescriptionView')))  session()->put('examDescriptionView', 'showInfo');
+        if($view)  session()->put('examDescriptionView', $view);
+        $examDescription = $examDescriptionRepo -> find($id);
+        $previous = $examDescriptionRepo -> PreviousRecordId($id);
+        $next = $examDescriptionRepo -> NextRecordId($id);
+
+        switch(session()->get('examDescriptionView')) {
+             case 'showInfo':
+               return view('examDescription.showInfo', ["examDescription"=>$examDescription, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showTerms':
+               return view('examDescription.showTerms', ["examDescription"=>$examDescription, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showExams':
+               //$studentClasses = StudentClass::all() -> where('grade_id', $id);
+               return view('examDescription.showExams', ["examDescription"=>$examDescription, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
+
 
     public function edit(ExamDescription $opis_egzaminu, SessionRepository $sessionRepo, SubjectRepository $subjectRepo)
     {
