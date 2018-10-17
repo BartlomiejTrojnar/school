@@ -68,12 +68,31 @@ class DeclarationController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Declaration $deklaracja, DeclarationRepository $declarationRepo)
+    public function show($id, $view='', DeclarationRepository $declarationRepo)
     {
-        $previous = $declarationRepo->previousRecordId($deklaracja->id);
-        $next = $declarationRepo->nextRecordId($deklaracja->id);
-        return view('declaration.show', ["declaration"=>$deklaracja, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('declarationView')))  session()->put('declarationView', 'showInfo');
+        if($view)  session()->put('declarationView', $view);
+        $declaration = $declarationRepo -> find($id);
+        $previous = $declarationRepo -> PreviousRecordId($id);
+        $next = $declarationRepo -> NextRecordId($id);
+
+        switch(session()->get('declarationView')) {
+             case 'showInfo':
+               return view('declaration.showInfo', ["declaration"=>$declaration, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showExams':
+               //$studentClasses = StudentClass::all() -> where('grade_id', $id);
+               return view('declaration.showExams', ["declaration"=>$declaration, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
+
 
     public function edit(Declaration $deklaracja, SessionRepository $sessionRepo, StudentRepository $studentRepo)
     {

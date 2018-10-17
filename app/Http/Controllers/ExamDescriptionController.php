@@ -111,7 +111,6 @@ class ExamDescriptionController extends Controller
         }
     }
 
-
     public function edit(ExamDescription $opis_egzaminu, SessionRepository $sessionRepo, SubjectRepository $subjectRepo)
     {
         $sessions = $sessionRepo->getAll();

@@ -81,12 +81,14 @@ Route::get('/podrecznik/sortuj/{column}', 'TextbookController@orderBy');
 Route::resource('/wybor_podrecznika', 'TextbookChoiceController');
 Route::get('/wybor_podrecznika/sortuj/{column}', 'TextbookChoiceController@orderBy');
 
+/* ---------------------------------------------------------------------------------------------- */
 Route::resource('/sesja', 'SessionController');
-Route::get('/sesja/{id}/{view}', 'SessionController@show');
 Route::get('/sesja/sortuj/{column}', 'SessionController@orderBy');
+Route::get('/sesja/{id}/{view}', 'SessionController@show');
 
 Route::resource('/deklaracja', 'DeclarationController');
 Route::get('/deklaracja/sortuj/{column}', 'DeclarationController@orderBy');
+Route::get('/deklaracja/{id}/{view}', 'DeclarationController@show');
 
 Route::resource('/opis_egzaminu', 'ExamDescriptionController');
 Route::get('/opis_egzaminu/sortuj/{column}', 'ExamDescriptionController@orderBy');
@@ -94,6 +96,8 @@ Route::get('/opis_egzaminu/{id}/{view}', 'ExamDescriptionController@show');
 
 Route::resource('/termin', 'TermController');
 Route::get('/termin/sortuj/{column}', 'TermController@orderBy');
+Route::get('/termin/{id}/{view}', 'TermController@show');
+
 Route::resource('/egzamin', 'ExamController');
 Route::get('/egzamin/sortuj/{column}', 'ExamController@orderBy');
 

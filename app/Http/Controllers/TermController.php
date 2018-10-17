@@ -67,11 +67,29 @@ class TermController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Term $termin, TermRepository $termRepo)
+    public function show($id, $view='', TermRepository $termRepo)
     {
-        $previous = $termRepo->previousRecordId($termin->id);
-        $next = $termRepo->nextRecordId($termin->id);
-        return view('term.show', ["term"=>$termin, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('termView')))  session()->put('termView', 'showInfo');
+        if($view)  session()->put('termView', $view);
+        $term = $termRepo -> find($id);
+        $previous = $termRepo -> PreviousRecordId($id);
+        $next = $termRepo -> NextRecordId($id);
+
+        switch(session()->get('termView')) {
+             case 'showInfo':
+               return view('term.showInfo', ["term"=>$term, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showExams':
+               //$studentClasses = StudentClass::all() -> where('grade_id', $id);
+               return view('term.showExams', ["term"=>$term, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
 
     public function edit(Term $termin, ExamDescriptionRepository $examDescriptionRepo, ClassroomRepository $classroomRepo)
