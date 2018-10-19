@@ -14,43 +14,36 @@
       <tr>
         <th><label for="student_id">uczeń</label></th>
         <td colspan="2">
-          <?php
-            use App\Student;
-            $student = new Student;
-            $student->printSelectField($student_id);
-          ?>
+          <?php  echo $studentSelectField;  ?>
         </td>
       </tr>
       <tr>
         <th><label for="grade_id">klasa</label></th>
         <td colspan="2">
-          <?php
-            use App\Grade;
-            $grade = new Grade;
-            $grade->printSelectField();
-          ?>
+          <?php  echo $gradeSelectField;  ?>
         </td>
       </tr>
       <tr>
         <th><label for="date_start">data początkowa</label></th>
         <td><input id="date_start" type="date" name="date_start" size="8" maxlength="10" /></td>
         <td><input type="checkbox" name="confirmation_date_start" /></td>
-        <td><a id="date_start1" href="">{{ $dates['dateOfSession'] }}</a></td>
-        <td><a id="date_start2" href="">{{ $dates['dateOfStartSchoolYear'] }}</a></td>
+        <td><a id="date_start1" href="">{{ session()->get('dateSession') }}</a></td>
+        <td><a id="date_start2" href="">{{ $proposedDates['dateOfStartSchoolYear'] }}</a></td>
       </tr>
       <tr>
         <th><label for="date_end">data końcowa</label></th>
         <td><input type="date" name="date_end" size="8" maxlength="10" id="date_end" /></td>
         <td><input type="checkbox" name="confirmation_date_end" /></td>
-        <td><a id="date_end1" href="">{{ $dates['dateOfSession'] }}</a></td>
-        <td><a id="date_end2" href="">{{ $dates['dateOfGraduationOfTheLastGrade'] }}</a></td>
-        <td><a id="date_end3" href="">{{ $dates['dateOfGraduationSchoolYear'] }}</a></td>
+        <td><a id="date_end1" href="">{{ date('Y-m-d', strtotime('-1 day', strtotime(session()->get('dateSession')))) }}</a></td>
+        <td><a id="date_end2" href="">{{ $proposedDates['dateOfEndSchoolYear'] }}</a></td>
+        <td><a id="date_end3" href="">{{ $proposedDates['dateOfGraduationSchoolYear'] }}</a></td>
+        <td><a id="date_end4" href="">{{ $proposedDates['dateOfGraduationOfTheLastGrade'] }}</a></td>
       </tr>
       <tr>
         <th><label for="numer">numer</label></th>
-        <td><input type="text" name="numer" size="2" maxlength="2" id="numer" /></td>
+        <td><input type="text" name="number" size="2" maxlength="2" id="number" /></td>
         <td><input type="checkbox" name="confirmation_numer" /></td>
-        <td><a id="proposedNumer" href="">{{ $proposedNumer }}</a></td>
+        <td><a id="proposedNumber" href="">{{ $proposedNumber }}</a></td>
       </tr>
       <tr>
         <th><label for="comments">uwagi</label></th>

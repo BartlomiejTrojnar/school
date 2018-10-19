@@ -1,5 +1,6 @@
 <?php
 Route::get('/', function () {
+    session()->put('dateSession', date('Y-m-d'));
     return view('welcome');
 });
 
@@ -22,16 +23,9 @@ Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
 
 // -------------------------------------------------------------------------------------------------------- //
-Route::get('/klasa/{id}/{view}', 'GradeController@show');
 Route::resource('/klasa', 'GradeController');
+Route::get('/klasa/{id}/{view}', 'GradeController@show');
 Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
-Route::get('/klasa/{id}/showGroups', 'GradeController@showGroups');
-Route::get('/klasa/{id}/showTeachers', 'GradeController@showTeachers');
-Route::get('/klasa/{id}/showLessonPlans', 'GradeController@showLessonPlans');
-Route::get('/klasa/{id}/showStudents', 'GradeController@showStudents');
-Route::get('/klasa/{id}/showEnlargements', 'GradeController@showEnlargements');
-Route::get('/klasa/{id}/showRatings', 'GradeController@showRatings');
-Route::get('/klasa/{id}/showTasks', 'GradeController@showTasks');
 
 Route::resource('/klasy_uczniow', 'StudentClassController');
 

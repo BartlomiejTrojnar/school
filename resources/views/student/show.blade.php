@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>{{ $student->first_name }} {{ $student->second_name }} {{ $student->last_name }}</h1>
   <aside id="strzalka_l">

@@ -19,7 +19,7 @@
     @foreach($grades as $grade)
       <tr>
         <td>{{ $grade->id }}</td>
-        <td><a href="{{ route('klasa.show', $grade->id) }}">{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</a></td>
+        <td><a href="{{ route('klasa.show', $grade->id.'/showStudents') }}">{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</a></td>
         <td><a href="{{ route('szkola.show', $grade->school_id) }}">{{ $grade->school->name }}</a></td>
         <td><a href="{{ route('klasa.edit', $grade->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
         <td>

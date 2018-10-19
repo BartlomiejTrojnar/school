@@ -8,7 +8,7 @@ class StudentClassRepository extends BaseRepository {
     }
 
     public function getLastNumber() {
-        return 5;
+        return $this->model->all()->last()->number+1;
     }
 }
 ?>
