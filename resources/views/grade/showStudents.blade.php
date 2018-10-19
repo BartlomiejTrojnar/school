@@ -32,6 +32,9 @@
   <p><a href="{{ route('szkola.show', $grade->school_id) }}">{{ $grade->school->name }}</a></p>
 
   <h2>uczniowie w klasie</h2>
+
+  <p><?php echo session()->get('dateSession') ?></p>
+
   <table>
     <tr>
       <th>uczeń</th>
@@ -53,8 +56,8 @@
       @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
       @else <td class="not_confirmation">{{ $sc->date_end }}</td>
       @endif
-      @if($sc->confirmation_numer==1) <td>{{ $sc->numer }}</td>
-      @else <td class="not_confirmation">{{ $sc->numer }}</td>
+      @if($sc->confirmation_numer==1) <td>{{ $sc->number }}</td>
+      @else <td class="not_confirmation">{{ $sc->number }}</td>
       @endif
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
