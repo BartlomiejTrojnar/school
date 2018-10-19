@@ -12,15 +12,15 @@ class StudentClassController extends Controller
 {
     public function create(StudentRepository $studentRepo, GradeRepository $gradeRepo, StudentClassRepository $scRepo, SchoolYearRepository $syRepo)
     {
-        $proposedNumer = $scRepo->getLastNumber();
-        $dates = SchoolYear::getDatesOfSchoolYear(date('Y-m-d'));
+        $proposedNumber = $scRepo->getLastNumber();
+        $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
         $students = $studentRepo->getAll();
         $grades = $gradeRepo->getAll();
         if(isset($_GET['grade_id'])) $selectedGrade = $_GET['grade_id'];   else $selectedGrade = 0;
         if(isset($_GET['student_id'])) $selectedStudent = $_GET['student_id'];   else $selectedStudent = 0;
-        return view('studentClass.create', ["studentClass"=>$klasy_uczniow, "dates"=>$dates])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$klasy_uczniow->student_id])
-             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>$klasy_uczniow->grade_id]);
+        return view('studentClass.create', ["proposedNumber"=>$proposedNumber, "proposedDates"=>$proposedDates])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$selectedStudent])
+             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>$selectedGrade]);
     }
 
     public function store(Request $request)

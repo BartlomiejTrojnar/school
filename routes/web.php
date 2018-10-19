@@ -1,5 +1,6 @@
 <?php
 Route::get('/', function () {
+    session()->put('dateSession', date('Y-m-d'));
     return view('welcome');
 });
 

@@ -8,12 +8,12 @@ class SchoolYearRepository extends BaseRepository {
     }
 
     public function getDatesOfSchoolYear($date) {
-        $date='2016-05-20';
-        $dates['dateOfSession'] = $date;
+        $proposedDates['dateOfSession'] = session()->get('dateSession');
         $schoolYear = $this->model->where('date_start', '<=', $date)->where('date_end', '>=', $date)->get();
-        print_r($schoolYear); exit;
-        //$dates['dateOfStartSchoolYear'] = $schoolYear->date_start;
-        return $dates;
+        $proposedDates['dateOfStartSchoolYear'] = $schoolYear[0]->date_start;
+        $proposedDates['dateOfGraduationOfTheLastGrade'] = $schoolYear[0]->date_of_graduation_of_the_last_grade;
+        $proposedDates['dateOfGraduationSchoolYear'] = $schoolYear[0]->date_of_graduation;
+        return $proposedDates;
     }
 }
 ?>
