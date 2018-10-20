@@ -21,6 +21,7 @@ Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
 
 Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
+Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 // -------------------------------------------------------------------------------------------------------- //
 Route::resource('/klasa', 'GradeController');
