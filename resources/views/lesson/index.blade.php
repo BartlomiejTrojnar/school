@@ -26,6 +26,7 @@
 
     @foreach($lessons as $lesson)
       <tr>
+        <td>{{ $lesson->id }}</td>
         <td>{{ $lesson->group_id }}</td>
         <td>{{ $lesson->teacher_id }}</td>
         <td>{{ $lesson->lesson_date }}</td>
@@ -48,7 +49,7 @@
     @endforeach
 
       <tr class="create">
-        <td colspan="12"><a href="{{ route('lekcja.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
+        <td colspan="13"><a href="{{ route('lekcja.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
       </tr>
     </tbody>
   </table>
