@@ -1,11 +1,12 @@
 @extends('layouts.app')
+
 @section('css')
   <link href="{{ asset('css/taughtSubject.css') }}" rel="stylesheet">
 @endsection
-
 @section('java-script')
   <script src="{{ asset('js/taughtSubject.js') }}"></script>
 @endsection
+
 
 @section('header')
   <h1>{{ $teacher->first_name }} {{ $teacher->last_name }}</h1>

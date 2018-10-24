@@ -26,4 +26,14 @@ class TaughtSubject extends Model
         $subjects = Subject::where('actual', true)->whereNotIn('id', $ts)->get();
         return $subjects;
     }
+
+    public static function unlearningTeachers($subjectTeachers)
+    {
+        $st = array();
+        foreach($subjectTeachers as $subjectTeacher)
+            $st[] = $subjectTeacher->teacher_id;
+
+        $teachers = Teacher::where('first_year_id', '<=', 125)->where('last_year_id', '>=', 125)->orWhere('last_year_id', NULL)->whereNotIn('id', $st)->get();
+        return $teachers;
+    }
 }
