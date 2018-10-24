@@ -33,7 +33,7 @@ class TaughtSubject extends Model
         foreach($subjectTeachers as $subjectTeacher)
             $st[] = $subjectTeacher->teacher_id;
 
-        $teachers = Teacher::where('first_year_id', '<=', 125)->where('last_year_id', '>=', 125)->orWhere('last_year_id', NULL)->whereNotIn('id', $st)->get();
+        $teachers = Teacher::where('first_year_id', '<=', 135)->where('last_year_id', '>=', 135)->orWhere('last_year_id', NULL)->whereNotIn('id', $st)->get();
         return $teachers;
     }
 }

@@ -27,6 +27,8 @@ section#subjectsList li, section#unlearningTeachersList li {
 section#subjectsList li:nth-child(2n), section#unlearningTeachersList li:nth-child(2n) {
     float: right;
 }
-section#taughtSubjectsList li span, section#subjectTeachersList li span, div#token, div#url {
+section#taughtSubjectsList li span, section#subjectTeachersList li span, div#token, div#url,
+div#subject-id, div#teacher-id
+{
     display: none;
 }

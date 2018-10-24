@@ -32,6 +32,7 @@
   </ul>
 
   <h2>Nauczyciele przedmiotu</h2>
+  <div id="subject-id">{{ $subject->id }}</div>
   <form action="{{ route('nauczany_przedmiot.store') }}" method="post" role="form" id="formTaughtSubject" style="display:none;">
     {{ csrf_field() }}
     <input name="teacher_id" />
@@ -58,7 +59,7 @@
     <h1>Nieuczący</h1>
     <ul class="list-group">
       @foreach($unlearningTeachers as $unlearningTeacher)
-        <li type="button" class="list-group-item" data-teacher-id="{{ $unlearningTeacher->id }}" data-subject-id="{{ $subject->id }}">{{ $unlearningTeacher->first_name }} {{ $unlearningTeacher->last_name }}</li>
+        <li type="button" class="list-group-item" data-teacher-id="{{ $unlearningTeacher->id }}">{{ $unlearningTeacher->first_name }} {{ $unlearningTeacher->last_name }}</li>
       @endforeach
     </ul>
   </section>
