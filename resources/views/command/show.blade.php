@@ -1,71 +1,50 @@
 @extends('layouts.app')
 @section('header')
-  <h1>{{ $student->first_name }} {{ $student->second_name }} {{ $student->last_name }}</h1>
+  <h1>{{ $command->command }} ({{ $command->task->name }})</h1>
   <aside id="strzalka_l">
-    <a href="{{ route('uczen.show', $previous) }}">
+    <a href="{{ route('polecenie.show', $previous) }}">
       <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzedni">
     </a>
   </aside>
   <aside id="strzalka_p">
-    <a href="{{ route('uczen.show', $next) }}">
+    <a href="{{ route('polecenie.show', $next) }}">
       <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepny">
     </a>
   </aside>
 @endsection
 
 @section('main-content')
-    <p>{{ $student->family_name }}</p>
-    <p>{{ $student->sex }}</p>
-    <p>{{ $student->pesel }}</p>
-    <p>{{ $student->place_of_birth }}</p>
-    <p>{{ $student->created_at }}</p>
-    <p>{{ $student->updated_at }}</p>
-
-  <h2>klasy ucznia</h2>
+  <p><a href="{{ route('polecenie.index') }}">powrót</a></p>
   <table>
+    <tr><th>zadanie</th><th>numer</th><th>polecenie</th><th>opis</th><th>punkty</th><th>utworzono</th><th>zaktualizowano</th></tr>
     <tr>
-      <th>klasa</th>
-      <th>od</th>
-      <th>do</th>
-      <th>numer</th>
-      <th>uwagi</th>
-      <th colspan="2">+/-</th>
+      <td>{{ $command->task->name }}</td>
+      <td>{{ $command->number }}</td>
+      <td>{{ $command->command }}</td>
+      <td>{{ $command->description }}</td>
+      <td>{{ $command->points }}</td>
+      <td>{{ $command->created_at }}</td>
+      <td>{{ $command->updated_at }}</td>
     </tr>
-
-    @foreach($studentClasses as $sc)
-    <tr>
-      <td><a href="{{ route('klasa.show', $sc->grade_id) }}">
-        {{ $sc->grade->year_of_beginning }}-{{ $sc->grade->year_of_graduation }}{{ $sc->grade->symbol }}
-      </a></td>
-      @if($sc->confirmation_date_start==1) <td>{{ $sc->date_start }}</td>
-      @else <td class="not_confirmation">{{ $sc->date_start }}</td>
-      @endif
-      @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
-      @else <td class="not_confirmation">{{ $sc->date_end }}</td>
-      @endif
-      @if($sc->confirmation_numer==1) <td>{{ $sc->numer }}</td>
-      @else <td class="not_confirmation">{{ $sc->numer }}</td>
-      @endif
-      @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
-      @else <td class="not_confirmation">{{ $sc->comments }}</td>
-      @endif
-      <td><a href="{{ route('klasy_uczniow.edit', $sc->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
-      <td>
-        <form action="{{ route('klasy_uczniow.destroy', $sc->id) }}" method="post" id="delete-form-{{$sc->id}}">
-          {{ csrf_field() }}
-          {{ method_field('DELETE') }}
-          <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
-        </form>
-      </td>
-    </tr>
-    @endforeach
-
-    <tr class="create"><td colspan="7">
-      <a href="{{ route('klasy_uczniow.create', 'student_id='.$student->id) }}">
-        <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj klasę
-      </a>
-    </td></tr>
   </table>
 
-    <p><a href="{{ route('uczen.index') }}">powrót</a></p>
+  <h2>oceny polecenia</h2>
+  <table>
+    <tr>
+      <th>id</th>
+      <th>ocena zadania</th>
+      <th>punkty</th>
+      <th>utworzono</th>
+      <th>zaktualizowano</th>
+    </tr>
+    @foreach($commandRatings as $commandRating)
+      <tr>
+        <td>{{ $commandRating->id }}</td>
+        <td>{{ $commandRating->task_rating_id }}</td>
+        <td>{{ $commandRating->points }}</td>
+        <td>{{ $commandRating->created_at }}</td>
+        <td>{{ $commandRating->updated_at }}</td>
+      </tr>
+    @endforeach
+  </table>
 @endsection

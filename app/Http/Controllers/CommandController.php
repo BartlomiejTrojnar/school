@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\Command;
 use App\Repositories\CommandRepository;
 use App\Repositories\TaskRepository;
+use App\Models\CommandRating;
 use Illuminate\Http\Request;
 
 class CommandController extends Controller
@@ -65,10 +66,10 @@ class CommandController extends Controller
 
     public function show(Command $polecenie, CommandRepository $commandRepo)
     {
-
         $previous = $commandRepo->previousRecordId($polecenie->id);
         $next = $commandRepo->nextRecordId($polecenie->id);
-        return view('command.show', ["command"=>$polecenie, "previous"=>$previous, "next"=>$next]);
+        $commandRatings = CommandRating::all() -> where('command_id', $polecenie->id);
+        return view('command.show', ["command"=>$polecenie, "commandRatings"=>$commandRatings, "previous"=>$previous, "next"=>$next]);
     }
 
     public function edit(Command $polecenie, TaskRepository $taskRepo)
