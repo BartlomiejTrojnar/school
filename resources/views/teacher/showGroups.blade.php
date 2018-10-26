@@ -22,20 +22,31 @@
 @endsection
 
 @section('main-content')
+    <ul class="nav nav-tabs nav-justified">
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showInfo') }}">informacje</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showSubjects') }}">przedmioty</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showGroups') }}">grupy</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showLessonPlans') }}">plan lekcji</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}">powrót</a></li>
+    </ul>
+
+
     <p style="display: none;" id="teacher_id">{{ $teacher->id }}</p>
     <p>{{ $teacher->family_name }}</p>
     <p>{{ $teacher->short }}</p>
     <p>{{ $teacher->degree }}</p>
     <p>{{ $teacher->classroom_id }}</p>
-    <p>od {{ substr($teacher->first_year->date_start, 0, 4) }}/{{ substr($teacher->first_year->date_end, 0, 4) }}
-       do {{ substr($teacher->last_year->date_start, 0, 4)}}/{{ substr($teacher->last_year->date_end, 0, 4) }}</p>
+    <p>od @if($teacher->first_year) {{ substr($teacher->first_year->date_start, 0, 4) }}/{{ substr($teacher->first_year->date_end, 0, 4)}} @endif
+       do @if($teacher->last_year) {{ substr($teacher->last_year->date_start, 0, 4)}}/{{ substr($teacher->last_year->date_end, 0, 4) }} @endif</p>
     <p>{{ $teacher->order }}</p>
     <p>{{ $teacher->created_at }}</p>
     <p>{{ $teacher->updated_at }}</p>
 
     <p><a href="{{ route('nauczyciel.index') }}">powrót</a></p>
 
-
+    <h2>Grupy nauczyciela</h2>
+    <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Widok w budowie</div>
+<?php /*
     <form action="{{ route('nauczany_przedmiot.store') }}" method="post" role="form" id="formTaughtSubject" style="display:none;">
       {{ csrf_field() }}
       <input name="teacher_id" />
@@ -64,5 +75,7 @@
         @endforeach
       </ul>
     </section>
+
+*/ ?>
 
 @endsection

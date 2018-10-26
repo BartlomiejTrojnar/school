@@ -11,7 +11,7 @@ class ClassroomController extends Controller
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("ClassroomOrderBy[$i]");
 
-        $classrooms = $classroomRepo->getAll($orderBy);
+        $classrooms = $classroomRepo->getPaginate($orderBy);
         return view('classroom.index', ["classrooms"=>$classrooms]);
     }
 

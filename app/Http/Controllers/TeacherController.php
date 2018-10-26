@@ -73,14 +73,39 @@ class TeacherController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Teacher $nauczyciel, TeacherRepository $teacherRepo, TaughtSubject $taughtSubject)
+    public function show($id, $view, TeacherRepository $teacherRepo)
     {
-        $previous = $teacherRepo->previousRecordId($nauczyciel->id);
-        $next = $teacherRepo->nextRecordId($nauczyciel->id);
-        $taughtSubjects = TaughtSubject::where('teacher_id', $nauczyciel->id)->get();
-        $nonTaughtSubjects = $taughtSubject->nonTaughtSubjects($taughtSubjects);
-        return view('teacher.show', ["teacher"=>$nauczyciel, "previous"=>$previous, "next"=>$next,
-               "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+        $teacher = $teacherRepo -> find($id);
+        $previous = $teacherRepo -> PreviousRecordId($id);
+        $next = $teacherRepo -> NextRecordId($id);
+
+        switch($view) {
+             case 'showInfo':
+               return view('teacher.showInfo', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showSubjects':
+               $taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+               $nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
+               return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
+                   "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+               exit;
+             break;
+             case 'showGroups':
+               return view('teacher.showGroups', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next]);
+                   //"taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+               exit;
+             break;
+             case 'showLessonPlans':
+               return view('teacher.showLessonPlans', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               echo 'Widok nieznany';
+               exit;
+             break;
+        }
+
     }
 
     public function edit(Teacher $nauczyciel, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo)

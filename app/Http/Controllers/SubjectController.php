@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
+use App\Models\TaughtSubject;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -75,10 +76,13 @@ class SubjectController extends Controller
                return view('subject.showGroups', ["subject"=>$subject, "previous"=>$previous, "next"=>$next]);
                exit;
             break;
-            case 'showTeachers':
-               return view('subject.showTeachers', ["subject"=>$subject, "previous"=>$previous, "next"=>$next]);
-               exit;
-            break;
+          case 'showTeachers':
+            $subjectTeachers = TaughtSubject::where('subject_id', $id)->get();
+            $unlearningTeachers = TaughtSubject::unlearningTeachers($subjectTeachers);
+            return view('subject.showTeachers', ["subject"=>$subject, "previous"=>$previous, "next"=>$next,
+              "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers]);
+            exit;
+          break;
             case 'showTextbooks':
                return view('subject.showTextbooks', ["subject"=>$subject, "previous"=>$previous, "next"=>$next]);
                exit;
