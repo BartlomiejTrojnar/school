@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Group;
+use App\Models\GroupTeacher;
 use App\Repositories\GroupRepository;
 use App\Repositories\SubjectRepository;
 use Session;
@@ -73,33 +74,32 @@ class GroupController extends Controller
         if(empty(Session::get('groupView')))  Session::put('groupView', 'showInfo');
         if($view)  Session::put('groupView', $view);
         $group = $groupRepo -> find($id);
-        $previous = $groupRepo -> PreviousRecordId($id);
-        $next = $groupRepo -> NextRecordId($id);
+        $this->previous = $groupRepo -> PreviousRecordId($id);
+        $this->next = $groupRepo -> NextRecordId($id);
 
         switch(Session::get('groupView')) {
-             case 'showInfo':
-               return view('group.showInfo', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showStudents':
-               return view('group.showStudents', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
-               //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
-               //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
-               //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
-               //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
-               exit;
-             break;
-             case 'showLessonPlan':
-               return view('group.showLessonPlan', ["group"=>$group, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               echo 'Widok nieznany';
-               exit;
-             break;
+          case 'showInfo':
+              return view('group.showInfo', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              exit;
+          break;
+          case 'showStudents':
+              return view('group.showStudents', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+              //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
+              //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
+              //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+              exit;
+          break;
+          case 'showLessonPlan':
+              return view('group.showLessonPlan', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              exit;
+          break;
+          default:
+              echo 'Widok nieznany';
+              exit;
+          break;
         }
     }
-
 
 
     public function edit(Group $grupa, SubjectRepository $subjectRepo)
