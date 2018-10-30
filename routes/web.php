@@ -12,6 +12,7 @@ Route::resource('/rok_szkolny', 'SchoolYearController');
 
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/sortuj/{column}', 'ClassroomController@orderBy');
+Route::get('/sala/{id}/{view}', 'ClassroomController@show');
 
 Route::resource('/przedmiot', 'SubjectController');
 Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
