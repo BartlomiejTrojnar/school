@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Group;
-use App\Models\GroupTeacher;
 use App\Repositories\GroupRepository;
 use App\Repositories\SubjectRepository;
 use Session;

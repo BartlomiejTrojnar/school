@@ -54,13 +54,13 @@
       <th>klasy</th>
       <td>
         @foreach($group->grades as $groupClass)
-          {{ $groupClass->id }}<br />
+          {{ $groupClass->class_id }}<br />
         @endforeach
       </td>
     </tr>
     <tr>
       <th>liczba uczniów</th>
-      <td>{{ $group->updated_at }}</td>
+      <td>{{ $group->students->count() }}</td>
     </tr>
   </table>
 @endsection
