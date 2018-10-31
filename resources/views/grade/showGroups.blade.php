@@ -47,9 +47,11 @@
     </thead>
     <tbody>
 
-    @foreach($grade->groups() as $group)
+
+    @foreach($grade->groups() as $groupClass)
       <tr>
-        <td><a href="{{ route('grupa.show', $group->id) }}">{{ $group->id }}</a></td>
+        <td><a href="{{ route('grupa_klasy.show', $groupClass->id) }}">{{ $groupClass->id }}</a></td>
+<?php /*
         <td>{{ $group->subject_id }} {{ $group->subject_id }}</td>
         <td>{{ $group->date_start }}</td>
         <td>{{ $group->date_end }}</td>
@@ -67,6 +69,7 @@
           </form>
         </td>
       </tr>
+*/ ?>
     @endforeach
 
     <tr class="create">
