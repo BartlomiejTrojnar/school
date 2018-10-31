@@ -63,7 +63,7 @@ class GradeController extends Controller
     }
 
 
-    public function show($id, $view='', GradeRepository $gradeRepo)
+    public function show($id, $view='', GradeRepository $gradeRepo, Grade $grade)
     {
         if(empty(session()->get('gradeView')))  session()->put('gradeView', 'showInfo');
         if($view)  session()->put('gradeView', $view);
