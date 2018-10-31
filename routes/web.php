@@ -35,9 +35,9 @@ Route::get('/klasa/{id}/showTasks', 'GradeController@showTasks');
 
 Route::resource('/klasy_uczniow', 'StudentClassController');
 
-Route::get('/nauczyciel/{id}/{view}', 'TeacherController@show');
-Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/sortuj/{column}', 'TeacherController@orderBy');
+Route::resource('/nauczyciel', 'TeacherController');
+Route::get('/nauczyciel/{id}/{view}', 'TeacherController@show');
 
 Route::post('/nauczany_przedmiot/add', 'TaughtSubjectController@add');
 Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');

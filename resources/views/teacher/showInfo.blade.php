@@ -43,5 +43,6 @@
     <p>{{ $teacher->order }}</p>
     <p>{{ $teacher->created_at }}</p>
     <p>{{ $teacher->updated_at }}</p>
+    <p>grupy: {{ $teacher->groups->count() }}
 
 @endsection

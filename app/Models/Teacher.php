@@ -26,7 +26,7 @@ class Teacher extends Model
 
     public function groups()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(GroupTeacher::class);
     }
 
     public function lessons()
