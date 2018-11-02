@@ -67,7 +67,8 @@ class SchoolController extends Controller
                exit;
              break;
              case 'showStudents':
-               return view('school.showStudents', ["school"=>$school, "previous"=>$previous, "next"=>$next]);
+               $students = School::findOrFail($id)->students;
+               return view('school.showStudents', ["school"=>$school, "students"=>$students, "previous"=>$previous, "next"=>$next]);
                exit;
              break;
              case 'showClasses':
