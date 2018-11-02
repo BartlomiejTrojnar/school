@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\SchoolYear;
+use App\Models\Grade;
 use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
@@ -42,50 +43,48 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show_old(SchoolYear $rok_szkolny, SchoolYearRepository $schoolYearRepo)
+    public function show($id, $view='', SchoolYearRepository $schoolYearRepo, SchoolYear $schoolYear)
     {
-        $previous = $schoolYearRepo->PreviousRecordId($rok_szkolny->id);
-        $next = $schoolYearRepo->NextRecordId($rok_szkolny->id);
-    }
-    public function show($id, $view, SchoolYearRepository $schoolYearRepo)
-    {
+        if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
+        if($view)  session()->put('schoolYearView', $view);
         $schoolYear = $schoolYearRepo -> find($id);
         $previous = $schoolYearRepo -> PreviousRecordId($id);
         $next = $schoolYearRepo -> NextRecordId($id);
 
-        switch($view) {
-             case 'showInfo':
-               return view('schoolYear.showInfo', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showClasses':
-               return view('schoolYear.showClasses', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
-               //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
-               //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
-               //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
-               exit;
-             break;
-             case 'showStudents':
-               return view('schoolYear.showStudents', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTeachers':
-               return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showGroups':
-               return view('schoolYear.showGroups', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTextbooks':
-               return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               echo 'Widok nieznany';
-               exit;
-             break;
+        switch(session()->get('schoolYearView')) {
+          case 'showInfo':
+              return view('schoolYear.showInfo', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showClasses':
+              $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
+                            -> where('year_of_graduation', '>', $schoolYear->date_start) -> get();
+              return view('schoolYear.showClasses', ["schoolYear"=>$schoolYear, "grades"=>$grades, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showStudents':
+              //$students = Student::where('first_year_id', '>', $id);
+              return view('schoolYear.showStudents', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTeachers':
+              $teachers = Teacher::where('first_year_id', '>', $id);
+              return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showGroups':
+              $groups = Group::where('first_year_id', '>', $id);
+              return view('schoolYear.showGroups', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTextbooks':
+              return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          default:
+              echo 'Widok nieznany';
+              exit;
+          break;
         }
     }
 
