@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\SchoolYear;
 use App\Models\Grade;
+use App\Models\Teacher;
 use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
@@ -68,9 +69,9 @@ class SchoolYearController extends Controller
               exit;
           break;
           case 'showTeachers':
-              $teachers = Teacher::where('first_year_id', '>', $id);
-              return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
-              exit;
+             $teachers = $this->getTeachers($id);
+             return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "teachers"=>$teachers, "previous"=>$previous, "next"=>$next]);
+             exit;
           break;
           case 'showGroups':
               $groups = Group::where('first_year_id', '>', $id);
@@ -86,6 +87,22 @@ class SchoolYearController extends Controller
               exit;
           break;
         }
+    }
+
+    private function getTeachers($id)
+    {
+        for($i=0; $i<6; $i++)
+          $orderBy[$i] = session()->get("TeacherOrderBy[$i]");
+        $teachers = Teacher :: where('first_year_id', '<=', $id)
+                            -> where(function($q) use ($id) {
+                                $q -> where('last_year_id', '>', $id)
+                                   -> orwhere('last_year_id', NULL);
+                            })
+                            -> orderBy($orderBy[0], $orderBy[1])
+                            -> orderBy($orderBy[2], $orderBy[3])
+                            -> orderBy($orderBy[4], $orderBy[5])
+                            -> paginate(10);
+        return $teachers;
     }
 
 

@@ -34,7 +34,7 @@ class TeacherController extends Controller
           session()->put('TeacherOrderBy[3]', session()->get('TeacherOrderBy[1]'));
           session()->put('TeacherOrderBy[1]', 'asc');
         }
-        return redirect( route('nauczyciel.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create(ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo)
