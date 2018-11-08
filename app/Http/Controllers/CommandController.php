@@ -33,7 +33,7 @@ class CommandController extends Controller
           session()->put('CommandOrderBy[3]', session()->get('CommandOrderBy[1]'));
           session()->put('CommandOrderBy[1]', 'asc');
         }
-        return redirect( route('polecenie.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create(TaskRepository $taskRepo)

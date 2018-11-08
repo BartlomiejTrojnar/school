@@ -22,13 +22,6 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('zadanie.index') }}">powrót</a></li>
   </ul>
 
-    <p>{{ $task->name }}</p>
-    <p>{{ $task->points }}</p>
-    <p>{{ $task->importance }}</p>
-    <p>{{ $task->sheet_name }}</p>
-    <p>{{ $task->created_at }}</p>
-    <p>{{ $task->updated_at }}</p>
-
   <h2>oceny zadania</h2>
   <table>
     <tr>
@@ -68,6 +61,4 @@
       </a>
     </td></tr>
   </table>
-
-    <p><a href="{{ route('zadanie.index') }}">powrót</a></p>
 @endsection

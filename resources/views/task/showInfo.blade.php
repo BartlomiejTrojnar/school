@@ -22,6 +22,23 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('zadanie.index') }}">powrót</a></li>
   </ul>
 
-    <h2>Informacje o zadaniu</h2>
-    <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Widok w budowie</div>
+  <h2>Informacje o zadaniu</h2>
+  <table>
+    <tr>
+      <th>nazwa zadania</th>
+      <th>waga</th>
+      <th>punkty</th>
+      <th>nazwa arkusza<br />w excelu</th>
+      <th>utworzono</th>
+      <th>aktualizacja</th>
+    </tr>
+    <tr>
+      <td>{{ $task->name }}</td>
+      <td>{{ $task->importance }}</td>
+      <td>{{ $task->points }}</td>
+      <td>{{ $task->sheet_name }}</td>
+      <td>{{ $task->created_at }}</td>
+      <td>{{ $task->updated_at }}</td>
+    </tr>
+  </table>
 @endsection
