@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('css')
+  <link href="{{ asset('css/groupClass.css') }}" rel="stylesheet">
+@endsection
+@section('java-script')
+  <script src="{{ asset('js/groupClass.js') }}"></script>
+@endsection
+
 @section('header')
   <h1>{{ $group->id }} {{ $group->subject->name }} {{ $group->date_start }}</h1>
   <aside id="strzalka_l">
@@ -23,12 +30,14 @@
   </ul>
 
   <h2>Informacje</h2>
-  <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Widok w budowie</div>
-
   <table>
     <tr>
       <th>przedmiot</th>
-      <td>{{ $group->subject->name }}</td>
+      <td>
+        <a href="{{ route('przedmiot.show', $group->subject_id) }}">
+          {{ $group->subject->name }}
+        </a>
+      </td>
     </tr>
     <tr>
       <th>czas życia</th>
@@ -46,15 +55,24 @@
       <th>nauczyciel(e)</th>
       <td>
         @foreach($group->teachers as $groupTeacher)
-          {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }} {{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}<br />
+          <a href="{{ route('nauczyciel.show', $groupTeacher->teacher_id) }}">
+            {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
+          </a>
+          {{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}<br />
         @endforeach
       </td>
     </tr>
     <tr>
       <th>klasy</th>
-      <td>
+      <td class="grades">
+        <aside><a href="{{ url('grupa_klasy/addGrade/'. $group->id) }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></aside>
         @foreach($group->grades as $groupClass)
-          {{ $groupClass->class_id }}<br />
+          <a href="{{ route('klasa.show', $groupClass->grade_id) }}">{{ $groupClass->grade->year_of_beginning }}-{{ $groupClass->grade->year_of_graduation }}{{ $groupClass->grade->symbol }}</a>
+          <form action="{{ route('grupa_klasy.destroy', $groupClass->id) }}" method="post" id="delete-form-{{$groupClass->id}}">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+          </form><br />
         @endforeach
       </td>
     </tr>

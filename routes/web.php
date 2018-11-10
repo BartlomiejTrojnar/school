@@ -55,7 +55,9 @@ Route::resource('/grupa', 'GroupController');
 Route::get('/grupa/sortuj/{column}', 'GroupController@orderBy');
 Route::get('/grupa/{id}/{view}', 'GroupController@show');
 
+Route::get('/grupa_klasy/addGrade/{id}', 'GroupClassController@addGrade');
 Route::resource('/grupa_klasy', 'GroupClassController');
+
 Route::resource('/grupa_nauczyciele', 'GroupTeacherController');
 Route::get('/grupa_nauczyciele/sortuj/{column}', 'GroupTeacherController@orderBy');
 Route::resource('/grupa_uczniowie', 'GroupStudentController');

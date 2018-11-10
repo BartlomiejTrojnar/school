@@ -11,6 +11,6 @@ class GroupClass extends Model
 
     public function grade()
     {
-        return $this->belongsTo(Grades::class);
+        return $this->belongsTo(Grade::class);
     }
 }

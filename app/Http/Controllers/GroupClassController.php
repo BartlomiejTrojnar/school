@@ -23,6 +23,13 @@ class GroupClassController extends Controller
              ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>0]);
     }
 
+    public function addGrade($id, GradeRepository $gradeRepo)
+    {
+        $grades = $gradeRepo->getAll();
+        return view('groupClass.addGrade', ["group_id"=>$id])
+             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>0]);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -32,7 +39,7 @@ class GroupClassController extends Controller
 
         $groupClass = new GroupClass;
         $groupClass->group_id = $request->group_id;
-        $groupClass->class_id = $request->grade_id;
+        $groupClass->grade_id = $request->grade_id;
         $groupClass->save();
 
         return redirect($request->history_view);
@@ -62,7 +69,7 @@ class GroupClassController extends Controller
         ]);
 
         $grupa_klasy->group_id = $request->group_id;
-        $grupa_klasy->class_id = $request->grade_id;
+        $grupa_klasy->grade_id = $request->grade_id;
         $grupa_klasy->save();
 
         return redirect($request->history_view);
