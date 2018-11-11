@@ -107,8 +107,8 @@ tr.submit a:hover, tr.create a:hover { background: #227; }
 
 
 /* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
-img.create, img.edit, img.destroy { width: 16px; }
-
+img.create, img.edit, img.destroy, img.btn { width: 16px; }
+img.btn { background: transparent; margin: 0 3px; }
 
 .label, sub, sup { vertical-align:baseline; }
 figure { margin:0; }

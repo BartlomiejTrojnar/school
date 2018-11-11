@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('css')
-  <link href="{{ asset('css/groupClass.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/group.css') }}" rel="stylesheet">
 @endsection
 @section('java-script')
-  <script src="{{ asset('js/groupClass.js') }}"></script>
+  <script src="{{ asset('js/group.js') }}"></script>
 @endsection
 
 @section('header')
@@ -45,7 +45,11 @@
     </tr>
     <tr>
       <th>godziny</th>
-      <td>{{ $group->hours }}</td>
+      <td data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
+        <img id="hourSubtract" class="btn btn-success" src="{{ asset('css/minus.png') }}" data-group_id="{{$group->id}}" />
+        <span>{{ $group->hours }}</span>
+        <img id="hourAdd" class="btn btn-success" src="{{ asset('css/plus.png') }}" data-group_id="{{$group->id}}" />
+      </td>
     </tr>
     <tr>
       <th>uwagi</th>

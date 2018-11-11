@@ -53,6 +53,8 @@ Route::get('/rozszerzenie/sortuj/{column}', 'EnlargementController@orderBy');
 
 Route::resource('/grupa', 'GroupController');
 Route::get('/grupa/sortuj/{column}', 'GroupController@orderBy');
+Route::get('/grupa/hourSubtract/{id}', 'GroupController@hourSubtract');
+Route::get('/grupa/hourAdd/{id}', 'GroupController@hourAdd');
 Route::get('/grupa/{id}/{view}', 'GroupController@show');
 
 Route::get('/grupa_klasy/addGrade/{id}', 'GroupClassController@addGrade');

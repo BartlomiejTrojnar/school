@@ -132,6 +132,21 @@ class GroupController extends Controller
         return redirect($request->history_view);
     }
 
+    public function hourSubtract($id, GroupRepository $groupRepo)
+    {
+        $group = $groupRepo -> find($id);
+        $group->hours = $group->hours-1;
+        $group->save();
+        return $group->hours;
+    }
+    public function hourAdd($id, GroupRepository $groupRepo)
+    {
+        $group = $groupRepo -> find($id);
+        $group->hours = $group->hours+1;
+        $group->save();
+        return $group->hours;
+    }
+
     public function destroy(Group $grupa)
     {
         $grupa->delete();
