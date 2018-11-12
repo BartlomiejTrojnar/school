@@ -57,12 +57,18 @@
     </tr>
     <tr>
       <th>nauczyciel(e)</th>
-      <td>
+      <td class="teachers">
+        <aside><a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></aside>
         @foreach($group->teachers as $groupTeacher)
-          <a href="{{ route('nauczyciel.show', $groupTeacher->teacher_id) }}">
-            {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
-          </a>
-          {{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}<br />
+          <div data-groupTeacher_id="{{$groupTeacher->id}}">
+            <a href="{{ route('nauczyciel.show', $groupTeacher->teacher_id) }}">
+              {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
+            </a>
+            {{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}
+            <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
+              <img class="destroy" src="{{ asset('css/minus.png') }}" />
+            </button>
+          </div>
         @endforeach
       </td>
     </tr>

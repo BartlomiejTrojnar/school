@@ -1,4 +1,4 @@
-<select name="teacher_id">
+<select name="teacher_id" class="form-control">
   <option value="0">- wybierz nauczyciela -</option>
   @foreach($teachers as $teacher)
     @if($teacher->id == $selectedTeacher)

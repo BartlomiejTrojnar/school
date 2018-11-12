@@ -1,5 +1,5 @@
 // ---------------------------------- OPERACJE DOTYCZĄCE GRUPY ---------------------------------- //
-// -------------------- (C) mgr inż. Bartłomiej Trojnar; (II) wrzesień 2017 -------------------- //
+// -------------------- (C) mgr inż. Bartłomiej Trojnar; (II) listopad 2018 --------------------- //
 
 // ------------------------------- ZMIANA LICZBY GODZIN W GRUPIE -------------------------------- //
 // ------------------------------ przypisanie operacji do kliknięć ------------------------------ //
@@ -45,7 +45,34 @@ function hourAdd(grupa, url) {
 		},
 		error: function(blad) { alert("Błąd: "+blad); }
 	});
+	return false;
+}
 
+// ------------------------------- USUWANIE NAUCZYCIELA Z GRUPY -------------------------------- //
+// ------------------------------ przypisanie operacji do kliknięć ------------------------------ //
+function teacherRemoveClick()
+{
+    $('.teacherRemove').bind('click', function(){
+        groupTeacher_id = $(this).attr('data-groupTeacher_id');
+        teacherRemove(groupTeacher_id);
+        return false;
+    });
+}
+
+function teacherRemove(groupTeacher_id=0)
+{
+    url = $('button[data-groupTeacher_id=' +groupTeacher_id+ ']').attr('data-url');
+    alert(url+' DOKOŃCZYĆ funkcję teacher Remove');
+    return;
+    $.ajax({
+        type: "DELETE",
+        url: url,
+        data: { groupTeacher_id: groupTeacher_id },
+        success: function(result) {
+			$('div[data-groupTeacher_id=' +groupTeacher_id+ ']').remove();
+			return;
+		},
+	});
 	return false;
 }
 
@@ -53,4 +80,5 @@ function hourAdd(grupa, url) {
 $(document).ready(function()
 {
     hourModificationClick();
+    teacherRemoveClick();
 });

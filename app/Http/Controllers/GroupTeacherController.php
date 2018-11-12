@@ -45,14 +45,28 @@ class GroupTeacherController extends Controller
              ->nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "selectedTeacher"=>0]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, TeacherRepository $teacherRepo, GroupRepository $groupRepo)
     {
         $this->validate($request, [
           'group_id' => 'required',
           'teacher_id' => 'required',
-          'date_start' => 'required|date',
-          'date_end' => 'required|date',
         ]);
+        $group = $groupRepo -> find($request->group_id);
+        if( $request->date_start > $request->date_end ||
+            $request->date_start == '' ||
+            $request->date_end   == '' ||
+            $request->date_start < $group->date_start ||
+            $request->date_end > $group->date_end )
+        {
+          $teachers = $teacherRepo->getAll();
+          $date_start[0] = $request->date_start;
+          $date_start[1] = $group->date_start;
+          $date_start[2] = date('Y-m-d');
+          $date_end[0] = $request->date_end;
+          $date_end[1] = $group->date_end;
+          return view('groupTeacher.addTeacher', ["group_id"=>$request->group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>$request->history_view])
+             ->nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "selectedTeacher"=>$request->teacher_id ]);
+        }
 
         $groupTeacher = new GroupTeacher;
         $groupTeacher->group_id = $request->group_id;
@@ -62,6 +76,19 @@ class GroupTeacherController extends Controller
         $groupTeacher->save();
 
         return redirect($request->history_view);
+    }
+
+    public function addTeacher($group_id, TeacherRepository $teacherRepo, GroupRepository $groupRepo)
+    {
+        $teachers = $teacherRepo->getAll();
+        $group = $groupRepo -> find($group_id);
+        $date_start[0] = $group->date_start;
+        $date_start[1] = $group->date_start;
+        $date_start[2] = date('Y-m-d');
+        $date_end[0] = $group->date_end;
+        $date_end[1] = $group->date_end;
+        return view('groupTeacher.addTeacher', ["group_id"=>$group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>''])
+             ->nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "selectedTeacher"=>0]);
     }
 
     public function show(GroupTeacher $grupa_nauczyciele, GroupTeacherRepository $groupTeacherRepo)
