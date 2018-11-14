@@ -15,14 +15,52 @@
 @endsection
 
 @section('main-content')
-    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showInfo') }}">informacje</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showExamDescriptions') }}">opisy egzaminów</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showDeclarations') }}">deklaracje</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showTerms') }}">terminy</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ route('sesja.index') }}">powrót</a></li>
-    </ul>
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showInfo') }}">informacje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showExamDescriptions') }}">opisy egzaminów</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showDeclarations') }}">deklaracje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('sesja/'.$session->id.'/showTerms') }}">terminy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('sesja.index') }}">powrót</a></li>
+  </ul>
 
-    <h2>Terminy egzaminów</h2>
-    <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Widok w budowie</div>
+  <h2>Terminy egzaminów</h2>
+  <table id="terms">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th><a href="{{ url('/termin/sortuj/exam_description_id') }}">opis egzaminu</a></th>
+        <th><a href="{{ url('/termin/sortuj/classroom_id') }}">sala</a></th>
+        <th><a href="{{ url('/termin/sortuj/date_start') }}">data rozpoczęcia</a></th>
+        <th><a href="{{ url('/termin/sortuj/date_end') }}">data zakończenia</a></th>
+        <th>wprowadzono</th>
+        <th>aktualizacja</th>
+        <th colspan="2">+/-</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    @foreach($terms as $term)
+      <tr>
+        <td><a href="{{ route('termin.show', $term->id) }}">{{ $term->id }}</a></td>
+        <td>{{ $term->exam_description_id }}</td>
+        <td>{{ $term->classroom_id }}</td>
+        <td>{{ $term->date_start }}</td>
+        <td>{{ $term->date_end }}</td>
+        <td>{{ $term->created_at }}</td>
+        <td>{{ $term->updated_at }}</td>
+        <td><a href="{{ route('termin.edit', $term->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
+        <td>
+          <form action="{{ route('termin.destroy', $term->id) }}" method="post" id="delete-form-{{$term->id}}">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+          </form>
+        </td>
+      </tr>
+    @endforeach
+      <tr class="create">
+        <td colspan="9"><a href="{{ route('termin.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
+      </tr>
+    </tbody>
+  </table>
 @endsection

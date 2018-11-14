@@ -26,6 +26,7 @@
   <h2>Opisy egzaminów</h2>
   <table>
     <tr>
+      <th>id</th>
       <th>przedmiot</th>
       <th>typ egzaminu</th>
       <th>poziom</th>
@@ -36,27 +37,29 @@
     </tr>
 
     @foreach($examDescriptions as $examDescription)
-    <tr>
-      <td><a href="{{ route('opis_egzaminu.show', $examDescriptions->id) }}">
-        {{ $command->student_id }}
-      </a></td>
-      <td><a href="{{ route('opis_egzaminu.edit', $examDescriptions->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
-      <td>
-        <form action="{{ route('opis_egzaminu.destroy', $examDescriptions->id) }}" method="post" id="delete-form-{{$examDescriptions->id}}">
-          {{ csrf_field() }}
-          {{ method_field('DELETE') }}
-          <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
-        </form>
+      <tr>
+        <td><a href="{{ route('opis_egzaminu.show', $examDescription->id) }}">{{ $examDescription->id }}</a></td>
+        <td>{{ $examDescription->subject->name }}</td>
+        <td>{{ $examDescription->type }}</td>
+        <td>{{ $examDescription->level }}</td>
+        <td>{{ $examDescription->max_points }}</td>
+        <td>{{ $examDescription->created_at }}</td>
+        <td>{{ $examDescription->updated_at }}</td>
+        <td><a href="{{ route('opis_egzaminu.edit', $examDescription->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
+        <td>
+          <form action="{{ route('opis_egzaminu.destroy', $examDescription->id) }}" method="post" id="delete-form-{{$examDescription->id}}">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+          </form>
+        </td>
       </td>
-    </tr>
     @endforeach
 
-    <tr class="create"><td colspan="7">
+    <tr class="create"><td colspan="9">
       <a href="{{ route('opis_egzaminu.create') }}">
         <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj opis egzaminu
       </a>
     </td></tr>
   </table>
-
-    <p><a href="{{ route('sesja.index') }}">powrót</a></p>
 @endsection
