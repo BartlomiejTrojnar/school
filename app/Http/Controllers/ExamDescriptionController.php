@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\ExamDescription;
-use App\Repositories\ExamDescriptionRepository;
-use App\Repositories\SessionRepository;
-use App\Repositories\SubjectRepository;
+//use App\Models\ExamDescription;
+//use App\Repositories\ExamDescriptionRepository;
+//use App\Repositories\SessionRepository;
+//use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
 
 class ExamDescriptionController extends Controller

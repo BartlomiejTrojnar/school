@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\CertificatePattern;
-use App\Repositories\CertificatePatternRepository;
+//use App\Models\CertificatePattern;
+//use App\Repositories\CertificatePatternRepository;
 use Illuminate\Http\Request;
 
 class CertificatePatternController extends Controller

@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Term;
-use App\Repositories\TermRepository;
-use App\Repositories\ExamDescriptionRepository;
-use App\Repositories\ClassroomRepository;
+//use App\Models\Term;
+//use App\Repositories\TermRepository;
+//use App\Repositories\ExamDescriptionRepository;
+//use App\Repositories\ClassroomRepository;
 use Illuminate\Http\Request;
 
 class TermController extends Controller

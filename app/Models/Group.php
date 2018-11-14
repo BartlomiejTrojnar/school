@@ -4,6 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
+    public function __construct() {
+        if(empty(session()->get('GroupOrderBy[0]')))    session()->put('GroupOrderBy[0]', 'id');
+        if(empty(session()->get('GroupOrderBy[1]')))    session()->put('GroupOrderBy[1]', 'asc');
+        if(empty(session()->get('GroupOrderBy[2]')))    session()->put('GroupOrderBy[2]', 'id');
+        if(empty(session()->get('GroupOrderBy[3]')))    session()->put('GroupOrderBy[3]', 'asc');
+        if(empty(session()->get('GroupOrderBy[4]')))    session()->put('GroupOrderBy[4]', 'id');
+        if(empty(session()->get('GroupOrderBy[5]')))    session()->put('GroupOrderBy[5]', 'asc');
+    }
+
     public function subject()
     {
         return $this->belongsTo(Subject::class);

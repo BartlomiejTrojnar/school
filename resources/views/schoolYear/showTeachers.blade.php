@@ -68,7 +68,7 @@
           @if($teacher->first_year_id) {{ substr($teacher->first_year->date_start, 0, 4) }}@endif -
           @if($teacher->last_year_id) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif
         </td>
-        <td><dfn>do zrobienia</dfn></td>
+        <td><a href="{{ route('nauczyciel.show', $teacher->id) }}">{{ count($teacher->subjects) }}</a></td>
         <td><dfn>do zrobienia</dfn></td>
         <td>{{ $teacher->updated_at }}</td>
         <td><a href="{{ route('nauczyciel.edit', $teacher->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>

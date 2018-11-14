@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\TaughtSubject;
-use App\Repositories\TaughtSubjectRepository;
-use App\Repositories\TeacherRepository;
-use App\Repositories\SubjectRepository;
+//use App\Models\TaughtSubject;
+//use App\Repositories\TaughtSubjectRepository;
+//use App\Repositories\TeacherRepository;
+//use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
 
 class TaughtSubjectController extends Controller

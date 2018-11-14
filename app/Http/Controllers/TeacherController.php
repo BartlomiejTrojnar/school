@@ -5,6 +5,8 @@ use App\Repositories\ClassroomRepository;
 use App\Repositories\SchoolYearRepository;
 use App\Repositories\TeacherRepository;
 use App\Models\TaughtSubject;
+
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
@@ -34,6 +36,7 @@ class TeacherController extends Controller
           session()->put('TeacherOrderBy[3]', session()->get('TeacherOrderBy[1]'));
           session()->put('TeacherOrderBy[1]', 'asc');
         }
+
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 

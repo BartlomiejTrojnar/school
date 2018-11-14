@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Group;
+//use App\Models\Group;
 use App\Repositories\GroupRepository;
-use App\Repositories\SubjectRepository;
+//use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -32,7 +32,7 @@ class GroupController extends Controller
           session()->put('GroupOrderBy[3]', session()->get('GroupOrderBy[1]'));
           session()->put('GroupOrderBy[1]', 'asc');
         }
-        return redirect( route('grupa.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create(SubjectRepository $subjectRepo)

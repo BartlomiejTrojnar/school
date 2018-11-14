@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Lesson;
-use App\Repositories\LessonRepository;
-use App\Repositories\GroupRepository;
-use App\Repositories\TeacherRepository;
+//use App\Models\Lesson;
+//use App\Repositories\LessonRepository;
+//use App\Repositories\GroupRepository;
+//use App\Repositories\TeacherRepository;
 use Illuminate\Http\Request;
 
 class LessonController extends Controller

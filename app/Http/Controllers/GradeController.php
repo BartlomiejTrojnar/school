@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Grade;
-use App\Models\GroupClass;
-use App\Models\StudentClass;
+//use App\Models\GroupClass;
+//use App\Models\StudentClass;
 use App\Repositories\GradeRepository;
 use App\Repositories\SchoolRepository;
-use App\Repositories\GroupClassRepository;
+//use App\Repositories\GroupClassRepository;
 use Illuminate\Http\Request;
 
 class GradeController extends Controller
@@ -77,7 +77,8 @@ class GradeController extends Controller
                exit;
              break;
              case 'showStudents':
-               $studentClasses = StudentClass::all() -> where('grade_id', $id);
+               //$studentClasses = StudentClass::all() -> where('grade_id', $id);
+               $studentClasses = $gradeRepo -> find($id) -> students;
                return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
                exit;
              break;

@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Exam;
-use App\Repositories\ExamRepository;
-use App\Repositories\DeclarationRepository;
-use App\Repositories\ExamDescriptionRepository;
-use App\Repositories\TermRepository;
+//use App\Models\Exam;
+//use App\Repositories\ExamRepository;
+//use App\Repositories\DeclarationRepository;
+//use App\Repositories\ExamDescriptionRepository;
+//use App\Repositories\TermRepository;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller

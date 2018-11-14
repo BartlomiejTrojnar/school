@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\StudentClass;
-use App\Models\SchoolYear;
+//use App\Models\SchoolYear;
 use App\Repositories\StudentClassRepository;
 use App\Repositories\GradeRepository;
 use App\Repositories\StudentRepository;

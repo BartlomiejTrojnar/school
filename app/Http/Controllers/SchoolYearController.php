@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\SchoolYear;
 use App\Models\Grade;
+use App\Models\Group;
 use App\Models\Teacher;
 use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
@@ -74,12 +75,13 @@ class SchoolYearController extends Controller
              exit;
           break;
           case 'showGroups':
-              $groups = Group::where('first_year_id', '>', $id);
-              return view('schoolYear.showGroups', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              $groups = $this->getGroups($schoolYear);
+              return view('schoolYear.showGroups', ["schoolYear"=>$schoolYear, "groups"=>$groups, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           case 'showTextbooks':
-              return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              $textbookChoices = $schoolYearRepo -> find($id) -> textbookChoices;
+              return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "textbookChoices"=>$textbookChoices, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           default:
@@ -91,18 +93,26 @@ class SchoolYearController extends Controller
 
     private function getTeachers($id)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TeacherOrderBy[$i]");
         $teachers = Teacher :: where('first_year_id', '<=', $id)
-                            -> where(function($q) use ($id) {
-                                $q -> where('last_year_id', '>', $id)
-                                   -> orwhere('last_year_id', NULL);
-                            })
-                            -> orderBy($orderBy[0], $orderBy[1])
-                            -> orderBy($orderBy[2], $orderBy[3])
-                            -> orderBy($orderBy[4], $orderBy[5])
-                            -> paginate(10);
+            -> where(function($q) use ($id) {
+                $q -> where('last_year_id', '>', $id) -> orwhere('last_year_id', NULL);
+            })
+            -> orderBy(session()->get("TeacherOrderBy[0]"), session()->get("TeacherOrderBy[1]"))
+            -> orderBy(session()->get("TeacherOrderBy[2]"), session()->get("TeacherOrderBy[3]"))
+            -> orderBy(session()->get("TeacherOrderBy[4]"), session()->get("TeacherOrderBy[5]"))
+            -> paginate(15);
         return $teachers;
+    }
+
+    private function getGroups($schoolYear)
+    {
+        $groups = Group :: where('date_start', '>=', $schoolYear->date_start)
+            -> where('date_end', '<=', $schoolYear->date_end)
+            -> orderBy(session()->get("GroupOrderBy[0]"), session()->get("GroupOrderBy[1]"))
+            -> orderBy(session()->get("GroupOrderBy[2]"), session()->get("GroupOrderBy[3]"))
+            -> orderBy(session()->get("GroupOrderBy[4]"), session()->get("GroupOrderBy[5]"))
+            -> paginate(15);
+        return $groups;
     }
 
 
