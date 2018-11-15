@@ -28,13 +28,6 @@
     <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">powrót</a></li>
   </ul>
 
-    <p>{{ $student->family_name }}</p>
-    <p>{{ $student->sex }}</p>
-    <p>{{ $student->pesel }}</p>
-    <p>{{ $student->place_of_birth }}</p>
-    <p>{{ $student->created_at }}</p>
-    <p>{{ $student->updated_at }}</p>
-
   <h2>klasy ucznia</h2>
   <table>
     <tr>
@@ -49,7 +42,8 @@
     @foreach($studentClasses as $sc)
     <tr>
       <td><a href="{{ route('klasa.show', $sc->grade_id) }}">
-        {{ $sc->grade->year_of_beginning }}-{{ $sc->grade->year_of_graduation }}{{ $sc->grade->symbol }}
+        {{ $sc->grade->year_of_beginning }}-{{ $sc->grade->year_of_graduation }} {{ $sc->grade->symbol }}
+        ({{ substr($sc->date_end, 0, 4) - $sc->grade->year_of_graduation }}{{ $sc->grade->symbol }})
       </a></td>
       @if($sc->confirmation_date_start==1) <td>{{ $sc->date_start }}</td>
       @else <td class="not_confirmation">{{ $sc->date_start }}</td>
@@ -57,8 +51,8 @@
       @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
       @else <td class="not_confirmation">{{ $sc->date_end }}</td>
       @endif
-      @if($sc->confirmation_numer==1) <td>{{ $sc->numer }}</td>
-      @else <td class="not_confirmation">{{ $sc->numer }}</td>
+      @if($sc->confirmation_numer==1) <td class="c">{{ $sc->number }}</td>
+      @else <td class="not_confirmation c">{{ $sc->number }}</td>
       @endif
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>

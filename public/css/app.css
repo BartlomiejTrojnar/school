@@ -131,6 +131,8 @@ img.down {
     width: 16px;
 }
 
+/* -------------------------------------- INNE --------------------------------------- */
+.c { text-align: center; }
 
 .label, sub, sup { vertical-align:baseline; }
 figure { margin:0; }

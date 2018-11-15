@@ -47,7 +47,7 @@ class StudentClassController extends Controller
         $studentClass->confirmation_comments   = $request->confirmation_comments   == 'on' ? true : false;
         $studentClass->save();
 
-        return redirect(route('klasa.show', $studentClass->grade_id));
+        return redirect( $request->history_view );
     }
 
     public function edit($id, StudentClassRepository $scRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo, SchoolYearRepository $syRepo)

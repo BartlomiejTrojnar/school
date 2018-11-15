@@ -67,12 +67,57 @@ class StudentController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Student $uczen, StudentRepository $studentRepo)
+    public function show($id, $view='', StudentRepository $studentRepo)
     {
-        $studentClasses = StudentClass::all()->where('student_id', $uczen->id);
-        $previous = $studentRepo->previousRecordId($uczen->id);
-        $next = $studentRepo->nextRecordId($uczen->id);
-        return view('student.show', ["student"=>$uczen, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('studentView')))  session()->put('studentView', 'showInfo');
+        if($view)  session()->put('studentView', $view);
+        $student = $studentRepo -> find($id);
+        $previous = $studentRepo -> PreviousRecordId($id);
+        $next = $studentRepo -> NextRecordId($id);
+
+        switch(session()->get('studentView')) {
+             case 'showInfo':
+               return view('student.showInfo', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showClasses':
+               $studentClasses = $studentRepo -> find($id) -> grades;
+               return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showEnlargements':
+               return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showGroups':
+               return view('student.showGroups', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showRatings':
+               return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showDeclarations':
+               return view('student.showDeclarations', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showExams':
+               return view('student.showExams', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showTasks':
+               return view('student.showTasks', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showLessonPlan':
+               return view('student.showLessonPlan', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
 
     public function edit(Student $uczen)
