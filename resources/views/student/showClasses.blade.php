@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>{{ $student->first_name }} {{ $student->second_name }} {{ $student->last_name }}</h1>
   <aside id="strzalka_l">
@@ -14,6 +15,19 @@
 @endsection
 
 @section('main-content')
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showInfo') }}">informacje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showClasses') }}">klasy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showEnlargements') }}">rozszerzenia</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showGroups') }}">grupy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showLessonPlan') }}">plan lekcji</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showRatings') }}">oceny</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showTasks') }}">zadania</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showDeclarations') }}">deklaracje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showExams') }}">egzaminy</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">powrót</a></li>
+  </ul>
+
     <p>{{ $student->family_name }}</p>
     <p>{{ $student->sex }}</p>
     <p>{{ $student->pesel }}</p>
@@ -66,6 +80,4 @@
       </a>
     </td></tr>
   </table>
-
-    <p><a href="{{ route('uczen.index') }}">powrót</a></p>
 @endsection
