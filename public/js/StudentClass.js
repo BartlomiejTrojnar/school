@@ -29,8 +29,19 @@ function klikanieNumeru() {
     });
 }
 
+function gradeChanged() {
+    $('select[name="grade_id"]').bind('change', function(){
+        getGradeDates($(this).val());
+        return false;
+    });
+}
+function getGradeDates(grade_id) {
+    alert(grade_id);
+}
+
 // ----------------------------------- ZAŁADOWANIE DOKUMENTU ------------------------------------ //
 $(document).ready(function() {
-     klikanieDat();
-     klikanieNumeru();
+    klikanieDat();
+    klikanieNumeru();
+    gradeChanged();
 });
