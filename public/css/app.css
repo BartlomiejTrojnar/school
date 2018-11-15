@@ -108,6 +108,28 @@ tr.submit a:hover, tr.create a:hover { background: #227; }
 
 /* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
 img.create, img.edit, img.destroy { width: 16px; }
+div.upAndDown {
+    display: inline-block;
+    width: 18px;
+    vertical-align: middle;
+}
+div.upAndDown button {
+    display: flex;
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+img.up {
+    float: left;
+    width: 16px;
+    margin-bottom: 4px;
+}
+img.down {
+    margin-top: 4px;
+    float: left;
+    clear: both;
+    width: 16px;
+}
 
 
 .label, sub, sup { vertical-align:baseline; }

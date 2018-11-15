@@ -1,4 +1,5 @@
 @section('java-script')
+
 @extends('layouts.app')
    <script language="javascript" type="text/javascript" src="{{ asset('js/StudentClass.js') }}"></script>
 @endsection
@@ -27,23 +28,29 @@
         <th><label for="date_start">data początkowa</label></th>
         <td><input id="date_start" type="date" name="date_start" size="8" maxlength="10" /></td>
         <td><input type="checkbox" name="confirmation_date_start" /></td>
-        <td><a id="date_start1" href="">{{ session()->get('dateSession') }}</a></td>
-        <td><a id="date_start2" href="">{{ $proposedDates['dateOfStartSchoolYear'] }}</a></td>
+        <td><button class="btn btn-primary studentClassDateStart">{{ session()->get('dateSession') }}</button></td>
+        <td><button class="btn btn-primary studentClassDateStart">{{ $proposedDates['dateOfStartSchoolYear'] }}</button></td>
       </tr>
       <tr>
         <th><label for="date_end">data końcowa</label></th>
         <td><input type="date" name="date_end" size="8" maxlength="10" id="date_end" /></td>
         <td><input type="checkbox" name="confirmation_date_end" /></td>
-        <td><a id="date_end1" href="">{{ date('Y-m-d', strtotime('-1 day', strtotime(session()->get('dateSession')))) }}</a></td>
-        <td><a id="date_end2" href="">{{ $proposedDates['dateOfEndSchoolYear'] }}</a></td>
-        <td><a id="date_end3" href="">{{ $proposedDates['dateOfGraduationSchoolYear'] }}</a></td>
-        <td><a id="date_end4" href="">{{ $proposedDates['dateOfGraduationOfTheLastGrade'] }}</a></td>
+        <td><button class="btn btn-primary studentClassDateEnd">{{ date('Y-m-d', strtotime('-1 day', strtotime(session()->get('dateSession')))) }}</button></td>
+        <td><button class="btn btn-primary studentClassDateEnd">{{ $proposedDates['dateOfEndSchoolYear'] }}</button></td>
+        <td><button class="btn btn-primary studentClassDateEnd">{{ $proposedDates['dateOfGraduationSchoolYear'] }}</button></td>
+        <td><button class="btn btn-primary studentClassDateEnd">{{ $proposedDates['dateOfGraduationOfTheLastGrade'] }}</button></td>
       </tr>
       <tr>
-        <th><label for="numer">numer</label></th>
-        <td><input type="text" name="number" size="2" maxlength="2" id="number" /></td>
-        <td><input type="checkbox" name="confirmation_numer" /></td>
-        <td><a id="proposedNumber" href="">{{ $proposedNumber }}</a></td>
+        <th><label for="number">numer</label></th>
+        <td>
+            <input type="text" name="number" size="2" maxlength="2" id="number" />
+            <div class="upAndDown">
+                <button class="btn btn-primary numerIncrease"><img class="up" src="{{ asset('css/up.png') }}" alt="up" /></button>
+                <button class="btn btn-primary numerDecrease"><img class="down" src="{{ asset('css/down.png') }}" alt="down" /></button>
+            </div>
+        </td>
+        <td><input type="checkbox" name="confirmation_number" /></td>
+        <td><button class="btn btn-primary studentClassProposedNumber">{{ $proposedNumber }}</button></td>
       </tr>
       <tr>
         <th><label for="comments">uwagi</label></th>
@@ -52,8 +59,8 @@
       </tr>
       <tr class="submit"><td colspan="3">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-          <button type="submit">dodaj</button>
-          <a href="{{ route('klasa.index') }}">anuluj</a>
+          <button type="submit" class="btn btn-success">dodaj</button>
+          <a href="{{ $_SERVER['HTTP_REFERER'] }}" class="btn btn-success">anuluj</a>
       </tr>
     </table>
   </form>
