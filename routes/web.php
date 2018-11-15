@@ -26,6 +26,7 @@ Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 // -------------------------------------------------------------------------------------------------------- //
 Route::resource('/klasa', 'GradeController');
+Route::get('/klasa/getDates/{id}', 'GradeController@getDates');
 Route::get('/klasa/{id}/{view}', 'GradeController@show');
 Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
 

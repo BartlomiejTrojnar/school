@@ -156,4 +156,10 @@ class GradeController extends Controller
         $klasa->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+
+    public function getDates()
+    {
+        return 167;
+         exit;
+    }
 }

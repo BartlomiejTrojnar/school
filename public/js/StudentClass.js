@@ -36,7 +36,17 @@ function gradeChanged() {
     });
 }
 function getGradeDates(grade_id) {
-    alert(grade_id);
+    $.ajax({
+        type: "GET",
+        url: "/klasa/getDates",
+        data: { grade_id: grade_id },
+        success: function(result) {
+			alert(result);
+			return;
+		},
+        error: function(result) { alert(result) },
+	});
+	return false;
 }
 
 // ----------------------------------- ZAŁADOWANIE DOKUMENTU ------------------------------------ //
