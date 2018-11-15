@@ -43,7 +43,7 @@
     <tr>
       <td><a href="{{ route('klasa.show', $sc->grade_id) }}">
         {{ $sc->grade->year_of_beginning }}-{{ $sc->grade->year_of_graduation }} {{ $sc->grade->symbol }}
-        ({{ substr($sc->date_end, 0, 4) - $sc->grade->year_of_graduation }}{{ $sc->grade->symbol }})
+        ({{ substr($sc->date_end, 0, 4) - $sc->grade->year_of_beginning }}{{ $sc->grade->symbol }})
       </a></td>
       @if($sc->confirmation_date_start==1) <td>{{ $sc->date_start }}</td>
       @else <td class="not_confirmation">{{ $sc->date_start }}</td>

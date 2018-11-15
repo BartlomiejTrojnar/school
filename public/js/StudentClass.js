@@ -36,12 +36,22 @@ function gradeChanged() {
     });
 }
 function getGradeDates(grade_id) {
+    $('#date_start_row .proposedCell').html('');
+    $('#date_end_row .proposedCell').html('');
     $.ajax({
         type: "GET",
-        url: "/klasa/getDates",
+        url: "http://localhost/szkola/public/klasa/getDates/"+grade_id,
         data: { grade_id: grade_id },
         success: function(result) {
-			alert(result);
+			$.each(result, function(index, value) {
+               if(index % 2 == 0) {
+                   $('#date_start_row .proposedCell').append('<button class="btn btn-success studentClassDateStart">'+value+'</button>');
+               }
+               else {
+                   $('#date_end_row .proposedCell').append('<button class="btn btn-success studentClassDateEnd">'+value+'</button>');
+               }
+               klikanieDat();
+            });
 			return;
 		},
         error: function(result) { alert(result) },

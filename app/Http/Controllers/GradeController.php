@@ -157,9 +157,13 @@ class GradeController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function getDates()
+    public function getDates($id)
     {
-        return 167;
-         exit;
+        $grade = Grade::find($id);
+        for($i = $grade->year_of_beginning; $i<$grade->year_of_graduation; $i++) {
+            $daty[] = $i."-09-01";
+            $daty[] = ($i+1)."-08-31";
+        }
+        return $daty;
     }
 }
