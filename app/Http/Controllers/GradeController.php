@@ -62,7 +62,6 @@ class GradeController extends Controller
         return redirect($request->history_view);
     }
 
-
     public function show($id, $view='', GradeRepository $gradeRepo)
     {
         if(empty(session()->get('gradeView')))  session()->put('gradeView', 'showInfo');
@@ -77,7 +76,6 @@ class GradeController extends Controller
                exit;
              break;
              case 'showStudents':
-               //$studentClasses = StudentClass::all() -> where('grade_id', $id);
                $studentClasses = $gradeRepo -> find($id) -> students;
                return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
                exit;

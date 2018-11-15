@@ -81,7 +81,7 @@ class StudentController extends Controller
                exit;
              break;
              case 'showClasses':
-               $studentClasses = StudentClass::all() -> where('grade_id', $id);
+               $studentClasses = $studentRepo -> find($id) -> grades;
                return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
                exit;
              break;

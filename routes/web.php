@@ -20,6 +20,7 @@ Route::resource('/przedmiot', 'SubjectController');
 Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
 
 Route::resource('/uczen', 'StudentController');
+Route::get('/uczen/{id}/{view}', 'StudentController@show');
 Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
