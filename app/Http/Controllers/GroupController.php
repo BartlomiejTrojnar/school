@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Repositories\GroupRepository;
 use App\Repositories\SubjectRepository;
-use Session;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -70,23 +69,20 @@ class GroupController extends Controller
 
     public function show($id, $view='', GroupRepository $groupRepo, Group $group)
     {
-        if(empty(Session::get('groupView')))  Session::put('groupView', 'showInfo');
-        if($view)  Session::put('groupView', $view);
+        if(empty( session()->get('groupView') ))  session()->put('groupView', 'showInfo');
+        if($view)  session()->put('groupView', $view);
         $group = $groupRepo -> find($id);
         $this->previous = $groupRepo -> PreviousRecordId($id);
         $this->next = $groupRepo -> NextRecordId($id);
 
-        switch(Session::get('groupView')) {
+        switch( session()->get('groupView') ) {
           case 'showInfo':
               return view('group.showInfo', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
           case 'showStudents':
-              return view('group.showStudents', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
-              //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
-              //$nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
-              //return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$previous, "next"=>$next,
-              //    "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
+              $groupStudents = $group -> students;
+              return view('group.showStudents', ["group"=>$group, "groupStudents"=>$groupStudents, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
           case 'showLessonPlan':

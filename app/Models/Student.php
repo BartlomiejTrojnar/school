@@ -6,7 +6,7 @@ class Student extends Model
 {
     public function grades()
     {
-        return $this->belongsToMany(Grade::class)->withTimestamps();
+        return $this->hasMany(StudentClass::class);
     }
 
     public function bookOfStudents()
