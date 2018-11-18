@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\School;
-use App\Repositories\SchoolRepository;
+//use App\Models\School;
+//use App\Repositories\SchoolRepository;
 use Illuminate\Http\Request;
 
 class SchoolController extends Controller

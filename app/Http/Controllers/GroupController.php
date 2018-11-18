@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Group;
 use App\Repositories\GroupRepository;
-//use App\Repositories\SubjectRepository;
+use App\Models\Group;
+
+use App\Repositories\SubjectRepository;
+use App\Models\LessonHour;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -86,7 +88,8 @@ class GroupController extends Controller
               exit;
           break;
           case 'showLessonPlan':
-              return view('group.showLessonPlan', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
+              return view('group.showLessonPlan', ["group"=>$group, "lessonHours"=>$lessonHours, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
           default:

@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Student;
-use App\Models\StudentClass;
 use App\Repositories\StudentRepository;
+use App\Models\LessonHour;
+
+//use App\Models\Student;
+//use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -76,47 +78,48 @@ class StudentController extends Controller
         $next = $studentRepo -> NextRecordId($id);
 
         switch(session()->get('studentView')) {
-             case 'showInfo':
-               return view('student.showInfo', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showClasses':
-               $studentClasses = $studentRepo -> find($id) -> grades;
-               return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showEnlargements':
-               return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showGroups':
-               return view('student.showGroups', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showRatings':
-               return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showDeclarations':
-               return view('student.showDeclarations', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showExams':
-               return view('student.showExams', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTasks':
-               return view('student.showTasks', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showLessonPlan':
-               return view('student.showLessonPlan', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
-               exit;
-             break;
+          case 'showInfo':
+              return view('student.showInfo', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showClasses':
+              $studentClasses = $studentRepo -> find($id) -> grades;
+              return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showEnlargements':
+              return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showGroups':
+              return view('student.showGroups', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showRatings':
+              return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showDeclarations':
+              return view('student.showDeclarations', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showExams':
+              return view('student.showExams', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTasks':
+              return view('student.showTasks', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showLessonPlan':
+              $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
+              return view('student.showLessonPlan', ["student"=>$student, "lessonHours"=>$lessonHours, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
         }
     }
 

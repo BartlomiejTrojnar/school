@@ -23,48 +23,24 @@
   </ul>
 
   <h2>Plan lekcji dla sali</h2>
-  <table id="lessonPlan">
-    <thead>
+  <table>
+    <tr>
+      <th>godziny</th>
+      <th>poniedziałek</th>
+      <th>wtorek</th>
+      <th>środa</th>
+      <th>czwartek</th>
+      <th>piątek</th>
+    </tr>
+    @foreach($lessonHours as $hour)
       <tr>
-        <th>id</th>
-        <th><a href="{{ url('/plan_lekcji/sortuj/group_id') }}">grupa</a></th>
-        <th><a href="{{ url('/plan_lekcji/sortuj/lesson_plan_id') }}">godzina</a></th>
-        <th><a href="{{ url('/plan_lekcji/sortuj/date_start') }}">data początkowa</a></th>
-        <th><a href="{{ url('/plan_lekcji/sortuj/date_end') }}">data końcowa</a></th>
-        <th>wprowadzono</th>
-        <th>aktualizacja</th>
-        <th colspan="2">+/-</th>
-      </tr>
-    </thead>
-    <tbody>
-
-    @foreach($lessonPlans as $lesson)
-      <tr>
-        <td><a href="{{ route('lekcja.show', $lesson->id) }}">{{ $lesson->id }}</a></td>
-        <td>
-          <a href="{{ route('grupa.show', $lesson->group_id) }}">
-            {{ $lesson->group_id }}
-          </a>
-        </td>
-        <td>{{ $lesson->lesson_hour_id }}</td>
-        <td>{{ $lesson->date_start }}</td>
-        <td>{{ $lesson->date_end }}</td>
-        <td>{{ $lesson->created_at }}</td>
-        <td>{{ $lesson->updated_at }}</td>
-        <td><a href="{{ route('plan_lekcji.edit', $lesson->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-        <td>
-          <form action="{{ route('plan_lekcji.destroy', $lesson->id) }}" method="post" id="delete-form-{{$lesson->id}}">
-            {{ csrf_field() }}
-            {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
-          </form>
-        </td>
+        <td>{{ $loop->iteration }} {{ substr($hour->start_time, 0, 5) }}</td>
+        <td data-hour_id="{{ $hour->id }}"></td>
+        <td data-hour_id="{{ $hour->id+9 }}"></td>
+        <td data-hour_id="{{ $hour->id+18 }}"></td>
+        <td data-hour_id="{{ $hour->id+27 }}"></td>
+        <td data-hour_id="{{ $hour->id+36 }}"></td>
       </tr>
     @endforeach
-
-      <tr class="create">
-        <td colspan="11"><a href="{{ route('termin.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-      </tr>
-    </tbody>
   </table>
 @endsection

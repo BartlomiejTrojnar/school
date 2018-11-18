@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\LessonHour;
-use App\Repositories\LessonHourRepository;
+//use App\Models\LessonHour;
+//use App\Repositories\LessonHourRepository;
 use Illuminate\Http\Request;
 
 class LessonHourController extends Controller

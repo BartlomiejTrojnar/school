@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Grade;
+use App\Repositories\GradeRepository;
+use App\Models\LessonHour;
+
+//use App\Models\Grade;
 //use App\Models\GroupClass;
 //use App\Models\StudentClass;
-use App\Repositories\GradeRepository;
-use App\Repositories\SchoolRepository;
+//use App\Repositories\SchoolRepository;
 //use App\Repositories\GroupClassRepository;
 use Illuminate\Http\Request;
 
@@ -71,60 +73,54 @@ class GradeController extends Controller
         $next = $gradeRepo -> NextRecordId($id);
 
         switch(session()->get('gradeView')) {
-             case 'showInfo':
-               return view('grade.showInfo', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showStudents':
-               $studentClasses = $gradeRepo -> find($id) -> students;
-               return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showStudents2':
-               return view('grade.showStudents2', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showEnlargements':
-               return view('grade.showEnlargements', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showGroups':
-               return view('grade.showGroups', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showLessonPlan':
-               return view('grade.showLessonPlan', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTeachers':
-               return view('grade.showTeachers', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showRatings':
-               return view('grade.showRatings', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showDeclarations':
-               return view('grade.showDeclarations', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTasks':
-               return view('grade.showTasks', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
-               exit;
-             break;
+          case 'showInfo':
+              return view('grade.showInfo', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showStudents':
+              $studentClasses = $gradeRepo -> find($id) -> students;
+              return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showStudents2':
+              return view('grade.showStudents2', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showEnlargements':
+              return view('grade.showEnlargements', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showGroups':
+              return view('grade.showGroups', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showLessonPlan':
+              $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
+              return view('grade.showLessonPlan', ["grade"=>$grade, "lessonHours"=>$lessonHours, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTeachers':
+              return view('grade.showTeachers', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showRatings':
+              return view('grade.showRatings', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showDeclarations':
+              return view('grade.showDeclarations', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTasks':
+              return view('grade.showTasks', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
         }
     }
-/*    public function showStudents($id, GradeRepository $gradeRepo)
-    {
-        $studentClasses = StudentClass::all() -> where('grade_id', $id);
-        return view('grade.showStudents', ["grade"=>$this->grade, "studentClasses"=>$studentClasses, "previous"=>$this->previous, "next"=>$this->next])
-             ->nest('gradeMenu', 'grade.menu', ["grade"=>$this->grade]);
-    }
-*/
 
     public function edit(Grade $klasa, SchoolRepository $schoolRepo)
     {

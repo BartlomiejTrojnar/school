@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Classroom;
-use App\Models\LessonPlan;
-use App\Models\Term;
 use App\Repositories\ClassroomRepository;
+use App\Models\LessonHour;
+
+//use App\Models\Classroom;
+//use App\Models\LessonPlan;
+//use App\Models\Term;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
@@ -72,8 +74,8 @@ class ClassroomController extends Controller
 
         switch(session()->get('classroomView')) {
           case 'showLessonPlan':
-              $lessonPlans = LessonPlan::all() -> where('classroom_id', $id);
-              return view('classroom.showLessonPlan', ["classroom"=>$classroom, "lessonPlans"=>$lessonPlans, "previous"=>$previous, "next"=>$next]);
+              $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
+              return view('classroom.showLessonPlan', ["classroom"=>$classroom, "lessonHours"=>$lessonHours, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           case 'showTerms':

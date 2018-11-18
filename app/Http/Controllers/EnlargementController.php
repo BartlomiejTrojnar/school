@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 //use App\Models\Enlargement;
-use App\Repositories\EnlargementRepository;
-use App\Repositories\StudentRepository;
-use App\Repositories\SubjectRepository;
+//use App\Repositories\EnlargementRepository;
+//use App\Repositories\StudentRepository;
+//use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
 
 class EnlargementController extends Controller

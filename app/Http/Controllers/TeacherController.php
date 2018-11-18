@@ -1,12 +1,13 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Teacher;
-use App\Repositories\ClassroomRepository;
-use App\Repositories\SchoolYearRepository;
 use App\Repositories\TeacherRepository;
 use App\Models\Group;
 use App\Models\TaughtSubject;
 use App\Models\LessonHour;
+
+//use App\Models\Teacher;
+//use App\Repositories\ClassroomRepository;
+//use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller

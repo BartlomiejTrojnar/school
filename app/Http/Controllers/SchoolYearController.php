@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\SchoolYear;
-use App\Models\Grade;
-use App\Models\Group;
-use App\Models\Teacher;
-use App\Repositories\SchoolYearRepository;
+//use App\Models\SchoolYear;
+//use App\Models\Grade;
+//use App\Models\Group;
+//use App\Models\Teacher;
+//use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
 class SchoolYearController extends Controller

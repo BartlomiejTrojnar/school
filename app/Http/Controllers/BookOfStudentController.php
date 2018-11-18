@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\BookOfStudent;
-use App\Repositories\BookOfStudentRepository;
-use App\Repositories\SchoolRepository;
-use App\Repositories\StudentRepository;
+//use App\Models\BookOfStudent;
+//use App\Repositories\BookOfStudentRepository;
+//use App\Repositories\SchoolRepository;
+//use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 
 class BookOfStudentController extends Controller

@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Textbook;
-use App\Repositories\TextbookRepository;
-use App\Repositories\SubjectRepository;
+//use App\Models\Textbook;
+//use App\Repositories\TextbookRepository;
+//use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
 
 class TextbookController extends Controller
