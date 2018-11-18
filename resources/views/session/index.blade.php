@@ -19,7 +19,7 @@
     @foreach($sessions as $session)
       <tr>
         <td>{{ $session->id }}</td>
-        <td><a href="{{ route('sesja.show', $session->id) }}">{{ $session->year }}</a></td>
+        <td><a href="{{ route('sesja.show', $session->id.'/showInfo') }}">{{ $session->year }}</a></td>
         <td>{{ $session->type }}</td>
         <td><a href="{{ route('sesja.edit', $session->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
         <td>
