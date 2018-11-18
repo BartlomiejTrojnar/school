@@ -15,9 +15,11 @@ Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
 
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/sortuj/{column}', 'ClassroomController@orderBy');
+Route::get('/sala/{id}/{view}', 'ClassroomController@show');
 
 Route::resource('/przedmiot', 'SubjectController');
 Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
+Route::get('/przedmiot/{id}/{view}', 'SubjectController@show');
 
 Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
@@ -32,8 +34,10 @@ Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
 
 Route::resource('/klasy_uczniow', 'StudentClassController');
 
+Route::get('/nauczyciel/{id}/{view}', 'TeacherController@show');
 Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/sortuj/{column}', 'TeacherController@orderBy');
+
 Route::post('/nauczany_przedmiot/add', 'TaughtSubjectController@add');
 Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::get('/nauczany_przedmiot/sortuj/{column}', 'TaughtSubjectController@orderBy');

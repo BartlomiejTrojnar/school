@@ -17,7 +17,7 @@ class TaughtSubject extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function nonTaughtSubjects($taughtSubjects)
+    public static function nonTaughtSubjects($taughtSubjects)
     {
         $ts = array();
         foreach($taughtSubjects as $taughtSubject)
@@ -25,5 +25,15 @@ class TaughtSubject extends Model
 
         $subjects = Subject::where('actual', true)->whereNotIn('id', $ts)->get();
         return $subjects;
+    }
+
+    public static function unlearningTeachers($subjectTeachers)
+    {
+        $st = array();
+        foreach($subjectTeachers as $subjectTeacher)
+            $st[] = $subjectTeacher->teacher_id;
+
+        $teachers = Teacher::where('first_year_id', '<=', 135)->where('last_year_id', '>=', 135)->orWhere('last_year_id', NULL)->whereNotIn('id', $st)->get();
+        return $teachers;
     }
 }

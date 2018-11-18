@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 //use App\Models\Classroom;
+use App\Models\LessonPlan;
+use App\Models\Term;
 use App\Repositories\ClassroomRepository;
 use Illuminate\Http\Request;
 
@@ -11,7 +13,7 @@ class ClassroomController extends Controller
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("ClassroomOrderBy[$i]");
 
-        $classrooms = $classroomRepo->getAll($orderBy);
+        $classrooms = $classroomRepo->getPaginate($orderBy);
         return view('classroom.index', ["classrooms"=>$classrooms]);
     }
 
@@ -60,11 +62,34 @@ class ClassroomController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Classroom $sala, ClassroomRepository $classroomRepo)
+    public function show($id, $view='', ClassroomRepository $classroomRepo)
     {
-        $previous = $classroomRepo->PreviousRecordId($sala->id);
-        $next = $classroomRepo->NextRecordId($sala->id);
-        return view('classroom.show', ["classroom"=>$sala, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('classroomView')))  session()->put('classroomView', 'showLessonPlan');
+        if($view)  session()->put('classroomView', $view);
+        $classroom = $classroomRepo -> find($id);
+        $previous = $classroomRepo -> PreviousRecordId($id);
+        $next = $classroomRepo -> NextRecordId($id);
+
+        switch(session()->get('classroomView')) {
+          case 'showLessonPlan':
+              $lessonPlans = LessonPlan::all() -> where('classroom_id', $id);
+              return view('classroom.showLessonPlan', ["classroom"=>$classroom, "lessonPlans"=>$lessonPlans, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showTerms':
+              $terms = Term::all() -> where('classroom_id', $id);
+              return view('classroom.showTerms', ["classroom"=>$classroom, "terms"=>$terms, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          case 'showExams':
+              return view('classroom.showExams', ["classroom"=>$classroom, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
+        }
     }
 
     public function edit(Classroom $sala)
