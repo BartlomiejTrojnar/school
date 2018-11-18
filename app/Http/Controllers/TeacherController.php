@@ -6,8 +6,7 @@ use App\Repositories\SchoolYearRepository;
 use App\Repositories\TeacherRepository;
 use App\Models\Group;
 use App\Models\TaughtSubject;
-
-use Illuminate\Support\Facades\Session;
+use App\Models\LessonHour;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
@@ -100,7 +99,8 @@ class TeacherController extends Controller
               exit;
           break;
           case 'showLessonPlans':
-              return view('teacher.showLessonPlans', ["teacher"=>$teacher, "previous"=>$this->previous, "next"=>$this->     next]);
+              $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
+              return view('teacher.showLessonPlans', ["teacher"=>$teacher, "lessonHours"=>$lessonHours, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
           default:
