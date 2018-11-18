@@ -71,8 +71,10 @@ Route::get('/plan_lekcji/sortuj/{column}', 'LessonPlanController@orderBy');
 Route::resource('/lekcja', 'LessonController');
 Route::get('/lekcja/sortuj/{column}', 'LessonController@orderBy');
 
+
 Route::resource('/zadanie', 'TaskController');
 Route::get('/zadanie/sortuj/{column}', 'TaskController@orderBy');
+Route::get('/zadanie/{id}/{view}', 'TaskController@show');
 Route::resource('/polecenie', 'CommandController');
 Route::get('/polecenie/sortuj/{column}', 'CommandController@orderBy');
 Route::resource('/ocena_zadania', 'TaskRatingController');

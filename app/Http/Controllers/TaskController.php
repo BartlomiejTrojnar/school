@@ -60,19 +60,33 @@ class TaskController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Task $zadanie, TaskRepository $taskRepo)
+    public function show($id, $view='', TaskRepository $taskRepo)
     {
-        $taskRatings = TaskRating::all()->where('task_id', $zadanie->id);
-        $previous = $taskRepo->previousRecordId($zadanie->id);
-        $next = $taskRepo->nextRecordId($zadanie->id);
-        return view('task.show', ["task"=>$zadanie, "taskRatings"=>$taskRatings, "previous"=>$previous, "next"=>$next]);
-    }
-    public function showCommands(Task $zadanie, TaskRepository $taskRepo)
-    {
-        $commands = Command::all()->where('task_id', $zadanie->id);
-        $previous = $taskRepo->previousRecordId($zadanie->id);
-        $next = $taskRepo->nextRecordId($zadanie->id);
-        return view('task.show', ["task"=>$zadanie, "commands"=>$commands, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('taskView')))  session()->put('taskView', 'showInfo');
+        if($view)  session()->put('taskView', $view);
+        $task = $taskRepo -> find($id);
+        $previous = $taskRepo -> PreviousRecordId($id);
+        $next = $taskRepo -> NextRecordId($id);
+
+        switch(session()->get('taskView')) {
+             case 'showInfo':
+               return view('task.showInfo', ["task"=>$task, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showCommands':
+               $commands = Command::all()->where('task_id', $id);
+               return view('task.showCommands', ["task"=>$task, "commands"=>$commands, "previous"=>$previous, "next"=>$next]);
+               exit;
+             break;
+             case 'showRatings':
+               $taskRatings = TaskRating::all()->where('task_id', $id);
+               return view('task.showRatings', ["task"=>$task, "taskRatings"=>$taskRatings, "previous"=>$previous, "next"=>$next]);
+             break;
+             default:
+               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+               exit;
+             break;
+        }
     }
 
     public function edit(Task $zadanie)

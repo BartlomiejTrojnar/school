@@ -15,12 +15,12 @@
 @endsection
 
 @section('main-content')
-    <p>{{ $task->name }}</p>
-    <p>{{ $task->points }}</p>
-    <p>{{ $task->importance }}</p>
-    <p>{{ $task->sheet_name }}</p>
-    <p>{{ $task->created_at }}</p>
-    <p>{{ $task->updated_at }}</p>
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/showInfo') }}">informacje</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/showRatings') }}">oceny</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/showCommands') }}">polecenia</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ route('zadanie.index') }}">powrót</a></li>
+  </ul>
 
   <h2>oceny zadania</h2>
   <table>
@@ -61,6 +61,4 @@
       </a>
     </td></tr>
   </table>
-
-    <p><a href="{{ route('zadanie.index') }}">powrót</a></p>
 @endsection
