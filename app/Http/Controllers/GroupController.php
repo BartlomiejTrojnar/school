@@ -67,12 +67,35 @@ class GroupController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(Group $grupa, GroupRepository $groupRepo)
+    public function show($id, $view='', GroupRepository $groupRepo, Group $group)
     {
-        $previous = $groupRepo->previousRecordId($grupa->id);
-        $next = $groupRepo->nextRecordId($grupa->id);
-        return view('group.show', ["group"=>$grupa, "previous"=>$previous, "next"=>$next]);
+        if(empty( session()->get('groupView') ))  session()->put('groupView', 'showInfo');
+        if($view)  session()->put('groupView', $view);
+        $group = $groupRepo -> find($id);
+        $this->previous = $groupRepo -> PreviousRecordId($id);
+        $this->next = $groupRepo -> NextRecordId($id);
+
+        switch( session()->get('groupView') ) {
+          case 'showInfo':
+              return view('group.showInfo', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              exit;
+          break;
+          case 'showStudents':
+              $groupStudents = $group -> students;
+              return view('group.showStudents', ["group"=>$group, "groupStudents"=>$groupStudents, "previous"=>$this->previous, "next"=>$this->next]);
+              exit;
+          break;
+          case 'showLessonPlan':
+              return view('group.showLessonPlan', ["group"=>$group, "previous"=>$this->previous, "next"=>$this->next]);
+              exit;
+          break;
+          default:
+              echo 'Widok nieznany';
+              exit;
+          break;
+        }
     }
+
 
     public function edit(Group $grupa, SubjectRepository $subjectRepo)
     {
@@ -103,6 +126,21 @@ class GroupController extends Controller
         $grupa->save();
 
         return redirect($request->history_view);
+    }
+
+    public function hourSubtract($id, GroupRepository $groupRepo)
+    {
+        $group = $groupRepo -> find($id);
+        $group->hours = $group->hours-1;
+        $group->save();
+        return $group->hours;
+    }
+    public function hourAdd($id, GroupRepository $groupRepo)
+    {
+        $group = $groupRepo -> find($id);
+        $group->hours = $group->hours+1;
+        $group->save();
+        return $group->hours;
     }
 
     public function destroy(Group $grupa)

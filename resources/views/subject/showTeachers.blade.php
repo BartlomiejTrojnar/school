@@ -7,7 +7,6 @@
   <script src="{{ asset('js/taughtSubject.js') }}"></script>
 @endsection
 
-
 @section('header')
   <h1>{{ $subject->name }}</h1>
   <aside id="strzalka_l">

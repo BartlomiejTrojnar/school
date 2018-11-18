@@ -31,36 +31,8 @@
   </ul>
 
 
-  <table>
-    <tr>
-      <th>id</th>
-      <th>nazwisko rodowe</th>
-      <th>skrót</th>
-      <th>stopień</th>
-      <th>klasa</th>
-      <th>rok pierwszy</th>
-      <th>rok ostatni</th>
-      <th>kolejność</th>
-      <th>dodano</th>
-      <th>aktualizacja</th>
-    </tr>
-    <tr>
-      <td>{{ $teacher->id }}</td>
-      <td>{{ $teacher->family_name }}</td>
-      <td>{{ $teacher->short }}</td>
-      <td>{{ $teacher->degree }}</td>
-      <td>{{ $teacher->classroom_id }}</td>
-      <td>od @if($teacher->first_year) {{ substr($teacher->first_year->date_start, 0, 4) }}/{{ substr($teacher->first_year->date_end, 0, 4)}} @endif</td>
-      <td>do @if($teacher->last_year) {{ substr($teacher->last_year->date_start, 0, 4)}}/{{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
-      <td>{{ $teacher->order }}</td>
-      <td>{{ $teacher->created_at }}</td>
-      <td>{{ $teacher->updated_at }}</td>
-    </tr>
-  </table>
-
   <h2>Grupy nauczyciela</h2>
-  <div style="background: yellow; color: red; border: 3px solid red; padding: 50px; text-align: center; font-size: x-large;">Pokazywane wszystkie grupy - wybrać tylko grupy nauczyciela</div>
-  <table id="groups">
+   <table id="groups">
     <thead>
       <tr>
         <th>id</th>
@@ -77,10 +49,10 @@
     </thead>
     <tbody>
 
-    @foreach($groups as $group)
+    @foreach($teacher->groups as $group)
       <tr>
-        <td><a href="{{ route('grupa.show', $group->id.'/showInfo') }}">{{ $group->id }}</a></td>
-        <td>{{ $group->subject_id }} {{ $group->subject_id }}</td>
+        <td><a href="{{ route('grupa.show', $group->id) }}">{{ $group->id }}</a></td>
+        <td><a href="{{ route('przedmiot.show', $group->group->subject_id) }}">{{ $group->group->subject->name }}</a></td>
         <td>{{ $group->date_start }}</td>
         <td>{{ $group->date_end }}</td>
         <td>{{ $group->comments }}</td>

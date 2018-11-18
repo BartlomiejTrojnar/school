@@ -75,6 +75,12 @@ tr.submit button {
     font-family: 'Source Sans Pro', 'Arimo', 'Alegreya Sans', sans-serif;
     font-size: 12pt;
 }
+input {
+    border-radius: 3px;
+    border: 2px solid #aaa;
+    margin: 3px;
+    font-size: 1.1em;
+}
 
 /* ------------------------------------------- TABELE ------------------------------------------- */
 table {
@@ -107,7 +113,8 @@ tr.submit a:hover, tr.create a:hover { background: #227; }
 
 
 /* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
-img.create, img.edit, img.destroy { width: 16px; }
+img.create, img.edit, img.destroy, img.btn { width: 16px; }
+img.btn { background: transparent; margin: 0 3px; }
 div.upAndDown {
     display: inline-block;
     width: 18px;
@@ -133,6 +140,7 @@ img.down {
 
 /* -------------------------------------- INNE --------------------------------------- */
 .c { text-align: center; }
+
 
 .label, sub, sup { vertical-align:baseline; }
 figure { margin:0; }
@@ -1185,7 +1193,7 @@ a.thumbnail.active, a.thumbnail:focus, a.thumbnail:hover { border-color:#3097D1;
 .alert-success { background-color:#dff0d8;border-color:#d6e9c6;color:#3c763d; }
 .alert-success hr { border-top-color:#c9e2b3; }
 .alert-success .alert-link { color:#2b542c; }
-.alert-info { background-color:#d9edf7;border-color:#bce8f1;color:#31708f; }
+.alert-info { background-color:#fa0;border-color:#bce8f1;color:#900;text-align:center; }
 .alert-info hr { border-top-color:#a6e1ec; }
 .alert-info .alert-link { color:#245269; }
 .alert-warning { background-color:#fcf8e3;border-color:#faebcc;color:#8a6d3b; }
@@ -1482,4 +1490,3 @@ td.visible-print, th.visible-print { display:table-cell!important; }
 }.visible-print-inline-block { display:none!important; }
 @media print { .visible-print-inline-block{display:inline-block!important; }
 .hidden-print { display:none!important; }
-

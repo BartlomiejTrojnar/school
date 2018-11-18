@@ -30,7 +30,6 @@
   </ul>
 
   <h2>uczniowie w klasie</h2>
-
   <p><?php echo session()->get('dateSession') ?></p>
 
   <table>

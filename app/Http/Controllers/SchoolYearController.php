@@ -45,7 +45,7 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', SchoolYearRepository $schoolYearRepo, SchoolYear $schoolYear)
+    public function show($id, $view, SchoolYearRepository $schoolYearRepo)
     {
         if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
         if($view)  session()->put('schoolYearView', $view);

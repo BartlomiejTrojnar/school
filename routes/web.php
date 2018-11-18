@@ -34,9 +34,9 @@ Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
 
 Route::resource('/klasy_uczniow', 'StudentClassController');
 
-Route::get('/nauczyciel/{id}/{view}', 'TeacherController@show');
-Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/sortuj/{column}', 'TeacherController@orderBy');
+Route::resource('/nauczyciel', 'TeacherController');
+Route::get('/nauczyciel/{id}/{view}', 'TeacherController@show');
 
 Route::post('/nauczany_przedmiot/add', 'TaughtSubjectController@add');
 Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
@@ -52,9 +52,17 @@ Route::get('/rozszerzenie/sortuj/{column}', 'EnlargementController@orderBy');
 
 Route::resource('/grupa', 'GroupController');
 Route::get('/grupa/sortuj/{column}', 'GroupController@orderBy');
+Route::get('/grupa/hourSubtract/{id}', 'GroupController@hourSubtract');
+Route::get('/grupa/hourAdd/{id}', 'GroupController@hourAdd');
+Route::get('/grupa/{id}/{view}', 'GroupController@show');
+
+Route::get('/grupa_klasy/addGrade/{id}', 'GroupClassController@addGrade');
 Route::resource('/grupa_klasy', 'GroupClassController');
+
+Route::get('/grupa_nauczyciele/addTeacher/{group_id}', 'GroupTeacherController@addTeacher');
 Route::resource('/grupa_nauczyciele', 'GroupTeacherController');
 Route::get('/grupa_nauczyciele/sortuj/{column}', 'GroupTeacherController@orderBy');
+
 Route::resource('/grupa_uczniowie', 'GroupStudentController');
 Route::get('/grupa_uczniowie/sortuj/{column}', 'GroupStudentController@orderBy');
 

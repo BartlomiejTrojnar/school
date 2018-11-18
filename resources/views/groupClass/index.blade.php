@@ -21,8 +21,16 @@
     @foreach($groupClasses as $groupClass)
       <tr>
         <td>{{ $groupClass->id }}</td>
-        <td>{{ $groupClass->group_id }}</td>
-        <td>{{ $groupClass->class_id }}</td>
+        <td>
+          <a href="{{ route('grupa.show', $groupClass->group_id) }}">
+            {{ $groupClass->group->date_start }} - {{ $groupClass->group->date_end }} {{ $groupClass->group->subject->name }} {{ $groupClass->group->level }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ route('klasa.show', $groupClass->grade_id) }}">
+            {{ $groupClass->grade->year_of_beginning }}-{{ $groupClass->grade->year_of_graduation }}{{ $groupClass->grade->symbol }}
+          </a>
+        </td>
         <td>{{ $groupClass->created_at }}</td>
         <td>{{ $groupClass->updated_at }}</td>
         <td><a href="{{ route('grupa_klasy.edit', $groupClass->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
