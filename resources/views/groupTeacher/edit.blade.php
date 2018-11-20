@@ -1,34 +1,43 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>Modyfikacja informacji o nauczycielu w grupie</h1>
 @endsection
+@section('java-script')
+  <script src="{{ asset('js/groupTeacher.js') }}"></script>
+@endsection
 
 @section('main-content')
+  <div id="error" class="alert alert-info hide"></div>
   <form action="{{ route('grupa_nauczyciele.update', $groupTeacher->id) }}" method="post" role="form">
   {{ csrf_field() }}
   {{ method_field('PATCH') }}
+    <input type="hidden" name="group_id" value="{{ $group_id }}" />
     <table>
-      <tr>
-        <th><label for="group_id">grupa</label></th>
-        <td><?php  print_r($groupSelectField);  ?></td>
-      </tr>
       <tr>
         <th><label for="teacher_id">nauczyciel</label></th>
         <td><?php  print_r($teacherSelectField);  ?></td>
       </tr>
       <tr>
-        <th><label for="date_start">data początkowa</label></th>
-        <td><input type="date" name="date_start" value="{{$groupTeacher->date_start}}" required /></td>
+        <th><label for="date_start">od</label></th>
+        <td><input type="date" name="date_start" id="date_start" value="{{ $date_start[0] }}" required /></td>
+        <td><button class="btn btn-primary teacherDateStart" id="groupDateStart">{{ $date_start[1] }}</button></td>
+        <td><button class="btn btn-primary teacherDateStart">{{ $date_start[2] }}</button></td>
       </tr>
       <tr>
-        <th><label for="date_end">data końcowa</label></th>
-        <td><input type="date" name="date_end" value="{{$groupTeacher->date_end}}" required /></td>
+        <th><label for="date_end">do</label></th>
+        <td><input type="date" name="date_end" id="date_end" value="{{ $date_end[0] }}" required /></td>
+        <td><button class="btn btn-primary teacherDateEnd" id="groupDateEnd">{{ $date_end[1] }}</button></td>
       </tr>
 
       <tr class="submit"><td colspan="2">
-          <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
+          <input type="hidden" name="history_view" value="
+                 @if($history_view) {{ $history_view }}
+                 @else {{ $_SERVER['HTTP_REFERER'] }}
+                 @endif
+                 " />
           <button type="submit">zapisz zmiany</button>
-          <a href="{{ route('grupa_nauczyciele.index') }}">anuluj</a>
+          <a href="@if($history_view) {{ $history_view }} @else {{ $_SERVER['HTTP_REFERER'] }} @endif">anuluj</a>
       </td></tr>
     </table>
   </form>

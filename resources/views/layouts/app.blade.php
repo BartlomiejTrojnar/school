@@ -101,8 +101,6 @@
         <li><a href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
         <li><a href="{{ route('rozszerzenie.index') }}">rozszerzenia</a></li>
         <li><a href="{{ route('grupa.index') }}">grupy</a></li>
-        <li><a href="{{ route('grupa_klasy.index') }}">klasy w grupie</a></li>
-        <li><a href="{{ route('grupa_nauczyciele.index') }}">nauczyciele grupie</a></li>
         <li><a href="{{ route('grupa_uczniowie.index') }}">uczniowie grupy</a></li>
         <li><a href="{{ route('plan_lekcji.index') }}">plany lekcji</a></li>
         <li><a href="{{ route('lekcja.index') }}">lekcje</a></li>

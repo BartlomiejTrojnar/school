@@ -53,23 +53,55 @@ function hourAdd(grupa, url) {
 function teacherRemoveClick()
 {
     $('.teacherRemove').bind('click', function(){
-        groupTeacher_id = $(this).attr('data-groupTeacher_id');
-        teacherRemove(groupTeacher_id);
+        var groupTeacher_id = $(this).attr("data-groupTeacher_id");
+        var token = $(this).data("token");
+        teacherRemove(groupTeacher_id, token);
         return false;
     });
 }
 
-function teacherRemove(groupTeacher_id=0)
+function teacherRemove(groupTeacher_id=0, token='')
 {
-    url = $('button[data-groupTeacher_id=' +groupTeacher_id+ ']').attr('data-url');
-    alert(url+' DOKOŃCZYĆ funkcję teacher Remove');
-    return;
     $.ajax({
+        url: $('button[data-groupTeacher_id=' +groupTeacher_id+ ']').attr('data-url'),
         type: "DELETE",
-        url: url,
-        data: { groupTeacher_id: groupTeacher_id },
+        data: { "_token":token, },
         success: function(result) {
-			$('div[data-groupTeacher_id=' +groupTeacher_id+ ']').remove();
+            $('div[data-groupTeacher_id=' +groupTeacher_id+ ']').remove();
+            return;
+        },
+        error: function(result) {
+            alert("Błąd: "+result);
+            return;
+        },
+    });
+    return false;
+}
+
+// ------------------------------- USUWANIE KLASY Z GRUPY -------------------------------- //
+// ------------------------------ przypisanie operacji do kliknięć ------------------------------ //
+function gradeRemoveClick()
+{
+    $('.gradeRemove').bind('click', function(){
+        var groupClass_id = $(this).attr("data-groupClass_id");
+        var token = $(this).data("token");
+        gradeRemove(groupClass_id, token);
+        return false;
+    });
+}
+
+function gradeRemove(groupClass_id=0, token='')
+{
+    $.ajax({
+        url: $('button[data-groupClass_id=' +groupClass_id+ ']').attr('data-url'),
+        type: "DELETE",
+        data: { "_token":token, },
+        success: function(result) {
+			$('div[data-groupClass_id=' +groupClass_id+ ']').remove();
+			return;
+		},
+        erroe: function(result) {
+			alert("Błąd: "+result);
 			return;
 		},
 	});
@@ -81,4 +113,5 @@ $(document).ready(function()
 {
     hourModificationClick();
     teacherRemoveClick();
+    gradeRemoveClick();
 });

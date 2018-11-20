@@ -65,7 +65,12 @@
               {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
             </a>
             {{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}
-            <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
+
+            <a href="{{ route('grupa_nauczyciele.edit', $groupTeacher->id) }}">
+              <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
+            </a>
+
+            <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
               <img class="destroy" src="{{ asset('css/minus.png') }}" />
             </button>
           </div>
@@ -77,12 +82,12 @@
       <td class="grades">
         <aside><a href="{{ url('grupa_klasy/addGrade/'. $group->id) }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></aside>
         @foreach($group->grades as $groupClass)
-          <a href="{{ route('klasa.show', $groupClass->grade_id) }}">{{ $groupClass->grade->year_of_beginning }}-{{ $groupClass->grade->year_of_graduation }}{{ $groupClass->grade->symbol }}</a>
-          <form action="{{ route('grupa_klasy.destroy', $groupClass->id) }}" method="post" id="delete-form-{{$groupClass->id}}">
-            {{ csrf_field() }}
-            {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
-          </form><br />
+          <div data-groupClass_id="{{$groupClass->id}}">
+            <a href="{{ route('klasa.show', $groupClass->grade_id) }}">{{ $groupClass->grade->year_of_beginning }}-{{ $groupClass->grade->year_of_graduation }}{{ $groupClass->grade->symbol }}</a>
+            <button class="gradeRemove" data-groupClass_id="{{$groupClass->id}}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_klasy.destroy', $groupClass->id) }}">
+              <img class="destroy" src="{{ asset('css/minus.png') }}" />
+            </button>
+          </div>
         @endforeach
       </td>
     </tr>

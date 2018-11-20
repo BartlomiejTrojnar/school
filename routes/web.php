@@ -60,8 +60,8 @@ Route::get('/grupa_klasy/addGrade/{id}', 'GroupClassController@addGrade');
 Route::resource('/grupa_klasy', 'GroupClassController');
 
 Route::get('/grupa_nauczyciele/addTeacher/{group_id}', 'GroupTeacherController@addTeacher');
-Route::resource('/grupa_nauczyciele', 'GroupTeacherController');
 Route::get('/grupa_nauczyciele/sortuj/{column}', 'GroupTeacherController@orderBy');
+Route::resource('/grupa_nauczyciele', 'GroupTeacherController');
 
 Route::resource('/grupa_uczniowie', 'GroupStudentController');
 Route::get('/grupa_uczniowie/sortuj/{column}', 'GroupStudentController@orderBy');
