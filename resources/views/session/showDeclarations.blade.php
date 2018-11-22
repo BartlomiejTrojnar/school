@@ -24,6 +24,9 @@
   </ul>
 
   <h2>Deklaracje</h2>
+  <?php echo($declarationsTable); ?>
+
+<?php /*
   <table id="declarations">
     <thead>
       <tr>
@@ -62,4 +65,5 @@
       </tr>
     </tbody>
   </table>
+*/ ?>
 @endsection

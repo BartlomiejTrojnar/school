@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Session;
+use App\Models\Session;
 use App\Repositories\SessionRepository;
 //use App\Models\ExamDescription;
 //use App\Models\Term;
@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-/*
     public function index(SessionRepository $sessionRepo)
     {
         for($i=0; $i<4; $i++)
@@ -66,29 +65,37 @@ class SessionController extends Controller
         $next = $sessionRepo -> NextRecordId($id);
 
         switch(session()->get('sessionView')) {
-             case 'showInfo':
-               return view('session.showInfo', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showExamDescriptions':
-               $examDescriptions = ExamDescription::all()->where('session_id', $id);
-               return view('session.showExamDescriptions', ["session"=>$session, "examDescriptions"=>$examDescriptions, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showDeclarations':
-               $declarations = $session -> declarations;
-               return view('session.showDeclarations', ["session"=>$session, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showTerms':
-               $terms = Term::all()->where('session_id', $id);
-               return view('session.showTerms', ["session"=>$session, "terms"=>$terms, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
-               exit;
-             break;
+          case 'showInfo':
+              return view('session.showInfo', ["session"=>$session, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+/*
+          case 'showExamDescriptions':
+              $examDescriptions = ExamDescription::all()->where('session_id', $id);
+              return view('session.showExamDescriptions', ["session"=>$session, "examDescriptions"=>$examDescriptions, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+*/
+          case 'showDeclarations':
+              $declarations = $session -> declarations;
+              //if(empty($declarations)) $declarations=0;
+              //print_r($declarations); exit;
+              return view('session.showDeclarations', ["session"=>$session, "previous"=>$previous, "next"=>$next])
+                  -> nest('declarationsTable', 'declaration.showDeclarationsTable', ["declarations"=>$declarations]);
+              //return view('session.showDeclarations', ["session"=>$session, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+/*
+          case 'showTerms':
+              $terms = Term::all()->where('session_id', $id);
+              return view('session.showTerms', ["session"=>$session, "terms"=>$terms, "previous"=>$previous, "next"=>$next]);
+              exit;
+          break;
+*/
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
         }
     }
 
@@ -118,5 +125,4 @@ class SessionController extends Controller
         $sesja->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }
