@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('java-script')
+  <script src="{{ asset('js/groupLessonPlan.js') }}"></script>
+@endsection
+
 @section('header')
   <h1>{{ $group->id }} {{ $group->subject->name }} {{ $group->date_start }}</h1>
   <aside id="strzalka_l">
@@ -23,7 +27,9 @@
   </ul>
 
   <h2>Plan lekcji</h2>
-  <table>
+  <div id="group_id">{{ $group->id }}</div>
+  <div id="url">{{ url('plan_lekcji/addLesson') }}</div>
+  <table class="lessonPlan">
     <tr>
       <th>godziny</th>
       <th>poniedziałek</th>
@@ -35,11 +41,21 @@
     @foreach($lessonHours as $hour)
       <tr>
         <td>{{ $loop->iteration }} {{ substr($hour->start_time, 0, 5) }}</td>
-        <td data-hour_id="{{ $hour->id }}"></td>
-        <td data-hour_id="{{ $hour->id+9 }}"></td>
-        <td data-hour_id="{{ $hour->id+18 }}"></td>
-        <td data-hour_id="{{ $hour->id+27 }}"></td>
-        <td data-hour_id="{{ $hour->id+36 }}"></td>
+        <td data-hour_id="{{ $hour->id }}">
+          <img class="hour btn btn-success" src="{{ asset('css/plus.png') }}" data-hour_id="{{$hour->id}}" />
+        </td>
+        <td data-hour_id="{{ $hour->id+9 }}">
+          <img class="hour btn btn-success" src="{{ asset('css/plus.png') }}" data-hour_id="{{$hour->id+9}}" />
+        </td>
+        <td data-hour_id="{{ $hour->id+18 }}">
+          <img class="hour btn btn-success" src="{{ asset('css/plus.png') }}" data-hour_id="{{$hour->id+18}}" />
+        </td>
+        <td data-hour_id="{{ $hour->id+27 }}">
+          <img class="hour btn btn-success" src="{{ asset('css/plus.png') }}" data-hour_id="{{$hour->id+27}}" />
+        </td>
+        <td data-hour_id="{{ $hour->id+36 }}">
+          <img class="hour btn btn-success" src="{{ asset('css/plus.png') }}" data-hour_id="{{$hour->id+36}}" />
+        </td>
       </tr>
     @endforeach
   </table>

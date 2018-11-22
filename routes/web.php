@@ -66,8 +66,11 @@ Route::resource('/grupa_nauczyciele', 'GroupTeacherController');
 Route::resource('/grupa_uczniowie', 'GroupStudentController');
 Route::get('/grupa_uczniowie/sortuj/{column}', 'GroupStudentController@orderBy');
 
+Route::get('/plan_lekcji/addLesson/{group_id}/{hour_id}', 'LessonPlanController@addLesson');
+Route::get('/plan_lekcji/findLesson/{group_id}/{hour_id}', 'LessonPlanController@findLesson');
 Route::resource('/plan_lekcji', 'LessonPlanController');
 Route::get('/plan_lekcji/sortuj/{column}', 'LessonPlanController@orderBy');
+
 Route::resource('/lekcja', 'LessonController');
 Route::get('/lekcja/sortuj/{column}', 'LessonController@orderBy');
 

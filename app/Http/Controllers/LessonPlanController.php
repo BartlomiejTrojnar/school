@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\LessonPlan;
-//use App\Repositories\LessonPlanRepository;
+use App\Models\LessonPlan;
+use App\Repositories\LessonPlanRepository;
 //use App\Repositories\GroupRepository;
 //use App\Repositories\LessonHourRepository;
 //use App\Repositories\ClassroomRepository;
@@ -16,6 +16,12 @@ class LessonPlanController extends Controller
 
         $lessonPlans = $lessonPlanRepo->getAll($orderBy);
         return view('lessonPlan.index', ["lessonPlans"=>$lessonPlans]);
+    }
+
+    public function findLesson($group_id, $hour_id)
+    {
+        $lessons = LessonPlan::where('group_id', $group_id) -> where('lesson_hour_id', $hour_id) -> get();
+        return view('lessonPlan.groupLesson', ["lessons"=>$lessons]);
     }
 
     public function orderBy($column)
@@ -46,6 +52,18 @@ class LessonPlanController extends Controller
              ->nest('groupSelectField', 'group.selectField', ["groups"=>$groups, "selectedGroup"=>0])
              ->nest('lessonHourSelectField', 'lessonHour.selectField', ["lessonHours"=>$lessonHours, "selectedLessonHour"=>0])
              ->nest('classroomSelectField', 'classroom.selectField', ["classrooms"=>$classrooms, "selectedClassroom"=>0]);
+    }
+
+    public function addLesson($group_id, $hour_id)
+    {
+        $lessonPlan = new LessonPlan;
+        $lessonPlan->group_id = $group_id;
+        $lessonPlan->lesson_hour_id = $hour_id;
+        $lessonPlan->date_start = session()->get('dateSession');
+        $lessonPlan->date_end = '2019-06-30';
+        $lessonPlan->save();
+
+        return;
     }
 
     public function store(Request $request)
