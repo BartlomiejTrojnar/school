@@ -78,11 +78,8 @@ class SessionController extends Controller
 */
           case 'showDeclarations':
               $declarations = $session -> declarations;
-              //if(empty($declarations)) $declarations=0;
-              //print_r($declarations); exit;
               return view('session.showDeclarations', ["session"=>$session, "previous"=>$previous, "next"=>$next])
                   -> nest('declarationsTable', 'declaration.showDeclarationsTable', ["declarations"=>$declarations]);
-              //return view('session.showDeclarations', ["session"=>$session, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
 /*
