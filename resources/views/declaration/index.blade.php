@@ -30,8 +30,8 @@
     @foreach($declarations as $declaration)
       <tr>
         <td><a href="{{ route('deklaracja.show', $declaration->id) }}">{{ $declaration->id }}</a></td>
-        <td>{{ $declaration->student_id }}</td>
-        <td>{{ $declaration->session_id }}</td>
+        <td><a href="{{ route('uczen.show', $declaration->student_id) }}">{{ $declaration->student->first_name }} {{ $declaration->student->last_name }}</a></td>
+        <td><a href="{{ route('sesja.show', $declaration->session_id) }}">{{ $declaration->session->year }} {{ $declaration->session->type }}</a></td>
         <td>{{ $declaration->application_number }}</td>
         <td>{{ $declaration->student_code }}</td>
         <td>{{ $declaration->created_at }}</td>
