@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
+/*
     public function index(SubjectRepository $subjectRepo)
     {
         for($i=0; $i<6; $i++)
@@ -132,4 +133,5 @@ class SubjectController extends Controller
         $przedmiot->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

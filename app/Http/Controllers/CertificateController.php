@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
+/*
     public function index(CertificateRepository $certificateRepo)
     {
         for($i=0; $i<6; $i++)
@@ -109,4 +110,5 @@ class CertificateController extends Controller
         $swiadectwo->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

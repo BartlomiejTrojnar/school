@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class CertificatePatternController extends Controller
 {
+/*
     public function index(CertificatePatternRepository $patternRepo)
     {
         for($i=0; $i<4; $i++)
@@ -70,4 +71,5 @@ class CertificatePatternController extends Controller
 
         return redirect($request->history_view);
     }
+*/
 }

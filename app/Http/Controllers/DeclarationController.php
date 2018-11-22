@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class DeclarationController extends Controller
 {
+/*
     public function index(DeclarationRepository $declarationRepo, SessionRepository $sessionRepo, StudentRepository $studentRepo)
     {
         for($i=0; $i<6; $i++)
@@ -126,4 +127,5 @@ class DeclarationController extends Controller
         $deklaracja->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

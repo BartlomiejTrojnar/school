@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class TextbookChoiceController extends Controller
 {
+/*
     public function index(TextbookChoiceRepository $textbookChoiceRepo)
     {
         for($i=0; $i<6; $i++)
@@ -115,4 +116,5 @@ class TextbookChoiceController extends Controller
         $wybor_podrecznika->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

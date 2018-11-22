@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
+/*
     public function index(SessionRepository $sessionRepo)
     {
         for($i=0; $i<4; $i++)
@@ -117,4 +118,5 @@ class SessionController extends Controller
         $sesja->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

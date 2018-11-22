@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 class StudentClassController extends Controller
 {
+/*
     public function create(StudentRepository $studentRepo, GradeRepository $gradeRepo, StudentClassRepository $scRepo, SchoolYearRepository $syRepo)
     {
         $proposedNumber = $scRepo->getLastNumber();
@@ -95,4 +96,5 @@ class StudentClassController extends Controller
         StudentClass::destroy($id);
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

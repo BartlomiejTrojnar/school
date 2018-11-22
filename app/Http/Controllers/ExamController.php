@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+/*
     public function index(ExamRepository $examRepo, DeclarationRepository $declarationRepo, ExamDescriptionRepository $examDescriptionRepo, TermRepository $termRepo)
     {
         for($i=0; $i<6; $i++)
@@ -128,4 +129,5 @@ class ExamController extends Controller
         $egzamin->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CommandController extends Controller
 {
+/*
     public function index(CommandRepository $commandRepo)
     {
         for($i=0; $i<6; $i++)
@@ -104,4 +105,5 @@ class CommandController extends Controller
         $polecenie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

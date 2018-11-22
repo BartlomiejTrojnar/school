@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+/*
     public function index(TaskRepository $taskRepo)
     {
         for($i=0; $i<6; $i++)
@@ -117,4 +118,5 @@ class TaskController extends Controller
         $zadanie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

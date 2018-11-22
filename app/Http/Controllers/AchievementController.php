@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class AchievementController extends Controller
 {
+/*
     public function index(AchievementRepository $achievementRepo)
     {
         for($i=0; $i<4; $i++)
@@ -88,4 +89,5 @@ class AchievementController extends Controller
         $osiagniecie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

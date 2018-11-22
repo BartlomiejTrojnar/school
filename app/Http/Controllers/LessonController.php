@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
+/*
     public function index(LessonRepository $lessonRepo)
     {
         for($i=0; $i<6; $i++)
@@ -119,4 +120,5 @@ class LessonController extends Controller
         $lekcja->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

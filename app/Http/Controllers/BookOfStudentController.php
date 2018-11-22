@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class BookOfStudentController extends Controller
 {
+/*
     public function index(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo)
     {
         for($i=0; $i<6; $i++)
@@ -101,4 +102,5 @@ class BookOfStudentController extends Controller
         $ksiega_uczniow->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

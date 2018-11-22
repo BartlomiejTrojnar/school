@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\SchoolYear;
+use App\Models\SchoolYear;
+use App\Repositories\SchoolYearRepository;
+
 //use App\Models\Grade;
 //use App\Models\Group;
 //use App\Models\Teacher;
-//use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
 class SchoolYearController extends Controller
@@ -45,7 +46,7 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view, SchoolYearRepository $schoolYearRepo)
+    public function show($id, $view='', SchoolYearRepository $schoolYearRepo)
     {
         if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
         if($view)  session()->put('schoolYearView', $view);
@@ -58,6 +59,7 @@ class SchoolYearController extends Controller
               return view('schoolYear.showInfo', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+/*
           case 'showClasses':
               $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
                             -> where('year_of_graduation', '>', $schoolYear->date_start) -> get();
@@ -84,13 +86,14 @@ class SchoolYearController extends Controller
               return view('schoolYear.showTextbooks', ["schoolYear"=>$schoolYear, "textbookChoices"=>$textbookChoices, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           default:
-              echo 'Widok nieznany';
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolYearView'));
               exit;
           break;
         }
     }
-
+/*
     private function getTeachers($id)
     {
         $teachers = Teacher :: where('first_year_id', '<=', $id)
@@ -103,7 +106,7 @@ class SchoolYearController extends Controller
             -> paginate(15);
         return $teachers;
     }
-
+/*
     private function getGroups($schoolYear)
     {
         $groups = Group :: where('date_start', '>=', $schoolYear->date_start)
@@ -116,7 +119,7 @@ class SchoolYearController extends Controller
     }
 
 
-
+*/
     public function edit(SchoolYear $rok_szkolny)
     {
         return view('schoolYear.edit', ["schoolYear"=>$rok_szkolny]);

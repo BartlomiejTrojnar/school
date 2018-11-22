@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+/*
     public function index(StudentRepository $studentRepo)
     {
         for($i=0; $i<6; $i++)
@@ -159,4 +160,5 @@ class StudentController extends Controller
         $uczen->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CommandRatingController extends Controller
 {
+/*
     public function index(CommandRatingRepository $commandRatingRepo)
     {
         for($i=0; $i<6; $i++)
@@ -101,4 +102,5 @@ class CommandRatingController extends Controller
         $commandRatingRepo->delete($id);
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

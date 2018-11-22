@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
+/*
     public function index(GroupRepository $groupRepo)
     {
         for($i=0; $i<6; $i++)
@@ -151,4 +152,5 @@ class GroupController extends Controller
         $grupa->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

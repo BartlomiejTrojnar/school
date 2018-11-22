@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class GroupClassController extends Controller
 {
+/*
     public function addGrade($id, GradeRepository $gradeRepo)
     {
         $grades = $gradeRepo->getAll();
@@ -33,4 +34,5 @@ class GroupClassController extends Controller
         print_r( $grupa_klasy->delete() );
         return;
     }
+*/
 }

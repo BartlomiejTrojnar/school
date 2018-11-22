@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class EnlargementController extends Controller
 {
+/*
     public function index(EnlargementRepository $enlargementRepo)
     {
         for($i=0; $i<6; $i++)
@@ -109,4 +110,5 @@ class EnlargementController extends Controller
         $rozszerzenie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+*/
 }

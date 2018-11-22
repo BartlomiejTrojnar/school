@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class GroupTeacherController extends Controller
 {
+/*
     public function addTeacher($group_id, TeacherRepository $teacherRepo, GroupRepository $groupRepo)
     {
         $teachers = $teacherRepo->getAll();
@@ -106,5 +107,5 @@ class GroupTeacherController extends Controller
         print_r( $grupa_nauczyciele->delete() );
         return;
     }
-
+*/
 }

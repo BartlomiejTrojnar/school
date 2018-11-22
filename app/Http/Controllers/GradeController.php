@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
+/*
     public function index(GradeRepository $gradeRepo)
     {
         for($i=0; $i<4; $i++)
@@ -166,4 +167,5 @@ class GradeController extends Controller
         }
         return $daty;
     }
+*/
 }
