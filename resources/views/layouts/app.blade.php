@@ -97,7 +97,6 @@
         <li><a href="{{ route('uczen.index') }}">uczniowie</a></li>
         <li><a href="{{ route('klasa.index') }}">klasy</a></li>
         <li><a href="{{ route('nauczyciel.index') }}">nauczyciele</a></li>
-        <li><a href="{{ route('nauczany_przedmiot.index') }}">nauczane przedmioty</a></li>
         <li><a href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
         <li><a href="{{ route('rozszerzenie.index') }}">rozszerzenia</a></li>
         <li><a href="{{ route('grupa.index') }}">grupy</a></li>

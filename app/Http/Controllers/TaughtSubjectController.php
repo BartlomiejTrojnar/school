@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\TaughtSubject;
 //use App\Repositories\TaughtSubjectRepository;
+
+//use App\Models\TaughtSubject;
 //use App\Repositories\TeacherRepository;
 //use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
@@ -9,15 +10,6 @@ use Illuminate\Http\Request;
 class TaughtSubjectController extends Controller
 {
 /*
-    public function index(TaughtSubjectRepository $taughtSubjectRepo)
-    {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("TaughtSubjectOrderBy[$i]");
-
-        $taughtSubjects = $taughtSubjectRepo->getAll($orderBy);
-        return view('taughtSubject.index', ["taughtSubjects"=>$taughtSubjects]);
-    }
-
     public function orderBy($column)
     {
         if(session()->get('TaughtSubjectOrderBy[0]') == $column)
@@ -34,7 +26,7 @@ class TaughtSubjectController extends Controller
         }
         return redirect( route('nauczany_przedmiot.index') );
     }
-
+/*
     public function create(TeacherRepository $teacherRepo, SubjectRepository $subjectRepo)
     {
         $teachers = $teacherRepo->getAll();
@@ -59,13 +51,6 @@ class TaughtSubjectController extends Controller
         if(!empty($request->history_view))
           return redirect($request->history_view);
         return $record->id;
-    }
-
-    public function show(TaughtSubject $nauczany_przedmiot, TaughtSubjectRepository $taughtSubjectRepo)
-    {
-        $previous = $taughtSubjectRepo->previousRecordId($nauczany_przedmiot->id);
-        $next = $taughtSubjectRepo->nextRecordId($nauczany_przedmiot->id);
-        return view('taughtSubject.show', ["taughtSubject"=>$nauczany_przedmiot, "previous"=>$previous, "next"=>$next]);
     }
 
     public function edit(TaughtSubject $nauczany_przedmiot, TeacherRepository $teacherRepo, SubjectRepository $subjectRepo)

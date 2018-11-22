@@ -1,15 +1,14 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Student;
 use App\Repositories\StudentRepository;
-use App\Models\LessonHour;
 
-//use App\Models\Student;
+//use App\Models\LessonHour;
 //use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-/*
     public function index(StudentRepository $studentRepo)
     {
         for($i=0; $i<6; $i++)
@@ -83,6 +82,7 @@ class StudentController extends Controller
               return view('student.showInfo', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+/*
           case 'showClasses':
               $studentClasses = $studentRepo -> find($id) -> grades;
               return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
@@ -100,11 +100,13 @@ class StudentController extends Controller
               return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           case 'showDeclarations':
               $declarations = $student -> declarations;
               return view('student.showDeclarations', ["student"=>$student, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+/*
           case 'showExams':
               return view('student.showExams', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;
@@ -118,8 +120,9 @@ class StudentController extends Controller
               return view('student.showLessonPlan', ["student"=>$student, "lessonHours"=>$lessonHours, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           default:
-              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('studentView'));
               exit;
           break;
         }
@@ -160,5 +163,4 @@ class StudentController extends Controller
         $uczen->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

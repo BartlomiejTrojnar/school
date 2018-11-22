@@ -1,18 +1,17 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Grade;
 use App\Repositories\GradeRepository;
-use App\Models\LessonHour;
 
-//use App\Models\Grade;
+//use App\Models\LessonHour;
+use App\Repositories\SchoolRepository;
 //use App\Models\GroupClass;
 //use App\Models\StudentClass;
-//use App\Repositories\SchoolRepository;
 //use App\Repositories\GroupClassRepository;
 use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
-/*
     public function index(GradeRepository $gradeRepo)
     {
         for($i=0; $i<4; $i++)
@@ -36,7 +35,7 @@ class GradeController extends Controller
           session()->put('GradeOrderBy[3]', session()->get('GradeOrderBy[1]'));
           session()->put('GradeOrderBy[1]', 'asc');
         }
-        return redirect( route('klasa.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create(SchoolRepository $schoolRepo)
@@ -74,15 +73,18 @@ class GradeController extends Controller
         $next = $gradeRepo -> NextRecordId($id);
 
         switch(session()->get('gradeView')) {
+/*
           case 'showInfo':
               return view('grade.showInfo', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           case 'showStudents':
-              $studentClasses = $gradeRepo -> find($id) -> students;
+              $studentClasses = $grade -> students;
               return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+/*
           case 'showStudents2':
               return view('grade.showStudents2', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
@@ -108,18 +110,22 @@ class GradeController extends Controller
               return view('grade.showRatings', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           case 'showDeclarations':
               $students = $grade -> students;
               foreach($students as $student)
                 if( $student->student->declarations->count() )
                   $declarations = $student->student->declarations;
+              if( empty($declarations) ) $declarations = 0;
               return view('grade.showDeclarations', ["grade"=>$grade, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+/*
           case 'showTasks':
               return view('grade.showTasks', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
               exit;
@@ -157,7 +163,7 @@ class GradeController extends Controller
         $klasa->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-
+/*
     public function getDates($id)
     {
         $grade = Grade::find($id);

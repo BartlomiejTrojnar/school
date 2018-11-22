@@ -1,18 +1,18 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
-use App\Models\Group;
-use App\Models\TaughtSubject;
-use App\Models\LessonHour;
 
-//use App\Models\Teacher;
-//use App\Repositories\ClassroomRepository;
-//use App\Repositories\SchoolYearRepository;
+use App\Models\TaughtSubject;
+use App\Repositories\ClassroomRepository;
+use App\Repositories\SchoolYearRepository;
+
+//use App\Models\Group;
+//use App\Models\LessonHour;
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
-/*
     public function index(TeacherRepository $teacherRepo)
     {
         for($i=0; $i<6; $i++)
@@ -72,30 +72,37 @@ class TeacherController extends Controller
         $teacher->classroom_id = $request->classroom_id;
         $teacher->first_year_id = $request->first_year_id;
         $teacher->last_year_id = $request->last_year_id;
+        if($teacher->last_year_id == 0) $teacher->last_year_id = NULL;
         $teacher->order = $request->order;
         $teacher->save();
 
         return redirect($request->history_view);
     }
 
-    public function show($id, $view, TeacherRepository $teacherRepo)
+    public function show($id, $view='', TeacherRepository $teacherRepo)
     {
+        if(empty(session()->get('teacherView')))  session()->put('teacherView', 'showInfo');
+        if($view)  session()->put('teacherView', $view);
         $teacher = $teacherRepo -> find($id);
         $this->previous = $teacherRepo -> PreviousRecordId($id);
         $this->next = $teacherRepo -> NextRecordId($id);
 
-        switch($view) {
+        switch(session()->get('teacherView')) {
+/*
           case 'showInfo':
               return view('teacher.showInfo', ["teacher"=>$teacher, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
+*/
           case 'showSubjects':
-              $taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+              //$taughtSubjects = TaughtSubject::where('teacher_id', $id)->get();
+              $taughtSubjects = $teacher -> subjects;
               $nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
               return view('teacher.showSubjects', ["teacher"=>$teacher, "previous"=>$this->previous, "next"=>$this->next,
                   "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
               exit;
           break;
+/*
           case 'showGroups':
               return $this -> showGroups($teacher);
               exit;
@@ -105,12 +112,14 @@ class TeacherController extends Controller
               return view('teacher.showLessonPlans', ["teacher"=>$teacher, "lessonHours"=>$lessonHours, "previous"=>$this->previous, "next"=>$this->next]);
               exit;
           break;
+*/
           default:
-              echo 'Widok nieznany';
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('teacherView'));
               exit;
           break;
         }
     }
+/*
     public function showGroups($teacher)
     {
         for($i=0; $i<6; $i++)
@@ -119,7 +128,7 @@ class TeacherController extends Controller
         return view('teacher.showGroups', ["teacher"=>$teacher, "groups"=>$groups, "previous"=>$this->previous, "next"=>$this->next]);
     }
 
-
+*/
     public function edit(Teacher $nauczyciel, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo)
     {
         $classrooms = $classroomRepo->getAll();
@@ -160,5 +169,4 @@ class TeacherController extends Controller
         $nauczyciel->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

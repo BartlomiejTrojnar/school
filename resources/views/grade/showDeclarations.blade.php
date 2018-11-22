@@ -45,6 +45,7 @@
     </thead>
 
     <tbody>
+    @if($declarations != 0)
     @foreach($declarations as $declaration)
       <tr>
         <td><a href="{{ route('deklaracja.show', $declaration->id) }}">{{ $loop->iteration }}</a></td>
@@ -64,6 +65,7 @@
         </td>
       </tr>
     @endforeach
+    @endif
 
       <tr class="create">
         <td colspan="9"><a href="{{ route('deklaracja.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>

@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Subject;
-//use App\Repositories\SubjectRepository;
-//use App\Models\Group;
-//use App\Models\TaughtSubject;
+use App\Models\Subject;
+use App\Repositories\SubjectRepository;
+
+use App\Models\TaughtSubject;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
-/*
+
     public function index(SubjectRepository $subjectRepo)
     {
         for($i=0; $i<6; $i++)
@@ -66,44 +66,39 @@ class SubjectController extends Controller
         if(empty(session()->get('subjectView')))  session()->put('subjectView', 'showInfo');
         if($view)  session()->put('subjectView', $view);
         $subject = $subjectRepo -> find($id);
-        $this->previous = $subjectRepo->previousRecordId($id);
-        $this->next = $subjectRepo->nextRecordId($id);
+        $previous = $subjectRepo->previousRecordId($id);
+        $next = $subjectRepo->nextRecordId($id);
 
         switch(session()->get('subjectView')) {
           case 'showInfo':
-              return view('subject.showInfo', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next]);
+              return view('subject.showInfo', ["subject"=>$subject, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           case 'showGroups':
-              return $this -> showGroups($subject);
+              $groups = $subject -> groups;
+              return view('subject.showGroups', ["subject"=>$subject, "groups"=>$groups, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+
           case 'showTeachers':
-              $subjectTeachers = TaughtSubject::where('subject_id', $id)->get();
+              $subjectTeachers = $subject -> teachers;
               $unlearningTeachers = TaughtSubject::unlearningTeachers($subjectTeachers);
-              return view('subject.showTeachers', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next,
+              return view('subject.showTeachers', ["subject"=>$subject, "previous"=>$previous, "next"=>$next,
                 "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers]);
               exit;
           break;
+
           case 'showTextbooks':
-              return view('subject.showTextbooks', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next]);
+              $textbooks = $subject -> textbooks;
+              return view('subject.showTextbooks', ["subject"=>$subject, "textbooks"=>$textbooks, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           default:
-              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('subjectView'));
               exit;
           break;
         }
     }
-
-    public function showGroups($subject)
-    {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("GroupOrderBy[$i]");
-        $groups = Group::where('subject_id', $subject->id)->get();
-        return view('subject.showGroups', ["subject"=>$subject, "groups"=>$groups, "previous"=>$this->previous, "next"=>$this->next]);
-    }
-
 
     public function edit(Subject $przedmiot)
     {
@@ -133,5 +128,4 @@ class SubjectController extends Controller
         $przedmiot->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }
