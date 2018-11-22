@@ -1,9 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 //use App\Models\Session;
-//use App\Repositories\SessionRepository;
+use App\Repositories\SessionRepository;
 //use App\Models\ExamDescription;
-//use App\Models\Declaration;
 //use App\Models\Term;
 use Illuminate\Http\Request;
 
@@ -76,7 +75,7 @@ class SessionController extends Controller
                exit;
              break;
              case 'showDeclarations':
-               $declarations = Declaration::all()->where('session_id', $id);
+               $declarations = $session -> declarations;
                return view('session.showDeclarations', ["session"=>$session, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
                exit;
              break;

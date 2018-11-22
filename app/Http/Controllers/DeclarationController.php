@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Declaration;
+use App\Models\Declaration;
 //use App\Repositories\DeclarationRepository;
-//use App\Repositories\StudentRepository;
-//use App\Repositories\SessionRepository;
+use App\Repositories\StudentRepository;
+use App\Repositories\SessionRepository;
 use Illuminate\Http\Request;
 
 class DeclarationController extends Controller

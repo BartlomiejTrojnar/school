@@ -100,7 +100,8 @@ class StudentController extends Controller
               exit;
           break;
           case 'showDeclarations':
-              return view('student.showDeclarations', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              $declarations = $student -> declarations;
+              return view('student.showDeclarations', ["student"=>$student, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           case 'showExams':

@@ -108,7 +108,11 @@ class GradeController extends Controller
               exit;
           break;
           case 'showDeclarations':
-              return view('grade.showDeclarations', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              $students = $grade -> students;
+              foreach($students as $student)
+                if( $student->student->declarations->count() )
+                  $declarations = $student->student->declarations;
+              return view('grade.showDeclarations', ["grade"=>$grade, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
           case 'showTasks':

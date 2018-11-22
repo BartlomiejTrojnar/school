@@ -29,7 +29,6 @@
       <tr>
         <th>id</th>
         <th><a href="{{ url('/deklaracja/sortuj/student_id') }}">uczeń</a></th>
-        <th><a href="{{ url('/deklaracja/sortuj/session_id') }}">sesja</a></th>
         <th><a href="{{ url('/deklaracja/sortuj/application_number') }}">numer zgłoszenia</a></th>
         <th><a href="{{ url('/deklaracja/sortuj/student_code') }}">kod ucznia</a></th>
         <th>wprowadzono</th>
@@ -41,9 +40,8 @@
     <tbody>
     @foreach($declarations as $declaration)
       <tr>
-        <td><a href="{{ route('deklaracja.show', $declaration->id) }}">{{ $declaration->id }}</a></td>
-        <td>{{ $declaration->student_id }}</td>
-        <td>{{ $declaration->session_id }}</td>
+        <td><a href="{{ route('deklaracja.show', $declaration->id) }}">{{ $loop->iteration }}</a></td>
+        <td><a href="{{ route('uczen.show', $declaration->student_id) }}">{{ $declaration->student->first_name }} {{ $declaration->student->last_name }}</a></td>
         <td>{{ $declaration->application_number }}</td>
         <td>{{ $declaration->student_code }}</td>
         <td>{{ $declaration->created_at }}</td>
