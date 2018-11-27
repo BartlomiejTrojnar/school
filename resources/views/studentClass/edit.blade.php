@@ -63,7 +63,7 @@
       <tr class="submit"><td colspan="4">
           <input type="hidden" name="historyView" value="{{ $_SERVER['HTTP_REFERER'] }}" />
           <button type="submit" class="btn btn-success">zapisz zmiany</button>
-          <a href="{{ route('klasa.index') }}" class="btn btn-success">anuluj</a>
+          <a href="{{ $_SERVER['HTTP_REFERER'] }}" class="btn btn-success">anuluj</a>
       </tr>
     </table>
   </form>

@@ -64,7 +64,7 @@
       <tr class="submit"><td colspan="4">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
           <button type="submit" class="btn btn-primary">dodaj</button>
-          <a href="{{ route('klasa.index') }}" class="btn btn-primary">anuluj</a>
+          <a href="{{ $_SERVER['HTTP_REFERER'] }}" class="btn btn-primary">anuluj</a>
       </tr>
     </table>
   </form>

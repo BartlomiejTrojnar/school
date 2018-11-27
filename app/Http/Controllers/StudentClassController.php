@@ -1,16 +1,15 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\StudentClass;
-//use App\Models\SchoolYear;
-//use App\Repositories\StudentClassRepository;
-//use App\Repositories\GradeRepository;
-//use App\Repositories\StudentRepository;
-//use App\Repositories\SchoolYearRepository;
+use App\Models\StudentClass;
+use App\Repositories\StudentClassRepository;
+
+use App\Repositories\GradeRepository;
+use App\Repositories\StudentRepository;
+use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
 class StudentClassController extends Controller
 {
-/*
     public function create(StudentRepository $studentRepo, GradeRepository $gradeRepo, StudentClassRepository $scRepo, SchoolYearRepository $syRepo)
     {
         $proposedNumber = $scRepo->getLastNumber();
@@ -96,5 +95,4 @@ class StudentClassController extends Controller
         StudentClass::destroy($id);
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

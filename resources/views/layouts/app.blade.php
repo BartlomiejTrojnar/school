@@ -91,13 +91,16 @@
       <ul class="nav flex-column">
         <li><a href="{{ route('szkola.index') }}">szkoły</a></li>
         <li><a href="{{ route('rok_szkolny.index') }}">lata szkolne</a></li>
+<?php /*
         <li><a href="{{ route('godzina.index') }}">godziny</a></li>
         <li><a href="{{ route('sala.index') }}">sale lekcyjne</a></li>
         <li><a href="{{ route('przedmiot.index') }}">przedmioty</a></li>
+*/ ?>
         <li><a href="{{ route('uczen.index') }}">uczniowie</a></li>
-        <li><a href="{{ route('klasa.index') }}">klasy</a></li>
-        <li><a href="{{ route('nauczyciel.index') }}">nauczyciele</a></li>
         <li><a href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
+        <li><a href="{{ route('klasa.index') }}">klasy</a></li>
+<?php /*
+        <li><a href="{{ route('nauczyciel.index') }}">nauczyciele</a></li>
         <li><a href="{{ route('rozszerzenie.index') }}">rozszerzenia</a></li>
         <li><a href="{{ route('grupa.index') }}">grupy</a></li>
         <li><a href="{{ route('grupa_uczniowie.index') }}">uczniowie grupy</a></li>
@@ -121,6 +124,7 @@
         <li><a href="{{ route('opis_egzaminu.index') }}">opisy egzaminów</a></li>
         <li><a href="{{ route('termin.index') }}">terminy</a></li>
         <li><a href="{{ route('egzamin.index') }}">egzaminy</a></li>
+*/ ?>
       </ul>
     </nav>
   @endif

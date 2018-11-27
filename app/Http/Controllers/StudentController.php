@@ -79,15 +79,17 @@ class StudentController extends Controller
 
         switch(session()->get('studentView')) {
           case 'showInfo':
-              return view('student.showInfo', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
+              return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'student.showInfo', ["student"=>$student]);
+              exit;
+          break;
+          case 'showClasses':
+              $studentClasses = $student -> grades;
+              return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses]);
               exit;
           break;
 /*
-          case 'showClasses':
-              $studentClasses = $studentRepo -> find($id) -> grades;
-              return view('student.showClasses', ["student"=>$student, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
-              exit;
-          break;
           case 'showEnlargements':
               return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;

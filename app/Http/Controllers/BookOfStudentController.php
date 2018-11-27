@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 //use App\Models\BookOfStudent;
-//use App\Repositories\BookOfStudentRepository;
-//use App\Repositories\SchoolRepository;
+use App\Repositories\BookOfStudentRepository;
+
+use App\Repositories\SchoolRepository;
 //use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 
 class BookOfStudentController extends Controller
 {
-/*
     public function index(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo)
     {
         for($i=0; $i<6; $i++)
@@ -19,6 +19,7 @@ class BookOfStudentController extends Controller
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>1]);
     }
+/*
 
     public function orderBy($column)
     {

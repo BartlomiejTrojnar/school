@@ -3,7 +3,8 @@ namespace App\Http\Controllers;
 use App\Models\SchoolYear;
 use App\Repositories\SchoolYearRepository;
 
-//use App\Models\Grade;
+use App\Models\Grade;
+use App\Models\Student;
 //use App\Models\Group;
 //use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -56,21 +57,28 @@ class SchoolYearController extends Controller
 
         switch(session()->get('schoolYearView')) {
           case 'showInfo':
-              return view('schoolYear.showInfo', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'schoolYear.showInfo', ["schoolYear"=>$schoolYear]);
               exit;
           break;
-/*
           case 'showClasses':
               $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
                             -> where('year_of_graduation', '>', $schoolYear->date_start) -> get();
-              return view('schoolYear.showClasses', ["schoolYear"=>$schoolYear, "grades"=>$grades, "previous"=>$previous, "next"=>$next]);
+              return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'schoolYear.showClasses', ["schoolYear"=>$schoolYear, "grades"=>$grades]);
               exit;
           break;
           case 'showStudents':
-              //$students = Student::where('first_year_id', '>', $id);
-              return view('schoolYear.showStudents', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next]);
+              $students = Student::join('student_classes', 'students.id', '=', 'student_classes.student_id')
+                  -> select('students.*')
+                  -> where('date_start', '>=', $schoolYear->date_start)
+                  -> where('date_end', '<=', $schoolYear->date_end)
+                  -> get();
+              return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'schoolYear.showStudents', ["schoolYear"=>$schoolYear, "students"=>$students]);
               exit;
           break;
+/*
           case 'showTeachers':
              $teachers = $this->getTeachers($id);
              return view('schoolYear.showTeachers', ["schoolYear"=>$schoolYear, "teachers"=>$teachers, "previous"=>$previous, "next"=>$next]);
