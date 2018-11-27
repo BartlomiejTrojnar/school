@@ -62,25 +62,28 @@ class SchoolController extends Controller
         $next = $schoolRepo->NextRecordId($id);
 
         switch(session()->get('schoolView')) {
-             case 'showInfo':
-               return view('school.showInfo', ["school"=>$school, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showStudents':
-               //$students = $schoolRepo -> find($id) -> students;
-               $students = $school -> students;
-               return view('school.showStudents', ["school"=>$school, "students"=>$students, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showClasses':
-               $grades = $school -> grades;
-               return view('school.showClasses', ["school"=>$school, "grades"=>$grades, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             default:
-               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));
-               exit;
-             break;
+          case 'showInfo':
+              return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'school.showInfo', ["school"=>$school]);
+              exit;
+          break;
+          case 'showStudents':
+              $students = $school -> students;
+              return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'school.showStudents', ["school"=>$school, "students"=>$students]);
+              exit;
+          break;
+          case 'showClasses':
+              $subTitle = "Klasy w szkole";
+              $grades = $school -> grades() -> paginate();
+              return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'grade.index', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades]);
+              exit;
+          break;
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));
+              exit;
+          break;
         }
     }
 
