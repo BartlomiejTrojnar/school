@@ -126,8 +126,12 @@ class GradeController extends Controller
               exit;
           break;
 */
+          case 'change':
+              session()->put('gradeSelected', $id);
+              return redirect( $_SERVER['HTTP_REFERER'] );
+          break;
           default:
-              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('gradeView'));
               exit;
           break;
         }

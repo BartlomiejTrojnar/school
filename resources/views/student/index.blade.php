@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('java-script')
+   <script language="javascript" type="text/javascript" src="{{ asset('js/student.js') }}"></script>
+@endsection
+
 @section('header')
   <h1>Uczniowie</h1>
 @endsection
@@ -21,6 +25,14 @@
         <th>aktualizacja</th>
         <th colspan="2">+/-</th>
       </tr>
+
+      <tr>
+        <td>-</td>
+        <td><?php  print_r($gradeSelectField);  ?></td>
+        <?php /*<td>  print_r($groupSelectField);  </td> */ ?>
+        <td colspan="10">=</td>
+      </tr>
+
     </thead>
     <tbody>
 

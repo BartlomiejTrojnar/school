@@ -3,19 +3,28 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
 
+use App\Repositories\GradeRepository;
+
 //use App\Models\LessonHour;
 //use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index(StudentRepository $studentRepo)
+    public function index(StudentRepository $studentRepo, GradeRepository $gradeRepo)
     {
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("StudentOrderBy[$i]");
 
-        $students = $studentRepo->getPaginate($orderBy);
-        return view('student.index', ["students"=>$students]);
+        if( session()->get('gradeSelected') )
+            $students = Student::join('student_classes', 'students.id', '=', 'student_classes.student_id')
+              -> select('students.*')
+              -> where('grade_id', '=', session()->get('gradeSelected'))
+              -> paginate(50);
+        else $students = $studentRepo -> getPaginate($orderBy);
+        $grades = $gradeRepo->getAll();
+        return view('student.index', ["students"=>$students])
+            -> nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>session()->get('gradeSelected') ]);
     }
 
     public function orderBy($column)
