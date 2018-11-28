@@ -25,5 +25,16 @@
     <th>aktualizacja</th>
     <td>{{ $student->updated_at }}</td>
   </tr>
-  <tr><th>aktualna klasa i numer</th><td></td></tr>
+  <tr>
+    <th>aktualna klasa i numer</th>
+    <td>
+      @foreach($student->grades as $grade)
+        @if( $grade->date_start <= session()->get('dateSession') && $grade->date_end >= session()->get('dateSession') )
+          <a href="{{ route('klasa.show', $grade->grade_id) }}">
+            {{ $grade->grade->year_of_beginning }}-{{ $grade->grade->year_of_graduation }} {{ $grade->grade->symbol }}
+          </a>  {{$grade->number}}
+        @endif
+      @endforeach
+    </td>
+  </tr>
 </table>
