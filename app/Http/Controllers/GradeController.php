@@ -18,7 +18,8 @@ class GradeController extends Controller
           $orderBy[$i] = session()->get("GradeOrderBy[$i]");
 
         $grades = $gradeRepo->getPaginate($orderBy);
-        return view('grade.index', ["grades"=>$grades]);
+        return view('grade.index')
+            -> nest('gradeTable', 'grade.table', ["grades"=>$grades]);
     }
 
     public function orderBy($column)
@@ -73,15 +74,15 @@ class GradeController extends Controller
         $next = $gradeRepo -> NextRecordId($id);
 
         switch(session()->get('gradeView')) {
-/*
           case 'showInfo':
-              return view('grade.showInfo', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'grade.showInfo', ["grade"=>$grade]);
               exit;
           break;
-*/
           case 'showStudents':
               $studentClasses = $grade -> students;
-              return view('grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses, "previous"=>$previous, "next"=>$next]);
+              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses]);
               exit;
           break;
 /*

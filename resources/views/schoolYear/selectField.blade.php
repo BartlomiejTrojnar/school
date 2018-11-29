@@ -1,7 +1,7 @@
 <select name="{{ $name }}">
   <option value="0">- wybierz rok szkolny -</option>
   @foreach($schoolYears as $schoolYear)
-    @if($schoolYear->id == $selectedSchoolYear)
+    @if($schoolYear->id == $schoolYearSelected)
       <option selected="selected" value="{{$schoolYear->id}}">{{$schoolYear->date_start}} {{$schoolYear->date_end}}</option>
     @else
       <option value="{{$schoolYear->id}}">{{$schoolYear->date_start}} {{$schoolYear->date_end}}</option>

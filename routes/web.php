@@ -8,10 +8,22 @@ Route::resource('/szkola', 'SchoolController');
 Route::get('/szkola/sortuj/{column}', 'SchoolController@orderBy');
 Route::get('/szkola/{id}/{view}', 'SchoolController@show');
 
+Route::resource('/rok_szkolny', 'SchoolYearController');
+Route::get('/rok_szkolny/{id}/change', 'SchoolYearController@change');
+Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
+
+Route::resource('/uczen', 'StudentController');
+Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
+Route::get('/uczen/{id}/{view}', 'StudentController@show');
+
+Route::resource('/klasa', 'GradeController');
+Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
+Route::get('/klasa/{id}/getDates', 'GradeController@getDates');
+Route::get('/klasa/{id}/{view}', 'GradeController@show');
+
+
 Route::resource('/godzina', 'LessonHourController');
 
-Route::resource('/rok_szkolny', 'SchoolYearController');
-Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
 
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/sortuj/{column}', 'ClassroomController@orderBy');
@@ -21,16 +33,8 @@ Route::resource('/przedmiot', 'SubjectController');
 Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
 Route::get('/przedmiot/{id}/{view}', 'SubjectController@show');
 
-Route::resource('/uczen', 'StudentController');
-Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
-Route::get('/uczen/{id}/{view}', 'StudentController@show');
-Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 // -------------------------------------------------------------------------------------------------------- //
-Route::resource('/klasa', 'GradeController');
-Route::get('/klasa/getDates/{id}', 'GradeController@getDates');
-Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
-Route::get('/klasa/{id}/{view}', 'GradeController@show');
 
 Route::resource('/klasy_uczniow', 'StudentClassController');
 

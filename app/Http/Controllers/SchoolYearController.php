@@ -47,6 +47,12 @@ class SchoolYearController extends Controller
         return redirect($request->history_view);
     }
 
+    public function change($id)
+    {
+        session()->put('schoolYearSelected', $id);
+        return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
     public function show($id, $view='', SchoolYearRepository $schoolYearRepo)
     {
         if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
@@ -68,7 +74,7 @@ class SchoolYearController extends Controller
 //              return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
   //                -> nest('subView', 'schoolYear.showClasses', ["schoolYear"=>$schoolYear, "grades"=>$grades]);
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.index', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
+                  -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
               exit;
           break;
           case 'showStudents':
@@ -98,6 +104,10 @@ class SchoolYearController extends Controller
               exit;
           break;
 */
+          case 'change':
+              session()->put('schoolYearSelected', $id);
+              return redirect( $_SERVER['HTTP_REFERER'] );
+          break;
           default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolYearView'));
               exit;

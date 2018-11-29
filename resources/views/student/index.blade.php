@@ -29,6 +29,7 @@
       <tr>
         <td>-</td>
         <td><?php  print_r($gradeSelectField);  ?></td>
+        <td><?php  print_r($schoolYearSelectField);  ?></td>
         <?php /*<td>  print_r($groupSelectField);  </td> */ ?>
         <td colspan="10">=</td>
       </tr>
@@ -38,7 +39,7 @@
 
     @foreach($students as $student)
       <tr>
-        <td>{{ $student->id }}</td>
+        <td>{{ $loop->iteration }}</td>
         <td>{{ $student->first_name }}</td>
         <td>{{ $student->second_name }}</td>
         <td><a href="{{ route('uczen.show', $student->id) }}">{{ $student->last_name }}</a></td>

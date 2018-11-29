@@ -4,26 +4,31 @@ use App\Models\Student;
 use App\Repositories\StudentRepository;
 
 use App\Repositories\GradeRepository;
-
-//use App\Models\LessonHour;
-//use App\Models\StudentClass;
+use App\Repositories\SchoolYearRepository;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index(StudentRepository $studentRepo, GradeRepository $gradeRepo)
+    public function index(StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, GradeRepository $gradeRepo)
     {
         for($i=0; $i<6; $i++)
           $orderBy[$i] = session()->get("StudentOrderBy[$i]");
 
+        $students = Student::leftjoin('student_classes', 'students.id', '=', 'student_classes.student_id')
+          -> select('students.*');
+        if( session()->get('schoolYearSelected') ) {
+            $schoolYear = $schoolYearRepo -> find( session()->get('schoolYearSelected') );
+            $students = $students -> where('date_start', '>=', $schoolYear->date_start)
+                                  -> where('date_end', '<=', $schoolYear->date_end);
+        }
         if( session()->get('gradeSelected') )
-            $students = Student::join('student_classes', 'students.id', '=', 'student_classes.student_id')
-              -> select('students.*')
-              -> where('grade_id', '=', session()->get('gradeSelected'))
-              -> paginate(50);
-        else $students = $studentRepo -> getPaginate($orderBy);
+            $students = $students -> where('grade_id', '=', session()->get('gradeSelected'));
+        $students = $students -> paginate(50);
+
+        $schoolYears = $schoolYearRepo->getAll();
         $grades = $gradeRepo->getAll();
         return view('student.index', ["students"=>$students])
+            -> nest('schoolYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ])
             -> nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>session()->get('gradeSelected') ]);
     }
 

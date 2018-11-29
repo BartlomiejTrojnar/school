@@ -77,7 +77,7 @@ class SchoolController extends Controller
               $subTitle = "Klasy w szkole";
               $grades = $school -> grades() -> paginate();
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.index', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades]);
+                  -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades]);
               exit;
           break;
           default:

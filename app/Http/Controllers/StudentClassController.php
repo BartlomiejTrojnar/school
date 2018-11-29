@@ -16,11 +16,11 @@ class StudentClassController extends Controller
         $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
         $students = $studentRepo->getAll();
         $grades = $gradeRepo->getAll();
-        if(isset($_GET['grade_id'])) $selectedGrade = $_GET['grade_id'];   else $selectedGrade = 0;
-        if(isset($_GET['student_id'])) $selectedStudent = $_GET['student_id'];   else $selectedStudent = 0;
+        if(isset($_GET['grade_id'])) $gradeSelected = $_GET['grade_id'];   else $gradeSelected = 0;
+        if(isset($_GET['student_id'])) $studentSelected = $_GET['student_id'];   else $studentSelected = 0;
         return view('studentClass.create', ["proposedNumber"=>$proposedNumber, "proposedDates"=>$proposedDates])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$selectedStudent])
-             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>$selectedGrade]);
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected])
+             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected]);
     }
 
     public function store(Request $request)
@@ -56,12 +56,12 @@ class StudentClassController extends Controller
         $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
         $students = $studentRepo->getAll();
         $grades = $gradeRepo->getAll();
-        $selectedStudent = $studentClass->student_id;
-        $selectedGrade = $studentClass->grade_id;
+        $studentSelected = $studentClass->student_id;
+        $gradeSelected = $studentClass->grade_id;
 
         return view('studentClass.edit', ["studentClass"=>$studentClass, "proposedDates"=>$proposedDates])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$selectedStudent])
-             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "selectedGrade"=>$selectedGrade]);
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected])
+             ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected]);
     }
 
     public function update(Request $request, StudentClass $klasy_uczniow)
