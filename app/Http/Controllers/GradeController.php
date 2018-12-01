@@ -85,11 +85,15 @@ class GradeController extends Controller
                   -> nest('subView', 'grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses]);
               exit;
           break;
-/*
-          case 'showStudents2':
-              return view('grade.showStudents2', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
+          case 'showStudentsAll':
+              foreach($grade -> students as $studentClass) {
+                 $students[] = $studentClass->student;
+              }
+              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "links">=false, "title"=>"Uczniowie klasy"]);
               exit;
           break;
+/*
           case 'showEnlargements':
               return view('grade.showEnlargements', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;

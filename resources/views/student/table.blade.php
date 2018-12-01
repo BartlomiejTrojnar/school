@@ -1,4 +1,8 @@
-{{ $students->links() }}
+@if( !empty( $links ) )
+  {{ $students->links() }}
+@endif
+
+<h2>{{ $title }}</h2>
 <table id="students">
   <thead>
     <tr>
@@ -15,6 +19,7 @@
       <th colspan="2">+/-</th>
     </tr>
 
+    @if( !empty( $links ) )
     <tr>
       <td>-</td>
       <td><?php  print_r($gradeSelectField);  ?></td>
@@ -22,6 +27,7 @@
       <?php /*<td>  print_r($groupSelectField);  </td> */ ?>
       <td colspan="10">=</td>
     </tr>
+    @endif
   </thead>
 
   <tbody>
