@@ -1,6 +1,4 @@
-<h2>uczniowie w klasie</h2>
-<p>Stan na dzień: <?php echo session()->get('dateSession') ?></p>
-
+<h2>{{ $subTitle }}</h2>
 <table>
   <tr>
     <th>uczeń</th>
@@ -22,8 +20,8 @@
       @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
       @else <td class="not_confirmation">{{ $sc->date_end }}</td>
       @endif
-      @if($sc->confirmation_numer==1) <td class="c">{{ $sc->number }}</td>
-      @else <td class="not_confirmation c">{{ $sc->number }}</td>
+      @if($sc->confirmation_numer==1) <td>{{ $sc->numer }}</td>
+      @else <td class="not_confirmation">{{ $sc->numer }}</td>
       @endif
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
@@ -38,10 +36,4 @@
       </td>
     </tr>
   @endforeach
-
-  <tr class="create"><td colspan="7">
-    <a href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
-      <img class="create" src="{{ asset('css/plus.png') }}" /> dodaj ucznia
-    </a>
-  </td></tr>
 </table>

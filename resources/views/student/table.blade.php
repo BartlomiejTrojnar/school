@@ -2,7 +2,7 @@
   {{ $students->links() }}
 @endif
 
-<h2>{{ $title }}</h2>
+<h2>{{ $subTitle }}</h2>
 <table id="students">
   <thead>
     <tr>

@@ -70,14 +70,14 @@ class SchoolController extends Controller
           case 'showStudents':
               $students = $school -> students;
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'school.showStudents', ["school"=>$school, "students"=>$students]);
+                  -> nest('subView', 'student.table', ["school"=>$school, "students"=>$students, "subTitle"=>"uczniowie szkoły"]);
               exit;
           break;
           case 'showClasses':
               $subTitle = "Klasy w szkole";
               $grades = $school -> grades() -> paginate();
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades]);
+                  -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades, "links"=>true]);
               exit;
           break;
           default:

@@ -19,7 +19,7 @@ class GradeController extends Controller
 
         $grades = $gradeRepo->getPaginate($orderBy);
         return view('grade.index')
-            -> nest('gradeTable', 'grade.table', ["grades"=>$grades]);
+            -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>""]);
     }
 
     public function orderBy($column)
@@ -82,7 +82,7 @@ class GradeController extends Controller
           case 'showStudents':
               $studentClasses = $grade -> students;
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.showStudents', ["grade"=>$grade, "studentClasses"=>$studentClasses]);
+                  -> nest('subView', 'studentClass.table', ["grade"=>$grade, "studentClasses"=>$studentClasses, "subTitle"=>"uczniowie w klasie"]);
               exit;
           break;
           case 'showStudentsAll':
@@ -90,7 +90,7 @@ class GradeController extends Controller
                  $students[] = $studentClass->student;
               }
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "links">=false, "title"=>"Uczniowie klasy"]);
+                  -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"Uczniowie klasy"]);
               exit;
           break;
 /*

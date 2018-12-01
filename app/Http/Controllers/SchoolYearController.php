@@ -71,20 +71,19 @@ class SchoolYearController extends Controller
               $subTitle = "klasy w roku szkolnym";
               $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
                             -> where('year_of_graduation', '>', $schoolYear->date_start) -> paginate();
-//              return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
-  //                -> nest('subView', 'schoolYear.showClasses', ["schoolYear"=>$schoolYear, "grades"=>$grades]);
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
               exit;
           break;
           case 'showStudents':
+              $subTitle = "uczniowie w roku szkolnym";
               $students = Student::join('student_classes', 'students.id', '=', 'student_classes.student_id')
                   -> select('students.*')
                   -> where('date_start', '>=', $schoolYear->date_start)
                   -> where('date_end', '<=', $schoolYear->date_end)
                   -> get();
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'schoolYear.showStudents', ["schoolYear"=>$schoolYear, "students"=>$students]);
+                  -> nest('subView', 'student.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "students"=>$students, "links"=>false]);
               exit;
           break;
 /*

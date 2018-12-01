@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-  <h1>Lekcje</h1>
+  <h1>Klasy</h1>
 @endsection
 
 @section('main-content')
