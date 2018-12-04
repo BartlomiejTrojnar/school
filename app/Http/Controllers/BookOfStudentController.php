@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\BookOfStudent;
+use App\Models\BookOfStudent;
 use App\Repositories\BookOfStudentRepository;
 
 use App\Repositories\SchoolRepository;
-//use App\Repositories\StudentRepository;
+use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 
 class BookOfStudentController extends Controller
@@ -17,9 +17,8 @@ class BookOfStudentController extends Controller
         $bookOfStudents = $bookOfStudentRepo->getAll($orderBy);
         $schools = $schoolRepo->getAll();
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>1]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
     }
-/*
 
     public function orderBy($column)
     {
@@ -45,8 +44,8 @@ class BookOfStudentController extends Controller
         $schools = $schoolRepo->getAll();
         $students = $studentRepo->getAll();
         return view('bookOfStudent.create')
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>1])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>0]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>0]);
     }
 
     public function store(Request $request)
@@ -66,20 +65,13 @@ class BookOfStudentController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show(BookOfStudent $ksiega_uczniow, BookOfStudentRepository $bookOfStudentRepo)
-    {
-        $previous = $bookOfStudentRepo->previousRecordId($ksiega_uczniow->id);
-        $next = $bookOfStudentRepo->nextRecordId($ksiega_uczniow->id);
-        return view('bookOfStudent.show', ["bookOfStudent"=>$ksiega_uczniow, "previous"=>$previous, "next"=>$next]);
-    }
-
     public function edit(BookOfStudent $ksiega_uczniow, SchoolRepository $schoolRepo, StudentRepository $studentRepo)
     {
         $schools = $schoolRepo->getAll();
         $students = $studentRepo->getAll();
         return view('bookOfStudent.edit', ["bookOfStudent"=>$ksiega_uczniow])
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>$ksiega_uczniow->school_id])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$ksiega_uczniow->student_id]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$ksiega_uczniow->school_id])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$ksiega_uczniow->student_id]);
     }
 
     public function update(Request $request, BookOfStudent $ksiega_uczniow)
@@ -103,5 +95,4 @@ class BookOfStudentController extends Controller
         $ksiega_uczniow->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

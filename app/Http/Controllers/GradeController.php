@@ -81,16 +81,20 @@ class GradeController extends Controller
           break;
           case 'showStudents':
               $studentClasses = $grade -> students;
-              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+              $java_script = "studentClass.js";
+              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next, "java_script"=>$java_script])
                   -> nest('subView', 'studentClass.table', ["grade"=>$grade, "studentClasses"=>$studentClasses, "subTitle"=>"uczniowie w klasie"]);
               exit;
           break;
           case 'showStudentsAll':
               foreach($grade -> students as $studentClass) {
-                 $students[] = $studentClass->student;
+                 if( $studentClass->date_start <= session()->get('dateSession') && $studentClass->date_end >= session()->get('dateSession') )
+                   $students[] = $studentClass->student;
+                 else $studentsOutOfDate[] = $studentClass->student;
               }
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"Uczniowie klasy"]);
+                  -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
+                  -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);
               exit;
           break;
 /*

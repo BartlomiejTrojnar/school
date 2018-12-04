@@ -2,6 +2,7 @@
   {{ $students->links() }}
 @endif
 
+<p>Stan na {{ session()->get('dateSession') }}</p>
 <h2>{{ $subTitle }}</h2>
 <table id="students">
   <thead>

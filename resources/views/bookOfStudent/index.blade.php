@@ -30,7 +30,7 @@
         <td>{{ $bookOfStudent->id }}</td>
         <td>{{ $bookOfStudent->school->name }}</td>
         <td>{{ $bookOfStudent->student->first_name }} {{ $bookOfStudent->student->last_name }}</td>
-        <td><a href="{{ route('ksiega_uczniow.show', $bookOfStudent->id) }}">{{ $bookOfStudent->number }}</a></td>
+        <td>{{ $bookOfStudent->number }}</td>
         <td>{{ $bookOfStudent->created_at }}</td>
         <td>{{ $bookOfStudent->updated_at }}</td>
         <td><a href="{{ route('ksiega_uczniow.edit', $bookOfStudent->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>

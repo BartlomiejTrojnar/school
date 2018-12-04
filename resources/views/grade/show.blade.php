@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@if( !empty($java_script) )
+   @section('java-script')
+       <script language="javascript" type="text/javascript" src="{{ asset('js/'.$java_script) }}"></script>
+   @endsection
+@endif
+
 @section('header')
   <h1>{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</h1>
   <aside id="strzalka_l">
@@ -33,5 +39,6 @@
 
   <?php
     echo $subView;
+    if( !empty($subView2) ) echo $subView2;
   ?>
 @endsection

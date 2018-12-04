@@ -59,9 +59,40 @@ function getGradeDates(grade_id) {
 	return false;
 }
 
+function clickGradeButtons() {
+    $('#gradeButtons a').bind('click', function(){
+        var year = $(this).attr('data-year');
+        $('input#date_start').val( year-1+'-09-01' );
+        $('input#date_end').val( year+'-08-31' );
+        verifyAndDisplayStudents( $('input#date_start').val(), $('input#date_end').val() );
+        return false;
+    });
+}
+function dateStartOrEndChanged() {
+    $('input#date_start').bind('change', function(){
+        verifyAndDisplayStudents( $(this).val(), $('input#date_end').val() );
+        return false;
+    });
+    $('input#date_end').bind('change', function(){
+        verifyAndDisplayStudents( $('input#date_start').val(), $(this).val() );
+        return false;
+    });
+}
+function verifyAndDisplayStudents(date_start, date_end) {
+    $('table#studentClasses tr').each( function() {
+        if( $(this).attr('data-start') > date_end || $(this).attr('data-end') < date_start)
+          $(this).hide();
+        else $(this).show();
+    });
+}
+
+
+
 // ----------------------------------- ZAŁADOWANIE DOKUMENTU ------------------------------------ //
 $(document).ready(function() {
     klikanieDat();
     klikanieNumeru();
     gradeChanged();
+    dateStartOrEndChanged();
+    clickGradeButtons();
 });
