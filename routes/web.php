@@ -16,10 +16,18 @@ Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
+Route::resource('/ksiega_uczniow', 'BookOfStudentController');
+Route::get('/ksiega_uczniow/sortuj/{column}', 'BookOfStudentController@orderBy');
+
 Route::resource('/klasa', 'GradeController');
 Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy');
 Route::get('/klasa/{id}/getDates', 'GradeController@getDates');
 Route::get('/klasa/{id}/{view}', 'GradeController@show');
+
+Route::resource('/klasy_ucznia', 'StudentClassController');
+Route::get('/klasy_ucznia/sortuj/{column}', 'StudentClassController@orderBy');
+
+// -------------------------------------------------------------------------------------------------------- //
 
 
 Route::resource('/godzina', 'LessonHourController');
@@ -34,9 +42,7 @@ Route::get('/przedmiot/sortuj/{column}', 'SubjectController@orderBy');
 Route::get('/przedmiot/{id}/{view}', 'SubjectController@show');
 
 
-// -------------------------------------------------------------------------------------------------------- //
 
-Route::resource('/klasy_uczniow', 'StudentClassController');
 
 Route::get('/nauczyciel/sortuj/{column}', 'TeacherController@orderBy');
 Route::resource('/nauczyciel', 'TeacherController');
@@ -47,9 +53,6 @@ Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::get('/nauczany_przedmiot/sortuj/{column}', 'TaughtSubjectController@orderBy');
 Route::get('/nauczany_przedmiot/delete/{id}', 'TaughtSubjectController@delete');
 
-Route::resource('/ksiega_uczniow', 'BookOfStudentController');
-Route::get('/ksiega_uczniow/sortuj/{column}', 'BookOfStudentController@orderBy');
-Route::resource('/klasy_ucznia', 'StudentClassController');
 
 Route::resource('/rozszerzenie', 'EnlargementController');
 Route::get('/rozszerzenie/sortuj/{column}', 'EnlargementController@orderBy');

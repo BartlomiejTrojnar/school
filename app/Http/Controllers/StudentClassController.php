@@ -10,6 +10,25 @@ use Illuminate\Http\Request;
 
 class StudentClassController extends Controller
 {
+    public function orderBy($column)
+    {
+        if(session()->get('StudentClassOrderBy[0]') == $column)
+          if(session()->get('StudentClassOrderBy[1]') == 'desc')
+            session()->put('StudentClassOrderBy[1]', 'asc');
+          else
+            session()->put('StudentClassOrderBy[1]', 'desc');
+        else
+        {
+          session()->put('StudentClassOrderBy[4]', session()->get('StudentClassOrderBy[2]'));
+          session()->put('StudentClassOrderBy[2]', session()->get('StudentClassOrderBy[0]'));
+          session()->put('StudentClassOrderBy[0]', $column);
+          session()->put('StudentClassOrderBy[5]', session()->get('StudentClassOrderBy[3]'));
+          session()->put('StudentClassOrderBy[3]', session()->get('StudentClassOrderBy[1]'));
+          session()->put('StudentClassOrderBy[1]', 'asc');
+        }
+        return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
     public function create(StudentRepository $studentRepo, GradeRepository $gradeRepo, StudentClassRepository $scRepo, SchoolYearRepository $syRepo)
     {
         $proposedNumber = $scRepo->getLastNumber();

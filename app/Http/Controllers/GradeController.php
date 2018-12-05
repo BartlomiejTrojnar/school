@@ -5,6 +5,7 @@ use App\Repositories\GradeRepository;
 
 //use App\Models\LessonHour;
 use App\Repositories\SchoolRepository;
+use App\Repositories\StudentClassRepository;
 //use App\Models\GroupClass;
 //use App\Models\StudentClass;
 //use App\Repositories\GroupClassRepository;
@@ -65,7 +66,7 @@ class GradeController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', GradeRepository $gradeRepo)
+    public function show($id, $view='', GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
     {
         if(empty(session()->get('gradeView')))  session()->put('gradeView', 'showInfo');
         if($view)  session()->put('gradeView', $view);
@@ -80,7 +81,7 @@ class GradeController extends Controller
               exit;
           break;
           case 'showStudents':
-              $studentClasses = $grade -> students;
+              $studentClasses = $studentClassRepo -> getGradeStudents($grade->id);
               $java_script = "studentClass.js";
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next, "java_script"=>$java_script])
                   -> nest('subView', 'studentClass.table', ["grade"=>$grade, "studentClasses"=>$studentClasses, "subTitle"=>"uczniowie w klasie"]);

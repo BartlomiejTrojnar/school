@@ -1,25 +1,27 @@
 <h2>{{ $subTitle }}</h2>
 
-<div id="gradeButtons" class="c">
-<?php
-  for($i=$grade->year_of_graduation-1; $i>=$grade->year_of_beginning; $i--)
-    printf('<a class="btn btn-primary" data-year="%s">klasa %s</a>', $grade->year_of_beginning+($grade->year_of_graduation-$i), $grade->year_of_graduation-$i );
-?>
-</div>
-<div class="form-inline c">
+@if( !empty($grade) )
+  <div id="gradeButtons" class="c">
+    <?php
+      for($i=$grade->year_of_graduation-1; $i>=$grade->year_of_beginning; $i--)
+      printf('<a class="btn btn-primary" data-year="%s">klasa %s</a>', $grade->year_of_beginning+($grade->year_of_graduation-$i), $grade->year_of_graduation-$i );
+    ?>
+  </div>
+  <div class="form-inline c">
     <label for="date_start">data początkowa</label>
     <input id="date_start" type="date" class="form-control" name="date_start" placeholder="2018-08-31" size="12">
     <label for="date_end">data końcowa</label>
     <input id="date_end" type="date" class="form-control" name="date_end" placeholder="2018-08-31">
-</div>
+  </div>
+@endif
 
 <table id="studentClasses">
   <tr>
-    <th>uczeń</th>
-    <th>klasa</th>
-    <th>od</th>
-    <th>do</th>
-    <th>numer</th>
+    <th><a href="{{ url('/klasy_ucznia/sortuj/student_id') }}">uczeń</a></th>
+    <th><a href="{{ url('/klasy_ucznia/sortuj/grade_id') }}">klasa</a></th>
+    <th><a href="{{ url('/klasy_ucznia/sortuj/date_start') }}">od</a></th>
+    <th><a href="{{ url('/klasy_ucznia/sortuj/date_end') }}">do</a></th>
+    <th><a href="{{ url('/klasy_ucznia/sortuj/number') }}">numer</a></th>
     <th>uwagi</th>
     <th colspan="2">+/-</th>
   </tr>

@@ -3,8 +3,9 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
 
-use App\Repositories\GradeRepository;
 use App\Repositories\SchoolYearRepository;
+use App\Repositories\GradeRepository;
+use App\Repositories\StudentClassRepository;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -83,7 +84,7 @@ class StudentController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', StudentRepository $studentRepo)
+    public function show($id, $view='', StudentRepository $studentRepo, StudentClassRepository $studentClassRepo)
     {
         if(empty(session()->get('studentView')))  session()->put('studentView', 'showInfo');
         if($view)  session()->put('studentView', $view);
@@ -99,7 +100,8 @@ class StudentController extends Controller
           break;
           case 'showClasses':
               $subTitle = "Klasy ucznia";
-              $studentClasses = $student -> grades;
+              //$studentClasses = $student -> grades;
+              $studentClasses = $studentClassRepo -> getStudentGrades($student->id);
               return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'studentClass.table', ["student"=>$student, "subTitle"=>$subTitle, "studentClasses"=>$studentClasses]);
               exit;
