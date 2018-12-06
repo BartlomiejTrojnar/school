@@ -8,7 +8,7 @@
 @endsection
 
 @section('main-content')
-  <form action="{{ route('klasy_uczniow.update', $studentClass->id) }}" method="post" role="form">
+  <form action="{{ route('klasy_ucznia.update', $studentClass->id) }}" method="post" role="form">
   {{ csrf_field() }}
   {{ method_field('PATCH') }}
     <table>

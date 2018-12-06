@@ -34,13 +34,15 @@ function gradeChanged() {
         getGradeDates($(this).val());
         return false;
     });
+    if( !$.isEmptyObject( $('select[name="grade_id"]').html() ) && $('select[name="grade_id"]').val() != '0' )
+      getGradeDates( $('select[name="grade_id"]').val() );
 }
 function getGradeDates(grade_id) {
     $('#date_start_row .proposedCell').html('');
     $('#date_end_row .proposedCell').html('');
     $.ajax({
         type: "GET",
-        url: "http://localhost/szkola/public/klasa/getDates/"+grade_id,
+        url: "http://localhost/szkola/public/klasa/"+grade_id+"/getDates",
         data: { grade_id: grade_id },
         success: function(result) {
 			$.each(result, function(index, value) {

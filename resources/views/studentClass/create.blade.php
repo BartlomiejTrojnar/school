@@ -9,7 +9,7 @@
 @endsection
 
 @section('main-content')
-  <form action="{{ route('klasy_uczniow.store') }}" method="post" role="form">
+  <form action="{{ route('klasy_ucznia.store') }}" method="post" role="form">
   {{ csrf_field() }}
     <table>
       <tr>

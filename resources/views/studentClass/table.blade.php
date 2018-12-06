@@ -58,7 +58,11 @@
   @endforeach
 
   <tr class="create"><td colspan="8">
-    <a href="{{ route('klasy_ucznia.create') }}">
+    @if( !empty($grade) )
+      <a href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
+    @else
+      <a href="{{ route('klasy_ucznia.create', 'student_id='.$student->id) }}">
+    @endif
       <img class="create btn" src="{{ asset('css/plus.png') }}" alt="--" />
     </a>
   </td></tr>

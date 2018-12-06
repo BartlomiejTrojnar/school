@@ -177,7 +177,7 @@ class GradeController extends Controller
         $klasa->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-/*
+
     public function getDates($id)
     {
         $grade = Grade::find($id);
@@ -187,5 +187,4 @@ class GradeController extends Controller
         }
         return $daty;
     }
-*/
 }

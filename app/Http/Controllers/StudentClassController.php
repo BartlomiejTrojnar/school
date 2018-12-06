@@ -83,8 +83,10 @@ class StudentClassController extends Controller
              ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected]);
     }
 
-    public function update(Request $request, StudentClass $klasy_uczniow)
+    public function update(Request $request, $id, StudentClass $klasy_ucznia)
     {
+        $klasy_ucznia = StudentClass::find($id);
+        // print_r($klasy_ucznia); exit;
         $this->validate($request, [
           'student_id' => 'required',
           'grade_id' => 'required',
@@ -94,17 +96,17 @@ class StudentClassController extends Controller
           'comments' => 'max:32',
         ]);
 
-        $klasy_uczniow->student_id = $request->student_id;
-        $klasy_uczniow->grade_id = $request->grade_id;
-        $klasy_uczniow->date_start = $request->date_start;
-        $klasy_uczniow->date_end = $request->date_end;
-        $klasy_uczniow->number = $request->number;
-        $klasy_uczniow->comments = $request->comments;
-        $klasy_uczniow->confirmation_date_start = $request->confirmation_date_start == 'on' ? true : false;
-        $klasy_uczniow->confirmation_date_end   = $request->confirmation_date_end   == 'on' ? true : false;
-        $klasy_uczniow->confirmation_numer      = $request->confirmation_numer      == 'on' ? true : false;
-        $klasy_uczniow->confirmation_comments   = $request->confirmation_comments   == 'on' ? true : false;
-        $klasy_uczniow->save();
+        $klasy_ucznia->student_id = $request->student_id;
+        $klasy_ucznia->grade_id = $request->grade_id;
+        $klasy_ucznia->date_start = $request->date_start;
+        $klasy_ucznia->date_end = $request->date_end;
+        $klasy_ucznia->number = $request->number;
+        $klasy_ucznia->comments = $request->comments;
+        $klasy_ucznia->confirmation_date_start = $request->confirmation_date_start == 'on' ? true : false;
+        $klasy_ucznia->confirmation_date_end   = $request->confirmation_date_end   == 'on' ? true : false;
+        $klasy_ucznia->confirmation_numer      = $request->confirmation_numer      == 'on' ? true : false;
+        $klasy_ucznia->confirmation_comments   = $request->confirmation_comments   == 'on' ? true : false;
+        $klasy_ucznia->save();
 
         return redirect($request->historyView);
     }
