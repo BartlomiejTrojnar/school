@@ -4,8 +4,17 @@ use App\Models\Grade;
 use Illuminate\Support\Facades\DB;
 
 class GradeRepository extends BaseRepository {
-    public function __construct(Grade $model) {
-        $this->model = $model;
-    }
+  public function __construct(Grade $model) {
+      $this->model = $model;
+  }
+
+  public function countGradesInYear($year) {
+      $grades = $this->model
+        -> where('year_of_beginning', '<=', $year)
+        -> where('year_of_graduation', '>=', $year)
+        -> get();
+      $count = $grades -> count();
+      return $count;
+  }
 }
 ?>

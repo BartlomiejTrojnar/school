@@ -5,6 +5,8 @@ use App\Repositories\SchoolYearRepository;
 
 use App\Models\Grade;
 use App\Models\Student;
+use App\Repositories\GradeRepository;
+use App\Repositories\StudentRepository;
 //use App\Models\Group;
 //use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -53,7 +55,7 @@ class SchoolYearController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function show($id, $view='', SchoolYearRepository $schoolYearRepo)
+    public function show($id, $view='', SchoolYearRepository $schoolYearRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo)
     {
         if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
         if($view)  session()->put('schoolYearView', $view);
@@ -63,8 +65,10 @@ class SchoolYearController extends Controller
 
         switch(session()->get('schoolYearView')) {
           case 'showInfo':
+              $countStudents = $studentRepo -> countStudentsByDates($schoolYear->date_start, $schoolYear->date_end);
+              $countGrades = $gradeRepo -> countGradesInYear(substr($schoolYear->date_end, 0, 4));
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'schoolYear.showInfo', ["schoolYear"=>$schoolYear]);
+                  -> nest('subView', 'schoolYear.showInfo', ["schoolYear"=>$schoolYear, "countStudents"=>$countStudents, "countGrades"=>$countGrades]);
               exit;
           break;
           case 'showClasses':

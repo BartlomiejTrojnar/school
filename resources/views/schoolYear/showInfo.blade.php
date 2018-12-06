@@ -20,7 +20,7 @@
   </tr>
 </table>
 
-<p>liczba uczniów: </p>
-<p>liczba klas: </p>
+<p>liczba uczniów: {{ $countStudents }}</p>
+<p>liczba klas: {{ $countGrades }}</p>
 <p>liczba grup: </p>
 <p>liczba nauczycieli: </p>
