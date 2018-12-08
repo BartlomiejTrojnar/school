@@ -26,7 +26,7 @@
       </tr>
       <tr id="date_start_row">
         <th><label for="date_start">data początkowa</label></th>
-        <td><input id="date_start" type="date" name="date_start" size="8" maxlength="10" /></td>
+        <td><input id="date_start" type="date" name="date_start" size="8" maxlength="10" value="{{ $lastRecord->date_start }}" /></td>
         <td><input type="checkbox" name="confirmation_date_start" /></td>
         <td class="proposedCell">
             <button class="btn btn-success studentClassDateStart">{{ session()->get('dateSession') }}</button>
@@ -35,7 +35,7 @@
       </tr>
       <tr id="date_end_row">
         <th><label for="date_end">data końcowa</label></th>
-        <td><input type="date" name="date_end" size="8" maxlength="10" id="date_end" /></td>
+        <td><input type="date" name="date_end" size="8" maxlength="10" id="date_end" value="{{ $lastRecord->date_end }}" /></td>
         <td><input type="checkbox" name="confirmation_date_end" /></td>
         <td class="proposedCell">
             <button class="btn btn-success studentClassDateEnd">{{ date('Y-m-d', strtotime('-1 day', strtotime(session()->get('dateSession')))) }}</button>
@@ -47,20 +47,20 @@
       <tr>
         <th><label for="numer">numer</label></th>
         <td>
-            <input type="text" name="number" size="2" maxlength="2" id="number" />
+            <input type="text" name="number" size="2" maxlength="2" id="number" value="{{ $proposedNumber }}" />
             <div class="upAndDown">
                 <button class="btn btn-primary numerIncrease"><img class="up" src="{{ asset('css/up.png') }}" alt="up" /></button>
                 <button class="btn btn-primary numerDecrease"><img class="down" src="{{ asset('css/down.png') }}" alt="down" /></button>
             </div>
         </td>
-        <td><input type="checkbox" name="confirmation_numer" /></td>
+        <td><input type="checkbox" name="confirmation_numer" checked /></td>
         <td><button class="btn btn-success studentClassProposedNumber">{{ $proposedNumber }}</button></td>
 
       </tr>
       <tr>
         <th><label for="comments">uwagi</label></th>
-        <td><input type="text" name="comments" size="20" maxlength="32" /></td>
-        <td colspan="2"><input type="checkbox" name="confirmation_comments" /></td>
+        <td><input type="text" name="comments" size="20" maxlength="32" value="{{ $lastRecord->comments }}" /></td>
+        <td colspan="2"><input type="checkbox" name="confirmation_comments" checked /></td>
       </tr>
       <tr class="submit"><td colspan="4">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />

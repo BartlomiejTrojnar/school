@@ -33,11 +33,12 @@ class StudentClassController extends Controller
     {
         $proposedNumber = $scRepo->getLastNumber();
         $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
+        $lastRecord = StudentClass::all()->last();
         $students = $studentRepo->getAll();
-        $grades = $gradeRepo->getAll();
-        if(isset($_GET['grade_id'])) $gradeSelected = $_GET['grade_id'];   else $gradeSelected = 0;
+        $grades = $gradeRepo -> getAllSorted();
+        if(isset($_GET['grade_id'])) $gradeSelected = $_GET['grade_id'];   else $gradeSelected = $lastRecord->grade_id;
         if(isset($_GET['student_id'])) $studentSelected = $_GET['student_id'];   else $studentSelected = 0;
-        return view('studentClass.create', ["proposedNumber"=>$proposedNumber, "proposedDates"=>$proposedDates])
+        return view('studentClass.create', ["proposedNumber"=>$proposedNumber, "proposedDates"=>$proposedDates, "lastRecord"=>$lastRecord])
              ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected])
              ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected]);
     }

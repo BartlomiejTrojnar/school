@@ -16,5 +16,12 @@ class GradeRepository extends BaseRepository {
       $count = $grades -> count();
       return $count;
   }
+
+  public function getAllSorted() {
+      return $this->model
+        -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
+        -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
+        -> get();
+  }
 }
 ?>

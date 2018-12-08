@@ -17,6 +17,7 @@
 
 <table id="studentClasses">
   <tr>
+    <th>lp</th>
     <th><a href="{{ url('/klasy_ucznia/sortuj/student_id') }}">uczeń</a></th>
     <th><a href="{{ url('/klasy_ucznia/sortuj/grade_id') }}">klasa</a></th>
     <th><a href="{{ url('/klasy_ucznia/sortuj/date_start') }}">od</a></th>
@@ -28,6 +29,7 @@
 
   @foreach($studentClasses as $sc)
     <tr data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}">
+      <td>{{ $loop->iteration }}</td>
       <td><a href="{{ route('uczen.show', $sc->student_id) }}">
         {{ $sc->student->first_name }} {{ $sc->student->second_name }} {{ $sc->student->last_name }}
       </a></td>
@@ -40,8 +42,8 @@
       @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
       @else <td class="not_confirmation">{{ $sc->date_end }}</td>
       @endif
-      @if($sc->confirmation_numer==1) <td>{{ $sc->numer }}</td>
-      @else <td class="not_confirmation">{{ $sc->numer }}</td>
+      @if($sc->confirmation_numer==1) <td>{{ $sc->number }}</td>
+      @else <td class="not_confirmation">{{ $sc->number }}</td>
       @endif
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
@@ -57,7 +59,7 @@
     </tr>
   @endforeach
 
-  <tr class="create"><td colspan="8">
+  <tr class="create"><td colspan="9">
     @if( !empty($grade) )
       <a href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
     @else
