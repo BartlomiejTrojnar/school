@@ -69,6 +69,7 @@ class SchoolController extends Controller
           break;
           case 'showStudents':
               $bookOfStudents = $school -> students;
+              $students = '';
               foreach($bookOfStudents as $book) $students[] = $book->student;
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["school"=>$school, "students"=>$students, "subTitle"=>"uczniowie szkoły"]);

@@ -21,20 +21,20 @@
         <td>{{ $school->id }}</td>
         <td><a href="{{ route('szkola.show', $school->id) }}">{{ $school->name }}</a></td>
         <td>{{ $school->id_OKE }}</td>
-        <td><a href="{{ route('szkola.edit', $school->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-        <td>
+        <td class="edit"><a class="btn btn-primary" href="{{ route('szkola.edit', $school->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
+        <td class="destroy">
           <form action="{{ route('szkola.destroy', $school->id) }}" method="post" id="delete-form-{{$school->id}}">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+            <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
           </form>
         </td>
       </tr>
     @endforeach
 
-      <tr class="create">
-        <td colspan="5"><a href="{{ route('szkola.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-      </tr>
+      <tr class="create"><td colspan="5">
+          <a class="btn btn-primary" href="{{ route('szkola.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+      </td></tr>
 
     </tbody>
   </table>

@@ -32,11 +32,10 @@
         <td><input type="date" name="date_of_graduation" /></td>
       </tr>
 
-      <tr class="submit">
-        <td colspan="2">
+      <tr class="submit"><td colspan="2">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-          <button type="submit">dodaj</button>
-          <a href="{{ route('rok_szkolny.index') }}">anuluj</a>
+          <button class="btn btn-primary" type="submit">dodaj</button>
+          <a class="btn btn-primary" href="{{ route('rok_szkolny.index') }}">anuluj</a>
         </td>
       </tr>
     </table>

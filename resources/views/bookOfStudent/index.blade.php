@@ -33,20 +33,22 @@
         <td>{{ $bookOfStudent->number }}</td>
         <td>{{ $bookOfStudent->created_at }}</td>
         <td>{{ $bookOfStudent->updated_at }}</td>
-        <td><a href="{{ route('ksiega_uczniow.edit', $bookOfStudent->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-        <td>
+        <td class="edit"><a class="btn btn-primary" href="{{ route('ksiega_uczniow.edit', $bookOfStudent->id) }}">
+          <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
+        </a></td>
+        <td class="destroy">
           <form action="{{ route('ksiega_uczniow.destroy', $bookOfStudent->id) }}" method="post" id="delete-form-{{$bookOfStudent->id}}">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+            <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
           </form>
         </td>
       </tr>
     @endforeach
 
-      <tr class="create">
-        <td colspan="8"><a href="{{ route('ksiega_uczniow.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-      </tr>
+      <tr class="create"><td colspan="8">
+          <a class="btn btn-primary" href="{{ route('ksiega_uczniow.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+      </td></tr>
     </tbody>
   </table>
 @endsection

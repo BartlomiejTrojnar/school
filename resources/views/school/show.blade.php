@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('header')
-  <h1>{{ $school->name }}</h1>
   <aside id="strzalka_l">
     <a href="{{ route('szkola.show', $previous) }}">
       <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
@@ -12,6 +11,7 @@
       <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
     </a>
   </aside>
+  <h1>{{ $school->name }}</h1>
 @endsection
 
 @section('main-content')

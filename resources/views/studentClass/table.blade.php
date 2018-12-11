@@ -48,12 +48,14 @@
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
       @endif
-      <td><a href="{{ route('klasy_ucznia.edit', $sc->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--"></a></td>
-      <td>
+      <td class="edit"><a class="btn btn-primary" href="{{ route('klasy_ucznia.edit', $sc->id) }}">
+        <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="--">
+      </a></td>
+      <td class="destroy">
         <form action="{{ route('klasy_ucznia.destroy', $sc->id) }}" method="post" id="delete-form-{{$sc->id}}">
           {{ csrf_field() }}
           {{ method_field('DELETE') }}
-          <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+            <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
         </form>
       </td>
     </tr>
@@ -61,9 +63,9 @@
 
   <tr class="create"><td colspan="9">
     @if( !empty($grade) )
-      <a href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
+      <a class="btn btn-primary" href="{{ route('klasy_ucznia.create', 'grade_id='.$grade->id) }}">
     @else
-      <a href="{{ route('klasy_ucznia.create', 'student_id='.$student->id) }}">
+      <a class="btn btn-primary" href="{{ route('klasy_ucznia.create', 'student_id='.$student->id) }}">
     @endif
       <img class="create btn" src="{{ asset('css/plus.png') }}" alt="--" />
     </a>

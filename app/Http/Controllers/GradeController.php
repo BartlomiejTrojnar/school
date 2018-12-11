@@ -44,7 +44,7 @@ class GradeController extends Controller
     {
         $schools = $schoolRepo->getAll();
         return view('grade.create')
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>1]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
     }
 
     public function store(Request $request)
@@ -93,6 +93,7 @@ class GradeController extends Controller
                    $students[] = $studentClass->student;
                  else $studentsOutOfDate[] = $studentClass->student;
               }
+              $students[] = ''; $studentsOutOfDate[] = '';
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
                   -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);
@@ -151,7 +152,7 @@ class GradeController extends Controller
     {
         $schools = $schoolRepo->getAll();
         return view('grade.edit', ["grade"=>$klasa])
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "selectedSchool"=>$klasa->school_id]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$klasa->school_id]);
     }
 
     public function update(Request $request, Grade $klasa)

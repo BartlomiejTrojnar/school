@@ -33,6 +33,7 @@
 
   <tbody>
     @foreach($students as $student)
+    @if( !empty($student->id) )
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td>{{ $student->first_name }}</td>
@@ -44,19 +45,22 @@
         <td>{{ $student->place_of_birth }}</td>
         <td>{{ $student->created_at }}</td>
         <td>{{ $student->updated_at }}</td>
-        <td><a href="{{ route('uczen.edit', $student->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-        <td>
+        <td class="edit"><a class="btn btn-primary" href="{{ route('uczen.edit', $student->id) }}">
+          <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
+        </a></td>
+        <td class="destroy">
           <form action="{{ route('uczen.destroy', $student->id) }}" method="post" id="delete-form-{{$student->id}}">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+            <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
           </form>
         </td>
       </tr>
+    @endif
     @endforeach
 
-    <tr class="create">
-      <td colspan="12"><a href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-    </tr>
+    <tr class="create"><td colspan="12">
+        <a class="btn btn-primary" href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+    </td></tr>
   </tbody>
 </table>

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('header')
-  <h1>rok szkolny {{ substr($schoolYear->date_start, 0, 4) }}/{{ substr($schoolYear->date_end, 0, 4) }}</h1>
   <aside id="strzalka_l">
     <a href="{{ route('rok_szkolny.show', $previous) }}">
       <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
@@ -12,6 +11,7 @@
       <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
     </a>
   </aside>
+  <h1>rok szkolny {{ substr($schoolYear->date_start, 0, 4) }}/{{ substr($schoolYear->date_end, 0, 4) }}</h1>
 @endsection
 
 @section('main-content')

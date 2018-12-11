@@ -1,78 +1,109 @@
 @charset "UTF-8"
-@import url(http://fonts.googleapis.com/css?family=Arimo:400,400italic,700,700italic&subset=latin,latin-ext);
-@import url(http://fonts.googleapis.com/css?family=Alegreya+Sans:400,400italic,700,700italic&subset=latin,latin-ext);
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic&subset=latin,latin-ext);
-@import url(http://fonts.googleapis.com/css?family=Almendra:400,400italic,700,700italic&subset=latin,latin-ext);
+@import url('https://fonts.googleapis.com/css?family=Kotta+One');
+@import url('https://fonts.googleapis.com/css?family=Kurale');
+@import url('https://fonts.googleapis.com/css?family=Kelly+Slab');
 @import url("nav.css");
 
 body {
-	background:	#444 url('/bazy/admin/css/logo.gif') no-repeat fixed top left;
-	background-size:	135px;
-	font-family: 'Source Sans Pro', 'Arimo', 'Alegreya Sans', sans-serif;
-	margin:		0;
-	padding:	0;
+    background: #444 url('/bazy/admin/css/logo.gif') no-repeat fixed top left;
+    background-size: 135px;
+    font-family: 'Kurale', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 /* --------------------------------- USTAWIENIA NAGŁÓWKA STRONY --------------------------------- */
-body > header { margin: -20px 10px 10px 170px;}
+body > header {
+    position: absolute;
+    width: 99%;
+    margin: 4px 0.5%;
+    border-radius: 10px;
+}
 body > header h1 {
-	background:		#808080;
-	box-shadow:		0 0 20px #202020 inset;
-	color:			#fff0bb;
-	font-family:	'Almendra', 'Cambria', serif;
-	font-size:		2em;
-	font-weight:	700;
-	height:			50px;
-	line-height:	50px;
-	margin:			0;
-	text-align:		center;
-	text-shadow:	-2px -1px 0px #603000;
-}
-aside#strzalka_l, aside#strzalka_p {
-	border-radius:	10px;
-	height:			50px;
-	position:		absolute;
-	text-align:		center;
-	top:			80px;
-	width:			40px;
-}
-aside#strzalka_p {
-	right:			10px;
-}
-body > header aside img {
+    background: #228;
     height: 40px;
-    margin-top: 5px;
+    margin: auto;
+    text-align: center;
+    font-family: 'Kotta One', serif;
+    font-size: 2em;
+    text-shadow: -2px -1px 0px #603000;
+    color: #fff0bb;
+    border-radius: 10px;
 }
+aside#strzalka_l, aside#strzalka_p { width: 20px; }
+aside#strzalka_l { float: left; }
+aside#strzalka_p { float: right; }
+body > header aside img { height: 40px; }
 
 
 /* ------------------------------ USTAWIENIA GŁÓWNEJ CZĘŚCI STRONY ------------------------------ */
 section#main-content {
-	background:		#444;
-	box-shadow:		inset 2px 2px 10px #444, inset -2px -2px 10px #444;
-	border-radius:	10px;
-    color:          #ddd;
-	left:			150px;
-	min-height:		800px;
-	padding:		10px;
-	position:		absolute;
-	right:			10px;
-	top:			130px;
+    background: #222;
+    border-radius: 10px;
+    color: #ddd;
+    left: 15.5%;
+    padding: 10px;
+    position: absolute;
+    right: 0.5%;
+    top: 132px;
 }
+
+
+/* ------------------------------------------- TABELE ------------------------------------------- */
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+tr:nth-of-type(even){ background: #555; }
+tr:nth-of-type(odd)	{ background: #444; }
+tr:hover { background: #336; }
+tr.create { text-align: center; }
+th {
+    border: 1px solid #ddd;
+    background: #999;
+    color: #228;
+    padding: 5px 2px;
+    font-size: 1.1em;
+}
+td { border: 1px solid #ddd; }
+td.edit, td.destroy {
+    width: 30px;
+    text-align: center;
+}
+tr.submit {
+    text-align: center;
+}
+
+
+/* ----------------------------------------- HIPERŁĄCZA ----------------------------------------- */
+a {
+    text-decoration: none;
+    color: #aaf;
+}
+tr.create a, td.edit a {
+    display: block;
+}
+tr.create a:hover, td.edit a:hover, td.destroy button:hover {
+    background: #00f;
+}
+
 
 /* ----------------------------------------- FORMULARZE ----------------------------------------- */
 button {
     background: transparent;
     border: 0;
-    padding: 0 10px;
+    padding: 0 3px;
     margin: 0;
+    font-family: 'Kurale', serif;
 }
+
 button:hover {
     cursor: pointer;
-    background: #227;
+    background: #00f;
 }
+/*
 tr.submit button {
     color: #aaf;
-    font-family: 'Source Sans Pro', 'Arimo', 'Alegreya Sans', sans-serif;
     font-size: 12pt;
 }
 input {
@@ -82,38 +113,12 @@ input {
     font-size: 1.1em;
 }
 
-/* ------------------------------------------- TABELE ------------------------------------------- */
-table {
-    border-collapse: collapse;
-    margin: auto;
-}
-tr:nth-of-type(even){ background: #757; }
-tr:nth-of-type(odd)	{ background: #555; }
-tr.submit, tr.create { text-align: center; }
-th {
-    background: #999;
-    border: 1px solid #fff;
-    color: #333;
-    padding: 5px;
-}
-td { border: 1px solid #ddd; }
-tr.create td { padding: 3px 0 5px 0;}
-td:hover { background: #979; }
-tr.submit td:hover, tr.create td:hover { background: transparent; }
-td.not_confirmation { background: #a33; }
-
-/* ----------------------------------------- HIPERŁĄCZA ----------------------------------------- */
-a {
-    color: #aaf;
-    text-decoration: none;
-    padding: 0 10px;
-}
-tr.create a { padding-bottom: 3px;}
-tr.submit a:hover, tr.create a:hover { background: #227; }
-
 
 /* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
-img.create, img.edit, img.destroy, img.btn { width: 16px; }
+img.create, img.edit, img.destroy { width: 16px; }
+
+/*
+img.btn { width: 16px; }
 img.btn { background: transparent; margin: 0 3px; }
 div.upAndDown {
     display: inline-block;
@@ -852,7 +857,7 @@ a.btn.disabled, fieldset[disabled] a.btn { pointer-events:none; }
 .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.btn-default.dropdown-toggle.focus, .open>.btn-default.dropdown-toggle:focus, .open>.btn-default.dropdown-toggle:hover { color:#636b6f;background-color:#d4d4d4;border-color:#8c8c8c; }
 .btn-default.disabled.focus, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled].focus, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover { background-color:#fff;border-color:#ccc; }
 .btn-default .badge { color:#fff;background-color:#636b6f; }
-.btn-primary { color:#fff;background-color:#3097D1;border-color:#2a88bd; }
+.btn-primary { color:#fff;background-color:#228;border-color:#2a88bd; }
 .btn-primary.focus, .btn-primary:focus { color:#fff;background-color:#2579a9;border-color:#133d55; }
 .btn-primary.active, .btn-primary:active, .btn-primary:hover, .open>.btn-primary.dropdown-toggle { color:#fff;background-color:#2579a9;border-color:#1f648b; }
 .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.btn-primary.dropdown-toggle.focus, .open>.btn-primary.dropdown-toggle:focus, .open>.btn-primary.dropdown-toggle:hover { color:#fff;background-color:#1f648b;border-color:#133d55; }
@@ -1009,7 +1014,7 @@ tbody.collapse.in { display:table-row-group; }
 }.tab-content>.tab-pane { display:none; }
 .tab-content>.active { display:block; }
 .nav-tabs .dropdown-menu { margin-top:-1px;border-top-right-radius:0;border-top-left-radius:0; }
-.navbar { position:relative;min-height:50px;margin-bottom:22px;border:1px solid transparent; }
+.navbar { position:relative;min-height:50px;margin-bottom:2px;border:1px solid transparent; }
 .navbar:after, .navbar:before { content:" ";display:table; }
 .navbar-header:after, .navbar-header:before { content:" ";display:table; }
 .navbar-collapse { overflow-x:visible;padding-right:15px;padding-left:15px;border-top:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.1);-webkit-overflow-scrolling:touch; }

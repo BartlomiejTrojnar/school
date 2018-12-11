@@ -7,7 +7,6 @@
 @endif
 
 @section('header')
-  <h1>{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</h1>
   <aside id="strzalka_l">
     <a href="{{ route('klasa.show', $previous) }}">
       <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
@@ -18,6 +17,7 @@
       <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
     </a>
   </aside>
+  <h1>{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</h1>
 @endsection
 
 @section('main-content')

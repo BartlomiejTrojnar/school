@@ -87,18 +87,18 @@
       @show
     </section>
 
-    <nav>
+    <nav id="main-menu">
       <ul class="nav flex-column">
-        <li><a href="{{ route('szkola.index') }}">szkoły</a></li>
-        <li><a href="{{ route('rok_szkolny.index') }}">lata szkolne</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('szkola.index') }}">szkoły</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('rok_szkolny.index') }}">lata szkolne</a></li>
 <?php /*
         <li><a href="{{ route('godzina.index') }}">godziny</a></li>
         <li><a href="{{ route('sala.index') }}">sale lekcyjne</a></li>
         <li><a href="{{ route('przedmiot.index') }}">przedmioty</a></li>
 */ ?>
-        <li><a href="{{ route('uczen.index') }}">uczniowie</a></li>
-        <li><a href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
-        <li><a href="{{ route('klasa.index') }}">klasy</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">uczniowie</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">klasy</a></li>
 <?php /*
         <li><a href="{{ route('nauczyciel.index') }}">nauczyciele</a></li>
         <li><a href="{{ route('rozszerzenie.index') }}">rozszerzenia</a></li>
