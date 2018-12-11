@@ -59,7 +59,7 @@
       </tr>
       <tr>
         <th><label for="comments">uwagi</label></th>
-        <td><input type="text" name="comments" size="20" maxlength="32" value="{{ $lastRecord->comments }}" /></td>
+        <td><input type="text" name="comments" size="27" maxlength="32" value="{{ $lastRecord->comments }}" /></td>
         <td colspan="2"><input type="checkbox" name="confirmation_comments" checked /></td>
       </tr>
       <tr class="submit"><td colspan="4">

@@ -83,6 +83,11 @@ a {
 tr.create a, td.edit a {
     display: block;
 }
+td.edit a, td.destroy button {
+    padding: 2px 12px;
+    line-height: 20px;
+    vertical-align: middle;
+}
 tr.create a:hover, td.edit a:hover, td.destroy button:hover {
     background: #00f;
 }
@@ -96,34 +101,9 @@ button {
     margin: 0;
     font-family: 'Kurale', serif;
 }
-
 button:hover {
     cursor: pointer;
     background: #00f;
-}
-/*
-tr.submit button {
-    color: #aaf;
-    font-size: 12pt;
-}
-input {
-    border-radius: 3px;
-    border: 2px solid #aaa;
-    margin: 3px;
-    font-size: 1.1em;
-}
-
-
-/* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
-img.create, img.edit, img.destroy { width: 16px; }
-
-/*
-img.btn { width: 16px; }
-img.btn { background: transparent; margin: 0 3px; }
-div.upAndDown {
-    display: inline-block;
-    width: 18px;
-    vertical-align: middle;
 }
 div.upAndDown button {
     display: flex;
@@ -131,15 +111,26 @@ div.upAndDown button {
     background: transparent;
     border: 0;
 }
+div.upAndDown {
+    display: inline-block;
+    width: 18px;
+    vertical-align: middle;
+}
+input, select {
+    border-radius: 3px;
+    border: 2px solid #aaa;
+    margin: 3px;
+    font-family: 'Kotta One', 'Kurale', sans-serif;
+}
+
+
+/* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */
+img.create, img.edit, img.destroy { width: 16px; }
 img.up {
-    float: left;
     width: 16px;
     margin-bottom: 4px;
 }
 img.down {
-    margin-top: 4px;
-    float: left;
-    clear: both;
     width: 16px;
 }
 
