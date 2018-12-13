@@ -11,11 +11,8 @@ class BookOfStudentController extends Controller
 {
     public function index(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("BookOrderBy[$i]");
-
-        $bookOfStudents = $bookOfStudentRepo->getAll($orderBy);
-        $schools = $schoolRepo->getAll();
+        $bookOfStudents = $bookOfStudentRepo->getAllSorted();
+        $schools = $schoolRepo->getAllSorted();
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
     }

@@ -4,6 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    public function __construct() {
+        if(empty(session()->get('StudentOrderBy[0]')))    session()->put('StudentOrderBy[0]', 'id');
+        if(empty(session()->get('StudentOrderBy[1]')))    session()->put('StudentOrderBy[1]', 'asc');
+        if(empty(session()->get('StudentOrderBy[2]')))    session()->put('StudentOrderBy[2]', 'id');
+        if(empty(session()->get('StudentOrderBy[3]')))    session()->put('StudentOrderBy[3]', 'desc');
+        if(empty(session()->get('StudentOrderBy[4]')))    session()->put('StudentOrderBy[4]', 'id');
+        if(empty(session()->get('StudentOrderBy[5]')))    session()->put('StudentOrderBy[5]', 'desc');
+    }
+
     public function grades()
     {
         return $this->hasMany(StudentClass::class);

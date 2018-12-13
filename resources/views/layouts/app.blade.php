@@ -107,7 +107,9 @@
         <li><a href="{{ route('plan_lekcji.index') }}">plany lekcji</a></li>
         <li><a href="{{ route('lekcja.index') }}">lekcje</a></li>
 
-        <li><a href="{{ route('zadanie.index') }}">zadania</a></li>
+*/ ?>
+        <li class="nav-item"><a class="nav-link" href="{{ route('zadanie.index') }}">zadania</a></li>
+<?php /*
         <li><a href="{{ route('polecenie.index') }}">polecenia</a></li>
         <li><a href="{{ route('ocena_zadania.index') }}">oceny zadań</a></li>
         <li><a href="{{ route('ocena_polecenia.index') }}">oceny poleceń</a></li>

@@ -27,8 +27,8 @@
 
       <tr class="submit"><td colspan="2">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-          <button type="submit">zapisz zmiany</button>
-          <a href="{{ route('zadanie.index') }}">anuluj</a>
+          <button class="btn btn-primary" type="submit">zapisz zmiany</button>
+          <a class="btn btn-primary" href="{{ route('zadanie.index') }}">anuluj</a>
       </td></tr>
     </table>
   </form>

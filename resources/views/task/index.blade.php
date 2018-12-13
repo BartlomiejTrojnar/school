@@ -29,20 +29,22 @@
         <td>{{ $task->sheet_name }}</td>
         <td>{{ $task->created_at }}</td>
         <td>{{ $task->updated_at }}</td>
-        <td><a href="{{ route('zadanie.edit', $task->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-        <td>
+        <td class="edit"><a class="btn btn-primary" href="{{ route('zadanie.edit', $task->id) }}">
+            <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
+        </a></td>
+        <td class="destroy">
           <form action="{{ route('zadanie.destroy', $task->id) }}" method="post" id="delete-form-{{$task->id}}">
             {{ csrf_field() }}
             {{ method_field('DELETE') }}
-            <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+            <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
           </form>
         </td>
       </tr>
     @endforeach
 
-      <tr class="create">
-        <td colspan="9"><a href="{{ route('zadanie.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-      </tr>
+      <tr class="create"><td colspan="9">
+          <a class="btn btn-primary" href="{{ route('zadanie.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+      </td></tr>
     </tbody>
   </table>
 @endsection

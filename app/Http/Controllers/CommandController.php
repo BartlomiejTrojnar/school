@@ -1,20 +1,17 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Command;
+use App\Models\Command;
 //use App\Repositories\CommandRepository;
-//use App\Repositories\TaskRepository;
+
+use App\Repositories\TaskRepository;
 //use App\Models\CommandRating;
 use Illuminate\Http\Request;
 
 class CommandController extends Controller
 {
-/*
     public function index(CommandRepository $commandRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("CommandOrderBy[$i]");
-
-        $commands = $commandRepo->getAll($orderBy);
+        $commands = $commandRepo->getAllSorted();
         return view('command.index', ["commands"=>$commands]);
     }
 
@@ -39,7 +36,7 @@ class CommandController extends Controller
 
     public function create(TaskRepository $taskRepo)
     {
-       $tasks = $taskRepo->getAll();
+       $tasks = $taskRepo->getAllSorted();
        return view('command.create')
             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>0]);
     }
@@ -50,7 +47,7 @@ class CommandController extends Controller
           'task_id' => 'required',
           'number' => 'required|integer|min:1|max:20',
           'command' => 'required|max:25',
-          'description' => 'max:25',
+          'description' => 'max:65',
           'points' => 'required|min:1',
         ]);
 
@@ -64,7 +61,7 @@ class CommandController extends Controller
 
         return redirect($request->history_view);
     }
-
+/*
     public function show(Command $polecenie, CommandRepository $commandRepo)
     {
         $previous = $commandRepo->previousRecordId($polecenie->id);
@@ -72,10 +69,10 @@ class CommandController extends Controller
         $commandRatings = CommandRating::all() -> where('command_id', $polecenie->id);
         return view('command.show', ["command"=>$polecenie, "commandRatings"=>$commandRatings, "previous"=>$previous, "next"=>$next]);
     }
-
+*/
     public function edit(Command $polecenie, TaskRepository $taskRepo)
     {
-        $tasks = $taskRepo->getAll();
+        $tasks = $taskRepo->getAllSorted();
         return view('command.edit', ["command"=>$polecenie])
              ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>$polecenie->task_id]);
     }
@@ -86,7 +83,7 @@ class CommandController extends Controller
           'task_id' => 'required',
           'number' => 'required|integer|min:1|max:20',
           'command' => 'required|max:25',
-          'description' => 'max:25',
+          'description' => 'max:65',
           'points' => 'required|min:1',
         ]);
 
@@ -105,5 +102,4 @@ class CommandController extends Controller
         $polecenie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

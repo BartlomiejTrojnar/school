@@ -15,9 +15,7 @@ class SchoolYearController extends Controller
 {
     public function index(SchoolYearRepository $schoolYearRepo)
     {
-        $orderBy[0] = 'id';
-        $orderBy[1] = 'desc';
-        $schoolYears = $schoolYearRepo->getPaginate($orderBy);
+        $schoolYears = $schoolYearRepo->getPaginateSorted();
         return view('schoolYear.index', ["schoolYears"=>$schoolYears]);
     }
 
@@ -74,7 +72,10 @@ class SchoolYearController extends Controller
           case 'showClasses':
               $subTitle = "klasy w roku szkolnym";
               $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
-                            -> where('year_of_graduation', '>', $schoolYear->date_start) -> paginate();
+                            -> where('year_of_graduation', '>', $schoolYear->date_start)
+                            -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
+                            -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
+                            -> get();
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
               exit;

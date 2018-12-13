@@ -42,9 +42,9 @@
       </tr>
     @endforeach
 
-      <tr class="create">
-        <td colspan="10"><a href="{{ route('polecenie.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a></td>
-      </tr>
+      <tr class="create"><td colspan="10">
+          <a class="btn btn-primary" href="{{ route('polecenie.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+      </td></tr>
     </tbody>
   </table>
 @endsection

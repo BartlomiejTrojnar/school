@@ -23,5 +23,12 @@ class GradeRepository extends BaseRepository {
         -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
         -> get();
   }
+
+  public function getPaginateSorted() {
+      return $this->model
+        -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
+        -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
+        -> paginate(20);
+  }
 }
 ?>

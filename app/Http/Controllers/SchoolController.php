@@ -8,10 +8,7 @@ class SchoolController extends Controller
 {
     public function index(SchoolRepository $schoolRepo)
     {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("SchoolOrderBy[$i]");
-
-        $schools = $schoolRepo->getAll($orderBy);
+        $schools = $schoolRepo->getAllSorted();
         return view('school.index', ["schools"=>$schools]);
     }
 
@@ -77,7 +74,10 @@ class SchoolController extends Controller
           break;
           case 'showClasses':
               $subTitle = "Klasy w szkole";
-              $grades = $school -> grades() -> paginate();
+              $grades = $school -> grades()
+                  -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
+                  -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
+                  -> paginate(20);
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades, "links"=>true]);
               exit;

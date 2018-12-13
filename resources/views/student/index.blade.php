@@ -63,7 +63,7 @@
     @endforeach
 
       <tr class="create"><td colspan="12">
-          <a class="btn btn-primary"  href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+          <a class="btn btn-primary" href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
       </td></tr>
     </tbody>
   </table>

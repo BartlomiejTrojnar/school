@@ -1,20 +1,17 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\Task;
+use App\Models\Task;
+use App\Repositories\TaskRepository;
+
 //use App\Models\Command;
 //use App\Models\TaskRating;
-//use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-/*
     public function index(TaskRepository $taskRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TaskOrderBy[$i]");
-
-        $tasks = $taskRepo->getAll($orderBy);
+        $tasks = $taskRepo->getAllSorted();
         return view('task.index', ["tasks"=>$tasks]);
     }
 
@@ -34,7 +31,7 @@ class TaskController extends Controller
           session()->put('TaskOrderBy[3]', session()->get('TaskOrderBy[1]'));
           session()->put('TaskOrderBy[1]', 'asc');
         }
-        return redirect( route('zadanie.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create()
@@ -70,23 +67,32 @@ class TaskController extends Controller
         $next = $taskRepo -> NextRecordId($id);
 
         switch(session()->get('taskView')) {
-             case 'showInfo':
-               return view('task.showInfo', ["task"=>$task, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
-             case 'showCommands':
-               $commands = Command::all()->where('task_id', $id);
-               return view('task.showCommands', ["task"=>$task, "commands"=>$commands, "previous"=>$previous, "next"=>$next]);
-               exit;
-             break;
+          case 'showInfo':
+              return view('task.show', ["task"=>$task, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'task.showInfo', ["task"=>$task]);
+              exit;
+          break;
+          case 'showCommands':
+              $subTitle = "Polecenia w zadaniu";
+              $commands = $task -> commands()
+                  -> orderBy( session()->get('CommandOrderBy[0]'), session()->get('CommandOrderBy[1]') )
+                  -> orderBy( session()->get('CommandOrderBy[2]'), session()->get('CommandOrderBy[3]') )
+                  -> orderBy( session()->get('CommandOrderBy[4]'), session()->get('CommandOrderBy[4]') )
+                  -> get();
+              return view('task.show', ["task"=>$task, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'command.table', ["task"=>$task, "subTitle"=>$subTitle, "commands"=>$commands]);
+              exit;
+          break;
+/*
              case 'showRatings':
                $taskRatings = TaskRating::all()->where('task_id', $id);
                return view('task.showRatings', ["task"=>$task, "taskRatings"=>$taskRatings, "previous"=>$previous, "next"=>$next]);
              break;
-             default:
-               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
-               exit;
-             break;
+*/
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
         }
     }
 
@@ -118,5 +124,4 @@ class TaskController extends Controller
         $zadanie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

@@ -15,10 +15,7 @@ class GradeController extends Controller
 {
     public function index(GradeRepository $gradeRepo)
     {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("GradeOrderBy[$i]");
-
-        $grades = $gradeRepo->getPaginate($orderBy);
+        $grades = $gradeRepo->getPaginateSorted();
         return view('grade.index')
             -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>""]);
     }

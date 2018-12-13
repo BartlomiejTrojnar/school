@@ -12,9 +12,6 @@ class StudentController extends Controller
 {
     public function index(StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, GradeRepository $gradeRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("StudentOrderBy[$i]");
-
         $students = Student::leftjoin('student_classes', 'students.id', '=', 'student_classes.student_id')
           -> select('students.*');
         if( session()->get('schoolYearSelected') ) {
@@ -26,8 +23,8 @@ class StudentController extends Controller
             $students = $students -> where('grade_id', '=', session()->get('gradeSelected'));
         $students = $students -> paginate(50);
 
-        $schoolYears = $schoolYearRepo->getAll();
-        $grades = $gradeRepo->getAll();
+        $schoolYears = $schoolYearRepo->getAllSorted();
+        $grades = $gradeRepo->getAllSorted();
         return view('student.index', ["students"=>$students])
             -> nest('schoolYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ])
             -> nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>session()->get('gradeSelected') ]);

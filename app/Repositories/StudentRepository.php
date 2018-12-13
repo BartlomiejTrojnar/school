@@ -8,6 +8,14 @@ class StudentRepository extends BaseRepository {
       $this->model = $model;
   }
 
+  public function getAllSorted() {
+      return $this->model
+        -> orderBy( session()->get('StudentOrderBy[0]'), session()->get('StudentOrderBy[1]') )
+        -> orderBy( session()->get('StudentOrderBy[2]'), session()->get('StudentOrderBy[3]') )
+        -> orderBy( session()->get('StudentOrderBy[4]'), session()->get('StudentOrderBy[5]') )
+        -> get();
+  }
+
   public function countStudentsByDates($date_start, $date_end) {
       $students = $this->model
         -> join('student_classes', 'students.id', '=', 'student_classes.student_id')
