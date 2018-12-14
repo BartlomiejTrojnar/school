@@ -34,7 +34,7 @@ class StudentClassController extends Controller
         $proposedNumber = $scRepo->getLastNumber();
         $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
         $lastRecord = StudentClass::all()->last();
-        $students = $studentRepo->getAll();
+        $students = $studentRepo->getAllSorted();
         $grades = $gradeRepo -> getAllSorted();
         if(isset($_GET['grade_id'])) $gradeSelected = $_GET['grade_id'];   else $gradeSelected = $lastRecord->grade_id;
         if(isset($_GET['student_id'])) $studentSelected = $_GET['student_id'];   else $studentSelected = 0;
@@ -74,8 +74,8 @@ class StudentClassController extends Controller
     {
         $studentClass = $scRepo -> find($id);
         $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
-        $students = $studentRepo->getAll();
-        $grades = $gradeRepo->getAll();
+        $students = $studentRepo->getAllSorted();
+        $grades = $gradeRepo->getAllSorted();
         $studentSelected = $studentClass->student_id;
         $gradeSelected = $studentClass->grade_id;
 
