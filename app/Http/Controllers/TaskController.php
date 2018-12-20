@@ -4,7 +4,8 @@ use App\Models\Task;
 use App\Repositories\TaskRepository;
 
 //use App\Models\Command;
-//use App\Models\TaskRating;
+use App\Models\TaskRating;
+use App\Repositories\TaskRatingRepository;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -58,7 +59,7 @@ class TaskController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', TaskRepository $taskRepo)
+    public function show($id, $view='', TaskRepository $taskRepo, TaskRatingRepository $taskRatingRepo)
     {
         if(empty(session()->get('taskView')))  session()->put('taskView', 'showInfo');
         if($view)  session()->put('taskView', $view);
@@ -83,12 +84,12 @@ class TaskController extends Controller
                   -> nest('subView', 'command.table', ["task"=>$task, "subTitle"=>$subTitle, "commands"=>$commands]);
               exit;
           break;
-/*
-             case 'showRatings':
-               $taskRatings = TaskRating::all()->where('task_id', $id);
-               return view('task.showRatings', ["task"=>$task, "taskRatings"=>$taskRatings, "previous"=>$previous, "next"=>$next]);
-             break;
-*/
+          case 'showRatings':
+              $subTitle = "Oceny zadania";
+              $taskRatings = $taskRatingRepo -> getTaskRatings($task->id);
+              return view('task.show', ["task"=>$task, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'taskRating.table', ["task"=>$task, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings]);
+          break;
           default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
               exit;

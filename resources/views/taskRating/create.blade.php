@@ -56,11 +56,10 @@
         <td><input type="datetime-local" name="entry_date" /></td>
       </tr>
 
-
       <tr class="submit"><td colspan="2">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-          <button type="submit">dodaj</button>
-          <a href="{{ route('ocena_zadania.index') }}">anuluj</a>
+          <button class="btn btn-primary" type="submit">dodaj</button>
+          <a class="btn btn-primary" href="{{ $_SERVER['HTTP_REFERER'] }}">anuluj</a>
       </td></tr>
     </table>
   </form>

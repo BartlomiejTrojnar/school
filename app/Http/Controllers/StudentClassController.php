@@ -87,7 +87,6 @@ class StudentClassController extends Controller
     public function update(Request $request, $id, StudentClass $klasy_ucznia)
     {
         $klasy_ucznia = StudentClass::find($id);
-        // print_r($klasy_ucznia); exit;
         $this->validate($request, [
           'student_id' => 'required',
           'grade_id' => 'required',

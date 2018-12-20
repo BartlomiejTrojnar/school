@@ -1,7 +1,7 @@
 <select name="task_id">
   <option value="0">- wybierz zadanie -</option>
   @foreach($tasks as $task)
-    @if($task->id == $selectedTask)
+    @if($task->id == $taskSelected)
       <option selected="selected" value="{{$task->id}}">{{$task->name}}</option>
     @else
       <option value="{{$task->id}}">{{$task->name}}</option>

@@ -26,12 +26,15 @@
       <td>{{ $command->points }}</td>
       <td>{{ $command->created_at }}</td>
       <td>{{ $command->updated_at }}</td>
-      <td><a href="{{ route('polecenie.edit', $command->id) }}"><img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]"></a></td>
-      <td>
+
+      <td class="edit"><a class="btn btn-primary" href="{{ route('polecenie.edit', $command->id) }}">
+          <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
+      </a></td>
+      <td class="destroy">
         <form action="{{ route('polecenie.destroy', $command->id) }}" method="post" id="delete-form-{{$command->id}}">
           {{ csrf_field() }}
           {{ method_field('DELETE') }}
-          <button><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
+          <button class="btn btn-primary"><img class="destroy" src="{{ asset('css/minus.png') }}" /></button>
         </form>
       </td>
     </tr>

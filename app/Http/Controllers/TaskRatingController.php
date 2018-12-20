@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
-//use App\Models\TaskRating;
-//use App\Repositories\TaskRatingRepository;
-//use App\Repositories\TaskRepository;
-//use App\Repositories\StudentRepository;
+use App\Models\TaskRating;
+use App\Repositories\TaskRatingRepository;
+
+use App\Repositories\TaskRepository;
+use App\Repositories\StudentRepository;
+
 use Illuminate\Http\Request;
 
 class TaskRatingController extends Controller
@@ -36,14 +38,18 @@ class TaskRatingController extends Controller
         }
         return redirect( route('ocena_zadania.index') );
     }
-
+*/
     public function create(TaskRepository $taskRepo, StudentRepository $studentRepo)
     {
-        $tasks = $taskRepo->getAll();
-        $students = $studentRepo->getAll();
+        $tasks = $taskRepo->getAllSorted();
+        $students = $studentRepo->getAllSorted();
+
+        if(isset($_GET['task_id'])) $taskSelected = $_GET['task_id'];   else $taskSelected = 0;
+        if(isset($_GET['student_id'])) $studentSelected = $_GET['student_id'];   else $studentSelected = 0;
+
         return view('taskRating.create')
-             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>0])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>0]);
+             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
     }
 
     public function store(Request $request)
@@ -52,12 +58,12 @@ class TaskRatingController extends Controller
           'student_id' => 'required',
           'task_id' => 'required',
           'deadline' => 'required',
-          'implementation_date' => 'date',
+          'implementation_date' => 'nullable|date',
           'version' => 'required|integer|between:1,10',
           'importance' => 'required|numeric',
           'points' => 'nullable|numeric',
-          'rating' => 'max:2',
-          'comments' => 'max:50',
+          'rating' => 'nullable|max:2',
+          'comments' => 'nullable|max:50',
         ]);
 
         $taskRating = new TaskRating;
@@ -75,24 +81,28 @@ class TaskRatingController extends Controller
         $taskRating->entry_date = $request->entry_date;
         $taskRating->save();
 
-        return redirect($request->history_view);
+        return redirect( $request->history_view );
     }
-
+/*
     public function show(TaskRating $ocena_zadania, TaskRatingRepository $taskRatingRepo)
     {
         $previous = $taskRatingRepo->previousRecordId($ocena_zadania->id);
         $next = $taskRatingRepo->nextRecordId($ocena_zadania->id);
         return view('taskRating.show', ["taskRating"=>$ocena_zadania, "previous"=>$previous, "next"=>$next]);
     }
-
+*/
     public function edit($id, TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo, StudentRepository $studentRepo)
     {
-        $ocena_zadania = $taskRatingRepo -> find($id);
-        $tasks = $taskRepo->getAll();
-        $students = $studentRepo->getAll();
-        return view('taskRating.edit', ["taskRating"=>$ocena_zadania])
-             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>$ocena_zadania->task_id])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "selectedStudent"=>$ocena_zadania->student_id]);
+        $taskRating = $taskRatingRepo -> find($id);
+        $tasks = $taskRepo->getAllSorted();
+        $students = $studentRepo->getAllSorted();
+
+        $taskSelected = $taskRating->task_id;
+        $studentSelected = $taskRating->student_id;
+
+        return view('taskRating.edit', ["taskRating"=>$taskRating])
+             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
     }
 
     public function update(Request $request, $id, TaskRatingRepository $taskRatingRepo)
@@ -102,12 +112,12 @@ class TaskRatingController extends Controller
           'student_id' => 'required',
           'task_id' => 'required',
           'deadline' => 'required',
-          'implementation_date' => 'date',
+          'implementation_date' => 'nullable|date',
           'version' => 'required|integer|between:1,10',
           'importance' => 'required|numeric',
           'points' => 'nullable|numeric',
-          'rating' => 'max:2',
-          'comments' => 'max:50',
+          'rating' => 'nullable|max:2',
+          'comments' => 'nullable|max:50',
         ]);
 
         $ocena_zadania->student_id = $request->student_id;
@@ -124,7 +134,7 @@ class TaskRatingController extends Controller
         $ocena_zadania->entry_date = $request->entry_date;
         $ocena_zadania->save();
 
-        return redirect($request->history_view);
+        return redirect($request->historyView);
     }
 
     public function destroy($id, TaskRatingRepository $taskRatingRepo)
@@ -132,5 +142,4 @@ class TaskRatingController extends Controller
         $taskRatingRepo->delete($id);
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
 }

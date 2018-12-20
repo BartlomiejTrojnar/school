@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Models\Command;
-//use App\Repositories\CommandRepository;
+use App\Repositories\CommandRepository;
 
 use App\Repositories\TaskRepository;
 //use App\Models\CommandRating;
@@ -38,7 +38,7 @@ class CommandController extends Controller
     {
        $tasks = $taskRepo->getAllSorted();
        return view('command.create')
-            ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>0]);
+            ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>0]);
     }
 
     public function store(Request $request)
@@ -61,20 +61,33 @@ class CommandController extends Controller
 
         return redirect($request->history_view);
     }
-/*
-    public function show(Command $polecenie, CommandRepository $commandRepo)
+
+    public function show($id, $view='', CommandRepository $commandRepo)
     {
-        $previous = $commandRepo->previousRecordId($polecenie->id);
-        $next = $commandRepo->nextRecordId($polecenie->id);
-        $commandRatings = CommandRating::all() -> where('command_id', $polecenie->id);
-        return view('command.show', ["command"=>$polecenie, "commandRatings"=>$commandRatings, "previous"=>$previous, "next"=>$next]);
+        if(empty(session()->get('commandView')))  session()->put('commandView', 'showInfo');
+        if($view)  session()->put('commandView', $view);
+        $command = $commandRepo -> find($id);
+        $previous = $commandRepo -> PreviousRecordId($id);
+        $next = $commandRepo -> NextRecordId($id);
+
+        switch(session()->get('commandView')) {
+          case 'showInfo':
+              return view('command.show', ["command"=>$command, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'command.showInfo', ["command"=>$command]);
+              exit;
+          break;
+          default:
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              exit;
+          break;
+        }
     }
-*/
+
     public function edit(Command $polecenie, TaskRepository $taskRepo)
     {
         $tasks = $taskRepo->getAllSorted();
         return view('command.edit', ["command"=>$polecenie])
-             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "selectedTask"=>$polecenie->task_id]);
+             ->nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>$polecenie->task_id]);
     }
 
     public function update(Request $request, Command $polecenie)

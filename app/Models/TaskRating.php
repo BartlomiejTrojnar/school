@@ -4,6 +4,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskRating extends Model
 {
+    public function __construct() {
+        if(empty(session()->get('TaskRatingOrderBy[0]')))    session()->put('TaskRatingOrderBy[0]', 'id');
+        if(empty(session()->get('TaskRatingOrderBy[1]')))    session()->put('TaskRatingOrderBy[1]', 'asc');
+        if(empty(session()->get('TaskRatingOrderBy[2]')))    session()->put('TaskRatingOrderBy[2]', 'id');
+        if(empty(session()->get('TaskRatingOrderBy[3]')))    session()->put('TaskRatingOrderBy[3]', 'asc');
+        if(empty(session()->get('TaskRatingOrderBy[4]')))    session()->put('TaskRatingOrderBy[4]', 'id');
+        if(empty(session()->get('TaskRatingOrderBy[5]')))    session()->put('TaskRatingOrderBy[5]', 'asc');
+    }
+
     public function student()
     {
         return $this->belongsTo(Student::class);

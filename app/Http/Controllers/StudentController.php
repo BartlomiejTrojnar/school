@@ -97,7 +97,6 @@ class StudentController extends Controller
           break;
           case 'showClasses':
               $subTitle = "Klasy ucznia";
-              //$studentClasses = $student -> grades;
               $studentClasses = $studentClassRepo -> getStudentGrades($student->id);
               return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'studentClass.table', ["student"=>$student, "subTitle"=>$subTitle, "studentClasses"=>$studentClasses]);

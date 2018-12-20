@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('header')
   <h1>{{ $command->command }} ({{ $command->task->name }})</h1>
   <aside id="strzalka_l">
@@ -14,37 +15,15 @@
 @endsection
 
 @section('main-content')
-  <p><a href="{{ route('polecenie.index') }}">powrót</a></p>
-  <table>
-    <tr><th>zadanie</th><th>numer</th><th>polecenie</th><th>opis</th><th>punkty</th><th>utworzono</th><th>zaktualizowano</th></tr>
-    <tr>
-      <td>{{ $command->task->name }}</td>
-      <td>{{ $command->number }}</td>
-      <td>{{ $command->command }}</td>
-      <td>{{ $command->description }}</td>
-      <td>{{ $command->points }}</td>
-      <td>{{ $command->created_at }}</td>
-      <td>{{ $command->updated_at }}</td>
-    </tr>
-  </table>
+  <ul class="nav nav-tabs nav-justified">
+    <li class="nav-item"><a class="nav-link" href="{{ url('polecenie/'.$command->id.'/showInfo') }}">informacje</a></li>
+<?php /*
+    <li class="nav-item"><a class="nav-link" href="{{ url('polecenie/'.$command->id.'/showCommands') }}">oceny polecenia</a></li>
+*/ ?>
+    <li class="nav-item"><a class="nav-link" href="{{ route('polecenie.index') }}">powrót</a></li>
+  </ul>
 
-  <h2>oceny polecenia</h2>
-  <table>
-    <tr>
-      <th>id</th>
-      <th>ocena zadania</th>
-      <th>punkty</th>
-      <th>utworzono</th>
-      <th>zaktualizowano</th>
-    </tr>
-    @foreach($commandRatings as $commandRating)
-      <tr>
-        <td>{{ $commandRating->id }}</td>
-        <td>{{ $commandRating->task_rating_id }}</td>
-        <td>{{ $commandRating->points }}</td>
-        <td>{{ $commandRating->created_at }}</td>
-        <td>{{ $commandRating->updated_at }}</td>
-      </tr>
-    @endforeach
-  </table>
+  <?php
+    echo $subView;
+  ?>
 @endsection

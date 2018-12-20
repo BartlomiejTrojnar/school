@@ -57,12 +57,11 @@
         <td><input type="datetime-local" name="entry_date" value="{{$taskRating->entry_date}}" /></td>
       </tr>
 
-
       <tr class="submit"><td colspan="2">
-          <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-          <button type="submit">zapisz zmiany</button>
-          <a href="{{ route('ocena_zadania.index') }}">anuluj</a>
-      </td></tr>
+          <input type="hidden" name="historyView" value="{{ $_SERVER['HTTP_REFERER'] }}" />
+          <button type="submit" class="btn btn-primary">zapisz zmiany</button>
+          <a href="{{ $_SERVER['HTTP_REFERER'] }}" class="btn btn-primary">anuluj</a>
+      </tr>
     </table>
   </form>
 @endsection
