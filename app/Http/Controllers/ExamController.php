@@ -26,6 +26,7 @@ class ExamController extends Controller
              ->nest('examDescriptionSelectField', 'examDescription.selectField', ["examDescriptions"=>$examDescriptions, "selectedExamDescription"=>0])
              ->nest('termSelectField', 'term.selectField', ["terms"=>$terms, "selectedTerm"=>0])
              ->nest('examTypeSelectField', 'exam.ExamTypeSelectField', ["examTypes"=>$examTypes, "selectedExamType"=>$selectedExamType]);
+
     }
 
     public function orderBy($column)

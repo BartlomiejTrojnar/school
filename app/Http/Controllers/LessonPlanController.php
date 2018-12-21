@@ -12,11 +12,9 @@ class LessonPlanController extends Controller
 /*
     public function index(LessonPlanRepository $lessonPlanRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("LessonPlanOrderBy[$i]");
-
-        $lessonPlans = $lessonPlanRepo->getAll($orderBy);
-        return view('lessonPlan.index', ["lessonPlans"=>$lessonPlans]);
+        $lessonPlans = $lessonPlanRepo -> getAllSorted();
+        return view('lessonPlan.index')
+            -> nest('lessonPlanTable', 'lessonPlan.table', ["lessonPlans"=>$lessonPlans, "subTitle"=>""]);
     }
 
     public function findLesson($group_id, $hour_id)

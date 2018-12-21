@@ -11,11 +11,9 @@ class EnlargementController extends Controller
 /*
     public function index(EnlargementRepository $enlargementRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("EnlargementOrderBy[$i]");
-
-        $enlargements = $enlargementRepo->getAll($orderBy);
-        return view('enlargement.index', ["enlargements"=>$enlargements]);
+        $enlargements = $enlargementRepo -> getAllSorted();
+        return view('enlargement.index')
+            -> nest('enlargementTable', 'enlargement.table', ["enlargements"=>$enlargements, "subTitle"=>""]);
     }
 
     public function orderBy($column)

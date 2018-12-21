@@ -11,11 +11,9 @@ class LessonController extends Controller
 /*
     public function index(LessonRepository $lessonRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("LessonOrderBy[$i]");
-
-        $lessons = $lessonRepo->getAll($orderBy);
-        return view('lesson.index', ["lessons"=>$lessons]);
+        $lessons = $lessonRepo -> getAllSorted();
+        return view('lesson.index')
+            -> nest('lessonTable', 'lesson.table', ["lessons"=>$lessons, "subTitle"=>""]);
     }
 
     public function orderBy($column)

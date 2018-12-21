@@ -11,11 +11,9 @@ class ClassroomController extends Controller
 
     public function index(ClassroomRepository $classroomRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("ClassroomOrderBy[$i]");
-
-        $classrooms = $classroomRepo->getPaginate($orderBy);
-        return view('classroom.index', ["classrooms"=>$classrooms]);
+        $classrooms = $classroomRepo->getAllSorted();
+        return view('classroom.index')
+            -> nest('classroomTable', 'classroom.table', ["classrooms"=>$commands, "subTitle"=>""]);
     }
 
     public function orderBy($column)

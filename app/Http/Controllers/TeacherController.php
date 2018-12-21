@@ -15,11 +15,9 @@ class TeacherController extends Controller
 {
     public function index(TeacherRepository $teacherRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TeacherOrderBy[$i]");
-
-        $teachers = $teacherRepo->getPaginate($orderBy);
-        return view('teacher.index', ["teachers"=>$teachers]);
+        $teachers = $teacherRepo -> getAllSorted();
+        return view('teacher.index')
+            -> nest('teacherTable', 'teacher.table', ["teachers"=>$teachers, "subTitle"=>""]);
     }
 
     public function orderBy($column)

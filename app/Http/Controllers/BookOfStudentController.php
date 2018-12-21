@@ -14,7 +14,7 @@ class BookOfStudentController extends Controller
         $bookOfStudents = $bookOfStudentRepo->getAllSorted();
         $schools = $schoolRepo->getAllSorted();
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
+            -> nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
     }
 
     public function orderBy($column)

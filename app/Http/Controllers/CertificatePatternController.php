@@ -9,11 +9,10 @@ class CertificatePatternController extends Controller
 /*
     public function index(CertificatePatternRepository $patternRepo)
     {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("PatternOrderBy[$i]");
-
         $patterns = $patternRepo->getAll($orderBy);
-        return view('certificatePattern.index', ["patterns"=>$patterns]);
+        $commands = $commandRepo->getAllSorted();
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
 
     public function orderBy($column)

@@ -3,15 +3,15 @@
 <table id="taskRatings">
   <tr>
     <th>uczeń</th>
-    <th>termin</th>
-    <th>data realizacji</th>
-    <th>wersja</th>
-    <th>waga</th>
-    <th>data oceny</th>
-    <th>punkty</th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/deadline') }}">termin</a></th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/implementation_date') }}">data realizacji</a></th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/version') }}">wersja</a></th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/importance') }}">waga</a></th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/rating_date') }}">data oceny</a></th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/points') }}">punkty</a></th>
     <th>ocena</th>
     <th>uwagi</th>
-    <th>dziennik?</th>
+    <th><a href="{{ url('/ocena_zadania/sortuj/diary') }}">dziennik?</a></th>
     <th>data dziennika</th>
     <th colspan="2">+/-</th>
   </tr>

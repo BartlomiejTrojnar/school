@@ -10,11 +10,9 @@ class SessionController extends Controller
 {
     public function index(SessionRepository $sessionRepo)
     {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("SessionOrderBy[$i]");
-
-        $sessions = $sessionRepo->getAll($orderBy);
-        return view('session.index', ["sessions"=>$sessions]);
+        $sessions = $sessionRepo -> getAllSorted();
+        return view('session.index')
+            -> nest('sessionTable', 'session.table', ["sessions"=>$sessions, "subTitle"=>""]);
     }
 
     public function orderBy($column)

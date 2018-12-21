@@ -8,8 +8,9 @@ class LessonHourController extends Controller
 {
     public function index(LessonHourRepository $lessonHourRepo)
     {
-        $lessonHours = $lessonHourRepo->getAll();
-        return view('lessonHour.index', ["lessonHours"=>$lessonHours]);
+        $lessonHours = $lessonHourRepo->getAllSorted();
+        return view('lessonHour.index')
+            -> nest('lessonHourTable', 'lessonHour.table', ["lessonHours"=>$lessonHours, "subTitle"=>""]);
     }
 
     public function create()

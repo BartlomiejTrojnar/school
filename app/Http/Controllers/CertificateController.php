@@ -11,11 +11,10 @@ class CertificateController extends Controller
 /*
     public function index(CertificateRepository $certificateRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("CertificateOrderBy[$i]");
-
         $certificates = $certificateRepo->getAll($orderBy);
-        return view('certificate.index', ["certificates"=>$certificates]);
+        $commands = $commandRepo->getAllSorted();
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
 
     public function orderBy($column)

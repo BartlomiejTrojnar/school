@@ -10,11 +10,9 @@ class TextbookController extends Controller
 /*
     public function index(TextbookRepository $textbookRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TextbookOrderBy[$i]");
-
-        $textbooks = $textbookRepo->getAll($orderBy);
-        return view('textbook.index', ["textbooks"=>$textbooks]);
+        $textbooks = $textbookRepo -> getAllSorted();
+        return view('textbook.index')
+            -> nest('textbookTable', 'textbook.table', ["textbooks"=>$textbooks, "subTitle"=>""]);
     }
 
     public function orderBy($column)

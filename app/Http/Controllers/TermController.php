@@ -11,9 +11,6 @@ class TermController extends Controller
 /*
     public function index(TermRepository $termRepo, ExamDescriptionRepository $examDescriptionRepo, ClassroomRepository $classroomRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TermOrderBy[$i]");
-
         $terms = $termRepo->getAll($orderBy);
         $examDescriptions = $examDescriptionRepo->getAll();
         $classrooms = $classroomRepo->getAll();

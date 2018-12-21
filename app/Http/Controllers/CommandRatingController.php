@@ -11,11 +11,9 @@ class CommandRatingController extends Controller
 /*
     public function index(CommandRatingRepository $commandRatingRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("CommandRatingOrderBy[$i]");
-
         $commandRatings = $commandRatingRepo->getAll($orderBy);
-        return view('commandRating.index', ["commandRatings"=>$commandRatings]);
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
 
     public function orderBy($column)

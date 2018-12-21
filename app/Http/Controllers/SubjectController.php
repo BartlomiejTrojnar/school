@@ -11,11 +11,9 @@ class SubjectController extends Controller
 
     public function index(SubjectRepository $subjectRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("SubjectOrderBy[$i]");
-
-        $subjects = $subjectRepo->getPaginate($orderBy);
-        return view('subject.index', ["subjects"=>$subjects]);
+        $subjects = $subjectRepo -> getAllSorted();
+        return view('subject.index')
+            -> nest('subjectTable', 'subject.table', ["subjects"=>$subjects, "subTitle"=>""]);
     }
 
     public function orderBy($column)

@@ -10,11 +10,9 @@ class AchievementController extends Controller
 /*
     public function index(AchievementRepository $achievementRepo)
     {
-        for($i=0; $i<4; $i++)
-          $orderBy[$i] = session()->get("AchievementOrderBy[$i]");
-
-        $achievements = $achievementRepo->getAll($orderBy);
-        return view('achievement.index', ["achievements"=>$achievements]);
+        $achievements = $achievementRepo -> getAllSorted();
+        return view('achievement.index')
+            -> nest('achievementTable', 'achievement.table', ["achievements"=>$achievements, "subTitle"=>""]);
     }
 
     public function orderBy($column)

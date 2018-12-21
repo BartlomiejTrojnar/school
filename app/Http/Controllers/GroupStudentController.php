@@ -11,11 +11,9 @@ class GroupStudentController extends Controller
 /*
     public function index(GroupStudentRepository $groupStudentRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("GroupStudentOrderBy[$i]");
-
-        $groupStudents = $groupStudentRepo->getAll($orderBy);
-        return view('groupStudent.index', ["groupStudents"=>$groupStudents]);
+        $groupStudents = $groupStudentRepo -> getAllSorted();
+        return view('groupStudent.index')
+            -> nest('groupStudentTable', 'groupStudent.table', ["groupStudents"=>$groupStudents, "subTitle"=>""]);
     }
 
     public function orderBy($column)

@@ -19,7 +19,7 @@
   @foreach($commands as $command)
     <tr>
       <td>{{ $command->id }}</td>
-      <td>{{ $command->task_id }}</td>
+      <td><a href="{{ route('zadanie.show', $command->task_id) }}">{{ $command->task->name }}</a></td>
       <td>{{ $command->number }}</td>
       <td><a href="{{ route('polecenie.show', $command->id) }}">{{ $command->command }}</a></td>
       <td>{{ $command->description }}</td>

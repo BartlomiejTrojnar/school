@@ -12,11 +12,9 @@ class GroupController extends Controller
 /*
     public function index(GroupRepository $groupRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("GroupOrderBy[$i]");
-
-        $groups = $groupRepo->getAll($orderBy);
-        return view('group.index', ["groups"=>$groups]);
+        $groups = $groupRepo -> getAllSorted();
+        return view('group.index')
+            -> nest('groupTable', 'group.table', ["groups"=>$groups, "subTitle"=>""]);
     }
 
     public function orderBy($column)

@@ -13,13 +13,11 @@ class TaskRatingController extends Controller
 /*
     public function index(TaskRatingRepository $taskRatingRepo)
     {
-        for($i=0; $i<6; $i++)
-          $orderBy[$i] = session()->get("TaskRatingOrderBy[$i]");
-
-        $taskRatings = $taskRatingRepo->getAll($orderBy);
-        return view('taskRating.index', ["taskRatings"=>$taskRatings]);
+        $taskRatings = $taskRatingRepo -> getAllSorted();
+        return view('taskRating.index')
+            -> nest('taskRatingTable', 'taskRating.table', ["taskRatings"=>$taskRatings, "subTitle"=>""]);
     }
-
+*/
     public function orderBy($column)
     {
         if(session()->get('TaskRatingOrderBy[0]') == $column)
@@ -36,9 +34,9 @@ class TaskRatingController extends Controller
           session()->put('TaskRatingOrderBy[3]', session()->get('TaskRatingOrderBy[1]'));
           session()->put('TaskRatingOrderBy[1]', 'asc');
         }
-        return redirect( route('ocena_zadania.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
+
     public function create(TaskRepository $taskRepo, StudentRepository $studentRepo)
     {
         $tasks = $taskRepo->getAllSorted();

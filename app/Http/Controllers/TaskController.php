@@ -12,7 +12,7 @@ class TaskController extends Controller
 {
     public function index(TaskRepository $taskRepo)
     {
-        $tasks = $taskRepo->getAllSorted();
+        $tasks = $taskRepo -> getAllSorted();
         return view('task.index', ["tasks"=>$tasks]);
     }
 

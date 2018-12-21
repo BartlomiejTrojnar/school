@@ -12,7 +12,8 @@ class CommandController extends Controller
     public function index(CommandRepository $commandRepo)
     {
         $commands = $commandRepo->getAllSorted();
-        return view('command.index', ["commands"=>$commands]);
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
 
     public function orderBy($column)
