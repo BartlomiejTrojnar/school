@@ -47,7 +47,7 @@ class Student extends Model
     {
         return $this->hasMany(Declaration::class);
     }
-
+/*
     public function printSelectField($id=0)
     {
        $students = Student::all();
@@ -75,4 +75,5 @@ class Student extends Model
            print '<option value="2">mężczyzna</option>';
        print '</select>';
     }
+*/
 }

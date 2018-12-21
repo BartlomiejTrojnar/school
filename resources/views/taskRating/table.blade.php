@@ -2,6 +2,7 @@
 
 <table id="taskRatings">
   <tr>
+    <th><a href="{{ url('/ocena_zadania/sortuj/task_id') }}">zadanie</a></th>
     <th>uczeń</th>
     <th><a href="{{ url('/ocena_zadania/sortuj/deadline') }}">termin</a></th>
     <th><a href="{{ url('/ocena_zadania/sortuj/implementation_date') }}">data realizacji</a></th>
@@ -18,6 +19,9 @@
 
   @foreach($taskRatings as $taskRating)
     <tr>
+      <td><a href="{{ route('zadanie.show', $taskRating->task_id) }}">
+          {{ $taskRating->task->name }}
+      </a></td>
       <td><a href="{{ route('uczen.show', $taskRating->student_id) }}">
           {{ $taskRating->student->first_name }} {{ $taskRating->student->last_name }}
       </a></td>
@@ -45,7 +49,7 @@
     </tr>
   @endforeach
 
-  <tr class="create"><td colspan="13">
+  <tr class="create"><td colspan="14">
       <a class="btn btn-primary" href="{{ route('ocena_zadania.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
   </td></tr>
 </table>

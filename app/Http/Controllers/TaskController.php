@@ -71,7 +71,6 @@ class TaskController extends Controller
           case 'showInfo':
               return view('task.show', ["task"=>$task, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'task.showInfo', ["task"=>$task]);
-              exit;
           break;
           case 'showCommands':
               $subTitle = "Polecenia w zadaniu";
@@ -82,7 +81,6 @@ class TaskController extends Controller
                   -> get();
               return view('task.show', ["task"=>$task, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'command.table', ["task"=>$task, "subTitle"=>$subTitle, "commands"=>$commands]);
-              exit;
           break;
           case 'showRatings':
               $subTitle = "Oceny zadania";
@@ -91,7 +89,7 @@ class TaskController extends Controller
                   -> nest('subView', 'taskRating.table', ["task"=>$task, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings]);
           break;
           default:
-              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('taskView'));
               exit;
           break;
         }

@@ -9,12 +9,12 @@
 @section('header')
   <aside id="strzalka_l">
     <a href="{{ route('klasa.show', $previous) }}">
-      <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
+      <img src="{{ asset('css/strzalka_lewa.png') }}" alt="poprzednia">
     </a>
   </aside>
   <aside id="strzalka_p">
     <a href="{{ route('klasa.show', $next) }}">
-      <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
+      <img src="{{ asset('css/strzalka_prawa.png') }}" alt="nastepna">
     </a>
   </aside>
   <h1>{{ $grade->year_of_beginning }}-{{ $grade->year_of_graduation }} {{ $grade->symbol }}</h1>

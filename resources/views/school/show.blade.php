@@ -3,12 +3,12 @@
 @section('header')
   <aside id="strzalka_l">
     <a href="{{ route('szkola.show', $previous) }}">
-      <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzednia">
+      <img src="{{ asset('css/strzalka_lewa.png') }}" alt="poprzednia">
     </a>
   </aside>
   <aside id="strzalka_p">
     <a href="{{ route('szkola.show', $next) }}">
-      <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepna">
+      <img src="{{ asset('css/strzalka_prawa.png') }}" alt="nastepna">
     </a>
   </aside>
   <h1>{{ $school->name }}</h1>

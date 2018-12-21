@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+
     public function index(SchoolRepository $schoolRepo)
     {
         $schools = $schoolRepo->getAllSorted();
@@ -62,15 +63,13 @@ class SchoolController extends Controller
           case 'showInfo':
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'school.showInfo', ["school"=>$school]);
-              exit;
           break;
           case 'showStudents':
               $bookOfStudents = $school -> students;
-              $students = '';
               foreach($bookOfStudents as $book) $students[] = $book->student;
+              if(empty($students)) $students='';
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["school"=>$school, "students"=>$students, "subTitle"=>"uczniowie szkoły"]);
-              exit;
           break;
           case 'showClasses':
               $subTitle = "Klasy w szkole";
@@ -80,7 +79,6 @@ class SchoolController extends Controller
                   -> paginate(20);
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades, "links"=>true]);
-              exit;
           break;
           default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));

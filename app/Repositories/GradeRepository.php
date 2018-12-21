@@ -8,15 +8,6 @@ class GradeRepository extends BaseRepository {
       $this->model = $model;
   }
 
-  public function countGradesInYear($year) {
-      $grades = $this->model
-        -> where('year_of_beginning', '<=', $year)
-        -> where('year_of_graduation', '>=', $year)
-        -> get();
-      $count = $grades -> count();
-      return $count;
-  }
-
   public function getAllSorted() {
       return $this->model
         -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
@@ -29,6 +20,15 @@ class GradeRepository extends BaseRepository {
         -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
         -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
         -> paginate(20);
+  }
+
+  public function countGradesInYear($year) {
+      $grades = $this->model
+        -> where('year_of_beginning', '<=', $year)
+        -> where('year_of_graduation', '>=', $year)
+        -> get();
+      $count = $grades -> count();
+      return $count;
   }
 }
 ?>

@@ -32,8 +32,8 @@
   </thead>
 
   <tbody>
+    @if( !empty($students) )
     @foreach($students as $student)
-    @if( !empty($student->id) )
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td>{{ $student->first_name }}</td>
@@ -56,8 +56,8 @@
           </form>
         </td>
       </tr>
-    @endif
     @endforeach
+    @endif
 
     <tr class="create"><td colspan="12">
         <a class="btn btn-primary" href="{{ route('uczen.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>

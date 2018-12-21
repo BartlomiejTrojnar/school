@@ -39,7 +39,7 @@ class GradeController extends Controller
 
     public function create(SchoolRepository $schoolRepo)
     {
-        $schools = $schoolRepo->getAll();
+        $schools = $schoolRepo->getAllSorted();
         return view('grade.create')
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
     }
@@ -75,14 +75,12 @@ class GradeController extends Controller
           case 'showInfo':
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.showInfo', ["grade"=>$grade]);
-              exit;
           break;
           case 'showStudents':
               $studentClasses = $studentClassRepo -> getGradeStudents($grade->id);
               $java_script = "studentClass.js";
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next, "java_script"=>$java_script])
                   -> nest('subView', 'studentClass.table', ["grade"=>$grade, "studentClasses"=>$studentClasses, "subTitle"=>"uczniowie w klasie"]);
-              exit;
           break;
           case 'showStudentsAll':
               foreach($grade -> students as $studentClass) {
@@ -94,7 +92,6 @@ class GradeController extends Controller
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
                   -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);
-              exit;
           break;
 /*
           case 'showEnlargements':
@@ -118,7 +115,6 @@ class GradeController extends Controller
               return view('grade.showRatings', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
-*/
           case 'showDeclarations':
               $students = $grade -> students;
               foreach($students as $student)
@@ -128,7 +124,6 @@ class GradeController extends Controller
               return view('grade.showDeclarations', ["grade"=>$grade, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
-/*
           case 'showTasks':
               return view('grade.showTasks', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
@@ -147,7 +142,7 @@ class GradeController extends Controller
 
     public function edit(Grade $klasa, SchoolRepository $schoolRepo)
     {
-        $schools = $schoolRepo->getAll();
+        $schools = $schoolRepo->getAllSorted();
         return view('grade.edit', ["grade"=>$klasa])
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$klasa->school_id]);
     }

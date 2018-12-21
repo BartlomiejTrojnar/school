@@ -71,15 +71,13 @@ class CommandController extends Controller
         $previous = $commandRepo -> PreviousRecordId($id);
         $next = $commandRepo -> NextRecordId($id);
 
-        switch(session()->get('commandView')) {
+        switch( session()->get('commandView') ) {
           case 'showInfo':
               return view('command.show', ["command"=>$command, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'command.showInfo', ["command"=>$command]);
-              exit;
           break;
           default:
-              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
-              exit;
+              printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
           break;
         }
     }

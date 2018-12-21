@@ -6,6 +6,7 @@ use App\Repositories\StudentRepository;
 use App\Repositories\SchoolYearRepository;
 use App\Repositories\GradeRepository;
 use App\Repositories\StudentClassRepository;
+use App\Repositories\TaskRatingRepository;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -46,7 +47,7 @@ class StudentController extends Controller
           session()->put('StudentOrderBy[3]', session()->get('StudentOrderBy[1]'));
           session()->put('StudentOrderBy[1]', 'asc');
         }
-        return redirect( route('uczen.index') );
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function create()
@@ -81,7 +82,7 @@ class StudentController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', StudentRepository $studentRepo, StudentClassRepository $studentClassRepo)
+    public function show($id, $view='', StudentRepository $studentRepo, StudentClassRepository $studentClassRepo, TaskRatingRepository $taskRatingRepo)
     {
         if(empty(session()->get('studentView')))  session()->put('studentView', 'showInfo');
         if($view)  session()->put('studentView', $view);
@@ -93,14 +94,12 @@ class StudentController extends Controller
           case 'showInfo':
               return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.showInfo', ["student"=>$student]);
-              exit;
           break;
           case 'showClasses':
               $subTitle = "Klasy ucznia";
               $studentClasses = $studentClassRepo -> getStudentGrades($student->id);
               return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'studentClass.table', ["student"=>$student, "subTitle"=>$subTitle, "studentClasses"=>$studentClasses]);
-              exit;
           break;
 /*
           case 'showEnlargements':
@@ -115,21 +114,22 @@ class StudentController extends Controller
               return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
-*/
           case 'showDeclarations':
               $declarations = $student -> declarations;
               return view('student.showDeclarations', ["student"=>$student, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
-              exit;
           break;
-/*
           case 'showExams':
               return view('student.showExams', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
+*/
           case 'showTasks':
-              return view('student.showTasks', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-              exit;
+              $subTitle = "Zadania ucznia";
+              $taskRatings = $taskRatingRepo -> getStudentTaskRatings($student->id);
+              return view('student.show', ["student"=>$student, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'taskRating.table', ["student"=>$student, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings]);
           break;
+/*
           case 'showLessonPlan':
               $lessonHours = LessonHour::where('day', 'poniedziałek') -> get();
               return view('student.showLessonPlan', ["student"=>$student, "lessonHours"=>$lessonHours, "previous"=>$previous, "next"=>$next]);

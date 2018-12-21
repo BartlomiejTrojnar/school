@@ -3,12 +3,12 @@
 @section('header')
   <aside id="strzalka_l">
     <a href="{{ route('polecenie.show', $previous) }}">
-      <img src="{{ asset('css/strzalka_l1.png') }}" alt="poprzedni">
+      <img src="{{ asset('css/strzalka_lewa.png') }}" alt="poprzedni">
     </a>
   </aside>
   <aside id="strzalka_p">
     <a href="{{ route('polecenie.show', $next) }}">
-      <img src="{{ asset('css/strzalka_p1.png') }}" alt="nastepny">
+      <img src="{{ asset('css/strzalka_prawa.png') }}" alt="nastepny">
     </a>
   </aside>
   <h1>{{ $command->command }} ({{ $command->task->name }})</h1>

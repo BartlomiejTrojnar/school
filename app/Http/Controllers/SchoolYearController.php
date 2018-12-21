@@ -46,13 +46,13 @@ class SchoolYearController extends Controller
 
         return redirect($request->history_view);
     }
-
+/*
     public function change($id)
     {
         session()->put('schoolYearSelected', $id);
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-
+*/
     public function show($id, $view='', SchoolYearRepository $schoolYearRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo)
     {
         if(empty(session()->get('schoolYearView')))  session()->put('schoolYearView', 'showInfo');
@@ -67,7 +67,6 @@ class SchoolYearController extends Controller
               $countGrades = $gradeRepo -> countGradesInYear(substr($schoolYear->date_end, 0, 4));
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'schoolYear.showInfo', ["schoolYear"=>$schoolYear, "countStudents"=>$countStudents, "countGrades"=>$countGrades]);
-              exit;
           break;
           case 'showClasses':
               $subTitle = "klasy w roku szkolnym";
@@ -78,7 +77,6 @@ class SchoolYearController extends Controller
                             -> get();
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
-              exit;
           break;
           case 'showStudents':
               $subTitle = "uczniowie w roku szkolnym";
@@ -89,7 +87,6 @@ class SchoolYearController extends Controller
                   -> get();
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "students"=>$students, "links"=>false]);
-              exit;
           break;
 /*
           case 'showTeachers':

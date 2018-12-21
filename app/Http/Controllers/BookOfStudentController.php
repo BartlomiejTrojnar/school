@@ -38,8 +38,8 @@ class BookOfStudentController extends Controller
 
     public function create(SchoolRepository $schoolRepo, StudentRepository $studentRepo)
     {
-        $schools = $schoolRepo->getAll();
-        $students = $studentRepo->getAll();
+        $schools = $schoolRepo->getAllSorted();
+        $students = $studentRepo->getAllSorted();
         return view('bookOfStudent.create')
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1])
              ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>0]);
@@ -64,8 +64,8 @@ class BookOfStudentController extends Controller
 
     public function edit(BookOfStudent $ksiega_uczniow, SchoolRepository $schoolRepo, StudentRepository $studentRepo)
     {
-        $schools = $schoolRepo->getAll();
-        $students = $studentRepo->getAll();
+        $schools = $schoolRepo->getAllSorted();
+        $students = $studentRepo->getAllSorted();
         return view('bookOfStudent.edit', ["bookOfStudent"=>$ksiega_uczniow])
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$ksiega_uczniow->school_id])
              ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$ksiega_uczniow->student_id]);
