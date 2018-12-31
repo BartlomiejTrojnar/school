@@ -6,6 +6,7 @@ use App\Repositories\GradeRepository;
 //use App\Models\LessonHour;
 use App\Repositories\SchoolRepository;
 use App\Repositories\StudentClassRepository;
+use App\Repositories\TaskRatingRepository;
 //use App\Models\GroupClass;
 //use App\Models\StudentClass;
 //use App\Repositories\GroupClassRepository;
@@ -63,7 +64,7 @@ class GradeController extends Controller
         return redirect($request->history_view);
     }
 
-    public function show($id, $view='', GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo)
+    public function show($id, $view='', GradeRepository $gradeRepo, StudentClassRepository $studentClassRepo, TaskRatingRepository $taskRatingRepo)
     {
         if(empty(session()->get('gradeView')))  session()->put('gradeView', 'showInfo');
         if($view)  session()->put('gradeView', $view);
@@ -92,6 +93,11 @@ class GradeController extends Controller
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
                   -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);
+          break;
+          case 'showTasks':
+              $taskRatings = $taskRatingRepo -> getGradeTaskRatings($grade->id);
+              return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
+                  -> nest('subView', 'taskRating.table', ["grade"=>$grade, "taskRatings"=>$taskRatings, "subTitle"=>"zadania w klasie"]);
           break;
 /*
           case 'showEnlargements':
@@ -122,10 +128,6 @@ class GradeController extends Controller
                   $declarations = $student->student->declarations;
               if( empty($declarations) ) $declarations = 0;
               return view('grade.showDeclarations', ["grade"=>$grade, "declarations"=>$declarations, "previous"=>$previous, "next"=>$next]);
-              exit;
-          break;
-          case 'showTasks':
-              return view('grade.showTasks', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
               exit;
           break;
 */

@@ -17,6 +17,7 @@
     <th colspan="2">+/-</th>
   </tr>
 
+  @if($taskRatings)
   @foreach($taskRatings as $taskRating)
     <tr>
       <td><a href="{{ route('zadanie.show', $taskRating->task_id) }}">
@@ -48,6 +49,7 @@
       </td>
     </tr>
   @endforeach
+  @endif
 
   <tr class="create"><td colspan="14">
       <a class="btn btn-primary" href="{{ route('ocena_zadania.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
