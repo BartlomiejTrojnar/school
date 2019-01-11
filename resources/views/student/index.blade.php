@@ -13,7 +13,7 @@
   <table id="students">
     <thead>
       <tr>
-        <th>id</th>
+        <th><a href="{{ url('/uczen/sortuj/id') }}">id</a></th>
         <th><a href="{{ url('/uczen/sortuj/first_name') }}">imię</a></th>
         <th><a href="{{ url('/uczen/sortuj/second_name') }}">drugie imię</a></th>
         <th><a href="{{ url('/uczen/sortuj/last_name') }}">nazwisko</a></th>
@@ -39,16 +39,20 @@
 
     @foreach($students as $student)
       <tr>
-        <td>{{ $loop->iteration }}</td>
+        @if( !empty($_GET['page']) )
+        <td style="font-size: x-small;">{{$_GET['page']*50-50+$loop->iteration}} ({{$student->id}})</td>
+        @else
+        <td style="font-size: x-small;">{{$loop->iteration}} ({{$student->id}})</td>
+        @endif
         <td>{{ $student->first_name }}</td>
         <td>{{ $student->second_name }}</td>
         <td><a href="{{ route('uczen.show', $student->id) }}">{{ $student->last_name }}</a></td>
         <td>{{ $student->family_name }}</td>
-        <td>{{ $student->sex }}</td>
+        <td style="font-size: x-small">{{ $student->sex }}</td>
         <td>{{ $student->PESEL }}</td>
         <td>{{ $student->place_of_birth }}</td>
-        <td>{{ $student->created_at }}</td>
-        <td>{{ $student->updated_at }}</td>
+        <td style="font-size: x-small">{{ $student->created_at }}</td>
+        <td style="font-size: x-small">{{ $student->updated_at }}</td>
         <td class="edit"><a class="btn btn-primary" href="{{ route('uczen.edit', $student->id) }}">
           <img class="edit" src="{{ asset('css/zmiana.png') }}" alt="[]">
         </a></td>

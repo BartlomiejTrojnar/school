@@ -1,2 +1,6 @@
 INSERT INTO school.students(`first_name`, `second_name`, `last_name`, `family_name`, `sex`, `PESEL`, `place_of_birth`, `created_at`, `updated_at`) 
-SELECT `imie`, `imie2`, `nazwisko`,`rodowe`, `plec`, `PESEL`, `m_urodzenia`, '2018-12-12 10:30', '2018-12-12 10:30' FROM `uczniowie` JOIN klasy_uczniowie ku ON uczniowie.iducznia=ku.iducznia WHERE ku.idklasy=60
+SELECT DISTINCT `imie`, `imie2`, `nazwisko`,`rodowe`, `plec`, `PESEL`, `m_urodzenia`, '2019-01-11 14:10', '2019-01-11 14:10' FROM `uczniowie` JOIN klasy_uczniowie ku ON uczniowie.iducznia=ku.iducznia WHERE ku.idklasy=9
+
+INSERT INTO school.student_classes(student_id, grade_id, date_start, date_end, number, comments, confirmation_date_start, confirmation_date_end, confirmation_numer, confirmation_comments, created_at, updated_at)
+SELECT iducznia-239+5994, 10, data_od, data_do, numer, uwagi, 0, 0, 0, 0, '2019-01-11 14:11', '2019-01-11 14:11' 
+FROM klasy_uczniowie WHERE idklasy=10

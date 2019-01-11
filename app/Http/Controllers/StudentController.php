@@ -22,7 +22,7 @@ class StudentController extends Controller
         }
         if( session()->get('gradeSelected') )
             $students = $students -> where('grade_id', '=', session()->get('gradeSelected'));
-        $students = $students -> paginate(50);
+        $students = $studentRepo -> getAllSortedPaginate($students);
 
         $schoolYears = $schoolYearRepo->getAllSorted();
         $grades = $gradeRepo->getAllSorted();

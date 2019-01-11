@@ -13,7 +13,7 @@ Route::get('/rok_szkolny/{id}/change', 'SchoolYearController@change');
 Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
 
 Route::resource('/uczen', 'StudentController');
-Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy');
+Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy')->name('uczen.sortuj');
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
