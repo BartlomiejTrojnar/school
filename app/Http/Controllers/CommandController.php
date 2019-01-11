@@ -5,6 +5,7 @@ use App\Repositories\CommandRepository;
 
 use App\Repositories\TaskRepository;
 //use App\Models\CommandRating;
+use Excel;
 use Illuminate\Http\Request;
 
 class CommandController extends Controller
@@ -113,5 +114,27 @@ class CommandController extends Controller
     {
         $polecenie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    public function export($task_id, CommandRepository $commandRepo)
+    {
+        $commands = $commandRepo -> getTaskCommands($task_id);
+        Excel::create('oceny', function($excel) use ($commands) {
+            $sheetName = $commands[0]->task->sheet_name;
+            $excel->sheet($sheetName, function($sheet) use ($commands) {
+                $subTitle = "Polecenia w zadaniu " . $commands[0]->task->name;
+                $sheet->loadView('command.export', ["subTitle"=>$subTitle, "commands"=>$commands]);
+            });
+        })->download('xlsx');
+        exit;
+    }
+
+    public function import($task_id)
+    {
+        $rows = Excel::selectSheets('komunikacja')->load('oceny.xlsx', function($reader) {
+            // reader methods
+        }) -> get();
+        print_r($rows[1]);
+        exit;
     }
 }

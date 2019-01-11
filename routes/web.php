@@ -28,7 +28,17 @@ Route::resource('/klasy_ucznia', 'StudentClassController');
 Route::get('/klasy_ucznia/sortuj/{column}', 'StudentClassController@orderBy');
 
 // -------------------------------------------------------------------------------------------------------- //
+Route::resource('/zadanie', 'TaskController');
+Route::get('/zadanie/sortuj/{column}', 'TaskController@orderBy');
+Route::get('/zadanie/{id}/{view}', 'TaskController@show');
 
+Route::resource('/polecenie', 'CommandController');
+Route::get('/polecenie/sortuj/{column}', 'CommandController@orderBy');
+Route::get('/polecenie/export/{id}', 'CommandController@export')->name('polecenie.export');
+Route::get('/polecenie/import/{id}', 'CommandController@import')->name('polecenie.import');
+
+
+// -------------------------------------------------------------------------------------------------------- //
 
 Route::resource('/godzina', 'LessonHourController');
 
@@ -82,11 +92,6 @@ Route::resource('/lekcja', 'LessonController');
 Route::get('/lekcja/sortuj/{column}', 'LessonController@orderBy');
 
 
-Route::resource('/zadanie', 'TaskController');
-Route::get('/zadanie/sortuj/{column}', 'TaskController@orderBy');
-Route::get('/zadanie/{id}/{view}', 'TaskController@show');
-Route::resource('/polecenie', 'CommandController');
-Route::get('/polecenie/sortuj/{column}', 'CommandController@orderBy');
 Route::resource('/ocena_zadania', 'TaskRatingController');
 Route::get('/ocena_zadania/sortuj/{column}', 'TaskRatingController@orderBy');
 Route::resource('/ocena_polecenia', 'CommandRatingController');

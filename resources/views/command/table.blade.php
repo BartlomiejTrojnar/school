@@ -16,6 +16,7 @@
   </thead>
 
   <tbody>
+  @if( !empty($commands) )
   @foreach($commands as $command)
     <tr>
       <td>{{ $command->id }}</td>
@@ -39,9 +40,14 @@
       </td>
     </tr>
   @endforeach
+  @endif
 
     <tr class="create"><td colspan="10">
         <a class="btn btn-primary" href="{{ route('polecenie.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
     </td></tr>
   </tbody>
 </table>
+
+<a class="btn btn-primary" href="{{ route('polecenie.export', $command->task_id) }}">eksportuj</a>
+&lt; plik Excel &gt;
+<a class="btn btn-primary" href="{{ route('polecenie.import', $command->task_id) }}">importuj</a>
