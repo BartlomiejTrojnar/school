@@ -9,13 +9,14 @@
 @endsection
 
 @section('main-content')
+  {{ $bookOfStudents->links() }}
   <table id="bookOfStudents">
     <thead>
       <tr>
         <th>id</th>
         <th><a href="{{ url('/ksiega_uczniow/sortuj/school_id') }}">szkoła</a></th>
         <th><a href="{{ url('/ksiega_uczniow/sortuj/student_id') }}">uczeń</a></th>
-        <th><a href="{{ url('/ksiega_uczniow/sortuj/number') }}">numer</a></th>
+        <th><a href="{{ route('ksiega_uczniow.sortuj', 'number') }}">numer</a></th>
         <th>wpis</th>
         <th>aktualizacja</th>
         <th colspan="2">+/-</th>

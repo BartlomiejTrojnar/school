@@ -15,5 +15,14 @@ class BookOfStudentRepository extends BaseRepository {
         -> orderBy( session()->get('BookOfStudentOrderBy[4]'), session()->get('BookOfStudentOrderBy[5]') )
         -> get();
   }
+
+  public function sortAndPaginateRecords($records) {
+      return $records
+        -> orderBy( session()->get('BookOfStudentOrderBy[0]'), session()->get('BookOfStudentOrderBy[1]') )
+        -> orderBy( session()->get('BookOfStudentOrderBy[2]'), session()->get('BookOfStudentOrderBy[3]') )
+        -> orderBy( session()->get('BookOfStudentOrderBy[4]'), session()->get('BookOfStudentOrderBy[5]') )
+        -> paginate(30);
+  }
+
 }
 ?>

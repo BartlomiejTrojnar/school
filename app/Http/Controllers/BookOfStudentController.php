@@ -15,27 +15,30 @@ class BookOfStudentController extends Controller
         $schoolSelected = session()->get('schoolSelected');
 
         $bookOfStudents = $bookOfStudentRepo -> getAllSorted();
-        if( $schoolSelected )
-            $bookOfStudents = $bookOfStudents -> where('school_id', $schoolSelected);
+        if( $schoolSelected ) {
+            $bookOfStudents = BookOfStudent::where('school_id', $schoolSelected);
+            $bookOfStudents = $bookOfStudentRepo -> sortAndPaginateRecords($bookOfStudents);
+        }
+
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
             -> nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
     }
 
     public function orderBy($column)
     {
-        if(session()->get('BookOrderBy[0]') == $column)
-          if(session()->get('BookOrderBy[1]') == 'desc')
-            session()->put('BookOrderBy[1]', 'asc');
+        if(session()->get('BookOfStudentOrderBy[0]') == $column)
+          if(session()->get('BookOfStudentOrderBy[1]') == 'desc')
+            session()->put('BookOfStudentOrderBy[1]', 'asc');
           else
-            session()->put('BookOrderBy[1]', 'desc');
+            session()->put('BookOfStudentOrderBy[1]', 'desc');
         else
         {
-          session()->put('BookOrderBy[4]', session()->get('BookOrderBy[2]'));
-          session()->put('BookOrderBy[2]', session()->get('BookOrderBy[0]'));
-          session()->put('BookOrderBy[0]', $column);
-          session()->put('BookOrderBy[5]', session()->get('BookOrderBy[3]'));
-          session()->put('BookOrderBy[3]', session()->get('BookOrderBy[1]'));
-          session()->put('BookOrderBy[1]', 'asc');
+          session()->put('BookOfStudentOrderBy[4]', session()->get('BookOfStudentOrderBy[2]'));
+          session()->put('BookOfStudentOrderBy[2]', session()->get('BookOfStudentOrderBy[0]'));
+          session()->put('BookOfStudentOrderBy[0]', $column);
+          session()->put('BookOfStudentOrderBy[5]', session()->get('BookOfStudentOrderBy[3]'));
+          session()->put('BookOfStudentOrderBy[3]', session()->get('BookOfStudentOrderBy[1]'));
+          session()->put('BookOfStudentOrderBy[1]', 'asc');
         }
         return redirect( route('ksiega_uczniow.index') );
     }
