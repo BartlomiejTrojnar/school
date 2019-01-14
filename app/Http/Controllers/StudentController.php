@@ -22,7 +22,7 @@ class StudentController extends Controller
         }
         if( session()->get('gradeSelected') )
             $students = $students -> where('grade_id', '=', session()->get('gradeSelected'));
-        $students = $studentRepo -> getAllSortedPaginate($students);
+        $students = $studentRepo -> sortAndPaginateRecords($students);
 
         $schoolYears = $schoolYearRepo->getAllSorted();
         $grades = $gradeRepo->getAllSorted();
@@ -84,6 +84,7 @@ class StudentController extends Controller
 
     public function show($id, $view='', StudentRepository $studentRepo, StudentClassRepository $studentClassRepo, TaskRatingRepository $taskRatingRepo)
     {
+        session()->put('studentSelected', $id);
         if(empty(session()->get('studentView')))  session()->put('studentView', 'showInfo');
         if($view)  session()->put('studentView', $view);
         $student = $studentRepo -> find($id);

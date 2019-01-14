@@ -14,11 +14,19 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
-    public function index(GradeRepository $gradeRepo)
+    public function index(GradeRepository $gradeRepo, SchoolRepository $schoolRepo)
     {
-        $grades = $gradeRepo->getPaginateSorted();
+        $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+
+        $grades = $gradeRepo -> getPaginateSorted();
+        if( $schoolSelected ) {
+            $grades = Grade::where('school_id', $schoolSelected);
+            $grades = $gradeRepo -> sortAndPaginateRecords($grades);
+        }
         return view('grade.index')
-            -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>""]);
+            -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>"", "schoolSelectField"=>$schoolSelectField]);
     }
 
     public function orderBy($column)

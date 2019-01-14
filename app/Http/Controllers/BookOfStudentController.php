@@ -11,10 +11,14 @@ class BookOfStudentController extends Controller
 {
     public function index(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo)
     {
-        $bookOfStudents = $bookOfStudentRepo->getAllSorted();
         $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+
+        $bookOfStudents = $bookOfStudentRepo -> getAllSorted();
+        if( $schoolSelected )
+            $bookOfStudents = $bookOfStudents -> where('school_id', $schoolSelected);
         return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents])
-            -> nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
+            -> nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
     }
 
     public function orderBy($column)
@@ -39,10 +43,13 @@ class BookOfStudentController extends Controller
     public function create(SchoolRepository $schoolRepo, StudentRepository $studentRepo)
     {
         $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
         $students = $studentRepo->getAllSorted();
+        $studentSelected = session()->get('studentSelected');
+
         return view('bookOfStudent.create')
-             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>1])
-             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>0]);
+             ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected])
+             ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
     }
 
     public function store(Request $request)

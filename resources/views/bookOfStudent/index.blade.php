@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('java-script')
+  <script language="javascript" type="text/javascript" src="{{ asset('js/bookOfStudent.js') }}"></script>
+@endsection
+
 @section('header')
   <h1>Księga uczniów</h1>
 @endsection
@@ -28,8 +32,8 @@
     @foreach($bookOfStudents as $bookOfStudent)
       <tr>
         <td>{{ $bookOfStudent->id }}</td>
-        <td>{{ $bookOfStudent->school->name }}</td>
-        <td>{{ $bookOfStudent->student->first_name }} {{ $bookOfStudent->student->last_name }}</td>
+        <td><a href="{{ route('szkola.show', $bookOfStudent->school_id) }}">{{ $bookOfStudent->school->name }}</a></td>
+        <td><a href="{{ route('uczen.show', $bookOfStudent->student_id) }}">{{ $bookOfStudent->student->first_name }} {{ $bookOfStudent->student->last_name }}</a></td>
         <td>{{ $bookOfStudent->number }}</td>
         <td>{{ $bookOfStudent->created_at }}</td>
         <td>{{ $bookOfStudent->updated_at }}</td>

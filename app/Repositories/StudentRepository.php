@@ -16,7 +16,7 @@ class StudentRepository extends BaseRepository {
         -> get();
   }
 
-  public function getAllSortedPaginate($records) {
+  public function sortAndPaginateRecords($records) {
       return $records
         -> orderBy( session()->get('StudentOrderBy[0]'), session()->get('StudentOrderBy[1]') )
         -> orderBy( session()->get('StudentOrderBy[2]'), session()->get('StudentOrderBy[3]') )

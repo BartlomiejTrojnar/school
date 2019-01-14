@@ -53,6 +53,7 @@ class SchoolController extends Controller
 
     public function show($id, $view='', SchoolRepository $schoolRepo)
     {
+        session()->put('schoolSelected', $id);
         if(empty(session()->get('schoolView')))  session()->put('schoolView', 'showInfo');
         if($view)  session()->put('schoolView', $view);
         $school = $schoolRepo -> find($id);
@@ -73,12 +74,17 @@ class SchoolController extends Controller
           break;
           case 'showClasses':
               $subTitle = "Klasy w szkole";
+              $schoolSelectField = 0;
+
               $grades = $school -> grades()
                   -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
                   -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
                   -> paginate(20);
               return view('school.show', ["school"=>$school, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades, "links"=>true]);
+                  -> nest('subView', 'grade.table', ["school"=>$school, "subTitle"=>$subTitle, "grades"=>$grades, "links"=>true, "schoolSelectField"=>$schoolSelectField]);
+          break;
+          case 'change':
+              return redirect( $_SERVER['HTTP_REFERER'] );
           break;
           default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));

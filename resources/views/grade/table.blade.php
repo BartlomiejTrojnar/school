@@ -11,6 +11,14 @@
       <th><a href="{{ url('/klasa/sortuj/school_id') }}">szkoła</a></th>
       <th colspan="2">+/-</th>
     </tr>
+
+    @if($schoolSelectField)
+    <tr>
+      <td colspan="2"></td>
+      <td><?php  print_r($schoolSelectField);  ?></td>
+      <td colspan="2"></td>
+    </tr>
+    @endif
   </thead>
 
   <tbody>

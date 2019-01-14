@@ -37,4 +37,13 @@
       @endforeach
     </td>
   </tr>
+  <tr>
+    <th>księga uczniów</th>
+    <td>
+      @foreach($student->bookOfStudents as $book)
+        <a href="{{ route('ksiega_uczniow.index') }}">{{ $book->school->name }} {{ $book->number }}</a>
+      @endforeach
+      <a class="btn btn-primary" href="{{ route('ksiega_uczniow.create') }}"><img class="create" src="{{ asset('css/plus.png') }}" /></a>
+    </td>
+  </tr>
 </table>
