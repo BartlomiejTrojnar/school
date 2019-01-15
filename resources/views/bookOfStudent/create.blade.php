@@ -17,7 +17,7 @@
       </tr>
       <tr>
         <th><label for="number">numer</label></th>
-        <td><input type="number" name="number" min="1" required /></td>
+        <td><input type="number" name="number" min="1" required value="{{ $proposedNumber }}" /></td>
       </tr>
 
       <tr class="submit"><td colspan="2">

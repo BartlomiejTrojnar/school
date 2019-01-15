@@ -14,7 +14,7 @@ class BookOfStudentController extends Controller
         $schools = $schoolRepo->getAllSorted();
         $schoolSelected = session()->get('schoolSelected');
 
-        $bookOfStudents = $bookOfStudentRepo -> getAllSorted();
+        $bookOfStudents = $bookOfStudentRepo -> getAllSortedAndPaginate();
         if( $schoolSelected ) {
             $bookOfStudents = BookOfStudent::where('school_id', $schoolSelected);
             $bookOfStudents = $bookOfStudentRepo -> sortAndPaginateRecords($bookOfStudents);
@@ -43,14 +43,15 @@ class BookOfStudentController extends Controller
         return redirect( route('ksiega_uczniow.index') );
     }
 
-    public function create(SchoolRepository $schoolRepo, StudentRepository $studentRepo)
+    public function create(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo, StudentRepository $studentRepo)
     {
         $schools = $schoolRepo->getAllSorted();
         $schoolSelected = session()->get('schoolSelected');
         $students = $studentRepo->getAllSorted();
         $studentSelected = session()->get('studentSelected');
+        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
 
-        return view('bookOfStudent.create')
+        return view('bookOfStudent.create', ["proposedNumber"=>$proposedNumber])
              ->nest('schoolSelectField', 'school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected])
              ->nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
     }
