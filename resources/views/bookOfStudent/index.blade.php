@@ -9,6 +9,7 @@
 @endsection
 
 @section('main-content')
+  <p class="btn btn-primary" style="float: right;"><a href="{{ route('uczen.search') }}">szukaj</a></p>
   {{ $bookOfStudents->links() }}
   <table id="bookOfStudents">
     <thead>

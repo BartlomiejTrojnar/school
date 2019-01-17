@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('java-script')
+  <script language="javascript" type="text/javascript" src="{{ asset('js/student.js') }}"></script>
+@endsection
+
 @section('header')
   <h1>Znalezieni uczniowie</h1>
 @endsection

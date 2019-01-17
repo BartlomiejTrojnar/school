@@ -26,6 +26,7 @@
 
       <tr class="submit"><td colspan="2">
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
+          <input type="hidden" name="search_field" value="1" />
           <button class="btn btn-primary" type="submit">szukaj</button>
           <a class="btn btn-primary" href="{{ $_SERVER['HTTP_REFERER'] }}">anuluj</a>
       </td></tr>

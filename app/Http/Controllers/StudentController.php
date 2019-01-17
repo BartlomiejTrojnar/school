@@ -79,6 +79,7 @@ class StudentController extends Controller
         $student->place_of_birth = $request->place_of_birth;
         $student->save();
 
+        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect($request->history_view);
     }
 
@@ -171,12 +172,14 @@ class StudentController extends Controller
         $uczen->place_of_birth = $request->place_of_birth;
         $uczen->save();
 
+        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect($request->history_view);
     }
 
     public function destroy(Student $uczen)
     {
         $uczen->delete();
+        if($_SERVER['HTTP_REFERER'] == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
