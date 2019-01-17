@@ -8,13 +8,13 @@
   <thead>
     <tr>
       <th>id</th>
-      <th><a href="{{ url('/uczen/sortuj/first_name') }}">imię</a></th>
-      <th><a href="{{ url('/uczen/sortuj/second_name') }}">drugie imię</a></th>
-      <th><a href="{{ url('/uczen/sortuj/last_name') }}">nazwisko</a></th>
+      <th><a href="{{ route('uczen.sortuj', 'first_name') }}">imię</a></th>
+      <th><a href="{{ route('uczen.sortuj', 'second_name') }}">drugie imię</a></th>
+      <th><a href="{{ route('uczen.sortuj', 'last_name') }}">nazwisko</a></th>
       <th>rodowe</th>
       <th>płeć</th>
-      <th><a href="{{ url('/uczen/sortuj/pesel') }}">PESEL</a></th>
-      <th><a href="{{ url('/uczen/sortuj/place_of_birth') }}">miejsce urodzenia</a></th>
+      <th><a href="{{ route('uczen.sortuj', 'pesel') }}">PESEL</a></th>
+      <th><a href="{{ route('uczen.sortuj', 'place_of_birth') }}">miejsce urodzenia</a></th>
       <th>wpis</th>
       <th>aktualizacja</th>
       <th colspan="2">+/-</th>

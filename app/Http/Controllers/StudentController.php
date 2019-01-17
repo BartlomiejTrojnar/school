@@ -179,4 +179,20 @@ class StudentController extends Controller
         $uczen->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+
+    public function search()
+    {
+        return view('student.search');
+    }
+
+    public function searchResults(Request $request, StudentRepository $studentRepo)
+    {
+        $students = $studentRepo -> getAllSorted();
+        if($request->last_name) $students = $students -> where('last_name', '=', $request->last_name);
+        if($request->first_name) $students = $students -> where('first_name', '=', $request->first_name);
+        if($request->PESEL) $students = $students -> where('PESEL', '=', $request->PESEL);
+        if($request->place_of_birth) $students = $students -> where('place_of_birth', '=', $request->place_of_birth);
+        //$students = $studentRepo -> sortAndPaginateRecords($students);
+        return view('student.searchResults', ["students"=>$students, "request"=>$request]);
+    }
 }

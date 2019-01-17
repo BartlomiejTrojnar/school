@@ -11,8 +11,10 @@ Route::get('/szkola/{id}/{view}', 'SchoolController@show');
 Route::resource('/rok_szkolny', 'SchoolYearController');
 Route::get('/rok_szkolny/{id}/{view}', 'SchoolYearController@show');
 
+Route::get('/uczen/search', 'StudentController@search')->name('uczen.search');
+Route::post('/uczen/search_results', 'StudentController@searchResults')->name('uczen.search_results');
 Route::resource('/uczen', 'StudentController');
-Route::get('/uczen/sortuj/{column}', 'StudentController@orderBy')->name('uczen.sortuj');
+Route::get('/uczen/order/{column}', 'StudentController@orderBy')->name('uczen.order');
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
