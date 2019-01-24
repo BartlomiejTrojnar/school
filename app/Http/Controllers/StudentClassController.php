@@ -111,6 +111,14 @@ class StudentClassController extends Controller
         return redirect($request->historyView);
     }
 
+    public function updateNumber(Request $request, StudentClass $klasy_ucznia)
+    {
+        $klasy_ucznia = StudentClass::find($request->id);
+        $klasy_ucznia->number = $request->number;
+        $klasy_ucznia->save();
+        return 0;
+    }
+
     public function destroy($id)
     {
         StudentClass::destroy($id);

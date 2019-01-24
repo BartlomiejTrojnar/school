@@ -10,23 +10,103 @@ function klikanieDat() {
     });
 }
 
-function klikanieNumeru() {
+function numberClick() {
     $('.studentClassProposedNumber').bind('click', function(){
         $('#number').val($(this).html());
         return false;
     });
-    $('.numerDecrease').bind('click', function(){
+    $('.numberDecrease').bind('click', function(){
         if($('#number').val() == '')  $('#number').val(1);
         $('#number').val($('#number').val()-1);
         if($('#number').val() < 1)  $('#number').val(1);
         return false;
     });
-    $('.numerIncrease').bind('click', function(){
+    $('.numberIncrease').bind('click', function(){
         if($('#number').val() == '')  $('#number').val(0);
         $('#number').val($('#number').val()-1+2);
         if($('#number').val() > 99)  $('#number').val(99);
         return false;
     });
+}
+
+function numberUpClick() {
+    $('#studentClasses .numberUp').bind('click', function(){
+        $('tr').css('background', '');
+        var id = $(this).attr("data-id");
+        var number = $('tr[data-id=' +id+ '] span.number').html()-1;
+        $('tr[data-id=' + id + ']').fadeOut( 500 );
+        if( idToReplace = findRowsToReplaceId(number) ) {
+            replaceRowsWithChangeNumbers(id, idToReplace);
+            updateRecordNumber(idToReplace, number+1);
+        }
+        else {
+            setTableRowNumber(id, number);
+        }
+        updateRecordNumber(id, number);
+        $('tr[data-id=' + id + ']').fadeIn( 500 ).css('background', '#552');
+        return false;
+    });
+}
+
+function numberDownClick() {
+    $('#studentClasses .numberDown').bind('click', function(){
+        $('tr').css('background', '');
+        var id = $(this).attr("data-id");
+        $('tr[data-id=' + id + ']').fadeOut( 500 );
+        var number = $('tr[data-id=' +id+ '] span.number').html()-1+2;
+        if( idToReplace = findRowsToReplaceId(number) ) {
+            replaceRowsWithChangeNumbers(idToReplace, id);
+            updateRecordNumber(idToReplace, number-1);
+        }
+        else {
+            setTableRowNumber(id, number);
+        }
+        updateRecordNumber(id, number);
+        $('tr[data-id=' + id + ']').fadeIn( 500 ).css('background', '#552');
+        return false;
+    });
+}
+
+function updateRecordNumber(id, number) {
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "http://localhost/szkola/public/klasy_ucznia/updateNumber",
+        data: { id: id, number: number },
+        success: function(result) { return; },
+        error: function(result) { alert(result) },
+    });
+    return false;
+}
+
+function findRowsToReplaceId(number) {
+    var count = 0, id = 0;
+    $('tr[data-number=' +number+ ']:visible').each(function() {
+        id = $(this).attr('data-id');
+        count++;
+    });
+    if(count>1) return 0;
+    return id;
+}
+
+function replaceRowsWithChangeNumbers(id, idToReplace) {
+    var number = $('tr[data-id=' +id+ '] span.number').html();
+    var tdNumber = $('tr[data-id=' +id+ '] td:first-child').html();
+
+    setTimeout(function() {
+         $('tr[data-id=' + idToReplace + ']').before( $('tr[data-id=' + id + ']').detach() );
+         setTableRowNumber(idToReplace, number, tdNumber);
+         setTableRowNumber(id, number-1, tdNumber-1);
+    }, 500);
+}
+
+function setTableRowNumber(id, number, tdNumber=0) {
+    $('tr[data-id=' + id + '] span.number').html(number);
+    $('tr[data-id=' + id + ']').attr('data-number', number);
+    if(tdNumber)
+        $('tr[data-id=' + id + '] td:first-child').html(tdNumber);
 }
 
 function gradeChanged() {
@@ -81,10 +161,14 @@ function dateStartOrEndChanged() {
     });
 }
 function verifyAndDisplayStudents(date_start, date_end) {
+    var lp = 0;
     $('table#studentClasses tr').each( function() {
         if( $(this).attr('data-start') > date_end || $(this).attr('data-end') < date_start)
-          $(this).hide();
-        else $(this).show();
+          $(this).fadeOut( 1000 );
+        else {
+            $(this).fadeIn( 1000 );
+            $('td:first-child', this).html(lp++);
+        }
     });
 }
 
@@ -93,8 +177,10 @@ function verifyAndDisplayStudents(date_start, date_end) {
 // ----------------------------------- ZAŁADOWANIE DOKUMENTU ------------------------------------ //
 $(document).ready(function() {
     klikanieDat();
-    klikanieNumeru();
+    numberClick();
     gradeChanged();
     dateStartOrEndChanged();
     clickGradeButtons();
+    numberUpClick();
+    numberDownClick();
 });
