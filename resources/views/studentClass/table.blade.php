@@ -18,12 +18,12 @@
 <table id="studentClasses">
   <tr>
     <th>lp</th>
-    <th><a href="{{ url('/klasy_ucznia/sortuj/student_id') }}">uczeń</a></th>
-    <th><a href="{{ url('/klasy_ucznia/sortuj/grade_id') }}">klasa</a></th>
-    <th><a href="{{ url('/klasy_ucznia/sortuj/date_start') }}">od</a></th>
-    <th><a href="{{ url('/klasy_ucznia/sortuj/date_end') }}">do</a></th>
-    <th><a href="{{ url('/klasy_ucznia/sortuj/number') }}">numer</a></th>
-    <th>uwagi</th>
+    <th><a href="{{ route('klasy_ucznia.order', 'student_id') }}">uczeń</a></th>
+    <th><a href="{{ route('klasy_ucznia.order', 'grade_id') }}">klasa</a></th>
+    <th><a href="{{ route('klasy_ucznia.order', 'date_start') }}">od</a></th>
+    <th><a href="{{ route('klasy_ucznia.order', 'date_end') }}">do</a></th>
+    <th><a href="{{ route('klasy_ucznia.order', 'number') }}">numer</a></th>
+    <th><a href="{{ route('klasy_ucznia.order', 'comments') }}">uwagi</th>
     <th colspan="2">+/-</th>
   </tr>
 

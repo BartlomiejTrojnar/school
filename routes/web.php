@@ -5,7 +5,7 @@ Route::get('/', function () {
 });
 
 Route::resource('/szkola', 'SchoolController');
-Route::get('/szkola/sortuj/{column}', 'SchoolController@orderBy')->name('szkola.sortuj');
+Route::get('/szkola/sortuj/{column}', 'SchoolController@orderBy')->name('szkola.order');
 Route::get('/szkola/{id}/{view}', 'SchoolController@show');
 
 Route::resource('/rok_szkolny', 'SchoolYearController');
@@ -18,7 +18,7 @@ Route::get('/uczen/order/{column}', 'StudentController@orderBy')->name('uczen.or
 Route::get('/uczen/{id}/{view}', 'StudentController@show');
 
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
-Route::get('/ksiega_uczniow/sortuj/{column}', 'BookOfStudentController@orderBy')->name('ksiega_uczniow.sortuj');
+Route::get('/ksiega_uczniow/sortuj/{column}', 'BookOfStudentController@orderBy')->name('ksiega_uczniow.order');
 
 Route::resource('/klasa', 'GradeController');
 Route::get('/klasa/sortuj/{column}', 'GradeController@orderBy')->name('klasa.sortuj');
@@ -27,15 +27,15 @@ Route::get('/klasa/{id}/{view}', 'GradeController@show');
 
 Route::post('/klasy_ucznia/updateNumber', 'StudentClassController@updateNumber');
 Route::resource('/klasy_ucznia', 'StudentClassController');
-Route::get('/klasy_ucznia/sortuj/{column}', 'StudentClassController@orderBy')->name('klasy_ucznia.sortuj');
+Route::get('/klasy_ucznia/sortuj/{column}', 'StudentClassController@orderBy')->name('klasy_ucznia.order');
 
 // -------------------------------------------------------------------------------------------------------- //
 Route::resource('/zadanie', 'TaskController');
-Route::get('/zadanie/sortuj/{column}', 'TaskController@orderBy')->name('zadanie.sortuj');
+Route::get('/zadanie/sortuj/{column}', 'TaskController@orderBy')->name('zadanie.order');
 Route::get('/zadanie/{id}/{view}', 'TaskController@show');
 
 Route::resource('/polecenie', 'CommandController');
-Route::get('/polecenie/sortuj/{column}', 'CommandController@orderBy')->name('polecenie.sortuj');
+Route::get('/polecenie/sortuj/{column}', 'CommandController@orderBy')->name('polecenie.order');
 Route::get('/polecenie/export/{id}', 'CommandController@export')->name('polecenie.export');
 Route::get('/polecenie/import/{id}', 'CommandController@import')->name('polecenie.import');
 
