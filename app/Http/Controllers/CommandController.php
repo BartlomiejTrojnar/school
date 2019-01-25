@@ -3,8 +3,10 @@ namespace App\Http\Controllers;
 use App\Models\Command;
 use App\Repositories\CommandRepository;
 
+use App\Models\Task;
 use App\Repositories\TaskRepository;
 //use App\Models\CommandRating;
+use Excel;
 use Illuminate\Http\Request;
 
 class CommandController extends Controller
@@ -113,5 +115,46 @@ class CommandController extends Controller
     {
         $polecenie->delete();
         return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    public function export($task_id, CommandRepository $commandRepo)
+    {
+        $commands = $commandRepo -> getTaskCommands($task_id);
+        Excel::create('oceny', function($excel) use ($commands) {
+            $sheetName = $commands[0]->task->sheet_name;
+            $excel->sheet($sheetName, function($sheet) use ($commands) {
+                $subTitle = "Polecenia w zadaniu " . $commands[0]->task->name;
+                $sheet->loadView('command.export', ["subTitle"=>$subTitle, "commands"=>$commands]);
+            });
+        })->download('xlsx');
+        exit;
+    }
+
+    public function import($task_id)
+    {
+        $sheetName = Task::find($task_id)->sheet_name;
+        $rows = Excel::selectSheets($sheetName)->load('oceny.xlsx') -> get();
+        if(empty($rows[0])) {echo 'Brak arkusza'; exit;}
+
+        $i = 0; $errorNumber=0;
+        foreach($rows[0] as $key=>$value) {
+            if($i++ < 15) continue;
+            $command = Command::where('command', $key)->first();
+            if(!empty($command['id'])) {
+                $commandErrors[$errorNumber]['lp'] = $i;
+                $commandErrors[$errorNumber]['command'] = $key;
+                $commandErrors[$errorNumber]['error'] = 'W pliku '. $value .' punktów, w bazie '. $command->points .' punktów.';
+                $commandErrors[$errorNumber]['button'] = 'Zmień';
+                $errorNumber++;
+            }
+            else {
+                $commandErrors[$errorNumber]['lp'] = $i;
+                $commandErrors[$errorNumber]['command'] = $key;
+                $commandErrors[$errorNumber]['error'] = 'Brak polecenia w zadaniu.';
+                $commandErrors[$errorNumber]['button'] = 'Wstaw';
+                $errorNumber++;
+            }
+        }
+        return view('command.import', ["commandErrors"=>$commandErrors]);
     }
 }

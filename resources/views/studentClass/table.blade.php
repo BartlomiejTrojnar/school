@@ -28,7 +28,11 @@
   </tr>
 
   @foreach($studentClasses as $sc)
-    <tr data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}">
+    @if($sc->student->sex == 'mężczyzna')
+      <tr class="man" data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}" data-id="{{ $sc->id }}" data-number="{{ $sc->number }}">
+    @else
+      <tr class="woman" data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}" data-id="{{ $sc->id }}" data-number="{{ $sc->number }}">
+    @endif
       <td>{{ $loop->iteration }}</td>
       <td><a href="{{ route('uczen.show', $sc->student_id) }}">
         {{ $sc->student->first_name }} {{ $sc->student->second_name }} {{ $sc->student->last_name }}
@@ -42,9 +46,19 @@
       @if($sc->confirmation_date_end==1) <td>{{ $sc->date_end }}</td>
       @else <td class="not_confirmation">{{ $sc->date_end }}</td>
       @endif
-      @if($sc->confirmation_numer==1) <td>{{ $sc->number }}</td>
-      @else <td class="not_confirmation">{{ $sc->number }}</td>
+
+      @if($sc->confirmation_numer==1)
+        <td>
+      @else
+        <td class="not_confirmation">
       @endif
+          <span class="number">{{ $sc->number }}</span>
+          <div class="upAndDown">
+            <button class="btn btn-primary numberUp" data-id="{{ $sc->id }}"><img class="up" src="{{ asset('css/up.png') }}" alt="up" /></button>
+            <button class="btn btn-primary numberDown" data-id="{{ $sc->id }}"><img class="down" src="{{ asset('css/down.png') }}" alt="down" /></button>
+          </div>
+        </td>
+
       @if($sc->confirmation_comments==1) <td>{{ $sc->comments }}</td>
       @else <td class="not_confirmation">{{ $sc->comments }}</td>
       @endif

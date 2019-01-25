@@ -16,6 +16,14 @@ class StudentRepository extends BaseRepository {
         -> get();
   }
 
+  public function sortAndPaginateRecords($records) {
+      return $records
+        -> orderBy( session()->get('StudentOrderBy[0]'), session()->get('StudentOrderBy[1]') )
+        -> orderBy( session()->get('StudentOrderBy[2]'), session()->get('StudentOrderBy[3]') )
+        -> orderBy( session()->get('StudentOrderBy[4]'), session()->get('StudentOrderBy[5]') )
+        -> distinct() -> paginate(50);
+  }
+
   public function countStudentsByDates($date_start, $date_end) {
       $students = $this->model
         -> join('student_classes', 'students.id', '=', 'student_classes.student_id')

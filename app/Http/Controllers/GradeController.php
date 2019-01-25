@@ -14,11 +14,19 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
-    public function index(GradeRepository $gradeRepo)
+    public function index(GradeRepository $gradeRepo, SchoolRepository $schoolRepo)
     {
-        $grades = $gradeRepo->getPaginateSorted();
+        $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+
+        $grades = $gradeRepo -> getPaginateSorted();
+        if( $schoolSelected ) {
+            $grades = Grade::where('school_id', $schoolSelected);
+            $grades = $gradeRepo -> sortAndPaginateRecords($grades);
+        }
         return view('grade.index')
-            -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>""]);
+            -> nest('gradeTable', 'grade.table', ["grades"=>$grades, "links"=>true, "subTitle"=>"", "schoolSelectField"=>$schoolSelectField]);
     }
 
     public function orderBy($column)
@@ -89,7 +97,8 @@ class GradeController extends Controller
                    $students[] = $studentClass->student;
                  else $studentsOutOfDate[] = $studentClass->student;
               }
-              $students[] = ''; $studentsOutOfDate[] = '';
+              if(empty($students)) $students=0;
+              if(empty($studentsOutOfDate)) $studentsOutOfDate=0;
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
                   -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);

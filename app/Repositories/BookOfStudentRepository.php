@@ -8,12 +8,25 @@ class BookOfStudentRepository extends BaseRepository {
       $this->model = $model;
   }
 
-  public function getAllSorted() {
+  public function getLastNumber() {
+      return $this->model->all()->last()->number;
+  }
+
+  public function getAllSortedAndPaginate() {
       return $this->model
         -> orderBy( session()->get('BookOfStudentOrderBy[0]'), session()->get('BookOfStudentOrderBy[1]') )
         -> orderBy( session()->get('BookOfStudentOrderBy[2]'), session()->get('BookOfStudentOrderBy[3]') )
         -> orderBy( session()->get('BookOfStudentOrderBy[4]'), session()->get('BookOfStudentOrderBy[5]') )
-        -> get();
+        -> paginate(30);
   }
+
+  public function sortAndPaginateRecords($records) {
+      return $records
+        -> orderBy( session()->get('BookOfStudentOrderBy[0]'), session()->get('BookOfStudentOrderBy[1]') )
+        -> orderBy( session()->get('BookOfStudentOrderBy[2]'), session()->get('BookOfStudentOrderBy[3]') )
+        -> orderBy( session()->get('BookOfStudentOrderBy[4]'), session()->get('BookOfStudentOrderBy[5]') )
+        -> paginate(30);
+  }
+
 }
 ?>

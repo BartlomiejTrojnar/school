@@ -22,7 +22,7 @@ class StudentController extends Controller
         }
         if( session()->get('gradeSelected') )
             $students = $students -> where('grade_id', '=', session()->get('gradeSelected'));
-        $students = $students -> paginate(50);
+        $students = $studentRepo -> sortAndPaginateRecords($students);
 
         $schoolYears = $schoolYearRepo->getAllSorted();
         $grades = $gradeRepo->getAllSorted();
@@ -79,11 +79,13 @@ class StudentController extends Controller
         $student->place_of_birth = $request->place_of_birth;
         $student->save();
 
+        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect($request->history_view);
     }
 
     public function show($id, $view='', StudentRepository $studentRepo, StudentClassRepository $studentClassRepo, TaskRatingRepository $taskRatingRepo)
     {
+        session()->put('studentSelected', $id);
         if(empty(session()->get('studentView')))  session()->put('studentView', 'showInfo');
         if($view)  session()->put('studentView', $view);
         $student = $studentRepo -> find($id);
@@ -170,12 +172,30 @@ class StudentController extends Controller
         $uczen->place_of_birth = $request->place_of_birth;
         $uczen->save();
 
+        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect($request->history_view);
     }
 
     public function destroy(Student $uczen)
     {
         $uczen->delete();
+        if($_SERVER['HTTP_REFERER'] == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    public function search()
+    {
+        return view('student.search');
+    }
+
+    public function searchResults(Request $request, StudentRepository $studentRepo)
+    {
+        $students = $studentRepo -> getAllSorted();
+        if($request->last_name) $students = $students -> where('last_name', '=', $request->last_name);
+        if($request->first_name) $students = $students -> where('first_name', '=', $request->first_name);
+        if($request->PESEL) $students = $students -> where('PESEL', '=', $request->PESEL);
+        if($request->place_of_birth) $students = $students -> where('place_of_birth', '=', $request->place_of_birth);
+        //$students = $studentRepo -> sortAndPaginateRecords($students);
+        return view('student.searchResults', ["students"=>$students, "request"=>$request]);
     }
 }

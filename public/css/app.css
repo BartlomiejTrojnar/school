@@ -54,10 +54,13 @@ table {
     border-collapse: collapse;
     margin: auto;
 }
+
 tr:nth-of-type(even){ background: #555; }
 tr:nth-of-type(odd)	{ background: #444; }
-tr:hover { background: #336; }
-tr.create { text-align: center; }
+tr.create, tr.submit { text-align: center; }
+tr.man { background: #222; }
+tr:hover { background: #44a; }
+
 th {
     border: 1px solid #ddd;
     background: #999;
@@ -65,12 +68,11 @@ th {
     padding: 5px 2px;
     font-size: 1.1em;
 }
+
 td { border: 1px solid #ddd; }
+td.not_confirmation { background: #854; }
 td.edit, td.destroy {
     width: 30px;
-    text-align: center;
-}
-tr.submit {
     text-align: center;
 }
 

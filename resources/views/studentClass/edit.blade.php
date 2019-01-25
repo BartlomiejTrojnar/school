@@ -49,8 +49,8 @@
         <td>
             <input type="text" name="number" size="2" maxlength="2" value="{{ $studentClass->number }}" id="number" />
             <div class="upAndDown">
-                <button class="btn btn-primary numerIncrease"><img class="up" src="{{ asset('css/up.png') }}" alt="up" /></button>
-                <button class="btn btn-primary numerDecrease"><img class="down" src="{{ asset('css/down.png') }}" alt="down" /></button>
+                <button class="btn btn-primary numberIncrease"><img class="up" src="{{ asset('css/up.png') }}" alt="up" /></button>
+                <button class="btn btn-primary numberDecrease"><img class="down" src="{{ asset('css/down.png') }}" alt="down" /></button>
             </div>
         </td>
         <td colspan="2"><input type="checkbox" name="confirmation_numer" @if($studentClass->confirmation_numer==1) checked="checked" @endif /></td>

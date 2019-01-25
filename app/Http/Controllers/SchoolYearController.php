@@ -70,13 +70,14 @@ class SchoolYearController extends Controller
           break;
           case 'showClasses':
               $subTitle = "klasy w roku szkolnym";
+              $schoolSelectField = '';
               $grades = Grade::where('year_of_beginning', '<', $schoolYear->date_end)
                             -> where('year_of_graduation', '>', $schoolYear->date_start)
                             -> orderBy( session()->get('GradeOrderBy[0]'), session()->get('GradeOrderBy[1]') )
                             -> orderBy( session()->get('GradeOrderBy[2]'), session()->get('GradeOrderBy[3]') )
                             -> get();
               return view('schoolYear.show', ["schoolYear"=>$schoolYear, "previous"=>$previous, "next"=>$next])
-                  -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades]);
+                  -> nest('subView', 'grade.table', ["schoolYear"=>$schoolYear, "subTitle"=>$subTitle, "grades"=>$grades, "schoolSelectField"=>$schoolSelectField]);
           break;
           case 'showStudents':
               $subTitle = "uczniowie w roku szkolnym";

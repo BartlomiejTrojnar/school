@@ -5,46 +5,47 @@
 @endsection
 
 @section('header')
-  <h1>Uczniowie</h1>
+  <h1>Znalezieni uczniowie</h1>
 @endsection
 
 @section('main-content')
 <p class="btn btn-primary" style="float: right;"><a href="{{ route('uczen.search') }}">szukaj</a></p>
-{{ $students->links() }}
   <table id="students">
     <thead>
       <tr>
-        <th><a href="{{ route('uczen.order', 'id') }}">id</a></th>
-        <th><a href="{{ route('uczen.order', 'first_name') }}">imię</a></th>
-        <th><a href="{{ route('uczen.order', 'second_name') }}">drugie imię</a></th>
-        <th><a href="{{ route('uczen.order', 'last_name') }}">nazwisko</a></th>
+        <th>id</th>
+        <th>imię</th>
+        <th>drugie imię</th>
+        <th>nazwisko</th>
         <th>rodowe</th>
         <th>płeć</th>
-        <th><a href="{{ route('uczen.order', 'pesel') }}">PESEL</a></th>
-        <th><a href="{{ route('uczen.order', 'place_of_birth') }}">miejsce urodzenia</a></th>
+        <th>PESEL</th>
+        <th>miejsce urodzenia</th>
         <th>wpis</th>
         <th>aktualizacja</th>
         <th colspan="2">+/-</th>
       </tr>
 
-      <tr>
-        <td>-</td>
-        <td><?php  print_r($gradeSelectField);  ?></td>
-        <td><?php  print_r($schoolYearSelectField);  ?></td>
-        <?php /*<td>  print_r($groupSelectField);  </td> */ ?>
-        <td colspan="10">=</td>
+      <tr style="background: orange;">
+        <td></td>
+        <td>{{ $request->first_name }}</td>
+        <td>{{ $request->second_name }}</td>
+        <td>{{ $request->last_name }}</td>
+        <td></td>
+        <td></td>
+        <td>{{ $request->pesel }}</td>
+        <td>{{ $request->place_of_birth }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
-
     </thead>
     <tbody>
 
     @foreach($students as $student)
       <tr>
-        @if( !empty($_GET['page']) )
-        <td style="font-size: x-small;">{{$_GET['page']*50-50+$loop->iteration}} ({{$student->id}})</td>
-        @else
         <td style="font-size: x-small;">{{$loop->iteration}} ({{$student->id}})</td>
-        @endif
         <td>{{ $student->first_name }}</td>
         <td>{{ $student->second_name }}</td>
         <td><a href="{{ route('uczen.show', $student->id) }}">{{ $student->last_name }}</a></td>

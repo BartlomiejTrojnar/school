@@ -31,8 +31,8 @@ class StudentClassController extends Controller
 
     public function create(StudentRepository $studentRepo, GradeRepository $gradeRepo, StudentClassRepository $scRepo, SchoolYearRepository $syRepo)
     {
-        $proposedNumber = $scRepo->getLastNumber();
-        $proposedDates = $syRepo->getDatesOfSchoolYear(date('Y-m-d'));
+        $proposedNumber = $scRepo -> getLastNumber() + 1;
+        $proposedDates = $syRepo -> getDatesOfSchoolYear(date('Y-m-d'));
         $lastRecord = StudentClass::all()->last();
         $students = $studentRepo->getAllSorted();
         $grades = $gradeRepo -> getAllSorted();
@@ -109,6 +109,14 @@ class StudentClassController extends Controller
         $klasy_ucznia->save();
 
         return redirect($request->historyView);
+    }
+
+    public function updateNumber(Request $request, StudentClass $klasy_ucznia)
+    {
+        $klasy_ucznia = StudentClass::find($request->id);
+        $klasy_ucznia->number = $request->number;
+        $klasy_ucznia->save();
+        return 0;
     }
 
     public function destroy($id)

@@ -15,5 +15,14 @@ class CommandRepository extends BaseRepository {
         -> orderBy( session()->get('CommandOrderBy[4]'), session()->get('CommandOrderBy[5]') )
         -> get();
   }
+
+  public function getTaskCommands($task_id) {
+      return $this->model
+        -> where('task_id', $task_id)
+        -> orderBy( session()->get('CommandOrderBy[0]'), session()->get('CommandOrderBy[1]') )
+        -> orderBy( session()->get('CommandOrderBy[2]'), session()->get('CommandOrderBy[3]') )
+        -> orderBy( session()->get('CommandOrderBy[4]'), session()->get('CommandOrderBy[5]') )
+        -> get();
+  }
 }
 ?>
