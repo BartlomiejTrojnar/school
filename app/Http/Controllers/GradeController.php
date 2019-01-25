@@ -97,7 +97,8 @@ class GradeController extends Controller
                    $students[] = $studentClass->student;
                  else $studentsOutOfDate[] = $studentClass->student;
               }
-              $students[] = ''; $studentsOutOfDate[] = '';
+              if(empty($students)) $students=0;
+              if(empty($studentsOutOfDate)) $studentsOutOfDate=0;
               return view('grade.show', ["grade"=>$grade, "previous"=>$previous, "next"=>$next])
                   -> nest('subView', 'student.table', ["grade"=>$grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy"])
                   -> nest('subView2', 'student.table', ["grade"=>$grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy"]);

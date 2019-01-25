@@ -28,7 +28,11 @@
   </tr>
 
   @foreach($studentClasses as $sc)
-    <tr data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}" data-id="{{ $sc->id }}" data-number="{{ $sc->number }}">
+    @if($sc->student->sex == 'mężczyzna')
+      <tr class="man" data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}" data-id="{{ $sc->id }}" data-number="{{ $sc->number }}">
+    @else
+      <tr class="woman" data-start="{{ $sc->date_start }}" data-end="{{ $sc->date_end }}" data-id="{{ $sc->id }}" data-number="{{ $sc->number }}">
+    @endif
       <td>{{ $loop->iteration }}</td>
       <td><a href="{{ route('uczen.show', $sc->student_id) }}">
         {{ $sc->student->first_name }} {{ $sc->student->second_name }} {{ $sc->student->last_name }}
