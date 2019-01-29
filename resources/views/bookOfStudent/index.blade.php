@@ -15,9 +15,9 @@
     <thead>
       <tr>
         <th>id</th>
-        <th><a href="{{ url('/ksiega_uczniow/sortuj/school_id') }}">szkoła</a></th>
-        <th><a href="{{ url('/ksiega_uczniow/sortuj/student_id') }}">uczeń</a></th>
-        <th><a href="{{ route('ksiega_uczniow.sortuj', 'number') }}">numer</a></th>
+        <th><a href="{{ route('ksiega_uczniow.order', 'school_id') }}">szkoła</a></th>
+        <th><a href="{{ route('ksiega_uczniow.order', 'student_id') }}">uczeń</a></th>
+        <th><a href="{{ route('ksiega_uczniow.order', 'number') }}">numer</a></th>
         <th>wpis</th>
         <th>aktualizacja</th>
         <th colspan="2">+/-</th>
@@ -33,7 +33,11 @@
 
     @foreach($bookOfStudents as $bookOfStudent)
       <tr>
-        <td>{{ $bookOfStudent->id }}</td>
+        @if( !empty($_GET['page']) )
+          <td style="font-size: small;">{{$_GET['page']*30-30+$loop->iteration}}</td>
+        @else
+          <td>{{$loop->iteration}}</td>
+        @endif
         <td><a href="{{ route('szkola.show', $bookOfStudent->school_id) }}">{{ $bookOfStudent->school->name }}</a></td>
         <td><a href="{{ route('uczen.show', $bookOfStudent->student_id) }}">{{ $bookOfStudent->student->first_name }} {{ $bookOfStudent->student->last_name }}</a></td>
         <td>{{ $bookOfStudent->number }}</td>
