@@ -26,6 +26,8 @@ Route::get('/klasa/{id}/getDates', 'GradeController@getDates');
 Route::get('/klasa/{id}/{view}', 'GradeController@show');
 
 Route::post('/klasy_ucznia/updateNumber', 'StudentClassController@updateNumber');
+Route::get('/klasy_ucznia/updateAll', 'StudentClassController@updateAll')->name('klasy_ucznia.updateAll');
+Route::get('/klasy_ucznia/editAll', 'StudentClassController@editAll')->name('klasy_ucznia.editAll');
 Route::resource('/klasy_ucznia', 'StudentClassController');
 Route::get('/klasy_ucznia/sortuj/{column}', 'StudentClassController@orderBy')->name('klasy_ucznia.order');
 

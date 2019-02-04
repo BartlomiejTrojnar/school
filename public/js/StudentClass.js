@@ -163,8 +163,10 @@ function dateStartOrEndChanged() {
 function verifyAndDisplayStudents(date_start, date_end) {
     var lp = 0;
     $('table#studentClasses tr').each( function() {
-        if( $(this).attr('data-start') > date_end || $(this).attr('data-end') < date_start)
-          $(this).fadeOut( 1000 );
+        if( $(this).attr('class')=="create" ) return true;
+        if( $(this).attr('data-start') > date_end || $(this).attr('data-end') < date_start) {
+            $(this).fadeOut( 1000 );
+        }
         else {
             $(this).fadeIn( 1000 );
             $('td:first-child', this).html(lp++);
@@ -172,7 +174,25 @@ function verifyAndDisplayStudents(date_start, date_end) {
     });
 }
 
+function editAllClick() {
+    $('#editAll').bind('click', function(){
+        var href = $(this).attr('href') + '?grade_id=' + $('#grade_id').text();
+        if( $('#date_start').val() ) href += '&date_start=' + $('#date_start').val();
+        else href += '&date_start=0';
+        if( $('#date_end').val() ) href += '&date_end=' + $('#date_end').val();
+        else href += '&date_end=9999';
+        $(this).attr('href', href);
+    });
+}
 
+function numberAllClick() {
+    $('#number_all').bind('click', function(){
+        $('.confirmation_number').each( function() {
+            $(this).attr('checked', 'checked');
+            alert(189);
+        });
+    });
+}
 
 // ----------------------------------- ZAŁADOWANIE DOKUMENTU ------------------------------------ //
 $(document).ready(function() {
@@ -183,4 +203,6 @@ $(document).ready(function() {
     clickGradeButtons();
     numberUpClick();
     numberDownClick();
+    editAllClick();
+    numberAllClick();
 });

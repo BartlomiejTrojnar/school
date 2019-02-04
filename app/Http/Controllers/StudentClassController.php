@@ -84,6 +84,13 @@ class StudentClassController extends Controller
              ->nest('gradeSelectField', 'grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected]);
     }
 
+    public function editAll(StudentClassRepository $scRepo)
+    {
+        $studentClasses = $scRepo -> getGradeStudents( $_GET['grade_id'] );
+
+        return view('studentClass.editAll', ["studentClasses"=>$studentClasses, "date_start"=>$_GET['date_start'], "date_end"=>$_GET['date_end']]);
+    }
+
     public function update(Request $request, $id, StudentClass $klasy_ucznia)
     {
         $klasy_ucznia = StudentClass::find($id);
@@ -108,6 +115,25 @@ class StudentClassController extends Controller
         $klasy_ucznia->confirmation_comments   = $request->confirmation_comments   == 'on' ? true : false;
         $klasy_ucznia->save();
 
+        return redirect($request->historyView);
+    }
+
+    public function updateAll(Request $request, StudentClass $klasy_ucznia)
+    {
+        foreach($_GET as $key=>$value) {
+            if( substr($key, 0, 10) != 'date_start' ) continue;
+            $id = substr($key, 10);
+            $klasy_ucznia = StudentClass::find($id);
+            $klasy_ucznia->date_start = $value;
+            $klasy_ucznia->date_end = $_GET['date_end'.$id];
+            $klasy_ucznia->number = $_GET['number'.$id];
+            $klasy_ucznia->comments = $_GET['comments'.$id];
+            if( isset($_GET['confirmation_date_start'.$id]) ) $klasy_ucznia->confirmation_date_start=1;
+            if( isset($_GET['confirmation_date_end'.$id]) ) $klasy_ucznia->confirmation_date_end=1;
+            if( isset($_GET['confirmation_number'.$id]) ) $klasy_ucznia->confirmation_numer=1;
+            if( isset($_GET['confirmation_comments'.$id]) ) $klasy_ucznia->confirmation_comments=1;;
+            $klasy_ucznia->save();
+        }
         return redirect($request->historyView);
     }
 

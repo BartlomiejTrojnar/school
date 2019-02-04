@@ -124,6 +124,10 @@ input, select {
     margin: 3px;
     font-family: 'Kotta One', 'Kurale', sans-serif;
 }
+input[readonly] {
+    background: #fdd;
+    border: 2px solid #b80;
+}
 
 
 /* -------------------------------------- OBRAZY, ZDJĘCIA --------------------------------------- */

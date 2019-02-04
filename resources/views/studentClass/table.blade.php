@@ -85,3 +85,9 @@
     </a>
   </td></tr>
 </table>
+
+
+@if( !empty($grade) )
+  <p id="grade_id" class="hidden">{{ $grade->id }}</p>
+  <p><a id="editAll" href="{{ route('klasy_ucznia.editAll') }}">edytuj wszystkie</a></p>
+@endif
