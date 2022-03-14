@@ -1,0 +1,36 @@
+/* ----------------------------- STYLE DLA EGZAMINÓW w DEKLARACJI ------------------------------ */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.11.2021 ------------------------ */
+
+/* ----------------------------------- wyróżnienie egzaminów ----------------------------------- */
+tr.dodatkowy {
+    background: #88a;
+}
+
+#createManyExams {
+    background: #555;
+    border: 3px solid #fff;
+    position: absolute;
+    top: 250px;
+    opacity: 0;
+    text-align: center;
+}
+#createManyExams ul {
+    list-style: none;
+}
+
+#createManyExams li {
+    float: left;
+    background: #b55;
+    margin: 20px;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: whitesmoke 5px 5px 1px;
+    padding: 5px;
+}
+#createManyExams li.checked {
+    background: #5b5;
+}
+#createManyExams p {
+    clear: both;
+    text-align: center;
+}

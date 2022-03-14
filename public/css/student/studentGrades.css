@@ -1,0 +1,21 @@
+/* ----------------------- STYLE DLA STRONY wyświetlającej klasy ucznia ------------------------ */
+/* ---------------------- (C) mgr inż. Bartłomiej Trojnar; (III) luty 2021 ---------------------- */
+
+tr#studentNumberCreateRow {
+    display: table-row;
+}
+td.destroy {
+    width: 100px;
+}
+
+.proposedDates button, .studentGradeProposedNumber {
+    padding: 12px;
+    font-size: 0.8em;
+    background-color: #800080;
+    border: 2px solid #000;
+}
+
+.proposedDates button:hover, .studentGradeProposedNumber:hover {
+    background-color: #d5d;
+    border: 2px solid #777;
+}

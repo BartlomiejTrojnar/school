@@ -1,0 +1,132 @@
+/* ---------------------------------- STYLE DLA PLANU LEKCJI  ---------------------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.02.2022 ------------------------ */
+
+h2#dateForView {
+    display: none;
+}
+/* ----------- nagłówek z datą widoku, paskiem postępu i polem całkowitego usunięcia ----------- */
+section#lessonPlanHeader {
+    min-height: 50px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background: #aaa;
+}
+section#lessonPlanHeader * {
+    display: inline-block;
+    font-family: 'Lato', 'Verdana', sans-serif;
+}
+section#lessonPlanHeader strong { font-size: 1.2em; }
+div#completeRemove {
+    width: 450px;
+    height: 50px;
+    margin: 0px 50px;
+    padding: 10px;
+    border: 3px solid #444;
+    background: #888;
+    text-align: center;
+    font-weight: bold;
+}
+section#lessonPlanHeader progress {
+    height: 20px;
+    border-radius: 10px;
+    background: #888;
+}
+progress::-moz-progress-bar {
+    border-radius: 10px;
+    background-image:
+      -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+	  -webkit-linear-gradient(top, rgba(192, 27, 27, 0.25), rgba(87, 218, 36, 0.25)),
+      -webkit-linear-gradient(left, #fff, #aa3);
+}
+
+/* ------- sekcja z grupami nauczyciela, które jeszcze nie są (w pełni) na planie lekcji -------- */
+section#gradeGroups, section#teacherGroups {
+    float: left;
+    width: 100%;
+    min-height: 50px;
+    margin-bottom: 10px;
+    background: #777;
+}
+section#gradeGroups ul, section#teacherGroups ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+li.group, li.teacherGroup {
+    float: left;
+    width: 175px;
+    margin: 0 5px;
+    padding: 5px;
+    border: 1px dashed #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.75em;
+    background-image:
+      -webkit-linear-gradient(-75deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+	  -webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)),
+      -webkit-linear-gradient(left, #447, #777);
+}
+li.gradeGroup:hover, li.teacherGroup:hover {
+    background:
+      -webkit-linear-gradient(-75deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+	  -webkit-linear-gradient(top, rgba(255, 0, 0, .25), rgba(255, 255, 0, .25)),
+      -webkit-linear-gradient(left, #bbb, #b60);
+}
+li.gradeGroup span.groupDates, li.teacherGroup span.groupDates {
+    color: #f88;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* ----------------------------------- tabela z planem lekcji ----------------------------------- */
+#gradePlan, #groupPlan, #teacherPlan, #classroomPlan  {
+    text-align: center;
+    font-family: 'Roboto Slab', serif;
+    font-size: 0.8em;
+    width: 90%;
+}
+td.lesson { width: 19%; }
+td.lesson ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+td.lesson:hover { background: #44f; }
+li.bg-warning {
+    background-color:  #955;
+}
+span.lessonDates {
+    font-size: 0.8em;
+    color: #f88;
+    font-style:italic;
+}
+span.teacher {
+    font-size: 0.8em;
+    color: #8f8;
+    font-style:italic;
+}
+
+/* ----------------------------------- lista uczniów na lekcji ----------------------------------- */
+aside#studentListForGroup {
+    position: absolute;
+    top: 100px;
+    left: 200px;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    background: #f44;
+    opacity: 0.9;
+    color: #fff;
+}
+aside#studentListForGroup h1 {
+    font-size: 1.2em;
+    text-align: center;
+}
+aside#studentListForGroup ul {
+    margin: 0;
+    padding: 10px;
+    list-style: none;
+}
+aside#studentListForGroup span.dates {
+    font-size: 0.65em;
+    color: #fdd;
+}

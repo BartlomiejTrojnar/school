@@ -1,0 +1,31 @@
+/* ---------------------------------- STYLE DLA PLANU LEKCJI  ---------------------------------- */
+/* -------------------- (C) mgr inż. Bartłomiej Trojnar; (I) wrzesień 2020 --------------------- */
+
+/* ----------- nagłówek z datą widoku, paskiem postępu i polem całkowitego usunięcia ----------- */
+nav#main-menu, ul.nav-tabs {
+    display: none;
+}
+section#lessonPlanHeader, section#gradeGroups {
+    display: none;
+}
+header aside {
+    display: none;
+}
+section#main-content {
+    left: 0.5cm;
+    top: 0.5cm;
+    font-size: 80%;
+}
+span.lessonDates {
+    display: none;
+}
+div:last-child {
+    display: none;
+}
+table#teacherPlan, table#gradePlan td {
+    border: 1px solid #000;
+}
+h2#dateForView {
+    text-align: center;
+    font-size: 100%;
+}

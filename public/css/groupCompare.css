@@ -1,0 +1,42 @@
+/* ---------------- STYLE DLA STRON DOTYCZĄCYCH PRZYNALEŻNOŚCI UCZNIÓW DO GRUPY ----------------- */
+/* --------------------- (C) mgr inż. Bartłomiej Trojnar; (II) sierpień 2019 --------------------- */
+
+#groupsForVerification {
+    background: #888;
+    border: 2px solid white;
+    width: 350px;
+    float: left;
+    margin: 20px;
+}
+#groupsForVerification li {
+    background: #444;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin: 5px 0;
+    box-shadow: -5px 2px chocolate;
+    padding: 3px;
+}
+li[data-groups_count="1"] {
+    display: none;
+}
+#groupsForVerification li[data-groups_count="2"] {
+    background-color: red;
+}
+#groupsDispayed > div {
+    min-width: 300px;
+    min-height: 100px;
+    border: 1px solid white;
+    margin: 20px;
+    float: left;
+}
+ol {
+    padding-left: 5px;
+    list-style-position: inside;
+}
+#groupsDispayed li {
+    background: #444;
+    border-radius: 5px;
+    margin: 5px 0;
+    box-shadow: -5px 2px white;
+    padding: 3px;
+}

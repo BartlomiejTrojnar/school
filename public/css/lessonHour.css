@@ -1,0 +1,67 @@
+/* ----------------------- STYLE DLA STRON DOTYCZĄCYCH GODZIN LEKCYJNYCH ----------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.09.2021 ------------------------ */
+
+div.classrooms {
+    float: left;
+}
+div.classroom {
+    background: #888;
+    border: 2px solid #fff;
+    width: 400px;
+    min-height: 80px;
+    float: left;
+    margin: 15px 5px;
+}
+div.classroom:nth-child(3n) {
+    clear: both;
+}
+aside.classroom-name {
+    display: inline-block;
+    margin: 0px 5px;
+    width: 75px;
+    text-align: center;
+    padding: 15px 0;
+    border: 2px solid #000;
+    border-radius: 5px;
+    font-size: 2em;
+}
+div.classroom-lesson {
+    float: right;
+    width: 300px;
+    margin: 5px;
+    padding: 5px;
+    border: 1px dashed #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    background-image:
+      -webkit-linear-gradient(-75deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+	  -webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)),
+      -webkit-linear-gradient(left, #447, #777);
+}
+span.lessonDates, span.teacher {
+    font-size: 0.8em;
+    color: #f88;
+    font-style:italic;
+}
+
+div.lessons {
+    float: right;
+    border: 2px solid #fff;
+    min-width: 200px;
+    min-height: 50px;
+    width: 330px;
+}
+div.lesson {
+    width: 300px;
+    margin: 5px;
+    padding: 5px;
+    border: 1px dashed #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    background-image:
+      -webkit-linear-gradient(-75deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+	  -webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)),
+      -webkit-linear-gradient(left, #447, #777);
+}

@@ -1,0 +1,43 @@
+/* ---------------------- STYLE DLA STRONY przypisywania uczniów do klasy ----------------------- */
+/* ------------------ (C) mgr inż. Bartłomiej Trojnar; (III) październik 2019 ------------------- */
+
+/* ----------------------------- skrypt school/klasy_ucznia/addMany ----------------------------- */
+div#studentsList {
+    float: left;
+    width: 438px;
+    border-radius: 15px;
+    background: #784;
+    padding: 8px;
+}
+div#studentsList ol {
+    padding: 0px;
+    list-style: none;
+}
+div#studentsList li, div#studentGradesList li {
+    margin: 5px 0;
+    border: 1px solid blue;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #000;
+    padding: 3px;
+    font-size: 1.2em;
+    width: 200px;
+    float: left;
+    margin-right: 10px;
+}
+
+div#studentGradesList {
+    float: left;
+    margin: 0 20px;
+    width: 750px;
+    border-radius: 15px;
+    background: #444;
+    padding: 8px;
+}
+div#studentGradesList ol {
+    padding: 0 20px;
+    border-top: 2px dotted #888;
+    padding-left: 20px;
+}
+div#studentGradesList li {
+    margin-right: 30px;
+}

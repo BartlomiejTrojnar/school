@@ -1,0 +1,55 @@
+/* -------------------------- STYLE DLA STRONY Z DEKLARACJAMI UCZNIA --------------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.11.2021 ------------------------ */
+
+div.declaration {
+    background: #444;
+    margin: 25px 75px;
+    border-radius: 20px;
+    border: 2px solid #fff;
+}
+
+div.declaration header {
+    background: #777;
+    color: #444;
+    margin: 20px 75px;
+    text-align: center;
+    font-size: 1.1em;
+}
+div.declaration header a {
+    color: #00b;
+}
+div.declaration header a:hover {
+    color: #bbf;
+}
+div.declaration header span {
+    display: inline-block;
+    font-size: 0.7em;
+    background-color: #bbb;
+    margin: 0 20px;
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px dotted #000;
+    border-radius: 5px;
+}
+div.declaration button {
+    padding: 10px;
+}
+
+footer {
+    text-align: center;
+}
+footer button {
+    width: 200px;
+}
+footer p.error {
+    background: orange;
+    width: 300px;
+    padding: 10px;
+    margin: auto;
+    border-radius: 10px;
+}
+
+button.update, button.cancelUpdate {
+    height: 40px;
+    margin: 5px;
+}

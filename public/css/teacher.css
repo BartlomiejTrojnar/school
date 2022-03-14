@@ -1,0 +1,8 @@
+/* -------------------- STYLE DLA STRON DOTYCZĄCYCH NUMERÓW UCZNIÓW W KLASIE --------------------- */
+/* --------------------- (C) mgr inż. Bartłomiej Trojnar; (III) listopad 2019 --------------------- */
+
+ol#printOrder li {
+    background: coral;
+    border: 2px solid #f44;
+    border-radius: 3px;
+}

@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather&display=swap');
+
+nav#main-menu {
+    position: absolute;
+    margin-top: 48px;
+    margin-left: 0.25%;
+    width: 15%;
+}
+nav#main-menu li {
+    background: #222;
+    margin-top: 3px;
+    border-radius: 10px;
+}
+nav#main-menu a {
+    border-radius: 10px;
+    color: #fa8;
+    font-family: 'Merriweather', sans-serif;
+}
+nav#main-menu a:hover {
+    background: #555;
+}
