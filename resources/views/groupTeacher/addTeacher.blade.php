@@ -21,16 +21,16 @@
         <td><?php  print_r($teacherSelectField);  ?></td>
       </tr>
       <tr>
-        <th><label for="date_start">od</label></th>
-        <td><input type="date" name="date_start" id="date_start" value="{{ $date_start[0] }}" /></td>
-        <td><button class="btn btn-primary teacherDateStart" id="groupDateStart">{{ $date_start[1] }}</button></td>
-        <td><button class="btn btn-primary teacherDateStart">{{ $date_start[2] }}</button></td>
-        <td><button class="btn btn-primary teacherDateStart">{{ $dataBiezaca }}</button></td>
+        <th><label for="start">od</label></th>
+        <td><input type="date" name="start" id="start" value="{{ $start[0] }}" /></td>
+        <td><button class="btn btn-primary teacherStart" id="groupStart">{{ $start[1] }}</button></td>
+        <td><button class="btn btn-primary teacherStart">{{ $start[2] }}</button></td>
+        <td><button class="btn btn-primary teacherStart">{{ $dataBiezaca }}</button></td>
       </tr>
       <tr>
-        <th><label for="date_end">do</label></th>
-        <td><input type="date" name="date_end" id="date_end" value="{{ $date_end[0] }}" /></td>
-        <td><button class="btn btn-primary teacherDateEnd" id="groupDateEnd">{{ $date_end[1] }}</button></td>
+        <th><label for="end">do</label></th>
+        <td><input type="date" name="end" id="end" value="{{ $end[0] }}" /></td>
+        <td><button class="btn btn-primary teacherEnd" id="groupEnd">{{ $end[1] }}</button></td>
       </tr>
 
       <tr class="submit"><td colspan="2">

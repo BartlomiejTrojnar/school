@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania grup dla klasy --------------------- //
 // ------------------------------ wybór klasy w polu select ------------------------------------ //
 function gradeChanged() {
@@ -54,29 +54,29 @@ function teacherChanged() {
 
 // po zmianie daty początkowej - sprawdzenie dat grupy
 function dateStartChange() {
-    $('input[name="date_start"]').bind('blur', function(){
-        dateStart = $(this).val();
-        dateEnd = $('input[name="date_end"]').val();
-        rememberDates(dateStart, dateEnd);
+    $('input[name="start"]').bind('blur', function(){
+        start = $(this).val();
+        end = $('input[name="end"]').val();
+        rememberDates(start, end);
         return false;
     });
 }
 // po zmianie daty końcowej - sprawdzenie dat grupy
 function dateEndChange() {
-    $('input[name="date_end"]').bind('blur', function(){
-        dateStart = $('input[name="date_start"]').val();
-        dateEnd = $(this).val();
-        rememberDates(dateStart, dateEnd);
+    $('input[name="end"]').bind('blur', function(){
+        start = $('input[name="start"]').val();
+        end = $(this).val();
+        rememberDates(start, end);
         return false;
     });
 }
 //zapamiętanie dat w sesji
-function rememberDates(dateStart, dateEnd) {
+function rememberDates(start, end) {
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/public/rememberDates",
-        data: { dateView: dateStart, dateEnd: dateEnd },
+        data: { dateView: start, dateEnd: end },
         success: function() { window.location.reload(); },
         error: function() { window.location.reload(); },
     });

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 24.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.03.2022 *********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -25,7 +25,7 @@
       @endif
       {{$group->comments}}
       <span style="font-size: 0.5em;">
-         [{{$group->date_start}}-{{$group->date_end}}]
+         [{{$group->start}}-{{$group->end}}]
          @foreach($group->teachers as $groupTeacher)
             /{{$groupTeacher->teacher->first_name}} {{$groupTeacher->teacher->last_name}}/
          @endforeach

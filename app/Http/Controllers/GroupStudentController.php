@@ -13,6 +13,12 @@ use Illuminate\Http\Request;
 
 class GroupStudentController extends Controller
 {
+    public function sprawdzGrupyUczniow() {
+        return 'Funkcja w przygotowaniu';
+        //return view('groupTeacher.sprawdzNauczycieli');
+    }
+
+
     public function orderBy($column) {
         if(session()->get('GroupStudentOrderBy[0]') == $column)
             if(session()->get('GroupStudentOrderBy[1]') == 'desc') session()->put('GroupStudentOrderBy[1]', 'asc');

@@ -1,53 +1,53 @@
-// ----------------------- (C) mgr inż. Bartłomiej Trojnar; (I) maj 2020 ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
 // ------------------ wydarzenia na stronach operowania na nauczycielach grup ------------------ //
 
 
 // ---------------------- DODAWANIE LUB MODYFIKOWANIE NAUCZYCIELA W GRUPIE ---------------------- //
 // -------------------- kliknięcie proponowanej daty początkowej lub końcowej ------------------- //
 function teacherDateClick() {
-    $('.teacherDateStart').bind('click', function(){
-        date_start = $(this).html();
-        $('input#date_start').val(date_start);
-        date_end = $('input#date_end').val();
-        datesValidate(date_start, date_end);
+    $('.teacherStart').bind('click', function(){
+        start = $(this).html();
+        $('input#start').val(start);
+        end = $('input#end').val();
+        datesValidate(start, end);
         return false;
     });
-    $('.teacherDateEnd').bind('click', function(){
-        date_end = $(this).html();
-        $('input#date_end').val(date_end);
-        date_start = $('input#date_start').val();
-        datesValidate(date_start, date_end);
+    $('.teacherEnd').bind('click', function(){
+        end = $(this).html();
+        $('input#end').val(end);
+        start = $('input#start').val();
+        datesValidate(start, end);
         return false;
     });
 }
 
 function dateStartChange() {
-    $('input#date_start').change('click', function(){
-        var date_start = $(this).val();
-        var date_end = $('input#date_end').val();
-        datesValidate(date_start, date_end);
+    $('input#start').change('click', function(){
+        var start = $(this).val();
+        var end = $('input#end').val();
+        datesValidate(start, end);
         return false;
     });
 }
 function dateEndChange() {
-    $('input#date_end').change('click', function(){
-        var date_start = $('input#date_start').val();
-        var date_end = $(this).val();
-        datesValidate(date_start, date_end);
+    $('input#end').change('click', function(){
+        var start = $('input#start').val();
+        var end = $(this).val();
+        datesValidate(start, end);
         return false;
     });
 }
-function datesValidate(date_start, date_end) {
+function datesValidate(start, end) {
     $('div#error').html('').addClass('hide');
-    if( date_start < $('#groupDateStart').html() )
+    if( start < $('#groupStart').html() )
       $('div#error').html('data początkowa nie może być wcześniejsza niż data początkowa grupy').removeClass('hide');
-    if( date_end > $('#groupDateEnd').html() )
+    if( end > $('#groupEnd').html() )
       $('div#error').html('data końcowa nie może być późniejsza niż data końcowa grupy').removeClass('hide');
-    if( date_start > date_end )
+    if( start > end )
       $('div#error').html('data początkowa nie może być późniejsza niż data końcowa').removeClass('hide');
-    if( date_start == '' )
+    if( start == '' )
       $('div#error').html('data początkowa nie może być pusta').removeClass('hide');
-    if( date_end == '' )
+    if( end == '' )
       $('div#error').html('data końcowa nie może być pusta').removeClass('hide');
 }
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
     dateEndChange();
     buttonChangeTeacherClick();
 
-    var date_start = $('input#date_start').val();
-    var date_end = $('input#date_end').val();
-    datesValidate(date_start, date_end);
+    var start = $('input#start').val();
+    var end = $('input#end').val();
+    datesValidate(start, end);
 });

@@ -13,17 +13,17 @@ class GroupTeacherController extends Controller
 {
     public function addTeacher($group_id, TeacherRepository $teacherRepo, GroupRepository $groupRepo, SchoolYearRepository $schoolYearRepo) {
         $group = $groupRepo -> find($group_id);
-        $schoolYear_id = $schoolYearRepo -> getSchoolYearIdForDate( $group->date_start );
+        $schoolYear_id = $schoolYearRepo -> getSchoolYearIdForDate( $group->start );
         $teachersForGroup = $teacherRepo -> getTeachersForGroup( $group, $schoolYear_id );
 
-        $date_start[0] = $group->date_start;
-        $date_start[1] = $group->date_start;
-        $date_start[2] = session() -> get('dateView');
-        $date_end[0] = $group->date_end;
-        $date_end[1] = $group->date_end;
+        $start[0] = $group->start;
+        $start[1] = $group->start;
+        $start[2] = session() -> get('dateView');
+        $end[0] = $group->end;
+        $end[1] = $group->end;
         $teacherSelected = session() -> get('teacherSelected');
-        return view('groupTeacher.addTeacher', ["group_id"=>$group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>''])
-            -> nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachersForGroup, "teacherSelected"=>$teacherSelected]);
+        $teacherSelectField = view('teacher.selectField', ["teachers"=>$teachersForGroup, "teacherSelected"=>$teacherSelected]);
+        return view('groupTeacher.addTeacher', ["group_id"=>$group_id, "start"=>$start, "end"=>$end, "history_view"=>'', "teacherSelectField"=>$teacherSelectField]);
     }
 
     // zamiana nauczyciela uczącego w grupie
@@ -81,27 +81,27 @@ class GroupTeacherController extends Controller
           'teacher_id' => 'required',
         ]);
         $group = $groupRepo -> find($request->group_id);
-        if( $request->date_start > $request->date_end ||
-            $request->date_start == '' ||
-            $request->date_end   == '' ||
-            $request->date_start < $group->date_start ||
-            $request->date_end > $group->date_end )
+        if( $request->start > $request->end ||
+            $request->start == '' ||
+            $request->end   == '' ||
+            $request->start < $group->start ||
+            $request->end > $group->end )
         {
             $teachers = $teacherRepo -> getAll();
-            $date_start[0] = $request->date_start;
-            $date_start[1] = $group->date_start;
-            $date_start[2] = date('Y-m-d');
-            $date_end[0] = $request->date_end;
-            $date_end[1] = $group->date_end;
-            return view('groupTeacher.addTeacher', ["group_id"=>$request->group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>$request->history_view])
+            $start[0] = $request->start;
+            $start[1] = $group->start;
+            $start[2] = date('Y-m-d');
+            $end[0] = $request->end;
+            $end[1] = $group->end;
+            return view('groupTeacher.addTeacher', ["group_id"=>$request->group_id, "start"=>$start, "end"=>$end, "history_view"=>$request->history_view])
                 -> nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "selectedTeacher"=>$request->teacher_id ]);
         }
 
         $groupTeacher = new GroupTeacher;
         $groupTeacher->group_id = $request->group_id;
         $groupTeacher->teacher_id = $request->teacher_id;
-        $groupTeacher->date_start = $request->date_start;
-        $groupTeacher->date_end = $request->date_end;
+        $groupTeacher->start = $request->start;
+        $groupTeacher->end = $request->end;
         $groupTeacher -> save();
         if( strpos($request->history_view, 'grupa/create') )  return redirect( route('grupa_klasy.gradesList', $groupTeacher->group_id.'/forIndex') );
         else  return redirect( route('grupa.show', $groupTeacher->group_id) );

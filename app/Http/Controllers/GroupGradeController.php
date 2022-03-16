@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupGrade;
 use App\Repositories\GradeRepository;
@@ -12,7 +12,7 @@ class GroupGradeController extends Controller
     public function gradesList($id, $version="forIndex", GradeRepository $gradeRepo, GroupRepository $groupRepo, SchoolYearRepository $schoolYearRepo) {
         session() -> put('groupSelected', $id);
         $group = $groupRepo -> find( $id );
-        $grades = $gradeRepo -> getGradesInYear($group->date_end);
+        $grades = $gradeRepo -> getGradesInYear($group->end);
         $schoolYear = $schoolYearRepo -> find( session()->get('schoolYearSelected') );
         $i=0;
         $gradesSelected[0] = "";

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -27,6 +27,7 @@
                      @endif
                      @if( array_search($grade->id, $gradesSelected) )
                         <li class="list-group-item list-group-item-dark active">
+                           {{$grade->id}}
                            @if( $schoolYear )
                               <button data-checked="1" data-grade="{{$grade->id}}" class="btn btn-danger" data-year="{{$grade->year_of_graduation}}">
                                  {{ substr($schoolYear->date_end,0,4) - $grade->year_of_beginning}} {{$grade->symbol}}
@@ -39,6 +40,7 @@
                         </li>
                      @else
                         <li class="list-group-item list-group-item-dark">
+                           {{$grade->id}}
                            @if( $schoolYear )
                               @if($gradeSelectedYear==0 || $gradeSelectedYear == $grade->year_of_graduation)
                                  <button data-checked="0" data-grade="{{$grade->id}}" class="btn btn-info" data-year="{{$grade->year_of_graduation}}">

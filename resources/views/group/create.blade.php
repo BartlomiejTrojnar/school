@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -18,16 +18,16 @@
         <td><?php  print_r($subjectSelectField);  ?></td>
       </tr>
       <tr>
-        <th><label for="date_start">data początkowa</label></th>
-        <td><input id="dateStart" type="date" name="date_start" required /></td>
+        <th><label for="start">data początkowa</label></th>
+        <td><input id="dateStart" type="date" name="start" required /></td>
         <td>
           <button class="btn btn-primary proposedGradeDateStart">{{ date('Y-m-d') }}</button>
           <button class="btn btn-primary proposedGradeDateStart">{{ $proposedDates['dateOfStartSchoolYear'] }}</button>
         </td>
       </tr>
       <tr>
-        <th><label for="date_end">data końcowa</label></th>
-        <td><input id="dateEnd" type="date" name="date_end" required /></td>
+        <th><label for="end">data końcowa</label></th>
+        <td><input id="dateEnd" type="date" name="end" required /></td>
         <td>
           <button class="btn btn-primary proposedGradeDateEnd">{{ $proposedDates['dateOfGraduationOfTheLastGrade'] }}</button>
           <button class="btn btn-primary proposedGradeDateEnd">{{ $proposedDates['dateOfGraduationSchoolYear'] }}</button>

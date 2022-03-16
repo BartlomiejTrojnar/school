@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -57,7 +57,7 @@
          <th>uczniowie</th>
          <th>wprowadzono</th>
          <th>aktualizacja</th>
-         <th colspan="3">operacje</th>
+         <th>klonuj / zmień / usuń</th>
       </tr>
 
       <tr>
@@ -72,7 +72,7 @@
             <input type="hidden" id="rememberDates" value="1" />
          </td>
          <td colspan="2"><?php  print_r($teacherSelectField);  ?></td>
-         <td colspan="5"></td>
+         <td colspan="3"></td>
       </tr>
    </thead>
 
@@ -128,9 +128,9 @@
             <td class="c small">{{ substr($group->created_at, 0, 10) }}</td>
             <td class="c small">{{ substr($group->updated_at, 0, 10) }}</td>
 
-            <td class="copy"><a class="btn btn-primary" href="{{ route('grupa.copy', $group->id) }}"><i class="fa fa-copy"></i></a></td>
             <!-- modyfikowanie i usuwanie -->
-            <td class="destroy edit c">
+            <td class="destroy edit c" style="min-width: 130px;">
+               <a style="display: inline;" class="btn btn-primary" href="{{ route('grupa.copy', $group->id) }}"><i class="fa fa-copy"></i></a>
                <button class="edit btn btn-primary"    data-group_id="{{ $group->id }}" data-version="{{$version}}"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary" data-group_id="{{ $group->id }}"><i class="fas fa-remove"></i></button>
             </td>

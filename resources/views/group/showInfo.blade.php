@@ -11,7 +11,7 @@
   </tr>
   <tr>
     <th>czas życia</th>
-    <td>{{ $group->date_start }} - {{ $group->date_end }}</td>
+    <td>{{ $group->start }} - {{ $group->end }}</td>
   </tr>
   <tr>
     <th>godziny</th>
@@ -30,7 +30,7 @@
     <td>{{ $group->comments }}</td>
   </tr>
   <tr>
-    <th>nauczyciel(e)</th>
+    <th>nauczyciele</th>
     <td class="teachers" style="min-width: 400px;">
       <aside style="float: right; margin-left: 10px;">
         <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">
@@ -48,7 +48,7 @@
           <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
             <i class="fa fa-remove"></i>
           </button>
-          <span style="font-size: 0.8em;">{{ $groupTeacher->date_start }} {{ $groupTeacher->date_end }}</span>
+          <span style="font-size: 0.8em;">{{ $groupTeacher->start }} {{ $groupTeacher->end }}</span>
         </div>
       @endforeach
     </td>

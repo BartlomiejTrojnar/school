@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.11.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Grade;
 use Illuminate\Support\Facades\DB;
