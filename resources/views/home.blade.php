@@ -106,7 +106,7 @@
       </div>
 
       <div id="menu"><ul>
-         <li><a class="btn btn-warning" href="{{ route('nauczany_przedmiot.sprawdzNauczanie') }}">sprawdź nauczanie przedmiotów</a></li>
+         <li><a class="btn btn-warning" href="{{ route('klasy_uczniow.przepiszSwiadectwa') }}">przepisz świadectwa</a></li>
          <li><a href="">przepisz oceny</a></li>
          <li><a href="{{ route('grupa_uczniowie.sprawdzGrupyUczniow') }}">sprawdź grupy uczniów</a></li>
          <li><a href="">sprawdź historie uczniów</a></li>

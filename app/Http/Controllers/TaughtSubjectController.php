@@ -6,10 +6,6 @@ use Illuminate\Http\Request;
 
 class TaughtSubjectController extends Controller
 {
-    public function sprawdzNauczanie() {
-        return view('teacher.sprawdzNauczanie');
-    }
-
     public function store(Request $request) {
         $this->validate($request, [
             'teacher_id' => 'required',

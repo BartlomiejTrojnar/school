@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class StudentGradeController extends Controller
 {
+    public function przepiszSwiadectwa() {
+        return view('studentGrade.przepiszSwiadectwa');
+    }
+
     public function orderBy($column) {
         if(session()->get('StudentGradeOrderBy[0]') == $column)
             if(session()->get('StudentGradeOrderBy[1]') == 'desc') session()->put('StudentGradeOrderBy[1]', 'asc');
