@@ -74,18 +74,18 @@ function addStudentGradeClick() {     // ustawienie instrukcji po kliknięciu an
 function addStudentGrade() {   // zapisanie klasy ucznia w bazie danych
     var student_id  = $('#studentGradeCreateRow input[name="student_id"]').val();
     var grade_id    = $('#studentGradeCreateRow select[name="grade_id"]').val();
-    var date_start  = $('#studentGradeCreateRow input[name="dateStart"]').val();
-    var date_end    = $('#studentGradeCreateRow input[name="dateEnd"]').val();
-    var confirmation_date_start = $('#studentGradeCreateRow input[name="confirmationDateStart"]').is(':checked');
-    var confirmation_date_end   = $('#studentGradeCreateRow input[name="confirmationDateEnd"]').is(':checked');
-    if(confirmation_date_start)  confirmation_date_start=1;
-    if(confirmation_date_end)  confirmation_date_end=1;
+    var start  = $('#studentGradeCreateRow input[name="start"]').val();
+    var end    = $('#studentGradeCreateRow input[name="end"]').val();
+    var confirmation_start = $('#studentGradeCreateRow input[name="confirmationStart"]').is(':checked');
+    var confirmation_end   = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(':checked');
+    if(confirmation_start)  confirmation_start=1;
+    if(confirmation_end)  confirmation_end=1;
 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/public/klasy_ucznia",
-        data: { student_id: student_id, grade_id: grade_id, date_start: date_start, date_end: date_end, confirmation_date_start: confirmation_date_start, confirmation_date_end: confirmation_date_end },
+        data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
         success: function(id) { refreshRowForStudentGrades(id, '?', true); },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd dodawania klasy dla ucznia.</td></tr>';
@@ -135,21 +135,21 @@ function updateStudentGradeClick() {     // ustawienie instrukcji po kliknięciu
 }
 
 function updateStudentGrade(id) {   // zapisanie klasy ucznia w bazie danych
-    var student_id              = $('tr[data-student_grade_id='+id+'] input[name="student_id"]').val();
-    var grade_id                = $('tr[data-student_grade_id='+id+'] select[name="grade_id"]').val();
-    var date_start              = $('tr[data-student_grade_id='+id+'] input[name="dateStart"]').val();
-    var date_end                = $('tr[data-student_grade_id='+id+'] input[name="dateEnd"]').val();
-    var confirmation_date_start = $('tr[data-student_grade_id='+id+'] input[name="confirmationDateStart"]').is(':checked');
-    var confirmation_date_end   = $('tr[data-student_grade_id='+id+'] input[name="confirmationDateEnd"]').is(':checked');
-    if(confirmation_date_start) confirmation_date_start=1;
-    if(confirmation_date_end)   confirmation_date_end=1;
+    var student_id         = $('tr[data-student_grade_id='+id+'] input[name="student_id"]').val();
+    var grade_id           = $('tr[data-student_grade_id='+id+'] select[name="grade_id"]').val();
+    var start              = $('tr[data-student_grade_id='+id+'] input[name="start"]').val();
+    var end                = $('tr[data-student_grade_id='+id+'] input[name="end"]').val();
+    var confirmation_start = $('tr[data-student_grade_id='+id+'] input[name="confirmationStart"]').is(':checked');
+    var confirmation_end   = $('tr[data-student_grade_id='+id+'] input[name="confirmationEnd"]').is(':checked');
+    if(confirmation_start) confirmation_start=1;
+    if(confirmation_end)   confirmation_end=1;
     var lp = $('tr[data-student_grade_id='+id+'] input[name="lp"]').val();
 
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/public/klasy_ucznia/"+id,
-        data: { student_id: student_id, grade_id: grade_id, date_start: date_start, date_end: date_end, confirmation_date_start: confirmation_date_start, confirmation_date_end: confirmation_date_end },
+        data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
         success: function() {   refreshRowForStudentGrades(id, lp);  },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd modyfikowania klasy ucznia.</td></tr>';
@@ -177,11 +177,11 @@ function destroyStudentGradeClick() {  // usunięcie klasy ucznia (z bazy danych
 
 function proposedDateClick() {
     $('.studentGradeDateStart').bind('click', function(){
-        $('#dateStart').val($(this).html());
+        $('#start').val($(this).html());
         return false;
     });
     $('.studentGradeDateEnd').bind('click', function(){
-        $('#dateEnd').val($(this).html());
+        $('#end').val($(this).html());
         return false;
     });
 }
@@ -681,17 +681,17 @@ function removeYesterdayClick() {
         var lp = $(this).parent().parent().children(":first").html();
         removeFromGroups(student_id, yesterday);
         addRemoveToStudentHistory(student_id, yesterday);
-        updateDateEndStudentGrade(student_grade_id, yesterday, lp);
+        updateEndStudentGrade(student_grade_id, yesterday, lp);
         return false;
     });
 }
 
-function removeFromGroups(student_id, dateEnd) {     // usunięcie ucznia z wszystkich grup do których należy w klasie (ustawienie daty końcowej na aktualną)
+function removeFromGroups(student_id, end) {     // usunięcie ucznia z wszystkich grup do których należy w klasie (ustawienie daty końcowej na aktualną)
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/groupStudent/removeYesterday",
-        data: { student_id: student_id, dateEnd: dateEnd },
+        data: { student_id: student_id, end: end },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd usuwania ucznia z grup.</td></tr>';
             $('#studentGrades tr.create').before(error);
@@ -699,7 +699,7 @@ function removeFromGroups(student_id, dateEnd) {     // usunięcie ucznia z wszy
     });
 }
 
-function addRemoveToStudentHistory(student_id, dateEnd) {   // zapisanie wpisu historii ucznia w bazie danych
+function addRemoveToStudentHistory(student_id, end) {   // zapisanie wpisu historii ucznia w bazie danych
     var event = "wybrano dokumenty";
     var confirmation_date = 1;
     var confirmation_event = 1;
@@ -708,7 +708,7 @@ function addRemoveToStudentHistory(student_id, dateEnd) {   // zapisanie wpisu h
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/historia_ucznia",
-        data: { student_id: student_id, date: dateEnd, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
+        data: { student_id: student_id, date: end, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
         success: function(id) {
             $('#studentHistory tr.create').before('<tr data-student_history_id="'+id+'"><td colspan="3">ładowanie danych</td></tr>');
             refreshRowForStudentHistory(id, true);
@@ -720,12 +720,12 @@ function addRemoveToStudentHistory(student_id, dateEnd) {   // zapisanie wpisu h
     });   
 }
 
-function updateDateEndStudentGrade(id, dateEnd, lp) {   // zapisanie klasy ucznia w bazie danych
+function updateEndStudentGrade(id, end, lp) {   // zapisanie klasy ucznia w bazie danych
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/studentGrade/updateDateEnd",
-        data: { id: id, date_end: dateEnd },
+        url: "http://localhost/school/studentGrade/updateEnd",
+        data: { id: id, end: end },
         success: function(id) {  refreshRowForStudentGrades(id, lp);  },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd modyfikowania końcowej daty dla przynależności ucznia do klasy.</td></tr>';

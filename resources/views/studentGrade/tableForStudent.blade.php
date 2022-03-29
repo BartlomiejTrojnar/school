@@ -8,8 +8,8 @@
          <th>nr księgi</th>
          <?php
             echo view('layouts.thSorting', ["thName"=>"klasa", "routeName"=>"klasy_ucznia.orderBy", "field"=>"grade_id", "sessionVariable"=>"StudentGradeOrderBy"]);
-            echo view('layouts.thSorting', ["thName"=>"od", "routeName"=>"klasy_ucznia.orderBy", "field"=>"date_start", "sessionVariable"=>"StudentGradeOrderBy"]);
-            echo view('layouts.thSorting', ["thName"=>"do", "routeName"=>"klasy_ucznia.orderBy", "field"=>"date_end", "sessionVariable"=>"StudentGradeOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"od", "routeName"=>"klasy_ucznia.orderBy", "field"=>"start", "sessionVariable"=>"StudentGradeOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"do", "routeName"=>"klasy_ucznia.orderBy", "field"=>"end", "sessionVariable"=>"StudentGradeOrderBy"]);
          ?>
          <th>popraw / usuń</th>
       </tr>
@@ -18,9 +18,9 @@
       @foreach($studentGrades as $sg)
          <!-- otwarcie wiersza dla ucznia -->
          @if($sg->student->sex == 'mężczyzna')
-            <tr class="man c" data-start="{{ $sg->date_start }}" data-end="{{ $sg->date_end }}" data-student_grade_id="{{ $sg->id }}">
+            <tr class="man c" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
          @else
-            <tr class="woman c" data-start="{{ $sg->date_start }}" data-end="{{ $sg->date_end }}" data-student_grade_id="{{ $sg->id }}">
+            <tr class="woman c" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
          @endif
 
             <td>{{ ++$count }}</td>
@@ -47,11 +47,11 @@
             </a></td>
 
             <!-- okres przynależności do klasy -->
-            @if($sg->confirmation_date_start==1) <td>{{ $sg->date_start }}</td>
-            @else <td class="not_confirmation">{{ $sg->date_start }}</td>
+            @if($sg->confirmation_start==1) <td>{{ $sg->start }}</td>
+            @else <td class="not_confirmation">{{ $sg->start }}</td>
             @endif
-            @if($sg->confirmation_date_end==1) <td>{{ $sg->date_end }}</td>
-            @else <td class="not_confirmation">{{ $sg->date_end }}</td>
+            @if($sg->confirmation_end==1) <td>{{ $sg->end }}</td>
+            @else <td class="not_confirmation">{{ $sg->end }}</td>
             @endif
 
             <!-- modyfikowanie i usuwanie -->

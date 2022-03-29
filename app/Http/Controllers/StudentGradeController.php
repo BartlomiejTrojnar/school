@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 
 class StudentGradeController extends Controller
 {
-    public function przepiszSwiadectwa() {
-        return view('studentGrade.przepiszSwiadectwa');
+    public function przepiszKlasy() {
+        return view('studentGrade.przepiszKlasy');
     }
 
     public function orderBy($column) {

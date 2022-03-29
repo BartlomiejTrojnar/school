@@ -14,14 +14,14 @@
 
       <!-- data początkowa przynależności ucznia do klasy -->
       <td>
-         <input id="dateStart" type="date" name="dateStart" size="8" maxlength="10" value="{{ $studentGrade->date_start }}" />
-         <input type="checkbox" name="confirmationDateStart" @if($studentGrade->confirmation_date_start==1) checked="checked" @endif />
+         <input id="start" type="date" name="start" size="8" maxlength="10" value="{{ $studentGrade->start }}" />
+         <input type="checkbox" name="confirmationStart" @if($studentGrade->confirmation_start==1) checked="checked" @endif />
       </td>
 
       <!-- data końcowa przynależności ucznia do klasy -->
       <td>
-         <input id="dateEnd" type="date" name="dateEnd" size="8" maxlength="10" value="{{ $studentGrade->date_end }}" />
-         <input type="checkbox" name="confirmationDateEnd" @if($studentGrade->confirmation_date_end==1) checked="checked" @endif />
+         <input id="end" type="date" name="end" size="8" maxlength="10" value="{{ $studentGrade->end }}" />
+         <input type="checkbox" name="confirmationEnd" @if($studentGrade->confirmation_end==1) checked="checked" @endif />
       </td>
 
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->

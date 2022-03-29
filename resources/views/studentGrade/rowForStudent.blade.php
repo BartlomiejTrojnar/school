@@ -1,9 +1,9 @@
 <!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.07.2021 *********************** -->
 <!-- otwarcie wiersza dla ucznia -->
 @if($studentGrade->student->sex == 'mężczyzna')
-   <tr class="man c" data-start="{{ $studentGrade->date_start }}" data-end="{{ $studentGrade->date_end }}" data-student_grade_id="{{ $studentGrade->id }}">
+   <tr class="man c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
 @else
-   <tr class="woman c" data-start="{{ $studentGrade->date_start }}" data-end="{{ $studentGrade->date_end }}" data-student_grade_id="{{ $studentGrade->id }}">
+   <tr class="woman c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
 @endif
 
    <td>{{$lp}}</td>
@@ -25,11 +25,11 @@
    </td>
 
    <!-- okres przynależności do klasy -->
-   @if($studentGrade->confirmation_date_start==1) <td>{{ $studentGrade->date_start }}</td>
-   @else <td class="not_confirmation">{{ $studentGrade->date_start }}</td>
+   @if($studentGrade->confirmation_start==1) <td>{{ $studentGrade->start }}</td>
+   @else <td class="not_confirmation">{{ $studentGrade->start }}</td>
    @endif
-   @if($studentGrade->confirmation_date_end==1) <td>{{ $studentGrade->date_end }}</td>
-   @else <td class="not_confirmation">{{ $studentGrade->date_end }}</td>
+   @if($studentGrade->confirmation_end==1) <td>{{ $studentGrade->end }}</td>
+   @else <td class="not_confirmation">{{ $studentGrade->end }}</td>
    @endif
 
    <!-- modyfikowanie i usuwanie -->
