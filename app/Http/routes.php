@@ -36,7 +36,7 @@ Route::post('/type/change/{type}', 'SessionVariablesController@typeChange');
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Route::get('/klasy_ucznia/przepiszKlasy', array('as'=>'klasy_ucznia.przepiszKlasy', 'uses'=>'StudentGradeController@przepiszKlasy'));
+Route::get('/grupa_uczniowie/przepiszOceny', array('as'=>'grupa_uczniowie.przepiszOceny', 'uses'=>'GroupStudentController@przepiszOceny'));
 Route::get('/grupa_uczniowie/sprawdzGrupyUczniow', array('as'=>'grupa_uczniowie.sprawdzGrupyUczniow', 'uses'=>'GroupStudentController@sprawdzGrupyUczniow'));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

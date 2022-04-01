@@ -3,7 +3,7 @@
 
 @section('main-content')
 
-<h1>Sprawdź i przepisz numery ze starej bazy danych - skrypt w trakcie tworzenia</h1>
+<h1>Sprawdź i przepisz oceny ze starej bazy danych - skrypt w trakcie tworzenia</h1>
 <?php
    @ $polacz_szkola = mysqli_connect('localhost', 'root', 'ARla575mow');
    //jeżeli połączono - wybór bazy danych
@@ -22,7 +22,7 @@
    mysqli_query($polacz_school, 'SET character_set_client=utf8');
    mysqli_query($polacz_school, 'SET character_set_results=utf8');
    mysqli_select_db($polacz_school, "school");
-
+/*
    // wyszukanie wpisów nauczania w starej bazie danych
    $wyszukaj_stara_klasa = "SELECT id_ku, ku.iducznia, u.newID as uczen_nowy_ID, ku.idklasy, k.newID as klasa_nowy_ID, data_od, data_do FROM klasy_uczniowie ku LEFT JOIN uczniowie u ON ku.iducznia=u.iducznia   LEFT JOIN klasy k ON ku.idklasy=k.idklasy   WHERE ku.idklasy IS NOT NULL";
    printf('<p>%s</p>', $wyszukaj_stara_klasa);
@@ -150,9 +150,9 @@
          printf('<p>nowe wpisy: %s</p>', $liczba_wpisow);
          printf('<p class="btn btn-danger">Wiele wpisów historii.</p>');
       }
-*/
 };
 echo '</ol>';
+*/
 ?>
 
 @endsection

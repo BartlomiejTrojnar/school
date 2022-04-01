@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 
 class GroupStudentController extends Controller
 {
+    public function przepiszOceny() {
+        return view('groupStudent.przepiszOceny');
+    }
+
+
     public function sprawdzGrupyUczniow() {
         return 'Funkcja w przygotowaniu';
         //return view('groupTeacher.sprawdzNauczycieli');
