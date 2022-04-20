@@ -14,4 +14,5 @@ class GroupStudent extends Model {
 
    public function group()  { return $this->belongsTo(Group::class); }
    public function student()  { return $this->belongsTo(Student::class); }
+   public function ratings()  { return $this->hasMany(FinalRating::class); }
 }

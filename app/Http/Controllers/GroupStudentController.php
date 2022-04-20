@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -13,17 +13,6 @@ use Illuminate\Http\Request;
 
 class GroupStudentController extends Controller
 {
-    public function przepiszOceny() {
-        return view('groupStudent.przepiszOceny');
-    }
-
-
-    public function sprawdzGrupyUczniow() {
-        return 'Funkcja w przygotowaniu';
-        //return view('groupTeacher.sprawdzNauczycieli');
-    }
-
-
     public function orderBy($column) {
         if(session()->get('GroupStudentOrderBy[0]') == $column)
             if(session()->get('GroupStudentOrderBy[1]') == 'desc') session()->put('GroupStudentOrderBy[1]', 'asc');
@@ -182,8 +171,9 @@ class GroupStudentController extends Controller
 
     public function destroy($id, GroupStudent $groupStudent) {
         $groupStudent = $groupStudent -> find($id);
+        foreach($groupStudent->ratings as $rating)      $rating -> delete();
         $groupStudent -> delete();
-        return 1;
+        return $id;
     }
 
     public function removeYesterday(Request $request, GroupStudent $groupStudent) {

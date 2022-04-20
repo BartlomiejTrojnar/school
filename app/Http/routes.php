@@ -35,13 +35,6 @@ Route::post('/studyYear/change/{year}', 'SessionVariablesController@studyYearCha
 Route::post('/type/change/{type}', 'SessionVariablesController@typeChange');
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Route::get('/grupa_uczniowie/przepiszOceny', array('as'=>'grupa_uczniowie.przepiszOceny', 'uses'=>'GroupStudentController@przepiszOceny'));
-Route::get('/grupa_uczniowie/sprawdzGrupyUczniow', array('as'=>'grupa_uczniowie.sprawdzGrupyUczniow', 'uses'=>'GroupStudentController@sprawdzGrupyUczniow'));
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 /* --------------------------------------------------------------------------- */
 
 Route::resource('/szkola', 'SchoolController');

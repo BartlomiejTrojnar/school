@@ -1,7 +1,8 @@
 <ul id="studentGroupToWhichHeBelongedAtAnotherTime">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 *********************** -->
    @foreach($studentGroups as $studentGroup)
       <li data-student_group="{{ $studentGroup->id }}" class="{{$studentGroup->group->level}}">
+         [{{$studentGroup->group->id}}]
          <button data-student_group="{{$studentGroup->id}}" class="edit btn btn-primary"><i class="fa fa-edit"></i></button>
          <button data-student_group="{{$studentGroup->id}}" class="destroy btn btn-primary"><i class="fa fa-remove"></i></button>
          <span class="dates"><span class="start">{{$studentGroup->start}}</span> <i class='fas fa-stopwatch' style='font-size: 1.2em;'></i> <span class="end">{{$studentGroup->end}}</span></span>
@@ -15,6 +16,11 @@
                <span class="small">{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}</span>
             @endif
          @endforeach
+         <em>
+            @foreach($studentGroup->ratings as $rating)
+               {{ $rating->grade }}
+            @endforeach
+         </em>
       </li>
    @endforeach
 </ul>

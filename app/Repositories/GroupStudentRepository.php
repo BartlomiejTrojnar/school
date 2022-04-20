@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -59,12 +59,12 @@ class GroupStudentRepository extends BaseRepository {
    }
 
    public function getStudentGroups($student_id) {    // pobranie wszystkich grup ucznia
-      return $this->model -> where('student_id', '=', $student_id) -> get();
+      return $this->model -> where('student_id', '=', $student_id) -> orderby('start') -> orderby('group_id') -> get();
    }
 
    public function getOtherGroupsInGrade($student, $grade, $date) {  // pobranie grup z klasy ucznia, do których nigdy nie należał
       $groupRepo = new GroupRepository(new Group);
-      $groups = $groupRepo -> getGradeGroupsFordate($grade, $date);
+      $groups = $groupRepo -> getGradeGroups($grade);
       $records = [];
       foreach($groups as $group)    if( !$this -> checkStudentGroup($group->id, $student, $date) ) $records[] = $group;
       return $records;

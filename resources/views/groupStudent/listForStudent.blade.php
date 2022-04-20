@@ -1,5 +1,5 @@
 <ul id="studentGroups">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.04.2021 *********************** -->
    @foreach($studentGroups as $studentGroup)
       <li data-student_group="{{$studentGroup->id}}" class="{{$studentGroup->group->level}}">
          <button data-student_group="{{$studentGroup->id}}" class="edit btn btn-primary"><i class="fa fa-edit"></i></button>

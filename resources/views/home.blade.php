@@ -104,14 +104,5 @@
       <div class="title" style="position: absolute; top: 150px;">
         Zespół Szkół nr 1 im. Janusza Korczaka w Łańcucie
       </div>
-
-      <div id="menu"><ul>
-         <li><a class="btn btn-warning" href="{{ route('grupa_uczniowie.przepiszOceny') }}">przepisz oceny</a></li>
-         <li><a href="{{ route('grupa_uczniowie.sprawdzGrupyUczniow') }}">sprawdź grupy uczniów</a></li>
-         <li><a href="">sprawdź historie uczniów</a></li>
-         <li><a href="">sprawdź osiągnięcia</a></li>
-         <li><a href="">sprawdź rozszerzenia</a></li>
-         <li><a href="">sprawdź plan lekcji</a></li>
-      </ul></div>
   </body>
 </html>

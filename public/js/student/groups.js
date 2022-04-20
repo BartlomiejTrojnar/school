@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania grup ucznia ----------------------- //
 
 function showOrHideGroups() {
@@ -176,7 +176,7 @@ function destroyClick() {  // usunięcie przynależności ucznia do grupy (z baz
                 refreshOtherGroupsInStudentsClass();
             },
             error: function() {
-                var error = '<li data-student_group="'+id+'" class="error">Błąd usuwania przynależności ucznia do grupy.</li>';
+                var error = '<li data-student_group="'+id+'" class="error">Błąd usuwania przynależności ucznia do grupy (możliwe że jest wpisana ocena końcowa).</li>';
                 $('li[data-student_group="'+id+'"]').replaceWith(error);
             }
         });

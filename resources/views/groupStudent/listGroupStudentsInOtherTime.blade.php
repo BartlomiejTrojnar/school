@@ -1,5 +1,5 @@
 <ul id="listGroupStudentsInOtherTime">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 *********************** -->
    @foreach($groupStudents as $groupStudent)
       @foreach($groupStudent->student->grades as $studentGrade)
       <li data-group_student_id="{{$groupStudent->id}}" data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}"

@@ -169,6 +169,12 @@ class StudentController extends Controller
             $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
             $year = substr($schoolYear->date_end, 0, 4);
         }
+        if($year==0) {
+            $year=9999;
+            foreach($this->student->grades as $sg) if( substr($sg->start, 0, 4) < $year) $year = substr($sg->start, 0, 4);
+            $year++;
+        }
+
         // znalezienie grup ucznia
         $studentGroups = $groupStudentRepo -> getStudentGroups($this->student->id);
         // lista grup do których uczeń należy
