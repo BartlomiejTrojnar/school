@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -377,6 +377,7 @@ class GroupController extends Controller
         $group = $group -> find($request->id);
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
-       return view('group.row', ["group"=>$group, "version"=>$request->version, "lp"=>$request->lp, "start"=>$start, "end"=>$end]);
+        $grade_id = session() -> get('gradeSelected');
+        return view('group.row', ["group"=>$group, "version"=>$request->version, "lp"=>$request->lp, "start"=>$start, "end"=>$end, "grade_id"=>$grade_id]);
     }
 }

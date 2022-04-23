@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania grup dla klasy --------------------- //
 // ------------------------------ wybór klasy w polu select ------------------------------------ //
 function gradeChanged() {
@@ -76,7 +76,7 @@ function rememberDates(start, end) {
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/public/rememberDates",
-        data: { dateView: start, dateEnd: end },
+        data: { dateView: start, end: end },
         success: function() { window.location.reload(); },
         error: function() { window.location.reload(); },
     });
@@ -104,7 +104,7 @@ function refreshRow(id, version, type, lp=0) {  // odświeżenie wiersza z grup�
         },
         error: function() {
             var error = '<tr><td class="error" colspan="12">Błąd odświeżania wiersza grupy!</td></tr>';
-            $('tr.create').before(error);
+            $('tr[data-group_id='+id+']').replaceWith(error);
         },
     });
 }
@@ -154,15 +154,15 @@ function update(id, version, lp) {   // zapisanie grupy w bazie danych
     var subject_id  = $('tr[data-group_id='+id+'] select[name="subject_id"]').val();
     var level       = $('tr[data-group_id='+id+'] select[name="level"]').val();
     var comments    = $('tr[data-group_id='+id+'] input[name="comments"]').val();
-    var date_start  = $('tr[data-group_id='+id+'] input[name="date_start"]').val();
-    var date_end    = $('tr[data-group_id='+id+'] input[name="date_end"]').val();
+    var start       = $('tr[data-group_id='+id+'] input[name="start"]').val();
+    var end         = $('tr[data-group_id='+id+'] input[name="end"]').val();
     var hours       = $('tr[data-group_id='+id+'] input[name="hours"]').val();
 
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/grupa/"+id,
-        data: { id: id, subject_id: subject_id, level: level, comments: comments, date_start: date_start, date_end: date_end, hours: hours },
+        data: { id: id, subject_id: subject_id, level: level, comments: comments, start: start, end: end, hours: hours },
         success: function() { refreshRow(id, version, "edit", lp); },
         error: function() {
             var error = '<tr><td colspan="12" class="error">Nie można zmienić danych grupy.</td></tr>';

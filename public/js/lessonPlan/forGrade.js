@@ -194,6 +194,7 @@ function addLessonToTable(id, group_id, lessonhour_id, start) {
     var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
     var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
     li += lessonDescription + '</li>';
+    li = $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').html() + li;
     $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').html(li);
     $('li[data-lesson_id="'+id+'"] .start').html(start);
     $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
