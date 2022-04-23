@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 
@@ -170,13 +170,6 @@ function dropLessonInGradeGroupList() {     // opuszczenie lekcji w polu zawiera
             $('li[data-lesson_id="'+lesson_id+'"]').remove();
             removeLesson(lesson_id);
         }
-        // zmiana lekcji - zmiana daty końcowej
-        // ukryj lekcję w tabeli planu
-        //var lesson_id = data.getData('lesson_id');
-        //var end = changeAndFormatDate( $('#dateView').val(), -1);
-        //$('li[data-lesson_id="'+lesson_id+'"]').remove();
-        //if( setTheEndDateOfTheLesson(lesson_id, end) )
-        //    increaseVisibleGroupHours( data.getData('group_id') );
         if(event.preventDefault) event.preventDefault();
         return false;
     });
@@ -219,8 +212,6 @@ function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // za
 }
 
 function setTheEndDateOfTheLesson(lesson_id, end) {     // ustawienie daty końcowej dla lekcji w planie
-    alert(lesson_id);
-    alert(end);
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
