@@ -83,4 +83,4 @@
   </tr>
 </table>
 
-<p><button class="btn btn-primary" id="groupExtension">Przedłuż grupę</button> do <input type="date" id="dateGroupExtension" value="2022-06-24"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> </p>
+<p><button class="btn btn-primary" id="groupExtension">Przedłuż grupę</button> do <input type="date" id="dateGroupExtension" value="{{$group->end}}"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> </p>
