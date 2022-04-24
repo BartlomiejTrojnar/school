@@ -3,6 +3,10 @@
    {!! $groups->render() !!}
 @endif
 
+<div style="box-shadow: 5px 5px 3px #f80; display: inline; float: right;">
+   <?php echo $schoolYearSelectField; ?>
+</div>
+
 <h2>{{ $subTitle }}</h2>
 
 <table id="groups">

@@ -51,6 +51,22 @@ function teacherChanged() {
         return false;
     });
 }
+// ------------------------------ wybór nauczyciela w polu select ------------------------------ //
+function schoolYearChanged() {
+    $('select[name="schoolYear"]').bind('change', function(){
+        var year = 1900 + parseInt($(this).val());
+        start = (year-1)+'-09-01';
+        end = year+'-08-31';
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/rok_szkolny/change/"+ $(this).val(),
+            success: function() { $('#start').val(start); $('#end').val(end); rememberDates(start, end); },
+            error: function() { alert('Błąd przy zmianie roku szkolnego'); window.location.reload(); },
+        });
+        return false;
+    });
+}
 
 // po zmianie daty początkowej - sprawdzenie dat grupy
 function dateStartChange() {
@@ -198,6 +214,7 @@ $(document).ready(function() {
     subjectChanged();
     levelChanged();
     teacherChanged();
+    schoolYearChanged();
     dateStartChange();
     dateEndChange();
 
