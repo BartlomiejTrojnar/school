@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -90,6 +90,8 @@ class LessonPlanForTeachersAndClassroomsExportController extends Controller
         if(count($lessons)==0) return;     // jeżeli nauczyciel nie ma lekcji na wskazanej godzinie
         if(count($lessons)>1)  {    // jeżeli jest więcej niż jedna lekcja
             $this->sheet -> setCellValueByColumnAndRow($col, $row, ">1 lekcja");
+            $this->sheet -> getStyleByColumnAndRow($col, $row) -> applyFromArray(array( 'fill' => array(
+                'type'  => \PHPExcel_Style_Fill::FILL_SOLID,    'color' => array('rgb' => 'bbbb55') ) ));
             return;
         }
         // jeżeli nauczyciel na wskazanej godzinie ma jedną lekcję

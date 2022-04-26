@@ -72,6 +72,7 @@
          <td></td>
          <td colspan="2" class="small">
             między <input type="date" id="start" name="start" value="{{ $start }}" />
+            <input type="text" readonly>
             a <input type="date" id="end" name="end" value="{{ $end }}" />
             <input type="hidden" id="rememberDates" value="1" />
          </td>

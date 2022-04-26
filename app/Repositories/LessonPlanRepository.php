@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\LessonPlan;
 
@@ -104,6 +104,36 @@ class LessonPlanRepository extends BaseRepository {
          -> leftjoin('groups', 'lesson_plans.group_id', '=', 'groups.id')
          -> leftjoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
          -> where('teacher_id', '=', $teacher_id)
+         -> distinct() -> get();
+      return $records;
+   }
+
+   // pobieranie danych do exportu planu lekcji
+   public function findTeacherLessonsForHour($teacher_id, $lessonHour_id, $dateView) {
+      $records = $this->model -> select('lesson_plans.*')
+         -> leftjoin('groups', 'lesson_plans.group_id', '=', 'groups.id')
+         -> leftjoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
+         -> where('teacher_id', '=', $teacher_id)
+         -> where('lesson_hour_id', '=', $lessonHour_id)
+         -> where('lesson_plans.start', '<=', $dateView)
+         -> where('lesson_plans.end', '>=', $dateView)
+         -> where('group_teachers.start', '<=', $dateView)
+         -> where('group_teachers.end', '>=', $dateView)
+         -> distinct() -> get();
+      return $records;
+   }
+
+   // pobieranie lekcji dla klasy do eksportu planu lekcji do Excela
+   public function findGradeLessonsForHour($grade_id, $lessonHour_id, $dateView) {
+      $records = $this->model -> select('lesson_plans.*')
+         -> leftjoin('groups', 'lesson_plans.group_id', '=', 'groups.id')
+         -> leftjoin('group_grades', 'groups.id', '=', 'group_grades.group_id')
+         -> leftjoin('subjects', 'groups.subject_id', '=', 'subjects.id')
+         -> where('grade_id', '=', $grade_id) 
+         -> where('lesson_hour_id', '=', $lessonHour_id)
+         -> where('lesson_plans.start', '<=', $dateView)
+         -> where('lesson_plans.end', '>=', $dateView)
+         -> orderBy( 'subjects.name', 'asc' ) -> orderBy('groups.comments', 'asc')
          -> get();
       return $records;
    }

@@ -91,10 +91,13 @@ function rememberDates(start, end) {
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/rememberDates",
+        url: "http://localhost/school/rememberDates",
         data: { dateView: start, end: end },
         success: function() { window.location.reload(); },
-        error: function() { window.location.reload(); },
+        error: function() { 
+            alert('Błąd');
+            //window.location.reload();
+         },
     });
 }
 

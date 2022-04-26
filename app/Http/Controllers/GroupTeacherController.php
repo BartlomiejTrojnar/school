@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupTeacher;
 use App\Repositories\GroupTeacherRepository;
@@ -121,16 +121,16 @@ class GroupTeacherController extends Controller
     public function edit($id, GroupTeacher $groupTeacher, GroupRepository $groupRepo, TeacherRepository $teacherRepo, SchoolYearRepository $schoolYearRepo) {
         $groupTeacher = $groupTeacher -> find($id);
         $group = $groupRepo -> find($groupTeacher->group_id);
-        $schoolYear_id = $schoolYearRepo -> getSchoolYearIdForDate( $group->date_start );
+        $schoolYear_id = $schoolYearRepo -> getSchoolYearIdForDate( $group->start );
         $teachers = $teacherRepo -> getTeachersForGroup( $group, $schoolYear_id );
 
-        $date_start[0] = $groupTeacher->date_start;
-        $date_start[1] = $group->date_start;
-        $date_start[2] = date('Y-m-d');
-        $date_end[0] = $groupTeacher->date_end;
-        $date_end[1] = $group->date_end;
+        $start[0] = $groupTeacher->start;
+        $start[1] = $group->start;
+        $start[2] = date('Y-m-d');
+        $end[0] = $groupTeacher->end;
+        $end[1] = $group->end;
 
-        return view('groupTeacher.edit', ["groupTeacher"=>$groupTeacher, "group_id"=>$groupTeacher->group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>''])
+        return view('groupTeacher.edit', ["groupTeacher"=>$groupTeacher, "group_id"=>$groupTeacher->group_id, "start"=>$start, "end"=>$end, "history_view"=>''])
             -> nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$groupTeacher->teacher_id]);
     }
 
@@ -142,27 +142,27 @@ class GroupTeacherController extends Controller
         ]);
         $group = $groupRepo -> find($request->group_id);
 
-        if( $request->date_start > $request->date_end ||
-            $request->date_start == '' ||
-            $request->date_end   == '' ||
-            $request->date_start < $group->date_start ||
-            $request->date_end > $group->date_end )
+        if( $request->start > $request->end ||
+            $request->start == '' ||
+            $request->end   == '' ||
+            $request->start < $group->start ||
+            $request->end > $group->end )
         {
             //$groups = $groupRepo -> getAll();
             $teachers = $teacherRepo -> getAll();
-            $date_start[0] = $request->date_start;
-            $date_start[1] = $group->date_start;
-            $date_start[2] = date('Y-m-d');
-            $date_end[0] = $request->date_end;
-            $date_end[1] = $group->date_end;
-            return view('groupTeacher.edit', ["groupTeacher"=>$groupTeacher, "group_id"=>$request->group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>$request->history_view])
+            $start[0] = $request->start;
+            $start[1] = $group->start;
+            $start[2] = date('Y-m-d');
+            $end[0] = $request->end;
+            $end[1] = $group->end;
+            return view('groupTeacher.edit', ["groupTeacher"=>$groupTeacher, "group_id"=>$request->group_id, "start"=>$start, "end"=>$end, "history_view"=>$request->history_view])
                 -> nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$request->teacher_id ]);
         }
 
         $groupTeacher->group_id = $request->group_id;
         $groupTeacher->teacher_id = $request->teacher_id;
-        $groupTeacher->date_start = $request->date_start;
-        $groupTeacher->date_end = $request->date_end;
+        $groupTeacher->start = $request->start;
+        $groupTeacher->end = $request->end;
         $groupTeacher -> save();
 
         return redirect( route('grupa.show', $request->group_id) );

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -217,7 +217,7 @@ class GradeController extends Controller
         $groups = $groupRepo -> getFilteredAndSorted($this->grade->id, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
 
         $groupTable = view('group.table', ["version"=>"forGrade", "subTitle"=>"grupy klasy", "groups"=>$groups, "links"=>true, "start"=>$start, "end"=>$end, "grade_id"=>$this->grade->id,
-            "gradeSelectField"=>"", "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField]);
+            "gradeSelectField"=>"", "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField, "schoolYearSelectField"=>""]);
         $js = "group/operations.js";
 
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$groupTable]);
