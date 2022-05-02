@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -240,13 +240,12 @@ class GroupController extends Controller
         $dateView = session()->get('dateView');
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($dateView);
         $groupStudents = $groupStudentRepo -> getGroupStudents($this->group->id);
-        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group]);
-        $countStudents = count($groupStudents);
+        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group, "year"=>$this->year]);
         $listGroupStudentsInOtherTime = view('groupStudent.listGroupStudentsInOtherTime', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
         $outsideGroupStudents = $groupStudentRepo -> getOutsideGroupStudents($this->group, $dateView);
         $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
 
-        $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "countStudents"=>$countStudents, "year"=>$this->year,
+        $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);
 
         $css = "group/groupStudents.css";

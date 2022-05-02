@@ -1,22 +1,27 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.02.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
     var dateView = $('#dateView').val();
-    var count=0;
+    var count=0, countStudents=0;
     var groupGrades = [];
+    var hide=false;
     $('#groupGrades button.off').each(function() {
         groupGrades[count++] = $(this).data('grade_id');
     });
 
     $('#studentsListForGroup li').each(function() {    // sprawdzenie i wyświetlenie odpowiednich uczniów
         $(this).removeClass('hide');
-        if( $(this).data('start') > dateView )  $(this).addClass('hide');
-        if( $(this).data('end') < dateView )    $(this).addClass('hide');
-        if( $(this).data('grade_start') > dateView )  $(this).addClass('hide');
-        if( $(this).data('grade_end') < dateView )    $(this).addClass('hide');
-        for(i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  $(this).addClass('hide');
+        hide = false;
+        if( $(this).data('start') > dateView )  hide=true;
+        if( $(this).data('end') < dateView )    hide=true;
+        if( $(this).data('grade_start') > dateView )  hide=true;
+        if( $(this).data('grade_end') < dateView )    hide=true;
+        for(i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  hide=true;
+        if(hide) $(this).addClass('hide');
+        else countStudents++;
     });
+    $('#countStudents').html(countStudents);
 
     $('#listGroupStudentsInOtherTime li').each(function() {    // sprawdzenie i wyświetlenie odpowiednich uczniów
         $(this).addClass('hide');

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 *********************** -->
 <div>
    <h2 style="display: inline-block;">stan dla daty: <input type="date" id="dateView" value="{{ $dateView }}" /></h2>
    <p style="display: inline-block;"><datalist></datalist> istnienia grupy: <span id="groupStart">{{ $group->start }}</span> - <span id="groupEnd">{{ $group->end }}</span></p>
@@ -16,7 +16,7 @@
 </p>
 
 <div class="col-md-6">
-   <h2>uczniowie grupy [<span id="countStudents">{{ $countStudents }}</span>]</h2>
+   <h2>uczniowie grupy: <span id="countStudents"></span></h2>
    <?php echo $listGroupStudents; ?>
 
    <h3>w innym terminie w grupie</h3>

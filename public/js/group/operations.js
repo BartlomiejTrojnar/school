@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania grup dla klasy --------------------- //
 // ------------------------------ wybór klasy w polu select ------------------------------------ //
 function gradeChanged() {
