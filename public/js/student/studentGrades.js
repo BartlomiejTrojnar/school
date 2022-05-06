@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
 
 // -------------------------------- zarządzanie klasami ucznia --------------------------------- //
@@ -6,7 +6,7 @@ function refreshRowForStudentGrades(id, lp, add=false) {    // odświeżenie wie
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasy_ucznia/refreshRow",
+        url: "http://localhost/school/klasy_ucznia/refreshRow",
         data: { id: id, lp: lp, version: "forStudent" },
         success: function(result) {
             if(add){
@@ -40,7 +40,7 @@ function showCreateRowForStudentGrade(student_id) {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasy_ucznia/create",
+        url: "http://localhost/school/klasy_ucznia/create",
         data: { student_id: student_id, version: "forStudent" },
         success: function(result) { 
             $('#studentGrades table').append(result);
@@ -80,13 +80,14 @@ function addStudentGrade() {   // zapisanie klasy ucznia w bazie danych
     var confirmation_end   = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(':checked');
     if(confirmation_start)  confirmation_start=1;
     if(confirmation_end)  confirmation_end=1;
+    var lp = parseInt($('#lp').val())+1;
 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasy_ucznia",
+        url: "http://localhost/school/klasy_ucznia",
         data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
-        success: function(id) { refreshRowForStudentGrades(id, '?', true); },
+        success: function(id) { refreshRowForStudentGrades(id, lp, true,); },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd dodawania klasy dla ucznia.</td></tr>';
             $('#studentGrades tr.create').before(error);
@@ -101,7 +102,7 @@ function editStudentGradeClick() {     // kliknięcie przycisku modyfikowania kl
         $.ajax({
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/klasy_ucznia/"+id+"/edit",
+            url: "http://localhost/school/klasy_ucznia/"+id+"/edit",
             data: { id: id, lp: lp, version: "forStudent" },
             success: function(result) {
                 $('tr[data-student_grade_id='+id+']').before(result).hide();
@@ -148,7 +149,7 @@ function updateStudentGrade(id) {   // zapisanie klasy ucznia w bazie danych
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasy_ucznia/"+id,
+        url: "http://localhost/school/klasy_ucznia/"+id,
         data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
         success: function() {   refreshRowForStudentGrades(id, lp);  },
         error: function() {
@@ -164,7 +165,7 @@ function destroyStudentGradeClick() {  // usunięcie klasy ucznia (z bazy danych
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/klasy_ucznia/" + id,
+            url: "http://localhost/school/klasy_ucznia/" + id,
             success: function() {   $('tr[data-student_grade_id='+id+']').remove(); },
             error: function() {
                 var error = '<tr><td colspan="6" class="error">Błąd usuwania klasy ucznia.</td></tr>';
@@ -176,11 +177,11 @@ function destroyStudentGradeClick() {  // usunięcie klasy ucznia (z bazy danych
 }
 
 function proposedDateClick() {
-    $('.studentGradeDateStart').bind('click', function(){
+    $('.studentGradeStart').bind('click', function(){
         $('#start').val($(this).html());
         return false;
     });
-    $('.studentGradeDateEnd').bind('click', function(){
+    $('.studentGradeEnd').bind('click', function(){
         $('#end').val($(this).html());
         return false;
     });
@@ -191,7 +192,7 @@ function refreshRowForStudentHistory(id, add=false) {    // odświeżenie wiersz
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/historia_ucznia/refreshRow",
+        url: "http://localhost/school/historia_ucznia/refreshRow",
         data: { id: id, version: "forStudent" },
         success: function(result) {
             if(add) $('tr[data-student_history_id="'+id+'"]').replaceWith(result);
@@ -222,7 +223,7 @@ function showCreateRowForStudentHistory(student_id) {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/historia_ucznia/create",
+        url: "http://localhost/school/historia_ucznia/create",
         data: { student_id: student_id, version: "forStudent" },
         success: function(result) {
             $('#studentHistory table').append(result);
@@ -262,7 +263,7 @@ function addStudentHistory() {   // zapisanie wpisu historii ucznia w bazie dany
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/historia_ucznia",
+        url: "http://localhost/school/historia_ucznia",
         data: { student_id: student_id, date: date, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
         success: function(id) {
             $('#studentHistory tr.create').before('<tr data-student_history_id="'+id+'"><td colspan="3">ładowanie danych</td></tr>');
@@ -282,7 +283,7 @@ function editStudentHistoryClick() {     // kliknięcie przycisku modyfikowania 
         $.ajax({
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/historia_ucznia/"+id+"/edit",
+            url: "http://localhost/school/historia_ucznia/"+id+"/edit",
             data: { id: id, version: "forStudent" },
             success: function(result) {
                 $('tr[data-student_history_id='+id+']').before(result).hide();
@@ -321,7 +322,7 @@ function updateStudentHistory(id) {   // zapisanie wydarzenia w bazie danych
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/historia_ucznia/"+id,
+        url: "http://localhost/school/historia_ucznia/"+id,
         data: { id: id, student_id: student_id, date: date, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
         success: function(result) { refreshRowForStudentHistory(result); },
         error: function() {
@@ -337,7 +338,7 @@ function destroyStudentHistoryClick() {  // usunięcie wydarzenia z historii ucz
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/historia_ucznia/" + id,
+            url: "http://localhost/school/historia_ucznia/" + id,
             success: function() {   $("tr[data-student_history_id='"+id+"']").remove();  },
             error: function() {
                 var error = '<td colspan="3" class="error">Błąd usuwania historii ucznia.</td>';
@@ -389,7 +390,7 @@ function showCreateRowForStudentNumber(student_id) {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/numery_ucznia/create",
+        url: "http://localhost/school/numery_ucznia/create",
         data: { student_id: student_id, version: "forStudent" },
         success: function(result) {
             $('#studentNumbers table').append(result);
@@ -428,7 +429,7 @@ function addStudentNumber() {   // zapisanie numeru w bazie danych
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/numery_ucznia",
+        url: "http://localhost/school/numery_ucznia",
         data: { student_id: student_id, grade_id: grade_id, school_year_id: school_year_id, number: number, confirmationNumber: confirmationNumber },
         success: function(id) {
             $('#studentNumbers tr.create').before('<tr data-student_number_id="'+id+'"><td colspan="4">ładowanie danych</td></tr>');
@@ -447,7 +448,7 @@ function editStudentNumberClick() {     // kliknięcie przycisku modyfikowania n
         $.ajax({
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/numery_ucznia/"+id+"/edit",
+            url: "http://localhost/school/numery_ucznia/"+id+"/edit",
             data: { id: id, version: "forStudent" },
             success: function(result) {
                 $('tr[data-student_number_id='+id+']').before(result).hide();
@@ -489,7 +490,7 @@ function updateStudentNumber(id) {   // zapisanie numeru w bazie danych
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/numery_ucznia/"+id,
+        url: "http://localhost/school/numery_ucznia/"+id,
         data: { id: id, student_id: student_id, grade_id: grade_id, school_year_id: school_year_id, number: number, confirmationNumber: confirmationNumber },
         success: function(id) {  refreshRowForStudentNumber(id);  },
         error: function() {
@@ -505,7 +506,7 @@ function destroyStudentNumberClick() {  // usunięcie Numeru ucznia (z bazy dany
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/numery_ucznia/" + id,
+            url: "http://localhost/school/numery_ucznia/" + id,
             success: function() {   $("tr[data-student_number_id='"+id+"']").remove();  },
             error: function() {
                 var error = '<tr><td colspan="4" class="error">Błąd usuwania numeru ucznia.</td></tr>';
@@ -529,7 +530,7 @@ function showCreateFormForBookOfStudent(student_id) {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ksiega_uczniow/create",
+        url: "http://localhost/school/ksiega_uczniow/create",
         data: { version: "forStudent" },
         success: function(result) {
             $('aside.createForm').replaceWith(result);
@@ -560,7 +561,7 @@ function addBookOfStudents(student_id) {   // zapisanie numeru księgi ucznia do
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ksiega_uczniow",
+        url: "http://localhost/school/ksiega_uczniow",
         data: { student_id: student_id, school_id: school_id, number: number },
         success: function() {
             $('td.bookOfStudent').html('<td class="bookOfStudent" style="color: #f77; background-color: #228;" data-book_of_student_id="4469">'+number+'</td>');
@@ -662,7 +663,7 @@ function refreshBookOfStudent(id) {  // odświeżenie tabeli z numerami księgi 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ksiega_uczniow/refresh",
+        url: "http://localhost/school/ksiega_uczniow/refresh",
         data: { id: id, version: "tableDataForId" },
         success: function(result) {
             $('td.bookOfStudent').replaceWith(result);
@@ -733,7 +734,6 @@ function updateEndStudentGrade(id, end, lp) {   // zapisanie klasy ucznia w bazi
         },
     });
 }
-
 
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //

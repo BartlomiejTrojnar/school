@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.08.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2021 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\StudentHistory;
 
@@ -16,7 +16,9 @@ class StudentHistoryController extends Controller
 
     private function createForStudent($student_id, $studentRepo) {
         $student = $studentRepo -> find($student_id);
-        return view('StudentHistory.createForStudent', ["student"=>$student]);
+        //return 20;
+        $sh = StudentHistory :: orderby('id', 'desc')->first();
+        return view('StudentHistory.createForStudent', ["student"=>$student, "proposedDateHistory"=>$sh->date]);
     }
 
     public function store(Request $request, StudentGrade $studentGrade) {

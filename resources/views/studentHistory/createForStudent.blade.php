@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 28.07.2021 ********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 *********************** -->
 <tr class="createRow">
    <form action="{{ route('historia_ucznia.store') }}" method="post" role="form">
       {{ csrf_field() }}
@@ -6,7 +6,7 @@
          <!-- uczeń (ukryte pole z id ucznia) -->
          <input type="hidden" name="student_id" value="{{$student->id}}" />
          <!-- data wydarzenia -->
-         <input type="date" name="date" value="{{ session()->get('dateView') }}" />
+         <input type="date" name="date" value="{{ $proposedDateHistory }}" />
          <input type="checkbox" name="confirmation_date" checked="checked" />
       </td>
       <!-- opis wydarzenia -->

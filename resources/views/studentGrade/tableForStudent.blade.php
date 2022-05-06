@@ -17,11 +17,7 @@
       <?php $count = 0; ?>
       @foreach($studentGrades as $sg)
          <!-- otwarcie wiersza dla ucznia -->
-         @if($sg->student->sex == 'mężczyzna')
-            <tr class="man c" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
-         @else
-            <tr class="woman c" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
-         @endif
+            <tr class="c" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
 
             <td>{{ ++$count }}</td>
             <!-- numer z księgi ucznia -->
@@ -69,6 +65,7 @@
             <button class="showCreateRow btn btn-primary"><i class="fa fa-plus"></i></button>
       </td></tr>
    </table>
+   <input id="lp" value="{{$count}}" hidden />
 </section>
 
 <?php echo $studentHistoryView; ?>
