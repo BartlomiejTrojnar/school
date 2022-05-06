@@ -1,5 +1,5 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 01.09.2021 *********************** -->
 <section id="studentGrades">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 *********************** -->
    <h2>uczniowe w klasie</h2>
    @if( !empty($grade) )
       <div id="gradeButtons" class="c">
@@ -44,7 +44,11 @@
             <td>{{ ++$count }}</td>
             <!-- numer z księgi ucznia -->
             <td>
-               @foreach($sg->student->bookOfStudents as $book) {{ $book->number }} @endforeach
+               @foreach($sg->student->bookOfStudents as $book)
+                  @if( $sg->grade->school_id == $book->school_id )
+                     {{ $book->number }}
+                  @endif
+               @endforeach
                @if(count($sg->student->bookOfStudents)==0)
                   <a href="{{ route('ksiega_uczniow.create', "version=createForm&student_id=".$sg->student->id) }}"><i class="fas fa-plus"></i></a>
                   <button class="showCreateForm" data-student_id="{{$sg->student->id}}" data-studentGradeId="{{ $sg->id }}">dodaj</button>

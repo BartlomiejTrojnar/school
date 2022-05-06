@@ -1,5 +1,5 @@
 <section id="studentGrades">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.01.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 *********************** -->
    <aside style="float: right;">data widoku: {{$dateView}}<input id="yesterday" type="hidden" value="{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}" /></aside>
    <h2>klasy ucznia</h2>
    <table id="studentGradesTable">
@@ -26,9 +26,11 @@
             <td>{{ ++$count }}</td>
             <!-- numer z księgi ucznia -->
             @foreach($sg->student->bookOfStudents as $book)
-               <td class="bookOfStudent" style="color: #f77; background-color: #228;" data-book_of_student_id="{{ $book->id }}">
-                  {{ $book->number }}
-               </td>
+               @if( $sg->grade->school_id == $book->school_id )
+                  <td class="bookOfStudent" style="color: #f77; background-color: #228;" data-book_of_student_id="{{ $book->id }}">
+                     {{ $book->number }}
+                  </td>
+               @endif
             @endforeach
             @if(count($sg->student->bookOfStudents)==0)
                <td class="showCreateFormForBookOfStudent">

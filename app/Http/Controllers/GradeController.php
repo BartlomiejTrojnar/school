@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -151,12 +151,11 @@ class GradeController extends Controller
 
         $grades[0] = $this->grade->id;
         $studentGrades = $studentGradeRepo -> getStudentsFromGrades($grades);
-        $subView = view('studentGrade.tableForGrade', ["subTitle"=>"uczniowie w klasie", "studentGrades"=>$studentGrades, "yearOfStudy"=>$this->year, "grade"=>$this->grade,
-            "schoolYearEnd"=>$schoolYearEnd, "start"=>$start, "end"=>$end]);
+        $tableForGrade = view('studentGrade.tableForGrade', ["studentGrades"=>$studentGrades, "yearOfStudy"=>$this->year, "grade"=>$this->grade, "schoolYearEnd"=>$schoolYearEnd, "start"=>$start, "end"=>$end]);
 
         $css = "grade/studentGrades.css";
         $js = "grade/studentGrades.js";
-        return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>$css, "js"=>$js, "subView"=>$subView]);
+        return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>$css, "js"=>$js, "subView"=>$tableForGrade]);
     }
 
     private function showStudentsAll() {  // funkcja przygotowująca i wyświetlająca widok danych osobowych wszystkich uczniów, którzy w zadanym dniu należą do klasy
