@@ -25,7 +25,7 @@
       @endif
       {{$group->comments}}
       <span style="font-size: 0.5em;">
-         [{{$group->start}}-{{$group->end}}]
+         [<time id="groupStart">{{$group->start}}</time> : <time id="groupEnd">{{$group->end}}</time>]
          @foreach($group->teachers as $groupTeacher)
             /{{$groupTeacher->teacher->first_name}} {{$groupTeacher->teacher->last_name}}/
          @endforeach

@@ -56,7 +56,7 @@
 <section id="groupLessons">
    <ul>
       @foreach($groupLessons as $lesson)
-         <li data-lesson_id="{{ $lesson->id }}" data-type="lesson" data-group_id="{{ $lesson->group_id }}" data-lesson_hour_id="{{ $lesson->lesson_hour_id }}">
+         <li data-lesson_id="{{ $lesson->id }}" data-type="lesson" data-lesson_hour_id="{{ $lesson->lesson_hour_id }}">
             <!-- data lekcji w planie -->
             <span class="lessonDates" style="display: inline;"><time class="start">{{$lesson->start}}</time> - <time class="end">{{$lesson->end}}</time></span><br />
             <!-- informacja o grupie -->
@@ -90,7 +90,7 @@
             @for($dzien=0; $dzien<=60; $dzien=$dzien+15)
                <td class="lesson c" data-lesson_hour_id="{{$i+$dzien}}">
                   <ul></ul>
-                  <button class="btn btn-primary" data-lessonHour_id="{{$i+$dzien}}"><i class='fa fa-plus'></i></button>
+                  <button class="btn btn-primary" data-lesson_hour_id="{{$i+$dzien}}"><i class='fa fa-plus'></i></button>
                </td>
             @endfor
          </tr>
