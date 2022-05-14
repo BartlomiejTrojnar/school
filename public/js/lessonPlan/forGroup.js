@@ -1,8 +1,43 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.05.2022 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania planu lekcji grupy ------------------- //
 
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
+function countStudents(dateView) {
+    var countStudents = 0;
+    $('#groupStudents li').each(function() {
+        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+    });
+    $('#groupInfo .studentsCount').html(countStudents);
+}
+
+function showOrHideTeachers(dateView) {
+    $('#groupInfo .teacher').each(function() {
+        if( $(this).data('start')>dateView || $(this).data('end')<dateView ) {
+            $(this).hide();
+        }
+    });
+}
+
+function rewriteGroupInfo() {
+    var dateView = $('#dateView').val();
+    countStudents(dateView);
+    showOrHideTeachers(dateView);
+    $('#groupLessons .groupInfo').html( $('#groupInfo').html() );
+    $('#groupLessons .teachers time').hide();
+    $('div.groupInfo').html( $('#groupInfo').html() );
+    $('div.groupInfo .teachers time').hide();
+}
+
+function moveLessonsToTable() {
+    rewriteGroupInfo();
+    var lesson_hour_id;
+    $('#groupLessons li').each(function() {
+        lesson_hour_id = $(this).data('lesson_hour_id');
+        $('td[data-lesson_hour_id="'+lesson_hour_id+'"] ul').append($(this));
+    });
+}
+
 function showOrHideLesson() {
     var dateView = $('#dateView').val();
     $('#groupPlan li').each(function() {
@@ -239,14 +274,17 @@ function dateViewChange() {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/rememberDates",
             data: { dateView: $('#dateView').val() },
-            success: function()  {  showOrHideLesson();  },
+            success: function()  {
+                rewriteGroupInfo();
+                showOrHideLesson();
+            },
         });
     });
 }
 
-
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
+    moveLessonsToTable();
     showOrHideLesson();
     tdLessonAddButtonClick();
     dragLesson();
