@@ -398,7 +398,8 @@ class TaskRatingController extends Controller
     public function destroy($id, TaskRating $taskRating) {
         $taskRating = $taskRating -> find($id);
         $taskRating -> delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
+        return 1;
+        //return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function refreshTable(Request $request, TaskRatingRepository $taskRatingRepo) {

@@ -211,7 +211,7 @@ class StudentController extends Controller
 
     private function showTasks() {
         $css = "/student/taskRating.css";
-        $js = "/student/taskRating.js";
+        $js = "/taskRating/forStudent.js";
         $subTitle = "Zadania ucznia";
         $taskRatingRepo = new TaskRatingRepository(new TaskRating);
         $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);

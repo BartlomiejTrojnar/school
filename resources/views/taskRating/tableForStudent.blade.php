@@ -27,15 +27,15 @@
             $sumImportances += $taskRating->importance;
          ?>
          <tr data-task-rating-id="{{$taskRating->id}}">
-            <td><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ ++$count }}</a></td>
+            <td class="lp"><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ ++$count }}</a></td>
             <td><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>
-            <td class="c">{{ substr($taskRating->deadline, 0, 10) }}</td>
-            <td class="c">{{ substr($taskRating->implementation_date, 0, 10) }}</td>
-            <td class="c">{{ $taskRating->version }}</td>
-            <td class="c">{{ $taskRating->importance }}</td>
-            <td class="c">{{ substr($taskRating->rating_date, 0, 10) }}</td>
-            <td class="c">{{ $taskRating->points }} ({{ number_format($taskRating->points/$taskRating->task->points*100, 1) }}%)</td>
-            <td class="c">{{ $taskRating->rating }}</td>
+            <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
+            <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
+            <td>{{ $taskRating->version }}</td>
+            <td>{{ $taskRating->importance }}</td>
+            <td>{{ substr($taskRating->rating_date, 0, 10) }}</td>
+            <td>{{ $taskRating->points }} ({{ number_format($taskRating->points/$taskRating->task->points*100, 1) }}%)</td>
+            <td>{{ $taskRating->rating }}</td>
             <td>{{ $taskRating->comments }}</td>
             <td class="diary c">
                @if($taskRating->diary)

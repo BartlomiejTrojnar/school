@@ -1,12 +1,12 @@
 // -------------------- (C) mgr inż. Bartłomiej Trojnar; (II) kwiecień 2021 -------------------- //
 // ---------------------- wydarzenia na stronie wyświetlania oceny zadań ----------------------- //
-
+/*
 // ----------------------------- zarządzanie ocenami zadań ucznia ------------------------------ //
 function refreshTaskRatingsTable(student_id) {  // odświeżenie tabeli z ocenami zadań dla ucznia
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ocena_zadania/refreshTable",
+        url: "http://localhost/school/ocena_zadania/refreshTable",
         data: { student_id: student_id, version: "forStudent" },
         success: function(result) {
             $('section#taskRatingsTable').replaceWith(result);
@@ -21,7 +21,7 @@ function refreshTaskRatingsTable(student_id) {  // odświeżenie tabeli z ocenam
         },
     });
 }
-
+*/
 function showCreateRowClick() {
     $('#showCreateRow').click(function(){
         $(this).hide();
@@ -36,11 +36,11 @@ function showCreateRow(student_id) {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ocena_zadania/create",
+        url: "http://localhost/school/ocena_zadania/create",
         data: { student_id: student_id, version: "forStudent" },
         success: function(result) { $('table#taskRatings tr.create').after(result); addClick(); },
         error: function() {
-            var error = '<tr><td colspan="13"><p class="error">Błąd tworzenia wiersza z formularzem dodawania oceny zadania.</p></td></tr>';
+            var error = '<tr><td colspan="13" class="error">Błąd tworzenia wiersza z formularzem dodawania oceny zadania.</td></tr>';
             $('table#taskRatings tr.create').after(error);
         },
     });
@@ -62,30 +62,73 @@ function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub
 }
 
 function add() {   // zapisanie oceny zadania w bazie danych
-    var student_id = $('#createRow input[name="student_id"]').val();
-    var task_id = $('#createRow select[name="task_id"]').val();
-    var deadline = $('#createRow input[name="deadline"]').val();
+    var student_id  = $('#createRow input[name="student_id"]').val();
+    var task_id     = $('#createRow select[name="task_id"]').val();
+    var task_name   = $('#createRow select[name="task_id"]').html();
+    var deadline    = $('#createRow input[name="deadline"]').val();
     var implementation_date = $('#createRow input[name="implementation_date"]').val();
-    var version = $('#createRow input[name="version"]').val();
-    var importance = $('#createRow input[name="importance"]').val();
+    var version     = $('#createRow input[name="version"]').val();
+    var importance  = $('#createRow input[name="importance"]').val();
     var rating_date = $('#createRow input[name="rating_date"]').val();
-    var points = $('#createRow input[name="points"]').val();
-    var rating = $('#createRow input[name="rating"]').val();
-    var comments = $('#createRow input[name="comments"]').val();
-    var diary = $('#createRow input[name="diary"]').val();
-    var entry_date = $('#createRow input[name="entry_date"]').val();
+    var points      = $('#createRow input[name="points"]').val();
+    var rating      = $('#createRow input[name="rating"]').val();
+    var comments    = $('#createRow input[name="comments"]').val();
+    var diary       = $('#createRow input[name="diary"]').val();
+    var entry_date  = $('#createRow input[name="entry_date"]').val();
+    alert(task_name);
 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ocena_zadania",
+        url: "http://localhost/school/ocena_zadania",
         data: { student_id: student_id, task_id: task_id, deadline: deadline, implementation_date: implementation_date, version: version, importance: importance,
             rating_date: rating_date, points: points, rating: rating, comments: comments, diary: diary, entry_date: entry_date },
-        success: function(comment) {  refreshTaskRatingsTable(student_id);  },
+        success: function(newID) {  addRowToTable(newID, task_id, deadline, implementation_date, version, importance, rating_date, points, rating, comments, diary, entry_date);  },
         error: function() {
-            var error = '<tr><td colspan="13"><p class="error">Błąd dodawania oceny zadania dla ucznia</p></td></tr>';
+            var error = '<tr><td colspan="13" class="error">Błąd dodawania oceny zadania dla ucznia!</td></tr>';
             $('table#taskRatings tr.create').after(error);
         },
+    });
+}
+
+function addRowToTable(newID, task_id, deadline, implementation_date, version, importance, rating_date, points, rating, comments, diary, entry_date) {
+    var newRow = '<tr data-task-rating-id="'+newID+'"><td class="lp">***lp***</td>';
+    newRow += '<td>'+task_id+'</td>';
+    newRow += '<td>'+deadline+'</td>';
+    newRow += '<td>'+implementation_date+'</td>';
+    newRow += '<td>'+version+'</td>';
+    newRow += '<td>'+importance+'</td>';
+    newRow += '<td>'+rating_date+'</td>';
+    newRow += '<td>'+points+'</td>';
+    newRow += '<td>'+rating+'</td>';
+    newRow += '<td>'+comments+'</td>';
+    newRow += '<td>'+diary+'</td>';
+    newRow += '<td>'+entry_date+'</td>';
+    newRow += '</tr>';
+    //alert(newID);
+    $('tr.create').after(newRow);
+    //alert(newID); refreshTaskRatingsTable(student_id);
+}
+
+
+function destroyClick() {  // usunięcie oceny zadania ucznia (z bazy danych)
+    $('.destroy').click(function() {
+        var id = $(this).data('taskratingid');
+        $.ajax({
+            type: "DELETE",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/ocena_zadania/" + id,
+            success: function() {
+                $.when( $('tr[data-task-rating-id="'+id+'"]').hide(1250) ).then(function() {
+                    $('li[data-task-rating-id="'+id+'"]').remove();
+                });
+            },
+            error: function() {
+                var error = '<tr data-task-rating-id="'+id+'"><td colspan="13" class="error">Błąd przy usuwaniu oceny zadania.</td></tr>';
+                $('tr[data-task-rating-id="'+id+'"]').replaceWith(error);
+            }
+        });
+        return false;
     });
 }
 
@@ -96,7 +139,7 @@ function gradeChanged() {  // wybór klasy w polu select
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/klasa/change/"+ $(this).val(),
+            url: "http://localhost/school/klasa/change/"+ $(this).val(),
             success: function(result) { window.location.reload(); },
             error: function(result) { window.location.reload(); },
         });
@@ -109,7 +152,7 @@ function groupChanged() {  // wybór grupy w polu select
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/grupa/change/"+ $(this).val(),
+            url: "http://localhost/school/grupa/change/"+ $(this).val(),
             success: function(result) { window.location.reload(); },
             error: function(result) { alert('Błąd: '+result); window.location.reload(); },
         });
@@ -122,7 +165,7 @@ function diaryYesNoChanged() {  // wybór tak/nie w polu select dotyczącego wpi
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/diaryYesNo/change/"+ $(this).val(),
+            url: "http://localhost/school/diaryYesNo/change/"+ $(this).val(),
             success: function(result) { window.location.reload(); },
             error: function(result) { window.location.reload(); },
         });
@@ -149,7 +192,7 @@ function writeInTheDiary(task_rating_id) {  // wpisanie informacji że ocena jes
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ocena_zadania/writeInTheDiary/"+ task_rating_id,
+        url: "http://localhost/school/ocena_zadania/writeInTheDiary/"+ task_rating_id,
         success: function(result) {
             $('tr[data-task-rating-id='+task_rating_id+'] td.entry_date').html(result);
             var button = '<button class="btn-warning entry-diary" data-task_rating_id="'+task_rating_id+'"><i class="fas fa-circle"></i></button>';
@@ -164,7 +207,7 @@ function removeFromDiary(task_rating_id) {  // wpisanie informacji, że ocena ni
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/ocena_zadania/removeFromDiary/"+ task_rating_id,
+        url: "http://localhost/school/ocena_zadania/removeFromDiary/"+ task_rating_id,
         success: function(result) {
             $('tr[data-task-rating-id='+task_rating_id+'] td.entry_date').html('');
             var button = '<button class="btn-warning no-diary" data-task_rating_id="'+task_rating_id+'"><i class="far fa-circle"></i></button>';
@@ -177,9 +220,10 @@ function removeFromDiary(task_rating_id) {  // wpisanie informacji, że ocena ni
 */
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
-    var student_id = $('input#student_id').val();
-    refreshTaskRatingsTable(student_id);
+    //var student_id = $('input#student_id').val();
+    //refreshTaskRatingsTable(student_id);
     showCreateRowClick();
+    destroyClick();
     //gradeChanged();
     //groupChanged();
     //diaryYesNoChanged();
