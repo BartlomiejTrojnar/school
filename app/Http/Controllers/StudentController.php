@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2021 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
@@ -162,7 +162,6 @@ class StudentController extends Controller
 
     private function showGroups($groupStudentRepo, $schoolYearRepo) {
         $dateView = session() -> get('dateView');
-
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
         $year = 0;
         if( !empty(session()->get('schoolYearSelected')) ) {
@@ -195,7 +194,7 @@ class StudentController extends Controller
         $otherGroupsInGrade = view('groupStudent.otherGroupsInGradeForStudent', ["groups"=>$groups, "year"=>$this->year, "dateView"=>$dateView]);
 
         $css = "student/groups.css";
-        $js = "student/groups.js";
+        $js = "groupStudent/forStudent.js";
         $listGroupsForStudent = view('groupStudent.sectionListsForStudent', ["dateView"=>$dateView, "student_id"=>$this->student->id, "studentList"=>$studentList, "studentListOutside"=>$studentListOutside, "otherGroupsInGrade"=>$otherGroupsInGrade]);
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$listGroupsForStudent]);
     }

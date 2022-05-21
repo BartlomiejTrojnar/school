@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania grup ucznia ----------------------- //
 
 function showOrHideGroups() {
@@ -226,26 +226,26 @@ function dateEndChange() {          // po zmianie daty końcowej - sprawdzenie t
 }
 
 function datesValidate(start, end) {      // sprawdzenie czy daty są prawidłowe
-    $('p.error').html('').addClass('hide');
+    $('td.error').html('');
     $('button.update').removeClass('disabled');
     if( start == '' ) {
-      $('p.error').html('data początkowa nie może być pusta').removeClass('hide');
+      $('td.error').html('data początkowa nie może być pusta');
       $('button.update').addClass('disabled');
     }
     if( end == '' ) {
-      $('p.error').html('data końcowa nie może być pusta').removeClass('hide');
+      $('td.error').html('data końcowa nie może być pusta');
       $('button.update').addClass('disabled');
     }
     if( start > end ) {
-      $('p.error').html('data początkowa nie może być późniejsza niż data końcowa').removeClass('hide');
+      $('td.error').html('data początkowa nie może być późniejsza niż data końcowa');
       $('button.update').addClass('disabled');
     }
     if( start < $('#groupStart').html() ) {
-      $('p.error').html('data początkowa nie może być wcześniejsza niż data początkowa grupy').removeClass('hide');
+      $('td.error').html('data początkowa nie może być wcześniejsza niż data początkowa grupy');
       $('button.update').addClass('disabled');
     }
     if( end > $('#groupEnd').html() ) {
-      $('p.error').html('data końcowa nie może być późniejsza niż data końcowa grupy').removeClass('hide');
+      $('td.error').html('data końcowa nie może być późniejsza niż data końcowa grupy');
       $('button.update').addClass('disabled');
     }
 }

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 *********************** -->
 <aside id="studentEditForm" style="background: brown; padding: 10px; position: absolute;">
   <form action="{{ route('grupa_uczniowie.update', $groupStudent->id) }}" method="post" role="form">
     {{ csrf_field() }}
@@ -69,6 +69,7 @@
         </td>
       </tr>
 
+      <tr><td colspan="3" class="error"></td></tr>
       <tr class="submit"><td colspan="3">
           <input type="hidden" name="validate" value="1" />
           <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />

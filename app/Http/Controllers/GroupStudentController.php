@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -99,8 +99,6 @@ class GroupStudentController extends Controller
         $groupStudent->student_id = $request->student_id;
         $groupStudent->start  = $request->start ;
         $groupStudent->end = $request->end;
-        $groupStudent->midyear_rating = $request->midyear_rating;
-        $groupStudent->final_rating = $request->final_rating;
         $groupStudent -> save();
         return $groupStudent->id;
     }

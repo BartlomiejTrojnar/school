@@ -231,12 +231,58 @@ function editFormClick() {
     // propozycje dat - reakcja po kliknięciu
     $('#proposedDateStart span.proposedDate').click(function() {
         $('input#start').val($(this).html());
+        var start = $('input#start').val();
+        var end = $('input#end').val();
+        datesValidate(start, end);
     });
     // propozycje dat - reakcja po kliknięciu
     $('#proposedDateEnd span.proposedDate').click(function() {
         $('input#end').val($(this).html());
+        var start = $('input#start').val();
+        var end = $('input#end').val();
+        datesValidate(start, end);
+    });
+
+    $('input#start').change(function() {
+        var start = $(this).val();
+        var end = $('input#end').val();
+        datesValidate(start, end);
+        return false;
+    });
+
+    $('input#end').change(function() {
+        var start = $('input#start').val();
+        var end = $(this).val();
+        datesValidate(start, end);
+        return false;
     });
 }
+
+function datesValidate(start, end) {      // sprawdzenie czy daty są prawidłowe
+    $('td.error').html('');
+    $('button.update').removeClass('disabled');
+    if( start == '' ) {
+      $('td.error').html('data początkowa nie może być pusta');
+      $('button.update').addClass('disabled');
+    }
+    if( end == '' ) {
+      $('td.error').html('data końcowa nie może być pusta');
+      $('button.update').addClass('disabled');
+    }
+    if( start > end ) {
+      $('td.error').html('data początkowa nie może być późniejsza niż data końcowa');
+      $('button.update').addClass('disabled');
+    }
+    if( start < $('#groupStart').html() ) {
+      $('td.error').html('data początkowa nie może być wcześniejsza niż data początkowa grupy');
+      $('button.update').addClass('disabled');
+    }
+    if( end > $('#groupEnd').html() ) {
+      $('td.error').html('data końcowa nie może być późniejsza niż data końcowa grupy');
+      $('button.update').addClass('disabled');
+    }
+}
+
 
 function showOrHideOneStudent(group_student_id, start, end) {
     $('#groupStudentDeleteForm').remove();
