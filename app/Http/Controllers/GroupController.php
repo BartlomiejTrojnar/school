@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -249,7 +249,7 @@ class GroupController extends Controller
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);
 
         $css = "group/groupStudents.css";
-        $js = "group/studentsForGroup.js";
+        $js = "groupStudent/forGroup.js";
         return view('group.show', ["group"=>$this->group, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>$css, "js"=>$js, "subView"=>$groupStudentTable]);
     }
 

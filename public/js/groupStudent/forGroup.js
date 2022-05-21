@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
@@ -186,10 +186,12 @@ function addAllStudentClick() {  // kliknięcie w przycisk "Dodaj wszystkich"
         var count = 0;
         // sprawdzenie czy dane są prawidłowe
         if( checkTheValuesForAddStudentsToGroup(group_id, start, end) ) return false;
-
         // zapamiętanie wszystkich uczniów
+        dateView = $('#dateView').val();
         $('#listOutsideGroupStudents li').each(function() {
-            students[count++] = $(this).data('student_id');
+            if( $(this).data('grade_start')<=dateView && $(this).data('grade_end')>=dateView ) {
+                students[count++] = $(this).data('student_id');
+            }
         });
         if(count)   addStudentsToGroup(students, group_id, start, end);
         else alert('Brak uczniów do dodania');
