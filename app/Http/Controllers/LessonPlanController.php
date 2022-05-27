@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\LessonPlan;
 use App\Repositories\LessonPlanRepository;
@@ -28,14 +28,6 @@ class LessonPlanController extends Controller
        return view('lessonPlan.groupsToAssign', ["groups"=>$groups]);
     }
 
-    public function findGroupLessonForHour(Request $request, LessonPlanRepository $lessonPlanRepo) {
-        $lessons = $lessonPlanRepo -> findGroupLessonForHour($request->group_id, $request->lesson_hour_id, $request->dateView);
-        if(empty($lessons)) return 0;
-        $studyYear = substr($request->dateView,0,4) - $lessons[0]->group->grades[0]->grade->year_of_beginning;
-        if( substr($request->dateView,5,2)>=8 ) $studyYear++;
-        return view('lessonPlan.groupLessonsForHour', ["lessons"=>$lessons, "lesson_hour_id"=>$request->lesson_hour_id, "studyYear"=>$studyYear, "dateView"=>$request->dateView]);
-    }
-
     public function setClassroomToLesson(Request $request, LessonPlan $lessonPlan) {
         $lessonPlan = $lessonPlan -> find($request->lesson_id);
         if($request->classroom_id<0)  $lessonPlan->classroom_id = NULL;
@@ -47,31 +39,28 @@ class LessonPlanController extends Controller
     public function setTheEndDateOfTheLesson(Request $request, LessonPlan $lessonPlan) {
         $lessonPlan = $lessonPlan -> find($request->lesson_id);
         $lessonPlan->end = $request->end;
-        if($lessonPlan->end < $lessonPlan->start)  $lessonPlan -> delete();
-        else {
-            print_r($lessonPlan->end < $lessonPlan->start);
-            $lessonPlan -> save();
+        if($lessonPlan->end < $lessonPlan->start)  {
+            $lessonPlan -> delete();
+            return 0;
         }
+        else    $lessonPlan -> save();
         return 1;
     }
 
-    public function addLesson(Request $request, GroupRepository $groupRepo) {
-        $lessonPlan = new LessonPlan;
-        $lessonPlan->group_id = $request->group_id;
-        $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
-        $lessonPlan->start = $request->start;
-        $lessonPlan->classroom_id = NULL;
+    // public function addLesson(Request $request) {
+        // $lessonPlan = new LessonPlan;
+        // $lessonPlan->group_id = $request->group_id;
+        // $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
+        // $lessonPlan->start = $request->start;
+        // $lessonPlan->end = $request->end;
+        // $lessonPlan->classroom_id = NULL;
 
-        $group = $groupRepo -> find($request->group_id);
-        $lessonPlan->end = $group->end;
-
-        if( $lessonPlan->start > $lessonPlan->end ) return 0;
-        $lessonPlan -> save();
-        return $lessonPlan->id;
-    }
+        // if( $lessonPlan->start > $lessonPlan->end ) return 0;
+        // $lessonPlan -> save();
+        // return $lessonPlan->id;
+    // }
 
     public function cloneLesson(Request $request, LessonPlan $lessonPlan) {
-        print_r(0);
         $oldLessonPlan = $lessonPlan -> find($request->lesson_id);
         $newLessonPlan = new LessonPlan;
         $newLessonPlan->group_id = $oldLessonPlan->group_id;
@@ -104,8 +93,8 @@ class LessonPlanController extends Controller
         $this -> validate($request, [
           'group_id' => 'required',
           'lesson_hour_id' => 'required',
-          'date_start' => 'required|date',
-          'date_end' => 'required|date',
+          'start' => 'required|date',
+          'end' => 'required|date',
         ]);
 
         $lessonPlan = new LessonPlan;
@@ -113,10 +102,12 @@ class LessonPlanController extends Controller
         $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
         $lessonPlan->classroom_id = $request->classroom_id;
           if($request->classroom_id==0) $lessonPlan->classroom_id=NULL;
-        $lessonPlan->date_start = $request->date_start;
-        $lessonPlan->date_end = $request->date_end;
+        $lessonPlan->start = $request->start;
+        $lessonPlan->end = $request->end;
+
+        if( $lessonPlan->start > $lessonPlan->end ) return 0;
         $lessonPlan -> save();
-        return $lessonPlan;
+        return $lessonPlan->id;
     }
 
     public function update($id, Request $request, LessonPlan $lessonPlan) {

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.05.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\LessonPlan;
 
@@ -32,16 +32,6 @@ class LessonPlanRepository extends BaseRepository {
          -> where('lesson_hour_id', '=', $lessonHour_id)
          -> where('lesson_plans.start', '<=', $dateView)
          -> where('lesson_plans.end', '>=', $dateView)
-         -> get();
-      return $records;
-   }
-
-   public function findGroupLessonForHour($group_id, $lessonHour_id, $dateView) {
-      $records = $this->model
-         -> where('group_id', '=', $group_id)
-         -> where('lesson_hour_id', '=', $lessonHour_id)
-         -> where('start', '<=', $dateView)
-         -> where('end', '>=', $dateView)
          -> get();
       return $records;
    }
