@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.05.2022 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania planu lekcji grupy ------------------- //
 
 
@@ -135,10 +135,10 @@ function dropLessonInLessonPlan() {
             });
         }
         else {
-            if( cloneLesson(lesson_id, lesson_hour_id, dateView) ) {
-                var end = changeAndFormatDate(dateView, -1);
-                setTheEndDateOfTheLesson(lesson_id, end);
-            }
+            var end = changeAndFormatDate(dateView, -1);
+            $.when( setTheEndDateOfTheLesson(lesson_id, end) ).then(function() {
+                cloneLesson(lesson_id, lesson_hour_id, dateView);
+            });
         }
         if(event.preventDefault) event.preventDefault();
         return false;
@@ -207,12 +207,15 @@ function setTheEndDateOfTheLesson(lesson_id, end) {
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/lessonPlan/setTheEndDateOfTheLesson",
         data: { lesson_id: lesson_id, end: end },
-        success: function() {
-            $('li[data-lesson_id="'+lesson_id+'"] .lessonDates .end').html(end);
-            $('li[data-lesson_id="'+lesson_id+'"]').fadeOut(1000);
+        success: function(wynik) {
+            if(wynik) {
+                $('li[data-lesson_id="'+lesson_id+'"] .lessonDates .end').html(end);
+                $('li[data-lesson_id="'+lesson_id+'"]').fadeOut(1000);    
+            }
             return true;
         },
-        error: function() { alert('Błąd: groupPlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
+        error: function() { 
+            alert('Błąd: groupPlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
     });
     return true;
 }

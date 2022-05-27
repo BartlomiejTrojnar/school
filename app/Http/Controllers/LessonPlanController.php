@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\LessonPlan;
 use App\Repositories\LessonPlanRepository;
@@ -39,11 +39,11 @@ class LessonPlanController extends Controller
     public function setTheEndDateOfTheLesson(Request $request, LessonPlan $lessonPlan) {
         $lessonPlan = $lessonPlan -> find($request->lesson_id);
         $lessonPlan->end = $request->end;
-        if($lessonPlan->end < $lessonPlan->start)  $lessonPlan -> delete();
-        else {
-            print_r($lessonPlan->end < $lessonPlan->start);
-            $lessonPlan -> save();
+        if($lessonPlan->end < $lessonPlan->start)  {
+            $lessonPlan -> delete();
+            return 0;
         }
+        else    $lessonPlan -> save();
         return 1;
     }
 
