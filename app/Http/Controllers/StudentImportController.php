@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.08.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.05.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -26,16 +26,16 @@ class StudentImportController extends Controller {
 
         echo '<p><a href="'.route('uczen.index').'">uczniowie</a></p>';
 
-        Excel::selectSheets('dane')->load('C:\dane\DaneUczniow.xlsx', function($reader) {
+        Excel::selectSheets('Uczniowie')->load('C:\dane\nauczyciele\ksiegauczniow\KsiegaUczniowMSP.xlsx', function($reader) {
             $students = $reader->get();
             foreach($students as $student) {
                 printf('<p>Sprawdzam ucznia %s %s %s.</p>', $student['imie'], $student['imie2'], $student['nazwisko']);
                 $student_id = $this -> checkStudent($student);
                 if($student_id) {
-                    printf('<p><a href="%s">przejdź do %s %s %s</a>.</p>', route('uczen.show', $student_id), $student['imie'], $student['imie2'], $student['nazwisko']);
+                    // printf('<p><a href="%s">przejdź do %s %s %s</a>.</p>', route('uczen.show', $student_id), $student['imie'], $student['imie2'], $student['nazwisko']);
                     $this -> checkBookOfStudent($student_id, $student['szkola'], $student['numer_ksiegi']);
                     $this -> checkStudentHistory($student_id, $student['data_przyjecia'], $student['data_opuszczenia'], $student['powod_opuszczenia']);
-                    $this -> checkStudentGrade($student_id, $student['oddzial'], $student['od'], $student['do']);
+                    // $this -> checkStudentGrade($student_id, $student['oddzial'], $student['od'], $student['do']);
                 }
                 echo '<br />**********<br />';
             }
@@ -45,12 +45,12 @@ class StudentImportController extends Controller {
     private function checkStudent($student) {
         // sprawdzenie czy w bazie danych istnieje osoba o podanym peselu
         $student_id = $this->studentRepo -> findStudentIdByPesel($student['pesel']);
-        if($student_id < 0) { printf('<p>Znaleziono kilku uczniów z peselem %s.</p>', $student['pesel']); exit; }
+        if($student_id < 0) { printf('<p style="background: grey;">Znaleziono kilku uczniów z peselem %s.</p>', $student['pesel']); exit; }
         if($student_id == 0) {
-            printf('<p style="color: red;">Nie znaleziono ucznia %s z podanym peselem %s.</p>', $student['nazwisko'], $student['pesel']);
+            printf('<p style="color: red; background: orange;">Nie znaleziono ucznia %s z podanym peselem %s.</p>', $student['nazwisko'], $student['pesel']);
             // sprawdzenie czy jest osoba o podanym nazwisku i imionach
             $student_id = $this->studentRepo -> findStudentIdByName($student['nazwisko'], $student['imie'], $student['imie2']);
-            if($student_id < 0) { printf('<p style="color: blue;">Znaleziono kilku uczniów z podanym nazwiskiem %s i imionami %s %s.</p>', $student['nazwisko'], $student['imie'], $student['imie2']); exit; }
+            if($student_id < 0) { printf('<p style="color: blue; background: #aaf;">Znaleziono kilku uczniów z podanym nazwiskiem %s i imionami %s %s.</p>', $student['nazwisko'], $student['imie'], $student['imie2']); exit; }
             if($student_id == 0) {
                 printf('<p style="color: #f60;">Nie znaleziono ucznia z podanym nazwiskiem %s i imionami %s %s. DODAJĘ</p>', $student['nazwisko'], $student['imie'], $student['imie2']);
                 return $this -> addStudent($student);
@@ -58,7 +58,12 @@ class StudentImportController extends Controller {
         }
         else {
             $wynik = $this->studentRepo -> checkStudentWithNames($student_id, $student['nazwisko'], $student['imie'], $student['imie2']);
-            if(!$wynik) { printf('<p style="color: pink;">Nie zgadzają się imiona lub nazwisko.</p>', $student['nazwisko'], $student['imie'], $student['imie2']); exit; }
+            if(!$wynik) {
+                printf('<p style="color: #141; background: #d7d;">Nie zgadzają się imiona lub nazwisko.</p>', $student['nazwisko'], $student['imie'], $student['imie2']);
+                printf('<p style="color: #141; background: #d7d;">PESEL: %s.</p>', $student['pesel']);
+                printf('<p><a href="%s">przejdź do %s %s %s</a>.</p>', route('uczen.show', $student_id), $student['imie'], $student['imie2'], $student['nazwisko']);
+                exit;
+            }
         }
         return $student_id;
     }
@@ -68,7 +73,7 @@ class StudentImportController extends Controller {
         $newStudent->first_name = $student['imie'];
         $newStudent->second_name = $student['imie2'];
         $newStudent->last_name = $student['nazwisko'];
-        $newStudent->family_name = NULL;
+        $newStudent->family_name = $student['rodowe'];
         $newStudent->sex = $student['plec'];
         $newStudent->PESEL = $student['pesel'];
         $newStudent->place_of_birth = $student['miejsce_urodzenia'];
@@ -81,7 +86,7 @@ class StudentImportController extends Controller {
         $school_id = $this->schoolRepo -> findSchoolIdByName($school_name);
         // sprawdzenie czy w bazie danych uczeń ma numer księgi
         $book_number = $this->bookRepo -> checkStudentNumber($student_id, $school_id);
-        if($book_number < 0) { printf('<p style="color: blue;">Znaleziono kilka numeró w księdze ucznia dla ucznia id=%d.</p>', $student_id); exit; }
+        if($book_number < 0) { printf('<p style="color: #aaf; background: #55a;">Znaleziono kilka numerów w księdze ucznia dla ucznia id=%d.</p>', $student_id); exit; }
         if($book_number == 0) $this -> addBookOfStudent($school_id, $student_id, $number);
         else if($book_number != $number) {
             printf('<p style="color: blue;">Podany numer(%d) jest inny niż numer(%d) w bazie danych dla ucznia id=%d.</p>', $number, $book_number, $student_id); exit;
@@ -89,6 +94,7 @@ class StudentImportController extends Controller {
     }
 
     private function addBookOfStudent($school_id, $student_id, $number) {
+        printf('<p style="background: #a44;">Dodaję numer księgi</p>');
         $newBookOfStudent = new BookOfStudent;
         $newBookOfStudent->school_id    = $school_id;
         $newBookOfStudent->student_id   = $student_id;
@@ -96,12 +102,13 @@ class StudentImportController extends Controller {
         $newBookOfStudent->save();
     }
 
-    private function checkStudentHistory($student_id, $data_przyjecia, $data_opuszczenia, $powod_opuszczenia) {
+    private function checkStudentHistory($student_id, $przyjecie, $opuszczenie, $powod_opuszczenia) {
+        $data_przyjecia = substr($przyjecie,6,4) .'-'. substr($przyjecie,3,2) .'-'. substr($przyjecie,0,2);
         // sprawdzenie czy w bazie danych uczeń ma odpowiedni wpis w swojej historii
         $studentHistory = StudentHistory::where('student_id', '=', $student_id) -> where('date', '=', $data_przyjecia) -> get();
-        if(count($studentHistory) && $studentHistory[0]['event'] == 'przyjęto do II LO') ;
+        if(count($studentHistory) && $studentHistory[0]['event'] == 'przyjęto do MSP') ;
         else if(count($studentHistory)) {
-            printf('<p style="color: blue;">Podany wpis historii ucznia (%s) jest inna niż "przyjęto do II LO" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
+            printf('<p style="color: blue;">Podany wpis historii ucznia (%s) jest inna niż "przyjęto do MSP" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
             exit;
         }
         else 
@@ -109,11 +116,14 @@ class StudentImportController extends Controller {
         $this -> addStudentHistoryDateOfAdmission($student_id, $data_przyjecia);
 
         // sprawdzenie według daty opuszczenia szkoły
-        if(!$data_opuszczenia) return;
+        if(!$opuszczenie) return;
+        $data_opuszczenia = substr($opuszczenie,6,4) .'-'. substr($opuszczenie,3,2) .'-'. substr($opuszczenie,0,2);
         $studentHistory = StudentHistory::where('student_id', '=', $student_id) -> where('date', '=', $data_opuszczenia) -> get();
+        if(count($studentHistory) && $studentHistory[0]['event'] == $powod_opuszczenia) return;
         if(count($studentHistory) && $studentHistory[0]['event'] == 'ukończenie szkoły') return;
         if(count($studentHistory)) {
-            printf('<p style="color: blue;">Podany wpis historii ucznia (%s) jest inna niż "ukończenie szkoły" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
+            printf('<p style="background: #aaf; color: blue;">Podany wpis historii ucznia (%s) jest inna niż "ukończenie szkoły" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
+            printf('<p style="background: #aaf; color: blue;">Powód opuszczenia: %s.</p>', $powod_opuszczenia);
             exit;
         }
         // wprowadzenie historii ucznia
@@ -124,7 +134,7 @@ class StudentImportController extends Controller {
         $newStudentHistory = new StudentHistory;
         $newStudentHistory->student_id = $student_id;
         $newStudentHistory->date = $data_przyjecia;
-        $newStudentHistory->event = 'przyjęto do II LO';
+        $newStudentHistory->event = 'przyjęto do MSP';
         $newStudentHistory->confirmation_date = 1;
         $newStudentHistory->confirmation_event = 1;
         $newStudentHistory->save();
@@ -138,6 +148,7 @@ class StudentImportController extends Controller {
         $newStudentHistory->event = $powod_opuszczenia;
         $newStudentHistory->confirmation_date = 1;
         $newStudentHistory->confirmation_event = 1;
+        if($powod_opuszczenia=='rezygnacja z nauki(?)')     $newStudentHistory->confirmation_event=0;
         $newStudentHistory->save();
     }
 
