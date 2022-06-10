@@ -8,7 +8,7 @@ class SchoolYearRepository extends BaseRepository {
    public function getPaginateSorted()  { return $this->model -> orderBy( 'date_start', 'desc' ) -> paginate(20); }
 
    public function getDatesOfSchoolYear($date) {
-      $schoolYear = $this->model->where('date_start', '<=', $date)->where('date_end', '>=', $date)->get();
+      $schoolYear = $this->model -> where('date_start', '<=', $date) -> where('date_end', '>=', $date) -> get();
       if( !count($schoolYear) ) return;
       $proposedDates['dateOfStartSchoolYear'] = $schoolYear[0]->date_start;
       $proposedDates['dateOfGraduationOfTheLastGrade'] = $schoolYear[0]->date_of_graduation_of_the_last_grade;
@@ -18,9 +18,16 @@ class SchoolYearRepository extends BaseRepository {
    }
 
    public function getSchoolYearIdForDate($date) {
-      $schoolYear = $this->model->where('date_start', '<=', $date)->where('date_end', '>=', $date)->get();
+      $schoolYear = $this->model -> where('date_start', '<=', $date) -> where('date_end', '>=', $date) -> get();
       if(isset($schoolYear[0]->id))  return $schoolYear[0]->id;
       return 0;
+   }
+
+   public function getSchoolYearEnds($year_start, $year_end) {
+      $start = $year_start."-09-01";
+      $end = $year_end."-09-01";
+      $ends = $this->model -> select('date_of_graduation') -> where('date_start', '>', $start) -> where('date_end', '<=', $end) -> get();
+      return $ends;
    }
 }
 ?>

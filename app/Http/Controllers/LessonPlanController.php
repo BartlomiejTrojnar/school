@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\LessonPlan;
 use App\Repositories\LessonPlanRepository;
@@ -46,19 +46,6 @@ class LessonPlanController extends Controller
         else    $lessonPlan -> save();
         return 1;
     }
-
-    // public function addLesson(Request $request) {
-        // $lessonPlan = new LessonPlan;
-        // $lessonPlan->group_id = $request->group_id;
-        // $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
-        // $lessonPlan->start = $request->start;
-        // $lessonPlan->end = $request->end;
-        // $lessonPlan->classroom_id = NULL;
-
-        // if( $lessonPlan->start > $lessonPlan->end ) return 0;
-        // $lessonPlan -> save();
-        // return $lessonPlan->id;
-    // }
 
     public function cloneLesson(Request $request, LessonPlan $lessonPlan) {
         $oldLessonPlan = $lessonPlan -> find($request->lesson_id);

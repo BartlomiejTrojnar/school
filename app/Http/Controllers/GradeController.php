@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -118,7 +118,7 @@ class GradeController extends Controller
             case 'showStudentsAll': return $this -> showStudentsAll();
             case 'showNumbers':     return $this -> showNumbers($syR, $snR);
             case 'showGroups':      return $this -> showGroup($subR, $tR, $gR);
-            case 'showLessonPlan':  return $this -> showLessonPlan($gR, $lpR);
+            case 'showLessonPlan':  return $this -> showLessonPlan($gR, $lpR, $syR);
             case 'showTeachers':    return $this -> showTeachers();
             case 'showDeclarations':    return $this -> showDeclarations($dR);
             case 'showTasks':    return $this -> showTasks();
@@ -222,12 +222,13 @@ class GradeController extends Controller
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$groupTable]);
     }
 
-    private function showLessonPlan($groupRepo, $lessonPlanRepo) {
+    private function showLessonPlan($groupRepo, $lessonPlanRepo, $schoolYearRepo) {
         $gradeLessons = $lessonPlanRepo -> getGradeLessons($this->grade->id);
         $dateView = session()->get('dateView'); if($dateView=="") $dateView = date('Y-m-d');
         $groups = $groupRepo -> getGradeGroups($this->grade->id);
         $studyYear = substr($dateView,0,4) - $this->grade->year_of_beginning;
-        $gradePlan = view('lessonPlan.gradePlan', ["gradeLessons"=>$gradeLessons, "groups"=>$groups, "grade"=>$this->grade, "dateView"=>$dateView, "studyYear"=>$studyYear]);
+        $schoolYearEnds = $schoolYearRepo -> getSchoolYearEnds($this->grade->year_of_beginning, $this->grade->year_of_graduation);     // znalezienie dat końcowych roku szkolnego w czasie istnienia klasy
+        $gradePlan = view('lessonPlan.gradePlan', ["gradeLessons"=>$gradeLessons, "groups"=>$groups, "grade"=>$this->grade, "dateView"=>$dateView, "studyYear"=>$studyYear, "schoolYearEnds"=>$schoolYearEnds]);
         $js = "lessonPlan/forGrade.js";
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next,  "css"=>"", "js"=>$js, "subView"=>$gradePlan]);
     }
@@ -319,7 +320,7 @@ class GradeController extends Controller
         else $year=0;
 
         if($request->version == "forIndex")     return view('grade.row', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
-        if($request->version == "forSchool")    return view('grade.rowForSchool', ["grade"=>$this->grade, "year"=>$year, "lp"=>$lp]);
+        if($request->version == "forSchool")    return view('grade.rowForSchool', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
         return $request->version;
     }
 }

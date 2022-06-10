@@ -176,7 +176,6 @@ Route::post('/lessonPlan/setTheEndDateOfTheLesson', 'LessonPlanController@setThe
 Route::post('/lessonPlan/setClassroomToLesson', 'LessonPlanController@setClassroomToLesson');
 
 Route::post('/lessonPlan/getDateEnd', 'LessonPlanController@getDateEnd');
-//Route::post('/lessonPlan/addLesson', 'LessonPlanController@addLesson');
 Route::post('/lessonPlan/cloneLesson', 'LessonPlanController@cloneLesson');
 
 Route::get('/lessonPlan/exportPlanForGrades/{dateView}', array('as'=>'lessonPlan.exportPlanForGrades', 'uses'=>'LessonPlanForGradesExportController@exportPlan'));
