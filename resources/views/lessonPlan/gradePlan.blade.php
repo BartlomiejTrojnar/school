@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -10,6 +10,11 @@
       <input type="date" id="dateView" value="{{ $dateView }}" />
    </strong>
    <div id="completeRemove">upuść lekcję tutaj by całkiem usunąć</div>
+   <ul id="schoolYearEnds">
+      @foreach($schoolYearEnds as $syEnd)
+         <li>{{$syEnd->date_of_graduation}}</li>
+      @endforeach
+   </ul>
 </section>
 
 
@@ -22,28 +27,29 @@
       <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
          <span class="groupDates"><span class="start">{{$group->start}}</span> : <span class="end">{{$group->end }}</span></span><br />
          {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
-         {{ $group->subject->name }}<br />
-         <em style="font-size: 0.8em;">{{ $group->level }} ({{$group->comments}})</em>
-         {<span class="hours">{{ $group->hours }}</span>}
+         {{ $group->subject->short_name }} 
+         <em style="font-size: 0.8em;">
+            @if($group->level == 'rozszerzony') R @endif
+            @if($group->level == 'podstawowy') P @endif
+            @if($group->level == 'nieokreślony') <span style="background: #333;">nieokr</span> @endif
+            @if($group->comments) ({{$group->comments}}) @endif
+         </em>
+         <span class="hours">{<var>{{ $group->hours }}</var>}</span>
          <!-- liczba uczniów -->
-         <?php
-            $countGradeStudents=0; $countAllStudents=0;
-            foreach($group->students as $groupStudent)
-               if($groupStudent->end >= $dateView && $groupStudent->start <= $dateView) {
-                     $countAllStudents++;
-                     foreach($groupStudent->student->grades as $studentGrade)
-                        if($studentGrade->end >= $dateView && $studentGrade->start <= $dateView && $studentGrade->grade_id==$grade->id)
-                           $countGradeStudents++;
-               }
-         ?>
-         @if( $countGradeStudents == $countAllStudents ) 
-            <code title="liczba uczniów" class="countStudents">[{{ $countGradeStudents }}]</code><br />
-         @else
-            <code title="liczba uczniów" class="countStudents">[{{ $countGradeStudents }}({{ $countAllStudents }})]</code><br />
-         @endif
+         <code class="studentsCount"></code>
+         <!-- nauczyciel -->
          @foreach($group->teachers as $groupTeacher)
             <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">/{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/</span>
          @endforeach
+
+         <!-- uczniowie -->
+         <ol class="groupStudents hidden">
+            @foreach($group->students as $groupStudent)
+               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">   
+                  {{ $groupStudent->start }} {{ $groupStudent->end}} {{ $groupStudent->student_id }}
+               </li>
+            @endforeach
+         </ol>
       </li>
    @endforeach
 </ul></section>
@@ -78,11 +84,11 @@
                      <em style="font-size: 0.8em;">
                         @if($lesson->group->level == 'rozszerzony') R @endif
                         @if($lesson->group->level == 'podstawowy') P @endif
-                        @if($lesson->group->level == 'nieokreślony') @endif
+                        @if($lesson->group->level == 'nieokreślony') <span style="background: #333;">nieokr</span> @endif
                         @if($lesson->group->comments) ({{$lesson->group->comments}}) @endif
                      </em>
                      <!-- liczba uczniów -->
-                     <code class="countStudents" title="liczba uczniów"></code>
+                     <code class="studentsCount" title="liczba uczniów"></code>
                      <!-- nauczyciel -->
                      @foreach($lesson->group->teachers as $groupTeacher)
                      <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">

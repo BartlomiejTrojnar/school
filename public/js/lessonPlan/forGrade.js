@@ -1,46 +1,22 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
-function showOrHideLesson() {
-    var dateView = $('#dateView').val();
-    $('#gradePlan li').each(function() {
-        $(this).show();
-        var start = $(this).children('.lessonDates').children('.start').html();
-        if(start > dateView)    $(this).hide();
-        $(this).removeClass('bg-warning');
-        $(this).children('.glyphicon-alert').remove();
-        if(changeAndFormatDate(start, 7) >= dateView) {
-            $(this).addClass('bg-warning');
-            $(this).prepend('<span class="glyphicon glyphicon-alert"></span>');
-        }
-        var end = $(this).children('.lessonDates').children('.end').html();
-        if(end < dateView)    $(this).hide();
-
-        $(this).children('span.teacher').each(function() {
-            $(this).show();
-            if($(this).data('start') > dateView)    $(this).hide();
-            if($(this).data('end')   < dateView)    $(this).hide();
-        });
-        var group_id = $(this).data('group_id');
-        var countStudents = $('#gradeGroups li[data-group_id="'+group_id+'"] .countStudents').html();
-        $('#gradePlan li[data-group_id="'+group_id+'"] .countStudents').html(countStudents);
-
-        if(start <= dateView && end >= dateView) {
-            var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours').html() ) - 1;
-            $('#gradeGroups li[data-group_id="'+group_id+'"] .hours').html(hours);
-            if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
-        }
+function countStudents(group, dateView) {
+    var countStudents = 0;
+    $('li[data-group_id='+group+'] .groupStudents li').each(function() {
+        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
     });
+    $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
 }
 
 function showOrHideGroup() {
     var dateView = $('#dateView').val();
     var start, end;
-    $('#gradeGroups li').each(function() {
+    $('#gradeGroups li.group').each(function() {
         var hours = $(this).data('hours');
-        $(this).children('.hours').html(hours);
+        $(this).children('.hours var').html(hours);
         $(this).show();
         start = $(this).children('.groupDates').children('.start').html();
         end = $(this).children('.groupDates').children('.end').html();
@@ -51,8 +27,42 @@ function showOrHideGroup() {
             if($(this).data('start') > dateView)    $(this).hide();
             if($(this).data('end')   < dateView)    $(this).hide();
         });
+        countStudents($(this).data('group_id'), dateView);
     });
 
+}
+
+function showOrHideLesson() {
+    var dateView = $('#dateView').val();
+    $('#gradePlan li').each(function() {
+        $(this).show();
+        var group_id = $(this).data('group_id');
+
+        var start = $(this).children('.lessonDates').children('.start').html();
+        if(start > dateView)    { $(this).hide(); return; }
+        $(this).removeClass('bg-warning');
+        $(this).children('.glyphicon-alert').remove();
+        if(changeAndFormatDate(start, 7) >= dateView) {
+            $(this).addClass('bg-warning');
+            $(this).prepend('<span class="glyphicon glyphicon-alert"></span>');
+        }
+        var end = $(this).children('.lessonDates').children('.end').html();
+        if(end < dateView)  { $(this).hide(); return; }
+
+        $(this).children('span.teacher').each(function() {
+            $(this).show();
+            if($(this).data('start') > dateView)    $(this).hide();
+            if($(this).data('end')   < dateView)    $(this).hide();
+        });
+
+        if(start <= dateView && end >= dateView) {
+            var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
+            $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html(hours);
+            if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
+        }
+        var studentsCount = $('#gradeGroups li[data-group_id="'+group_id+'"] .studentsCount').html();
+        $('#gradePlan li[data-group_id="'+group_id+'"] .studentsCount').html(studentsCount);
+    });
 }
 
 function dateViewChange() {     // po zmianie widocznej na stronie daty widoku
@@ -98,8 +108,14 @@ function dropInLessonPlan() {     // opuszczenie lekcji/grupy na planie lekcji k
 
         if( data.getData('type') == 'group' ) {
             var group_id = data.getData('group_id');
+            var end = $("li[data-group_id="+group_id+"] .end").html();
+            $("#schoolYearEnds li").each( function() {
+                if( $(this).html()<dateView ) return;
+                if( $(this).html()>end ) return;
+                end = $(this).html();
+            });
             // dodaj lekcję na wybranej godzinie od daty początkowej
-            $.when( addLesson(group_id, lessonhour_id, dateView) ).then(function() {
+            $.when( addLesson(group_id, lessonhour_id, dateView, end) ).then(function() {
                 decreaseVisibleGroupHours(group_id);  // zmniejszenie liczby lekcji do obsadzenia na liście grup
             });
         }
@@ -179,25 +195,26 @@ function dropLessonInGradeGroupList() {     // opuszczenie lekcji w polu zawiera
     });
 }
 
-function addLesson(group_id, lessonhour_id, start) {        // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
+function addLesson(group_id, lessonhour_id, start, end) {        // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/lessonPlan/addLesson",
-        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start },
-        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start); },
-        error: function() { alert('Błąd: gradePlan.js - funkcja addLesson'); return 0; }
+        url: "http://localhost/school/plan_lekcji",
+        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start, end: end },
+        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start, end); },
+        error: function(id) { alert('Błąd: gradePlan.js - funkcja addLesson'); return 0; }
     });
 }
 
-function addLessonToTable(id, group_id, lessonhour_id, start) {
+function addLessonToTable(id, group_id, lessonhour_id, start, end) {
     var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
     var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
     li += lessonDescription + '</li>';
-    li = $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').html() + li;
-    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').html(li);
+    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').append(li);
     $('li[data-lesson_id="'+id+'"] .start').html(start);
+    $('li[data-lesson_id="'+id+'"] .end').html(end);
     $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
+    $('li[data-lesson_id="'+id+'"] .hours').remove();
     dragLesson();
 }
 
@@ -273,15 +290,15 @@ function changeAndFormatDate(date, day) {       // zmiana daty o podaną liczbę
 }
 
 function decreaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zmniejsza liczbę godzin do obsadzenia dla grupy
-    var hours = $('li.group[data-group_id=' +group_id+ '] span.hours').html();
+    var hours = $('li.group[data-group_id=' +group_id+ '] span.hours var').html();
     hours = parseInt(hours) - 1;
-    $('li.group[data-group_id=' +group_id+ '] span.hours').html(hours);
+    $('li.group[data-group_id=' +group_id+ '] span.hours var').html(hours);
     if(hours<1) $('li.group[data-group_id=' +group_id+ ']').fadeOut(1500);
 }
 function increaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zwiększa liczbę godzin do obsadzenia dla grupy
-    var hours = $('li.group[data-group_id=' +group_id+ '] span.hours').html();
+    var hours = $('li.group[data-group_id=' +group_id+ '] span.hours var').html();
     hours = parseInt(hours) + 1;
-    $('li.group[data-group_id=' +group_id+ '] span.hours').html(hours);
+    $('li.group[data-group_id=' +group_id+ '] span.hours var').html(hours);
     if(hours>0) $('li.group[data-group_id=' +group_id+ ']').fadeIn(1500);
 }
 
