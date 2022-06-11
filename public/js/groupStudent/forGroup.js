@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.06.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
@@ -327,7 +327,7 @@ function completeRemoveClick() {    // całkowite usunięcie ucznia z grupy
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/grupa_uczniowie/delete/" + group_student_id,
+            url: "http://localhost/school/grupa_uczniowie/" + group_student_id,
             data: { },
             success: function() {
                 $('#groupStudentDeleteForm').remove();
