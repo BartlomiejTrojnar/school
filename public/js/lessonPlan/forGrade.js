@@ -1,8 +1,7 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
-
-// -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
+// ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
 function countStudents(group, dateView) {
     var countStudents = 0;
     $('li[data-group_id='+group+'] .groupStudents li').each(function() {
@@ -16,20 +15,32 @@ function showOrHideGroup() {
     var start, end;
     $('#gradeGroups li.group').each(function() {
         var hours = $(this).data('hours');
-        $(this).children('.hours var').html(hours);
+        $(this).children('.hours').children('var').html(hours);
         $(this).show();
         start = $(this).children('.groupDates').children('.start').html();
         end = $(this).children('.groupDates').children('.end').html();
         if(start > dateView)    $(this).hide();
         if(end   < dateView)    $(this).hide();
         $(this).children('span.teacher').each(function() {
-            $(this).show();
-            if($(this).data('start') > dateView)    $(this).hide();
-            if($(this).data('end')   < dateView)    $(this).hide();
+           $(this).show();
+           if($(this).data('start') > dateView)    $(this).hide();
+           if($(this).data('end')   < dateView)    $(this).hide();
         });
         countStudents($(this).data('group_id'), dateView);
     });
+}
 
+// -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
+function changeAndFormatDate(date, day) {       // zmiana daty o podaną liczbę dni oraz sformatowanie jej
+    newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + day);
+    if( newDate.getMonth()<9 && newDate.getDate()<10 )
+        return newDate.getFullYear() +"-0"+ (newDate.getMonth()+1) +"-0"+ newDate.getDate();
+    if( newDate.getMonth()<9 )
+        return newDate.getFullYear() +"-0"+ (newDate.getMonth()+1) +"-"+ newDate.getDate();
+    if( newDate.getDate()<10 )
+        return newDate.getFullYear() +"-"+ (newDate.getMonth()+1) +"-0"+ newDate.getDate();
+    return newDate.getFullYear() +"-"+ (newDate.getMonth()+1) +"-"+ newDate.getDate();
 }
 
 function showOrHideLesson() {
@@ -100,6 +111,78 @@ function dragLesson() {     // podnoszenie lekcji z planu lekcji
     });
 }
 
+function decreaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zmniejsza liczbę godzin do obsadzenia dla grupy
+    var hours = $('li.group[data-group_id=' +group_id+ '] .hours var').html();
+    hours = parseInt(hours) - 1;
+    $('li.group[data-group_id=' +group_id+ '] .hours var').html(hours);
+    if(hours<1) $('li.group[data-group_id=' +group_id+ ']').fadeOut(1500);
+}
+function increaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zwiększa liczbę godzin do obsadzenia dla grupy
+    var hours = $('li.group[data-group_id=' +group_id+ '] .hours var').html();
+    hours = parseInt(hours) + 1;
+    $('li.group[data-group_id=' +group_id+ '] .hours var').html(hours);
+    if(hours>0) $('li.group[data-group_id=' +group_id+ ']').fadeIn(1500);
+}
+
+function addLessonToTable(id, group_id, lessonhour_id, start, end) {
+    var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
+    var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
+    li += lessonDescription + '</li>';
+    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').append(li);
+    $('li[data-lesson_id="'+id+'"] .start').html(start);
+    $('li[data-lesson_id="'+id+'"] .end').html(end);
+    $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
+    $('li[data-lesson_id="'+id+'"] .hours').remove();
+    dragLesson();
+}
+
+function addLesson(group_id, lessonhour_id, start, end) {        // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/plan_lekcji",
+        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start, end: end },
+        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start, end); },
+        error: function() { alert('Błąd: gradePlan.js - funkcja addLesson'); return 0; }
+    });
+}
+
+/*
+function cloneLesson(lesson_id, lessonhour_id, start) {     // wstawienie nowej lekcji (na podstawie lekcji przeciągniętej) od podanej daty
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/lessonPlan/cloneLesson",
+        data: { lesson_id: lesson_id, lesson_hour_id: lessonhour_id, start: start },
+        success: function(result) { return result; },
+        error: function() { alert('Błąd: gradePlan.js - funkcja cloneLesson'); return 0; }
+    });
+}
+
+function setTheEndDateOfTheLesson(lesson_id, end) {     // ustawienie daty końcowej dla lekcji w planie
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/lessonPlan/setTheEndDateOfTheLesson",
+        data: { lesson_id: lesson_id, end: end },
+        success: function() { return true; },
+        error: function() { alert('Błąd: gradePlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
+    });
+    return true;
+}
+
+function moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, start='') { // przesunięcie lekcji na planie - przebudowa kodu HTML
+    $('li[data-lesson_id="'+lesson_id+'"]').clone().appendTo('td[data-lessonhour_id="'+lessonhour_id+'"] ul').hide();
+    if(start)  {
+        $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"] .start').html(start);
+        var end = changeAndFormatDate(start, -1);
+        $('td[data-lessonhour_id="'+old_lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"] .end').html(end);
+    }
+    $.when( $('li[data-lesson_id="'+lesson_id+'"]').fadeOut(1000) ).then(function() {
+        $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"]').fadeIn(1000);
+    });
+}
+*/
 function dropInLessonPlan() {     // opuszczenie lekcji/grupy na planie lekcji klasy
     $('#gradePlan td').bind('drop', function(event) {
         var data = event.originalEvent.dataTransfer;
@@ -114,30 +197,29 @@ function dropInLessonPlan() {     // opuszczenie lekcji/grupy na planie lekcji k
                 if( $(this).html()>end ) return;
                 end = $(this).html();
             });
+            decreaseVisibleGroupHours(group_id);  // zmniejszenie liczby lekcji do obsadzenia na liście grup
             // dodaj lekcję na wybranej godzinie od daty początkowej
-            $.when( addLesson(group_id, lessonhour_id, dateView, end) ).then(function() {
-                decreaseVisibleGroupHours(group_id);  // zmniejszenie liczby lekcji do obsadzenia na liście grup
-            });
+            addLesson(group_id, lessonhour_id, dateView, end);
         }
         else {
+            alert('skrypt forGrade.js - zatrzymanie w linii 194');  return;
             var lesson_id = data.getData('lesson_id')
             var start = $('li[data-lesson_id="'+lesson_id+'"] .start').html();
             var old_lessonhour_id = data.getData('lessonhour_id');
 
             if(start == dateView) {     // tylko zmiana godziny dla lekcji
+                alert('forGrade.js - linia 126'); return;
                 var group_id = $('li[data-lesson_id="'+lesson_id+'"]').data('group_id');
                 var classroom_id = $('li[data-lesson_id="'+lesson_id+'"] .classroom aside').html();
-                var end = $('li[data-lesson_id="'+lesson_id+'"] .end').html();
                 $.when( update(lesson_id, group_id, lessonhour_id, classroom_id, start, end) ).then(function() {
                     moveLesson(lesson_id, lessonhour_id, old_lessonhour_id);
                 });
             }
             else {  // sklonowanie lekcji z nową datą początkową i godziną lekcji, zmiana daty końcowej dla "starej" lekcji
-                $.when( cloneLesson(lesson_id, lessonhour_id, dateView) ).then(function() {
-                    var end = changeAndFormatDate(dateView, -1);
-                    setTheEndDateOfTheLesson(lesson_id, end);
-                    moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, dateView);
-                });
+                var end = changeAndFormatDate(dateView, -1);
+                setTheEndDateOfTheLesson(lesson_id, end);
+                cloneLesson(lesson_id, lessonhour_id, dateView);
+                moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, dateView);    
             }
         }
         if(event.preventDefault) event.preventDefault();
@@ -148,7 +230,40 @@ function dropInLessonPlan() {     // opuszczenie lekcji/grupy na planie lekcji k
         return false;
     });
 }
+/*
 
+function dropLessonInGradeGroupList() {     // opuszczenie lekcji w polu zawierającym grupy klasy
+    $('#gradeGroups').bind('drop', function(event) {
+        var data = event.originalEvent.dataTransfer;
+        if( data.getData('type') != 'lesson' ) {
+            alert( 'Upuszczono coś innego niż lekcja!' );
+            return false;
+        }
+        // dodaj godzinę na liście grup klasy (w górnej części strony)
+        increaseVisibleGroupHours( data.getData('group_id') );
+        var lesson_id = data.getData('lesson_id');
+        var dateView = $('#dateView').val();
+        var end = changeAndFormatDate(dateView, -1);
+        $('li[data-lesson_id="'+lesson_id+'"] .end').html( end );     // zmiana daty końca lekcji na stronie
+        $.when( $('li[data-lesson_id="'+lesson_id+'"]').fadeOut(1000) ).then( function() {
+            $('li[data-lesson_id="'+lesson_id+'"]').remove();
+        });
+        
+        if( $('li[data-lesson_id="'+lesson_id+'"] .start').html() > $('li[data-lesson_id="'+lesson_id+'"] .end').html() ) {     // jeżeli start > end usuń lekcję ze strony i z bazy
+            alert('forGrade.js - linia 218');    
+            removeLesson(lesson_id);
+        }
+        else    setTheEndDateOfTheLesson(lesson_id, end);       // ustawienie daty końca dla lekcji
+        if(event.preventDefault) event.preventDefault();
+        return false;
+    });
+    $('#gradeGroups').bind('dragover', function(event) {
+        if(event.preventDefault) event.preventDefault();
+        return false;
+    });
+}
+
+/*
 function dropLessonInCompleteRemoveField() {        // opuszczenie lekcji w polu całkowitego usunięcia
     $('#completeRemove').bind('drop', function(event) {
         var data = event.originalEvent.dataTransfer;
@@ -170,54 +285,6 @@ function dropLessonInCompleteRemoveField() {        // opuszczenie lekcji w polu
     });
 }
 
-function dropLessonInGradeGroupList() {     // opuszczenie lekcji w polu zawierającym grupy klasy
-    $('#gradeGroups').bind('drop', function(event) {
-        var data = event.originalEvent.dataTransfer;
-        if( data.getData('type') != 'lesson' ) {
-            alert( 'Upuszczono coś innego niż lekcja!' );
-            return false;
-        }
-        // dodaj godzinę na liście grup klasy (w górnej części strony)
-        increaseVisibleGroupHours( data.getData('group_id') );
-        var lesson_id = data.getData('lesson_id');
-        var dateView = $('#dateView').val();
-        $('li[data-lesson_id="'+lesson_id+'"] .end').html( changeAndFormatDate(dateView, -1) );     // zmiana daty końca lekcji na stronie
-        if( $('li[data-lesson_id="'+lesson_id+'"] .start').html() > $('li[data-lesson_id="'+lesson_id+'"] .end').html() ) {     // jeżeli start > end usuń lekcję ze strony i z bazy
-            $('li[data-lesson_id="'+lesson_id+'"]').remove();
-            removeLesson(lesson_id);
-        }
-        if(event.preventDefault) event.preventDefault();
-        return false;
-    });
-    $('#gradeGroups').bind('dragover', function(event) {
-        if(event.preventDefault) event.preventDefault();
-        return false;
-    });
-}
-
-function addLesson(group_id, lessonhour_id, start, end) {        // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/plan_lekcji",
-        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start, end: end },
-        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start, end); },
-        error: function(id) { alert('Błąd: gradePlan.js - funkcja addLesson'); return 0; }
-    });
-}
-
-function addLessonToTable(id, group_id, lessonhour_id, start, end) {
-    var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
-    var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
-    li += lessonDescription + '</li>';
-    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').append(li);
-    $('li[data-lesson_id="'+id+'"] .start').html(start);
-    $('li[data-lesson_id="'+id+'"] .end').html(end);
-    $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
-    $('li[data-lesson_id="'+id+'"] .hours').remove();
-    dragLesson();
-}
-
 function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // zapisanie zmian lekcji w bazie danych
     $.ajax({
         method: "PUT",
@@ -226,31 +293,6 @@ function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // za
         data: { id: id, group_id: group_id, lesson_hour_id: lessonhour_id, classroom_id: classroom_id, start: start, end: end },
         success: function(result) { return result; },
         error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja update'); return false; }
-    });
-}
-
-function setTheEndDateOfTheLesson(lesson_id, end) {     // ustawienie daty końcowej dla lekcji w planie
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/lessonPlan/setTheEndDateOfTheLesson",
-        data: { lesson_id: lesson_id, end: end },
-        success: function() { return true; },
-        error: function() { alert('Błąd: gradePlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
-    });
-    return true;
-}
-
-function cloneLesson(lesson_id, lessonhour_id, start) {     // wstawienie nowej lekcji (na podstawie lekcji przeciągniętej) od podanej daty
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            type: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/lessonPlan/cloneLesson",
-            data: { lesson_id: lesson_id, lesson_hour_id: lessonhour_id, start: start },
-            success: function(result) { resolve(result); },
-            error: function() { alert('Błąd: gradePlan.js - funkcja cloneLesson'); reject(0); }
-        });
     });
 }
 
@@ -302,6 +344,7 @@ function increaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zwię
     if(hours>0) $('li.group[data-group_id=' +group_id+ ']').fadeIn(1500);
 }
 
+*/
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
@@ -309,8 +352,8 @@ $(document).ready(function() {
     showOrHideLesson();
     dateViewChange();
     dragGroup();
-    dropInLessonPlan();
     dragLesson();
-    dropLessonInCompleteRemoveField();
-    dropLessonInGradeGroupList();
+    dropInLessonPlan();
+    // // dropLessonInCompleteRemoveField();
+    // dropLessonInGradeGroupList();
 });

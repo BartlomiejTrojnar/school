@@ -25,7 +25,7 @@
          if( substr($dateView, 5, 2)>=8 ) $studyYear++;
       ?>
       <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
-         <span class="groupDates"><span class="start">{{$group->start}}</span> : <span class="end">{{$group->end }}</span></span><br />
+         <span class="groupDates"><time class="start">{{$group->start}}</time> : <time class="end">{{$group->end }}</time></span><br />
          {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
          {{ $group->subject->short_name }} 
          <em style="font-size: 0.8em;">
@@ -76,7 +76,7 @@
                @if($lesson->lesson_hour_id == $i+$dzien)
                   <li data-lesson_id="{{ $lesson->id }}" data-type="lesson" data-group_id="{{ $lesson->group_id }}">
                      <!-- data lekcji w planie -->
-                     <span class="lessonDates"><span class="start">{{$lesson->start}}</span>-<span class="end">{{$lesson->end}}</span></span><br />
+                     <span class="lessonDates"><time class="start">{{$lesson->start}}</time> : <time class="end">{{$lesson->end}}</time></span><br />
                      <!-- klasy -->
                      {{ $studyYear }}@foreach($lesson->group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
                      <!-- przedmiot i komentarz grupy -->
