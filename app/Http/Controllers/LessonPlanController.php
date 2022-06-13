@@ -98,20 +98,14 @@ class LessonPlanController extends Controller
     }
 
     public function update($id, Request $request, LessonPlan $lessonPlan) {
-        $this -> validate($request, [
-          'group_id' => 'required',
-          'lesson_hour_id' => 'required',
-          'start' => 'required|date',
-          'end' => 'required|date',
-        ]);
-
         $lessonPlan = $lessonPlan -> find($id);
-        $lessonPlan->group_id = $request->group_id;
-        $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
+
+        if(isset($request->group_id))   $lessonPlan->group_id = $request->group_id;
+        if(isset($request->lesson_hour_id))   $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
         if($request->classroom_id==0) $lessonPlan->classroom_id=NULL;
         else $lessonPlan->classroom_id = $request->classroom_id;
-        $lessonPlan->start = $request->start;
-        $lessonPlan->end = $request->end;
+        if(isset($request->start))   $lessonPlan->start = $request->start;
+        if(isset($request->end))   $lessonPlan->end = $request->end;
         $lessonPlan -> save();
         return $lessonPlan->id;
     }
