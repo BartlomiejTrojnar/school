@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 14.06.2022 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -10,7 +10,7 @@
       <input type="date" id="dateView" value="{{ $dateView }}" />
    </strong>
    <div id="completeRemove">upuść lekcję tutaj by całkiem usunąć</div>
-   <ul id="schoolYearEnds">
+   <ul id="schoolYearEnds" class="hidden">
       @foreach($schoolYearEnds as $syEnd)
          <li>{{$syEnd->date_of_graduation}}</li>
       @endforeach

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.06.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -113,15 +113,15 @@ class GradeController extends Controller
         }
 
         switch(session()->get('gradeView')) {
-            case 'showInfo':        return $this -> showInfo();
-            case 'showStudents':    return $this -> showStudents($syR, $sgR);
-            case 'showStudentsAll': return $this -> showStudentsAll();
-            case 'showNumbers':     return $this -> showNumbers($syR, $snR);
-            case 'showGroups':      return $this -> showGroup($subR, $tR, $gR);
-            case 'showLessonPlan':  return $this -> showLessonPlan($gR, $lpR, $syR);
-            case 'showTeachers':    return $this -> showTeachers();
-            case 'showDeclarations':    return $this -> showDeclarations($dR);
-            case 'showTasks':    return $this -> showTasks();
+            case 'info':        return $this -> showInfo();
+            case 'uczniowie':   return $this -> showStudents($syR, $sgR);
+            case 'daneuczniow': return $this -> showStudentsAll();
+            case 'numery':      return $this -> showNumbers($syR, $snR);
+            case 'grupy':       return $this -> showGroup($subR, $tR, $gR);
+            case 'planlekcji':  return $this -> showLessonPlan($gR, $lpR, $syR);
+            case 'nauczyciele': return $this -> showTeachers();
+            case 'deklaracje':  return $this -> showDeclarations($dR);
+            case 'zadania':     return $this -> showTasks();
 /*
           case 'showEnlargements':
               return view('grade.showEnlargements', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
