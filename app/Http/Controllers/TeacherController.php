@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -102,7 +102,7 @@ class TeacherController extends Controller
             case 'showSubjects':    return $this -> showSubjects();
             case 'showGroups':      return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
             case 'showGrades':      return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
-            case 'showLessonPlans': return $this -> showLessonPlans($groupRepo, $lessonPlanRepo);
+            case 'showLessonPlans': return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('teacherView'));
         }
@@ -170,13 +170,14 @@ class TeacherController extends Controller
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$teacherGrades]);
     }
 
-    private function showLessonPlans($groupRepo, $lessonPlanRepo) {
-        $dateView = session() -> get('dateView');
+    private function showLessonPlans($groupRepo, $lessonPlanRepo, $schoolYearRepo) {
+        $dateView = session() -> get('dateView');   if($dateView=="") $dateView = date('Y-m-d');
         $groups = $groupRepo -> getTeacherGroupsForDate($this->teacher->id, $dateView);
         $lessons = $lessonPlanRepo -> getTeacherLessons($this->teacher->id);
         $year = substr($dateView, 0, 4);
         if( substr($dateView, 5, 2)>=8 ) $year++;
-        $teacherLessonPlan = view('lessonPlan.teacherPlan', ["lessons"=>$lessons, "groups"=>$groups, "dateView"=>$dateView, "year"=>$year]);
+        $schoolYearEnds = $schoolYearRepo -> getSchoolYearEnds($year-1, $year);     // znalezienie dat końcowych roku szkolnego w czasie istnienia klasy
+        $teacherLessonPlan = view('lessonPlan.teacherPlan', ["lessons"=>$lessons, "groups"=>$groups, "dateView"=>$dateView, "schoolYearEnds"=>$schoolYearEnds, "year"=>$year]);
         $js = "lessonPlan/forTeacher.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
