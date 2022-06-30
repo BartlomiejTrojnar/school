@@ -241,7 +241,7 @@ Route::get('/podrecznik/{id}/{view?}', 'TextbookController@show');
 
 Route::post('/textbookChoice/refreshRow', 'TextbookChoiceController@refreshRow');
 Route::post('/textbookChoice/extension/{id}', 'TextbookChoiceController@extension');
-Route::post('/textbookChoice/verifyExtension/{id}', 'TextbookChoiceController@verifyExtension');
+Route::post('/textbookChoice/verifyProlong/{id}', 'TextbookChoiceController@verifyProlong');
 Route::post('/wybor_podrecznika/refreshTableForTextbook', 'TextbookChoiceController@refreshTableForTextbook');
 Route::resource('/wybor_podrecznika', 'TextbookChoiceController');
 Route::get('/wybor_podrecznika/orderBy/{column}', array('as'=>'wybor_podrecznika.orderBy', 'uses'=>'TextbookChoiceController@orderBy'));

@@ -1,5 +1,6 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ------------------------ //
 // ------------- wydarzenia na stronie wyświetlania wyboru podręczników ------------------------ //
+var dfr;
 
 function schoolChanged() {  // wybór szkoły w polu select
     $('select[name="school_id"]').bind('change', function(){
@@ -239,41 +240,39 @@ function destroyClick() {  // usunięcie wyboru podręcznika (z bazy danych)
     });
 }
 
-function extensionClick() {  // usunięcie wyboru podręcznika (z bazy danych)
-    $('#textbookChoicesTable').delegate('.extension', 'click', function() {
+function prolongChoiceTextbook(id) {
+    alert('Sprawdzić funkcję przedłużania podręcznika po wprowadzeniu roku szkolnego 2022/23');
+    return;
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/textbookChoice/prolong/" + id,
+        success: function() { return true; },
+        error: function() {
+            var error = '<tr><td colspan="7" class="error">Błąd przedłużania wyboru podręcznika.</td></tr>';
+            $('tr[data-textbookchoice_id='+id+']').after(error).hide();
+        }
+    });
+}
+
+function prolongClick() {  // wybór podręcznika na następny rok szkolny
+    $('#textbookChoicesTable').delegate('.prolong', 'click', function() {
         var id = $(this).data('textbookchoice_id');
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/textbookChoice/extension/" + id,
-            success: function() {  $('button.extension[data-textbookchoice_id='+id+']').remove();  },
-            error: function() {
-                var error = '<tr><td colspan="7" class="error">Błąd przedłużania wyboru podręcznika.</td></tr>';
-                $('tr[data-textbookchoice_id='+id+']').after(error).hide();
-            }
-        });
-        return false;
-    });
-    verifyExtensions();
-}
-
-function verifyExtensions() {
-    var id;
-    $('.extension').each(function(){
-        id = $(this).data('textbookchoice_id');
-        $.ajax({
-            type: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/textbookChoice/verifyExtension/" + id,
-            success: function(result) {  $('button.extension[data-textbookchoice_id='+result+']').remove();  },
-            error: function(result) {  alert(result+' = błąd w skrypcie textbookChoicesIndex w funkcji verifyExtansions');  }
+            url: "http://localhost/school/textbookChoice/verifyProlong/" + id,
+            success: function(data) {
+                $('button.prolong[data-textbookchoice_id='+data+']').remove();
+                if(data=='0') prolongChoiceTextbook(id);
+            },
+            error: function() { alert('błąd'); }
         });
     });
 }
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
-
     schoolChanged();
     schoolYearChanged();
     studyYearChanged();
@@ -285,5 +284,5 @@ $(document).ready(function() {
     addClick();
     editClick();
     destroyClick();
-    extensionClick();
+    prolongClick();
 });

@@ -104,11 +104,11 @@ class TextbookChoiceController extends Controller
         return $textbookChoice->id;
     }
 
-    public function verifyExtension(Request $request, TextbookChoiceRepository $textbookChoiceRepo) {
+    public function verifyProlong($id, TextbookChoiceRepository $textbookChoiceRepo) {
         $oldTBC = new TextbookChoice;
-        $oldTBC = $textbookChoiceRepo -> find($request->id);
+        $oldTBC = $textbookChoiceRepo -> find($id);
         $textbookChoice_news = $textbookChoiceRepo -> numberOfChoices($oldTBC->textbook_id, $oldTBC->school_id, $oldTBC->school_year_id+1, $oldTBC->learning_year, $oldTBC->level);
-        if($textbookChoice_news>0) return $request->id;
+        if($textbookChoice_news>0) return $id;
         return 0;
     }
 
