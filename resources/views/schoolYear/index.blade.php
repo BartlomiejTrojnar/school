@@ -1,5 +1,9 @@
-<!-- ******************  (C) mgr inż. Bartłomiej Trojnar; (III) czerwiec 2021 ****************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.07.2022 ********************** -->
 @extends('layouts.app')
+
+@section('java-script')
+   <script language="javascript" type="text/javascript" src="{{ url('public/js/'.$js) }}"></script>
+@endsection
 
 @section('header')
    <h1>Lata szkolne</h1>
@@ -17,7 +21,7 @@
             <th>data zakończenia nauki<br />ostatnich klas</th>
             <th>data<br />klasyfikacji</th>
             <th>data<br />zakończenia nauki</th>
-            <th colspan="2">+/-</th>
+            <th>zmień / usuń</th>
          </tr>
       </thead>
 
@@ -25,7 +29,7 @@
          <?php $count = 0; ?>
          @foreach($schoolYears as $sy)
             <?php $count++; ?>
-            <tr>
+            <tr data-school_year_id="{{$sy->id}}">
                <td>{{ $count }}</td>
                <td>{{ $sy->date_start }}</td>
                <td><a href="{{ route('rok_szkolny.show', $sy->id) }}">{{ $sy->date_end }}</a></td>
@@ -33,21 +37,13 @@
                <td>{{ $sy->date_of_graduation_of_the_last_grade }}</td>
                <td>{{ $sy->date_of_classification }}</td>
                <td>{{ $sy->date_of_graduation }}</td>
-               <td class="edit"><a class="btn btn-primary" href="{{ route('rok_szkolny.edit', $sy->id) }}">
-                  <i class="fa fa-edit"></i>
-               </a></td>
-               <td class="destroy">
-                  <form action="{{ route('rok_szkolny.destroy', $sy->id) }}" method="post" id="delete-form-{{$sy->id}}">
-                     {{ csrf_field() }}
-                     {{ method_field('DELETE') }}
-                     <button class="btn btn-primary"><i class="fa fa-remove"></i></button>
-                  </form>
+               <td class="edit destroy c">
+                  <button class="edit btn btn-primary" data-school_year_id="{{ $sy->id }}"><i class="fa fa-edit"></i></button>
+                  <button class="destroy btn btn-primary" data-school_year_id="{{ $sy->id }}"><i class="fas fa-remove"></i></button>
                </td>
             </tr>
          @endforeach
-         <tr class="create"><td colspan="9">
-               <a class="btn btn-primary" href="{{ route('rok_szkolny.create') }}"><i class="fa fa-plus"></i></a>
-         </td></tr>
+         <tr class="create"><td colspan="8"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
       </tbody>
    </table>
 @endsection

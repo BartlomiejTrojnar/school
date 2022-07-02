@@ -1,4 +1,4 @@
-// -------------------- (C) mgr inż. Bartłomiej Trojnar; (III) czerwiec 2021 -------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.07.2022 ------------------------ //
 // -------------------------- wydarzenia na stronie wyświetlania klas -------------------------- //
 function schoolYearChanged() {  // wybór roku szkolnego w polu select
     $('select[name="school_year_id"]').bind('change', function(){

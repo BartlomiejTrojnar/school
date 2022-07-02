@@ -45,6 +45,7 @@ Route::get('/szkola/{id}/{view?}', 'SchoolController@show');
 Route::resource('/rok_szkolny', 'SchoolYearController');
 Route::post('/rok_szkolny/change/{id}', 'SchoolYearController@change');
 Route::get('/rok_szkolny/{id}/{view?}', 'SchoolYearController@show');
+Route::post('/rok_szkolny/refreshRow', 'SchoolYearController@refreshRow');
 
 Route::get('/uczen/import', array('as'=>'uczen.import', 'uses'=>'StudentImportController@import'));
 Route::get('/uczen/search', array('as'=>'uczen.search', 'uses'=>'StudentController@search'));
