@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -57,7 +57,7 @@
             <td>{{$textbookChoice->learning_year}}</td>
             <td>{{$textbookChoice->level}}</td>
             <td class="edit destroy c" style="width: 150px;">
-               <button class="prolong btn btn-primary" data-textbookChoice_id="{{ $textbookChoice->id }}"><i class="fa fa-arrow-right" title="przedłuż na następny rok szkolny"></i></button>
+               <button class="prolongate btn btn-primary" data-textbookChoice_id="{{ $textbookChoice->id }}"><i class="fa fa-arrow-right" title="przedłuż na następny rok szkolny"></i></button>
                <button class="edit btn btn-primary" data-textbookchoice_id="{{ $textbookChoice->id }}" title="modyfikuj"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary" data-textbookchoice_id="{{ $textbookChoice->id }}"><i class="fas fa-remove" title="usuń"></i></button>
             </td>

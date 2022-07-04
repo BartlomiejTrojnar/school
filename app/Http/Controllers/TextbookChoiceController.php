@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.10.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\TextbookChoice;
 use App\Repositories\TextbookChoiceRepository;
@@ -92,7 +92,7 @@ class TextbookChoiceController extends Controller
         return $textbookChoice->id;
     }
 
-    public function extension(Request $request, TextbookChoice $textbookChoice_old) {
+    public function prolongate(Request $request, TextbookChoice $textbookChoice_old) {
         $textbookChoice_old = $textbookChoice_old -> find($request->id);
         $textbookChoice = new TextbookChoice;
         $textbookChoice->textbook_id    = $textbookChoice_old->textbook_id;
@@ -104,7 +104,7 @@ class TextbookChoiceController extends Controller
         return $textbookChoice->id;
     }
 
-    public function verifyProlong($id, TextbookChoiceRepository $textbookChoiceRepo) {
+    public function verifyProlongate($id, TextbookChoiceRepository $textbookChoiceRepo) {
         $oldTBC = new TextbookChoice;
         $oldTBC = $textbookChoiceRepo -> find($id);
         $textbookChoice_news = $textbookChoiceRepo -> numberOfChoices($oldTBC->textbook_id, $oldTBC->school_id, $oldTBC->school_year_id+1, $oldTBC->learning_year, $oldTBC->level);

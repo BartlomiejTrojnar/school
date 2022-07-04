@@ -1,6 +1,5 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ------------------------ //
 // ------------- wydarzenia na stronie wyświetlania wyboru podręczników ------------------------ //
-var dfr;
 
 function schoolChanged() {  // wybór szkoły w polu select
     $('select[name="school_id"]').bind('change', function(){
@@ -240,14 +239,12 @@ function destroyClick() {  // usunięcie wyboru podręcznika (z bazy danych)
     });
 }
 
-function prolongChoiceTextbook(id) {
-    alert('Sprawdzić funkcję przedłużania podręcznika po wprowadzeniu roku szkolnego 2022/23');
-    return;
+function prolongateChoiceTextbook(id) {
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/textbookChoice/prolong/" + id,
-        success: function() { return true; },
+        url: "http://localhost/school/textbookChoice/prolongate/" + id,
+        success: function() {   $('button.prolongate[data-textbookchoice_id='+id+']').remove(); },
         error: function() {
             var error = '<tr><td colspan="7" class="error">Błąd przedłużania wyboru podręcznika.</td></tr>';
             $('tr[data-textbookchoice_id='+id+']').after(error).hide();
@@ -255,18 +252,18 @@ function prolongChoiceTextbook(id) {
     });
 }
 
-function prolongClick() {  // wybór podręcznika na następny rok szkolny
-    $('#textbookChoicesTable').delegate('.prolong', 'click', function() {
+function prolongateClick() {  // wybór podręcznika na następny rok szkolny
+    $('#textbookChoicesTable').delegate('.prolongate', 'click', function() {
         var id = $(this).data('textbookchoice_id');
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/textbookChoice/verifyProlong/" + id,
+            url: "http://localhost/school/textbookChoice/verifyProlongate/" + id,
             success: function(data) {
-                $('button.prolong[data-textbookchoice_id='+data+']').remove();
-                if(data=='0') prolongChoiceTextbook(id);
+                $('button.prolongate[data-textbookchoice_id='+data+']').remove();
+                if(data=='0') prolongateChoiceTextbook(id);
             },
-            error: function() { alert('błąd'); }
+            error: function() { alert('Błąd - skrypt textbookChoicesIndex.js w funkcji prolongateClick.'); }
         });
     });
 }
@@ -284,5 +281,5 @@ $(document).ready(function() {
     addClick();
     editClick();
     destroyClick();
-    prolongClick();
+    prolongateClick();
 });
