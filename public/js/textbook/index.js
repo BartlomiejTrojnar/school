@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ------------------------ //
 // ------------- wydarzenia na stronie wyświetlania wyboru podręczników ------------------------ //
 
 function subjectChanged() {  // wybór przedmiotu w polu select
@@ -24,6 +24,7 @@ function refreshRow(id, version, lp=0) {  // odświeżenie wskazanego wiersza z 
             if(version=="add"){
                 $('tr.create').before(result);
                 $('#showCreateRow').show();
+                $('#countTextbooks').html(lp);
             }
             else {
                 $('tr.editRow[data-textbook_id='+id+']').remove();
@@ -64,14 +65,12 @@ function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub
     $('#textbooks').delegate('#cancelAdd', 'click', function() {
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 
     $('#textbooks').delegate('#add', 'click', function() {
         add();
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 }
 
@@ -82,13 +81,14 @@ function add() {   // zapisanie wyboru podręcznika w bazie danych
     var publishing_house= $('#createRow input[name="publishing_house"]').val();
     var admission       = $('#createRow input[name="admission"]').val();
     var comments        = $('#createRow input[name="comments"]').val();
+    var lp = parseInt( $('#countTextbooks').html() )+1;
 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/podrecznik",
         data: { subject_id: subject_id, title: title, author: author, publishing_house: publishing_house, admission: admission, comments: comments },
-        success: function(id) {  refreshRow(id, "add", 999);  },
+        success: function(id) {  refreshRow(id, "add", lp);  },
         error: function() {
             var error = '<tr><td colspan="10" class="error">Błąd dodawania podręcznika</td></tr>';
             $('#textbooks tr.create').before(error);

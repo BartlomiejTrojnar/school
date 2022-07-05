@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -27,10 +27,10 @@
             <?php
                echo view('layouts.thSorting', ["thName"=>"szkoła", "routeName"=>"wybor_podrecznika.orderBy", "field"=>"school_id", "sessionVariable"=>"TextbookChoiceOrderBy"]);
                echo view('layouts.thSorting', ["thName"=>"rok szkolny", "routeName"=>"wybor_podrecznika.orderBy", "field"=>"school_year_id", "sessionVariable"=>"TextbookChoiceOrderBy"]);
+               echo view('layouts.thSorting', ["thName"=>"wybrano dla klasy (rok nauki)", "routeName"=>"wybor_podrecznika.orderBy", "field"=>"learning_year", "sessionVariable"=>"TextbookChoiceOrderBy"]);
+               echo view('layouts.thSorting', ["thName"=>"poziom", "routeName"=>"wybor_podrecznika.orderBy", "field"=>"level", "sessionVariable"=>"TextbookChoiceOrderBy"]);
             ?>
-            <th>wybrano dla klasy<br />(rok nauki)</th>
-            <th>poziom</th>
-            <th>zmień/usuń</th>
+            <th>zmień / usuń</th>
          </tr>
 
          <tr>
@@ -64,7 +64,10 @@
          </tr>
          @endforeach
 
-         <tr class="create"><td colspan="7"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+         <tr class="create"><td colspan="7">
+            <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+            <var id="countChoices" hidden>{{$count}}</var>
+         </td></tr>
       </tbody>
    </table>
 @endsection

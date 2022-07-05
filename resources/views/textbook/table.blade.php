@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 13.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2021 ********************** -->
 @if( !empty( $links ) )
    {!! $textbooks->render() !!}
 @endif
@@ -13,8 +13,8 @@
             echo view('layouts.thSorting', ["thName"=>"autor", "routeName"=>"podrecznik.orderBy", "field"=>"author", "sessionVariable"=>"TextbookOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"tytuł", "routeName"=>"podrecznik.orderBy", "field"=>"title", "sessionVariable"=>"TextbookOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"wydawnictwo", "routeName"=>"podrecznik.orderBy", "field"=>"publishing_house", "sessionVariable"=>"TextbookOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"dopuszczenie", "routeName"=>"podrecznik.orderBy", "field"=>"admission", "sessionVariable"=>"TextbookOrderBy"]);
          ?>
-         <th>dopuszczenie</th>
          <th>uwagi</th>
          <th>ilość<br>wyborów</th>
          <th>aktualizacja</th>
@@ -49,6 +49,9 @@
          </tr>
       @endforeach
 
-      <tr class="create"><td colspan="10"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      <tr class="create"><td colspan="10">
+         <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+         <var id="countTextbooks">{{$count}}</var>
+      </td></tr>
    </tbody>
 </table>

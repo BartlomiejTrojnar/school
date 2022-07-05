@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ********************** -->
 <tr id="createRow">
    <form action="{{ route('wybor_podrecznika.store') }}" method="post" role="form">
    {{ csrf_field() }}
@@ -9,7 +9,7 @@
       <td><?php  print_r($levelSelectField);  ?></td>
 
       <!-- komórka z przyciskami dodawania i anulowania -->
-      <td class="c" colspan="2">
+      <td class="c" colspan="2" style="width: 300px;">
          <button id="add" class="btn btn-primary">dodaj</button>
          <button id="cancelAdd" class="btn btn-primary">anuluj</button>
       </td>

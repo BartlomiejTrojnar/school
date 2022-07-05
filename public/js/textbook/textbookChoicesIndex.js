@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ------------------------ //
 // ------------- wydarzenia na stronie wyświetlania wyboru podręczników ------------------------ //
 
 function schoolChanged() {  // wybór szkoły w polu select
@@ -89,6 +89,7 @@ function refreshRow(id, version, lp=0) {  // odświeżenie wiersza z klasą o po
             if(version=="add"){
                 $('tr.create').before(result);
                 $('#showCreateRow').show();
+                $('#countChoices').html(lp);
             }
             else {
                 $('tr.editRow[data-textbookchoice_id='+id+']').remove();
@@ -136,14 +137,12 @@ function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub
     $('#textbookChoicesTable').delegate('#cancelAdd', 'click', function() {
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 
     $('#textbookChoicesTable').delegate('#add', 'click', function() {
         add();
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 }
 
@@ -153,13 +152,14 @@ function add() {   // zapisanie wyboru podręcznika w bazie danych
     var school_year_id  = $('#createRow select[name="school_year_id"]').val();
     var learning_year   = $('#createRow input[name="learning_year"]').val();
     var level           = $('#createRow select[name="level"]').val();
+    var lp              = parseInt($('#countChoices').html())+1;
 
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/wybor_podrecznika",
         data: { textbook_id: textbook_id, school_id: school_id, school_year_id: school_year_id, learning_year: learning_year, level: level },
-        success: function(id) {  refreshRow(id, "add", 999);  },
+        success: function(id) {  refreshRow(id, "add", lp);  },
         error: function() {
             var error = '<tr><td colspan="7" class="error">Błąd dodawania wyboru dla podręcznika</td></tr>';
             $('#textbookChoicesTable tr.create').before(error);
