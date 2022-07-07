@@ -51,7 +51,7 @@
 
       <tr class="create"><td colspan="10">
          <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-         <var id="countTextbooks">{{$count}}</var>
+         <var id="countTextbooks" hidden>{{$count}}</var>
       </td></tr>
    </tbody>
 </table>
