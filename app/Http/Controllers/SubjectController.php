@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.08.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.07.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -20,8 +20,8 @@ class SubjectController extends Controller
 {
     public function index(SubjectRepository $subjectRepo) {
         $subjects = $subjectRepo -> getAllSortedAndPaginate();
-        return view('subject.index')
-            -> nest('subjectTable', 'subject.table', ["subjects"=>$subjects, "subTitle"=>"", "links"=>true]);
+        $js = "subject/index.js";
+        return view('subject.index', ["js"=>$js]) -> nest('subjectTable', 'subject.table', ["subjects"=>$subjects, "subTitle"=>"", "links"=>true]);
     }
 
     public function orderBy($column) {
@@ -46,19 +46,21 @@ class SubjectController extends Controller
         $this->validate($request, [
           'name' => 'required|max:60',
           'short_name' => 'max:15',
-          'order_in_the_sheet' => 'integer|between:1,25',
+          'order_in_the_sheet' => 'integer|between:1,99',
         ]);
 
         $subject = new Subject;
         $subject->name = $request->name;
         $subject->short_name = $request->short_name;
-        if($request->actual=="on") $subject->actual = true; else $subject->actual = false;
+        $subject->actual = $request->actual;
+        if($request->actual) $subject->actual=1;    else $subject->actual=0;
         $subject->order_in_the_sheet = $request->order_in_the_sheet;
         if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        if($request->expanded=="on") $subject->expanded = true; else $subject->expanded = false;
+        $subject->expanded = $request->expanded;
+        if($request->expanded) $subject->expanded=1;    else $subject->expanded=0;
         $subject->save();
 
-        return redirect($request->history_view);
+        return $subject->id;
     }
 
     public function change($id) {  session()->put('subjectSelected', $id);   }
@@ -160,10 +162,9 @@ class SubjectController extends Controller
             -> nest('subView', 'textbook.table', ["subTitle"=>$subTitle, "textbooks"=>$textbooks, "subjectSelectField"=>$subjectSelectField]);
     }
 
-
-    public function edit($id, Subject $subject) {
-        $subject = $subject -> find($id);
-        return view('subject.edit', ["subject"=>$subject]);
+    public function edit(Request $request, Subject $subject) {
+        $subject = $subject -> find($request->id);
+        return view('subject.edit', ["subject"=>$subject, "lp"=>$request->lp]);
     }
 
     public function update($id, Request $request, Subject $subject) {
@@ -176,18 +177,24 @@ class SubjectController extends Controller
 
         $subject->name = $request->name;
         $subject->short_name = $request->short_name;
-        if($request->actual=="on") $subject->actual = true; else $subject->actual = false;
+        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
         $subject->order_in_the_sheet = $request->order_in_the_sheet;
         if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        if($request->expanded=="on") $subject->expanded = true; else $subject->expanded = false;
+        $subject->expanded = $request->expanded;
+        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
         $subject->save();
 
-        return redirect($request->history_view);
+        return $subject->id;
     }
 
     public function destroy($id, Subject $subject) {
         $subject = $subject -> find($id);
-        $subject->delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
+        $subject -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, SubjectRepository $subjectRepo) {
+        $this->subject = $subjectRepo -> find($request->id);
+        return view('subject.row', ["subject"=>$this->subject, "lp"=>$request->lp]);
     }
 }

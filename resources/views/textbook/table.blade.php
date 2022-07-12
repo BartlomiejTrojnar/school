@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 12.07.2022 ********************** -->
 @if( !empty( $links ) )
    {!! $textbooks->render() !!}
 @endif
@@ -43,7 +43,7 @@
             <td class="c">{{ count($textbook->textbookChoices) }}</td>
             <td>{{ substr($textbook->updated_at, 0, 10) }}</td>
             <td class="edit destroy c">
-               <button class="edit btn btn-primary" data-textbook_id="{{ $textbook->id }}"><i class="fa fa-edit"></i></button>
+               <button class="edit btn btn-primary"    data-textbook_id="{{ $textbook->id }}"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary" data-textbook_id="{{ $textbook->id }}"><i class="fas fa-remove"></i></button>
             </td>
          </tr>
