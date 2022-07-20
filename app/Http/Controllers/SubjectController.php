@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -63,7 +63,7 @@ class SubjectController extends Controller
     public function change($id) {  session()->put('subjectSelected', $id);   }
 
     public function show($id, SubjectRepository $subjectRepo, SchoolYearRepository $syR, GradeRepository $gradeRepo, TeacherRepository $tR, GroupRepository $groupRepo, SessionRepository $sessionRepo, ExamDescriptionRepository $edR, $view='') {
-        if(empty(session()->get('subjectView')) || session()->get('subjectView')=='change')  session()->put('subjectView', 'showInfo');
+        if(empty(session()->get('subjectView')) || session()->get('subjectView')=='change')  session()->put('subjectView', 'info');
         if($view)  session()->put('subjectView', $view);
         session() -> put('subjectSelected', $id);
         $this->subject = $subjectRepo -> find($id);
@@ -83,24 +83,25 @@ class SubjectController extends Controller
     }
 
     private function showInfo($subject) {
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next])
+        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "js"=>""])
             -> nest('subView', 'subject.showInfo', ["subject"=>$subject]);
     }
 
     private function showTeachers($subject, $schoolYearRepo) {
         $schoolYears = $schoolYearRepo->getAllSorted();
         $subjectTeachers = $subject -> teachers;
-        $schoolYear_id = session() -> get('schoolYearSelected');
-        if(!$schoolYear_id) $schoolYear_id=0;
-        else for($i=0; $i<sizeof($subjectTeachers); $i++) {
-            if($subjectTeachers[$i]->teacher->first_year_id > $schoolYear_id ||
-              ($subjectTeachers[$i]->teacher->last_year_id!= "" && $subjectTeachers[$i]->teacher->last_year_id < $schoolYear_id))
-                unset($subjectTeachers[$i]);
-        }
+        $js = "teacher/forSubject.js";
+        //$schoolYear_id = session() -> get('schoolYearSelected');
+        //if(!$schoolYear_id) $schoolYear_id=0;
+        //else for($i=0; $i<sizeof($subjectTeachers); $i++) {
+        //    if($subjectTeachers[$i]->teacher->first_year_id > $schoolYear_id ||
+        //      ($subjectTeachers[$i]->teacher->last_year_id!= "" && $subjectTeachers[$i]->teacher->last_year_id < $schoolYear_id))
+        //        unset($subjectTeachers[$i]);
+        //}
         $unlearningTeachers = TaughtSubject::unlearningTeachers($subjectTeachers);
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $subjectTeachersView = view('subject.showTeachers', ["subject"=>$subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSF"=>$schoolYearSF]);
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subjectTeachersView]);
+        $subjectTeachersView = view('teacher.viewForSubject', ["subject"=>$subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSF"=>$schoolYearSF]);
+        return view('subject.show', ["subject"=>$subject, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subjectTeachersView]);
     }
 
     private function showGroups($syRepo, $gradeRepo, $teacherRepo, $groupRepo) {

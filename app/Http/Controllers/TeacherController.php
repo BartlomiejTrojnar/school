@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.07.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -118,7 +118,7 @@ class TeacherController extends Controller
         $nonTaughtSubjects = TaughtSubject::nonTaughtSubjects($taughtSubjects);
         $teacherSubjects = view('teacher.showSubjects', ["teacher"=>$this->teacher, "taughtSubjects"=>$taughtSubjects, "nonTaughtSubjects"=>$nonTaughtSubjects]);
         $css = "taughtSubject.css";
-        $js = "teacher/taughtSubject.js";
+        $js = "subject/forTeacher.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>$css, "js"=>$js, "subView"=>$teacherSubjects]);
     }
 

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('java-script')
+   <script src="{{ asset('public/js/'.$js) }}"></script>
+@endsection
+
 @section('header')
   <aside id="arrow_left">
     <a href="{{ route('przedmiot.show', $previous) }}">

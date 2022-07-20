@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.09.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.07.2022 ------------------------ //
 // --------- wydarzenia na stronie wyświetlania nauczanych przedmiotów dla nauczyciela --------- //
 
 // ---------------------- DODAWANIE PRZEDMIOTU do nauczanych przedmiotów ----------------------- //
@@ -31,7 +31,7 @@ function addSubject(subject_id) {
     var subjectName = $('li[data-subject-id=' +subject_id+ ']').text();
     var li_1 = '<li class="list-group-item active" type="button" data-subject-name="' +subjectName+ '" data-subject-id="';
     var li_2 = '" data-taught-subject-id="';;
-    var li_3 = '">' +subjectName+ '<span class="url">http://localhost/school/public/nauczany_przedmiot/delete/';
+    var li_3 = '">' +subjectName+ '<span class="url">http://localhost/school/nauczany_przedmiot/delete/';
     var li_4 = '</span></li>';
 
     $.ajax({
@@ -93,7 +93,6 @@ function deleteSubject(url, id, subject_id, subjectName) {
         error: function(blad) { alert(blad); }
     });
 }
-
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
