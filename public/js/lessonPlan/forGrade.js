@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 // ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
@@ -67,7 +67,7 @@ function showOrHideLesson() {
         });
 
         if(start <= dateView && end >= dateView) {
-            var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
+                var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
             $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html(hours);
             if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
         }
@@ -201,7 +201,7 @@ function changeLessonHour(lesson_id, lessonhour_id, old_lessonhour_id) {
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/plan_lekcji/"+lesson_id,
         data: { id: lesson_id, lesson_hour_id: lessonhour_id, classroom_id: 0 },
-        error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja changeLessonHour'); return false; }
+        error: function() { alert('Błąd: lessonPlan/forGrade.js - funkcja changeLessonHour'); return false; }
     });
 }
 

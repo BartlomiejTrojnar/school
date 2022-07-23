@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.09.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -20,11 +20,11 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showInfo') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showSubjects') }}">przedmioty <i class='fas fa-chalkboard'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showGroups') }}">grupy <i class='fas fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showGrades') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/showLessonPlans') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/przedmioty') }}">przedmioty <i class='fas fa-chalkboard'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/grupy') }}">grupy <i class='fas fa-users'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/klasy') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>
 

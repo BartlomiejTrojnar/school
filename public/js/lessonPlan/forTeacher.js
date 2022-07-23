@@ -1,22 +1,36 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ------------------------ //
 // ---------------- wydarzenia na stronie wyświetlania planu lekcji nauczyciela ---------------- //
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
+function countStudents(group, dateView) {
+    var countStudents = 0;
+    $('li[data-group_id='+group+'] .groupStudents li').each(function() {
+        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+    });
+    $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+}
+
 function showOrHideLesson() {
     var dateView = $('#dateView').val();
     var group_id, hours;
-    $('#teacherGroups li').each(function() {
+    $('#teacherGroups li.teacherGroup').each(function() {
         hours = $(this).data('hours');
         $(this).children('span.hours').html(hours);
+        group_id = $(this).data('group_id');
+        countStudents(group_id, dateView);
     });
     $('#teacherPlan li').each(function() {
         $(this).show();
-        var teacher_id = $(this).children('.teacher').children('aside').html();
-        if(teacher_id != $('#teacher_id').val())    $(this).hide();
+        // jeżeli data widoku nie mieści się między datą początku i końca lekcji - ukrycie lekcji
         var start = $(this).children('.lessonDates').children('.start').html();
-        if(start > dateView)    $(this).hide();
         var end = $(this).children('.lessonDates').children('.end').html();
-        if(end < dateView)    $(this).hide();
+        if(start > dateView || end<dateView)    $(this).hide();
+        // jeżeli data widoku nie mieści się między datą początku i końca nauczyciela w grupie - ukrycie lekcji
+        var teacher_id = $("#teacher_id").val();
+        var teacherStart = $(this).children('span.teacher[data-teacher_id="'+teacher_id+'"]').data('start');
+        var teacherEnd = $(this).children('span.teacher[data-teacher_id="'+teacher_id+'"]').data('end');
+        if(teacherStart>dateView || teacherEnd<dateView)    $(this).hide();
+        // jeżeli lekcja jest widoczna - zmniejszenie liczby godzin do dodania na plan lekcji w sekcji grupy nauczyciela (#teacherGroups)
         if(start <= dateView  &&  end >= dateView)  {
             group_id = $(this).data('group_id');
             hours = parseInt( $('#teacherGroups li[data-group_id="'+group_id+'"] span.hours').html() )-1;
@@ -49,47 +63,6 @@ function increaseVisibleGroupHours(group_id) {  // funkcja odczytuje i zwiększa
     if(hours>0) $('li.teacherGroup[data-group_id=' +group_id+ ']').show(1000);
 }
 
-function dropInLessonPlan() {  // opuszczenie lekcji/grupy na planie lekcji nauczyciela
-    $('#teacherPlan').delegate('td', 'drop', function(event) {
-        var data = event.originalEvent.dataTransfer;
-        var lessonhour_id = $(this).data('lessonhour_id');
-        var dateView = $('#dateView').val();
-
-        if( data.getData('type')=='group' ) {   // jeżeli opuszczono grupę - dodanie lekcji
-            var group_id = data.getData('group_id');
-            if( addLesson(group_id, lessonhour_id, dateView) )  decreaseVisibleGroupHours(group_id);
-            return false;
-        }
-        else {
-            var lesson_id = data.getData('lesson_id');
-            var start = $('li[data-lesson_id="'+lesson_id+'"] .start').html();
-            var old_lessonhour_id = data.getData('lessonhour_id');
-
-            if(start == dateView) {     // tylko aktualizacja lekcji
-                var group_id = $('li[data-lesson_id="'+lesson_id+'"]').data('group_id');
-                var classroom_id = $('li[data-lesson_id="'+lesson_id+'"] .classroom aside').html();
-                var end = $('li[data-lesson_id="'+lesson_id+'"] .end').html();
-                $.when( update(lesson_id, group_id, lessonhour_id, classroom_id, start, end) ).then(function() {
-                    moveLesson(lesson_id, lessonhour_id, old_lessonhour_id);
-                });
-            }
-            else {
-                if( cloneLesson(lesson_id, lessonhour_id, dateView) ) {
-                    var end = changeAndFormatDate(dateView, -1);
-                    setTheEndDateOfTheLesson(lesson_id, end);
-                    moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, dateView);
-                }
-            }
-        }
-        if(event.preventDefault) event.preventDefault();
-        return false;
-    });
-    $('#teacherPlan td').bind('dragover', function(event) {
-        if(event.preventDefault) event.preventDefault();
-        return false;
-    });
-}
-
 function moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, start='') {
     $('li[data-lesson_id="'+lesson_id+'"]').clone().appendTo('td[data-lessonhour_id="'+lessonhour_id+'"] ul').hide();
     if(start)  {
@@ -102,14 +75,95 @@ function moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, start='') {
     });
 }
 
-function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // zapisanie zmian lekcji w bazie danych
+function addLessonToTable(id, group_id, lessonhour_id, start, end) {
+    var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
+    var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
+    li += lessonDescription + '</li>';
+    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').append(li);
+    $('li[data-lesson_id="'+id+'"] .start').html(start);
+    $('li[data-lesson_id="'+id+'"] .end').html(end);
+    $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
+    $('li[data-lesson_id="'+id+'"] .hours').remove();
+    dragLesson();
+}
+
+function addLesson(group_id, lessonhour_id, start, end) {  // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/plan_lekcji",
+        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start, end: end },
+        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start, end); },
+        error: function(result) { alert('Błąd: teacherPlan.js - funkcja addLesson'); alert(result); }
+    });
+    return true;
+}
+
+function setTheEndDateOfTheLesson(lesson_id, end) {  // ustawienie daty końcowej dla lekcji w planie
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/lessonPlan/setTheEndDateOfTheLesson",
+        data: { lesson_id: lesson_id, end: end },
+        success: function() { return true; },
+        error: function() { alert('Błąd: teacherPlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
+    });
+    return true;
+}
+
+function cloneLesson(lesson_id, lessonhour_id, old_lessonhour_id, start) {  // wstawienie nowej lekcji (na podstawie lekcji przeciągniętej) od podanej daty
+    var end = $('li[data-lesson_id="'+lesson_id+'"] .end').html();
+    setTheEndDateOfTheLesson(lesson_id, changeAndFormatDate(start, -1));
+    moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, start);
+
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/lessonPlan/cloneLesson",
+        data: { lesson_id: lesson_id, lesson_hour_id: lessonhour_id, start: start, end: end },
+        success: function(result) { $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"]').attr('data-lesson_id', result).fadeIn(1000);  },
+        error: function() { alert('Błąd: teacherPlan.js - funkcja cloneLesson'); return 0; }
+    });
+}
+
+function changeLessonHour(lesson_id, lessonhour_id, old_lessonhour_id) {
+    moveLesson(lesson_id, lessonhour_id, old_lessonhour_id);
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/plan_lekcji/"+id,
-        data: { id: id, group_id: group_id, lesson_hour_id: lessonhour_id, classroom_id: classroom_id, start: start, end: end },
-        success: function(result) { return result; },
-        error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja update'); return false; }
+        url: "http://localhost/school/plan_lekcji/"+lesson_id,
+        data: { id: lesson_id, lesson_hour_id: lessonhour_id, classroom_id: 0 },
+        error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja changeLessonHour'); return false; }
+    });
+}
+
+function dropInLessonPlan() {  // opuszczenie lekcji/grupy na planie lekcji nauczyciela
+    $('#teacherPlan').delegate('td', 'drop', function(event) {
+        var data = event.originalEvent.dataTransfer;
+        var lessonhour_id = $(this).data('lessonhour_id');
+        var dateView = $('#dateView').val();
+
+        if( data.getData('type')=='group' ) {   // jeżeli opuszczono grupę - dodanie lekcji
+            var group_id = data.getData('group_id');
+            var end = $("li[data-group_id="+group_id+"] .end").html();
+            decreaseVisibleGroupHours(group_id);  // zmniejszenie liczby lekcji do obsadzenia na liście grup
+            // dodaj lekcję na wybranej godzinie od daty początkowej
+            addLesson(group_id, lessonhour_id, dateView, end);
+        }
+        else {
+            var lesson_id = data.getData('lesson_id');
+            var start = $('li[data-lesson_id="'+lesson_id+'"] .start').html();
+            var old_lessonhour_id = data.getData('lessonhour_id');
+
+            if(start == dateView)   changeLessonHour(lesson_id, lessonhour_id, old_lessonhour_id);  // tylko zmiana godziny dla lekcji
+            else    cloneLesson(lesson_id, lessonhour_id, old_lessonhour_id, dateView);    // sklonowanie lekcji z nową datą początkową i godziną lekcji, zmiana daty końcowej dla "starej" lekcji
+        }
+        if(event.preventDefault) event.preventDefault();
+        return false;
+    });
+    $('#teacherPlan td').bind('dragover', function(event) {
+        if(event.preventDefault) event.preventDefault();
+        return false;
     });
 }
 
@@ -169,54 +223,6 @@ function dropLessonInCompleteRemoveField() {  // opuszczenie lekcji w polu całk
         if(event.preventDefault) event.preventDefault();
         return false;
     });
-}
-
-function addLesson(group_id, lessonhour_id, start) {  // wstawienie nowej lekcji dla wskazanej grupy od podanej daty
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/lessonPlan/addLesson",
-        data: { group_id: group_id, lesson_hour_id: lessonhour_id, start: start },
-        success: function(id) { addLessonToTable(id, group_id, lessonhour_id, start); },
-        error: function(result) { alert('Błąd: teacherPlan.js - funkcja addLesson'); alert(result); }
-    });
-    return true;
-}
-
-function addLessonToTable(id, group_id, lessonhour_id, start) {
-    var lessonDescription = $('li[data-group_id="'+group_id+'"]').html();
-    var li = '<li class="bg-warning" data-lesson_id="'+id+'" data-type="lesson" data-group_id="'+group_id+'">';
-    li += lessonDescription + '</li>';
-    $('td[data-lessonhour_id="'+lessonhour_id+'"] ul').html(li);
-    $('li[data-lesson_id="'+id+'"] .start').html(start);
-    $('li[data-lesson_id="'+id+'"] .groupDates').addClass('lessonDates').removeClass('groupDates');
-    $('li[data-lesson_id="'+id+'"] .hours').remove();
-    dragLesson();
-}
-
-
-function cloneLesson(lesson_id, lessonhour_id, start) {  // wstawienie nowej lekcji (na podstawie lekcji przeciągniętej) od podanej daty
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/lessonPlan/cloneLesson",
-        data: { lesson_id: lesson_id, lesson_hour_id: lessonhour_id, start: start },
-        success: function(result) { return result; },
-        error: function(result) { alert('Błąd: teacherPlan.js - funkcja cloneLesson'); alert(result); }
-    });
-    return true;
-}
-
-function setTheEndDateOfTheLesson(lesson_id, end) {  // ustawienie daty końcowej dla lekcji w planie
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/lessonPlan/setTheEndDateOfTheLesson",
-        data: { lesson_id: lesson_id, end: end },
-        success: function() { return true; },
-        error: function() { alert('Błąd: teacherPlan.js - funkcja setTheEndDateOfTheLesson'); return false; }
-    });
-    return true;
 }
 
 function removeLesson(lesson_id) {  // usunięcie lekcji (całkowite usunięcie rekordu z bazy danych)

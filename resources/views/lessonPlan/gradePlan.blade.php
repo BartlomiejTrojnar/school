@@ -41,7 +41,6 @@
          @foreach($group->teachers as $groupTeacher)
             <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">/{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/</span>
          @endforeach
-
          <!-- uczniowie -->
          <ol class="groupStudents hidden">
             @foreach($group->students as $groupStudent)
