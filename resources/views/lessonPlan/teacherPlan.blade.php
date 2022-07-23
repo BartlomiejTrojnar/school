@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -81,7 +81,7 @@
                            <code class="studentsCount" title="liczba uczniów"></code>
                            <!-- nauczyciel -->
                            @foreach($lesson->group->teachers as $groupTeacher)
-                           <span class="teacher" hidden data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">
+                           <span class="teacher" hidden2 data-teacher_id="{{ $groupTeacher->teacher_id }}" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">
                               /{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/
                            </span>
                            @endforeach

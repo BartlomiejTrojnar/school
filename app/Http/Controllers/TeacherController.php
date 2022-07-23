@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -89,7 +89,7 @@ class TeacherController extends Controller
     public function show($id, TeacherRepository $teacherRepo, SchoolYearRepository $syRepo, GradeRepository $gradeRepo, SubjectRepository $subjectRepo,
         GroupRepository $groupRepo, SchoolRepository $schoolRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
 
-            if(empty(session()->get('teacherView')))  session()->put('teacherView', 'showInfo');
+        if(empty(session()->get('teacherView')))  session()->put('teacherView', 'showInfo');
         if($view)  session()->put('teacherView', $view);
         $this->teacher = $teacherRepo -> find($id);
         session()->put('teacherSelected', $id);
@@ -98,11 +98,11 @@ class TeacherController extends Controller
         list($this->previous, $this->next) = $teacherRepo -> nextAndPreviousRecordId($teachers, $id);
 
         switch( session()->get('teacherView') ) {
-            case 'showInfo':        return $this -> showInfo();
-            case 'showSubjects':    return $this -> showSubjects();
-            case 'showGroups':      return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
-            case 'showGrades':      return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
-            case 'showLessonPlans': return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
+            case 'info':        return $this -> showInfo();
+            case 'przedmioty':  return $this -> showSubjects();
+            case 'grupy':       return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
+            case 'klasy':       return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
+            case 'planlekcji':  return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('teacherView'));
         }
@@ -131,21 +131,21 @@ class TeacherController extends Controller
         else $year = date('Y');
         $grades = $gradeRepo -> getFilteredAndSorted($year, 0);
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year, "name"=>"grade_id"]);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year, "name"=>"grade_id"]);
 
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
 
         $levelSelected = session()->get('levelSelected');
         $levels = array('rozszerzony', 'podstawowy');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
         $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $this->teacher->id);
-        $teacherGroups = view('group.table', ["groups"=>$groups, "subTitle"=>"grupy nauczyciela", "version"=>"forTeacher", "start"=>$start, "end"=>$end,
-            "gradeSelectField"=>$gradeSelectField, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>"", "grade_id"=>0]);
+        $teacherGroups = view('group.table', ["schoolYearSF"=>"", "subTitle"=>"grupy nauczyciela", "gradeSF"=>$gradeSF, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF,
+            "start"=>$start, "end"=>$end, "teacherSF"=>"", "groups"=>$groups, "grade_id"=>0, "version"=>"forTeacher"]);
         $js = "group/operations.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherGroups]);
     }
@@ -161,12 +161,12 @@ class TeacherController extends Controller
 
         $schools = $schoolRepo -> getAllSorted();
         $schoolSelected = session()->get('schoolSelected');
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
 
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYearSelected = session()->get('schoolYearSelected');
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
-        $teacherGrades = view('grade.tableForTeacher', ["grades"=>$grades, "subTitle"=>"klasy nauczyciela", "year"=>$year, "schoolSelectField"=>$schoolSelectField, "schoolYearSelectField"=>$schoolYearSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        $teacherGrades = view('grade.tableForTeacher', ["schoolYearSF"=>$schoolYearSF, "schoolSF"=>$schoolSF, "grades"=>$grades, "year"=>$year]);
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$teacherGrades]);
     }
 

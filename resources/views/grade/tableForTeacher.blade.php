@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.09.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ********************** -->
 <table id="grades">
    <thead>
       <tr>
@@ -9,8 +9,8 @@
          ?>
       </tr> 
       <tr>
-         <td colspan="2"><?php  print_r($schoolYearSelectField);  ?></td>
-         <td><?php  print_r($schoolSelectField);  ?></td>
+         <td colspan="2"><?php  print_r($schoolYearSF);  ?></td>
+         <td><?php  print_r($schoolSF);  ?></td>
       </tr>
    </thead>
 

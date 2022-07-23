@@ -1,20 +1,36 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ------------------------ //
 // ---------------- wydarzenia na stronie wyświetlania planu lekcji nauczyciela ---------------- //
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
+function countStudents(group, dateView) {
+    var countStudents = 0;
+    $('li[data-group_id='+group+'] .groupStudents li').each(function() {
+        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+    });
+    $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+}
+
 function showOrHideLesson() {
     var dateView = $('#dateView').val();
     var group_id, hours;
-    $('#teacherGroups li').each(function() {
+    $('#teacherGroups li.teacherGroup').each(function() {
         hours = $(this).data('hours');
         $(this).children('span.hours').html(hours);
+        group_id = $(this).data('group_id');
+        countStudents(group_id, dateView);
     });
     $('#teacherPlan li').each(function() {
         $(this).show();
+        // jeżeli data widoku nie mieści się między datą początku i końca lekcji - ukrycie lekcji
         var start = $(this).children('.lessonDates').children('.start').html();
-        if(start > dateView)    $(this).hide();
         var end = $(this).children('.lessonDates').children('.end').html();
-        if(end < dateView)    $(this).hide();
+        if(start > dateView || end<dateView)    $(this).hide();
+        // jeżeli data widoku nie mieści się między datą początku i końca nauczyciela w grupie - ukrycie lekcji
+        var teacher_id = $("#teacher_id").val();
+        var teacherStart = $(this).children('span.teacher[data-teacher_id="'+teacher_id+'"]').data('start');
+        var teacherEnd = $(this).children('span.teacher[data-teacher_id="'+teacher_id+'"]').data('end');
+        if(teacherStart>dateView || teacherEnd<dateView)    $(this).hide();
+        // jeżeli lekcja jest widoczna - zmniejszenie liczby godzin do dodania na plan lekcji w sekcji grupy nauczyciela (#teacherGroups)
         if(start <= dateView  &&  end >= dateView)  {
             group_id = $(this).data('group_id');
             hours = parseInt( $('#teacherGroups li[data-group_id="'+group_id+'"] span.hours').html() )-1;
@@ -130,11 +146,6 @@ function dropInLessonPlan() {  // opuszczenie lekcji/grupy na planie lekcji nauc
         if( data.getData('type')=='group' ) {   // jeżeli opuszczono grupę - dodanie lekcji
             var group_id = data.getData('group_id');
             var end = $("li[data-group_id="+group_id+"] .end").html();
-            $("#schoolYearEnds li").each( function() {
-                if( $(this).html()<dateView ) return;
-                if( $(this).html()>end ) return;
-                end = $(this).html();
-            });
             decreaseVisibleGroupHours(group_id);  // zmniejszenie liczby lekcji do obsadzenia na liście grup
             // dodaj lekcję na wybranej godzinie od daty początkowej
             addLesson(group_id, lessonhour_id, dateView, end);
@@ -156,18 +167,6 @@ function dropInLessonPlan() {  // opuszczenie lekcji/grupy na planie lekcji nauc
     });
 }
 
-/*
-function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // zapisanie zmian lekcji w bazie danych
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/plan_lekcji/"+id,
-        data: { id: id, group_id: group_id, lesson_hour_id: lessonhour_id, classroom_id: classroom_id, start: start, end: end },
-        success: function(result) { return result; },
-        error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja update'); return false; }
-    });
-}
-*/
 function dragLesson() {  // podnoszenie lekcji z planu lekcji
     $('#teacherPlan li').attr('draggable', 'true');
     $('#teacherPlan').delegate('li', 'dragstart', function(event) {
