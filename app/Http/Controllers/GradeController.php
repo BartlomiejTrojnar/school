@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -201,22 +201,22 @@ class GradeController extends Controller
     private function showGroup($subjectRepo, $teacherRepo, $groupRepo) {
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
 
         $levels = array('rozszerzony', 'podstawowy');
         $levelSelected = session()->get('levelSelected');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $teacherSelected = session()->get('teacherSelected');
         $teachers = $teacherRepo -> getAll();
-        $teacherSelectField = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
+        $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
         $groups = $groupRepo -> getFilteredAndSorted($this->grade->id, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
 
         $groupTable = view('group.table', ["version"=>"forGrade", "subTitle"=>"grupy klasy", "groups"=>$groups, "links"=>true, "start"=>$start, "end"=>$end, "grade_id"=>$this->grade->id,
-            "gradeSelectField"=>"", "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField, "schoolYearSelectField"=>""]);
+            "gradeSF"=>"", "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>""]);
         $js = "group/operations.js";
 
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$groupTable]);
