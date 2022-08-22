@@ -23,8 +23,8 @@ class StudentController extends Controller
         if( session() -> get('schoolYearSelected') ) {
             $schoolYear = $schoolYearRepo -> find( session() -> get('schoolYearSelected') );
             $students = $students
-                -> where('date_start', '>=', $schoolYear->date_start)
-                -> where('date_end', '<=', $schoolYear->date_end);
+                -> where('start', '>=', $schoolYear->date_start)
+                -> where('end', '<=', $schoolYear->date_end);
         }
         if( session() -> get('gradeSelected') )     $students = $students -> where('grade_id', '=', session() -> get('gradeSelected'));
         $students = $studentRepo -> sortAndPaginateRecords($students);

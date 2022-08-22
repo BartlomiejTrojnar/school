@@ -11,7 +11,8 @@
 @section('main-content')
 <p><a href="{{ route('uczen.import') }}">import uczniów</a></p>
 <aside>
-  <p>Dane importowane są z pliku <strong style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">C:/dane/nauczyciele/ksiegauczniow/KsiegaUczniowMSP.xlsx</strong>. Arkusz powinien nosić nazwę <em style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">Uczniowie</em>.</p>
+  <!-- <p>Dane importowane są z pliku <strong style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">C:/dane/nauczyciele/ksiegauczniow/KsiegaUczniowMSP.xlsx</strong>. Arkusz powinien nosić nazwę <em style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">Uczniowie</em>.</p> -->
+  <p>Dane importowane są z pliku <strong style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">C:/dane/nauczyciele/ksiegauczniow/KsiegaUczniow2LO.xlsx</strong>. Arkusz powinien nosić nazwę <em style="border: 1px solid #66f; padding: 5px; background: #555; color: #aaf;">Uczniowie</em>.</p>
   <p>W pliku kolejno powinny być kolumny nazwane: Nazwisko, imie, imie2, PESEL, miejsce_urodzenia, plec, szkola, numer_ksiegi.<br />
   W kolumnach I,J,K,L powinny być: data_przyjecia, poziom_przyjscia, data_opuszczenia, powod_opuszczenia (jeżeli jest data opuszczenia).<br />
   W ostatnich kolumnach M,N,O: oddzial, od, do (daty przynależności do oddziału).</p>
