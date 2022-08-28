@@ -165,7 +165,8 @@ class StudentImportController extends Controller {
         if(count($studentGrade)==0) {
             printf('<p>BRAK KLAS dla ucznia. Dodaję.</p>');
             $this -> addStudentGrade($student_id, $grade_id, $od, $do);
-            return; }
+            return;
+        }
         if(count($studentGrade)!=1) { echo '<p>Znaleziono NIEWŁAŚCIWĄ ilość klas ucznia.</p>'; return; }
         $od = substr($od, 0, 10);
         $do = substr($do, 0, 10);
@@ -184,6 +185,7 @@ class StudentImportController extends Controller {
         $newStudentGrade->confirmation_start = 1;
         $newStudentGrade->end = $end;
         $newStudentGrade->confirmation_end = 0;
+        //print_r($newStudentGrade);
         $newStudentGrade->save();
     }
 }
