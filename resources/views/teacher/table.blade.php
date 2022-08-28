@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.08.2022 *********************** -->
 @if( !empty( $links ) )
   {!! $teachers->render() !!}
 @endif
@@ -38,7 +38,7 @@
     @foreach($teachers as $teacher)
       <?php $count++; ?>
       <tr>
-        <td>{{ $count }}</td>
+        <td>{{ $count + session()->get('TeacherPage')*20-20 }}</td>
         <td>{{ $teacher->degree }}</td>
         <td>{{ $teacher->first_name }}</td>
         <td><a href="{{ route('nauczyciel.show', $teacher->id.'/przedmioty') }}">{{ $teacher->last_name }}</a></td>
