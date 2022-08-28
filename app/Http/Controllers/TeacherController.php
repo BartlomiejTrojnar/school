@@ -18,18 +18,12 @@ use Illuminate\Http\Request;
 class TeacherController extends Controller
 {
     public function index(TeacherRepository $teacherRepo, SchoolYearRepository $schoolYearRepo) {
-        $this -> setPage();
+        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
         $teachers = $teacherRepo -> getAllSortedAndPaginate();
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
         $teacherTable = view('teacher.table', ["teachers"=>$teachers, "links"=>true, "subTitle"=>"", "schoolYearSelectField"=>$schoolYearSelectField]);
         return view('teacher.index', ["teacherTable"=>$teacherTable]);
-    }
-
-    private function setPage() {
-        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
-        else if( !empty(session()->get('TeacherPage')) )
-            return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
     }
 
     public function orderBy($column) {
@@ -51,10 +45,10 @@ class TeacherController extends Controller
     public function create(ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
         $classrooms = $classroomRepo -> getAllSorted();
         $schoolYears = $schoolYearRepo -> getAllSorted();
-        return view('teacher.create')
-            -> nest('classroomSelectField', 'classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>0])
-            -> nest('firstYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id'])
-            -> nest('lastYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>0]);
+        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id']);
+        $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
+        return view('teacher.create', ["classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
     }
 
     public function store(Request $request) {
