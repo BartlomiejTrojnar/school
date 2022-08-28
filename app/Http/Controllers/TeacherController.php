@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -18,18 +18,12 @@ use Illuminate\Http\Request;
 class TeacherController extends Controller
 {
     public function index(TeacherRepository $teacherRepo, SchoolYearRepository $schoolYearRepo) {
-        $this -> setPage();
+        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
         $teachers = $teacherRepo -> getAllSortedAndPaginate();
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
         $teacherTable = view('teacher.table', ["teachers"=>$teachers, "links"=>true, "subTitle"=>"", "schoolYearSelectField"=>$schoolYearSelectField]);
         return view('teacher.index', ["teacherTable"=>$teacherTable]);
-    }
-
-    private function setPage() {
-        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
-        else if( !empty(session()->get('TeacherPage')) )
-            return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
     }
 
     public function orderBy($column) {
