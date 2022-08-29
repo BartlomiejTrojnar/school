@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif

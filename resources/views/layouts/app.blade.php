@@ -105,7 +105,7 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('rok_szkolny.index') }}">lata szkolne</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('sala.index') }}">sale lekcyjne</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('przedmiot.index') }}">przedmioty</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}?@if(!empty( session()->get('TeacherPage') ))page={{session()->get('TeacherPage')}} @endif">nauczyciele</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}@if(!empty( session()->get('TeacherPage') ))?page={{session()->get('TeacherPage')}} @endif">nauczyciele</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">uczniowie</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">klasy</a></li>

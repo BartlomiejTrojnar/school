@@ -1,6 +1,6 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.08.2022 *********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 ********************** -->
 @if( !empty( $links ) )
-  {!! $teachers->render() !!}
+   {!! $teachers->render() !!}
 @endif
 
 <h2>{{ $subTitle }}</h2>
@@ -33,41 +33,34 @@
     </tr>
   </thead>
 
-  <tbody>
-    <?php $count = 0; ?>
-    @foreach($teachers as $teacher)
-      <?php $count++; ?>
-      <tr>
-        <td>{{ $count + session()->get('TeacherPage')*20-20 }}</td>
-        <td>{{ $teacher->degree }}</td>
-        <td>{{ $teacher->first_name }}</td>
-        <td><a href="{{ route('nauczyciel.show', $teacher->id.'/przedmioty') }}">{{ $teacher->last_name }}</a></td>
-        <td>{{ $teacher->family_name }}</td>
-        <td>{{ $teacher->short }}</td>
-        <td>
-          @if($teacher->classroom_id)
-            <a href="{{ route('sala.show', $teacher->classroom_id) }}">{{ $teacher->classroom->name }}</a>
-          @endif
-        </td>
-        <td>@if($teacher->first_year_id) {{ substr($teacher->first_year->date_start, 0, 4) }} @endif</td>
-        <td>@if($teacher->last_year_id) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
-        <td>{{ $teacher->order }}</td>
-        <td>{{ $teacher->updated_at }}</td>
-        <td class="edit"><a class="btn btn-primary" href="{{ route('nauczyciel.edit', $teacher->id) }}">
-            <i class="fa fa-edit"></i>
-        </a></td>
-        <td class="destroy">
-          <form action="{{ route('nauczyciel.destroy', $teacher->id) }}" method="post" id="delete-form-{{$teacher->id}}">
-            {{ csrf_field() }}
-            {{ method_field('DELETE') }}
-            <button class="btn btn-primary"><i class="fa fa-remove"></i></button>
-          </form>
-        </td>
-      </tr>
-    @endforeach
+   <tbody>
+      <?php $count = 0; ?>
+      @foreach($teachers as $teacher)
+         <?php $count++; ?>
+         <tr data-teacher_id="{{$teacher->id}}">
+            <td>{{ $count + session()->get('TeacherPage')*20-20 }}</td>
+            <td>{{ $teacher->degree }}</td>
+            <td>{{ $teacher->first_name }}</td>
+            <td><a href="{{ route('nauczyciel.show', $teacher->id) }}">{{ $teacher->last_name }}</a></td>
+            <td>{{ $teacher->family_name }}</td>
+            <td>{{ $teacher->short }}</td>
+            <td>
+               @if($teacher->classroom_id)
+                  <a href="{{ route('sala.show', $teacher->classroom_id) }}">{{ $teacher->classroom->name }}</a>
+               @endif
+            </td>
+            <td>@if($teacher->first_year_id) {{ substr($teacher->first_year->date_start, 0, 4) }} @endif</td>
+            <td>@if($teacher->last_year_id) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
+            <td>{{ $teacher->order }}</td>
+            <td>{{ $teacher->updated_at }}</td>
+            <td class="edit destroy c">
+               <button class="edit btn btn-primary"    data-teacher_id="{{ $teacher->id }}"><i class="fa fa-edit"></i></button>
+               <button class="destroy btn btn-primary" data-teacher_id="{{ $teacher->id }}"><i class="fas fa-remove"></i></button>
+            </td>
+         </tr>
+      @endforeach
 
-    <tr class="create"><td colspan="13">
-        <a class="btn btn-primary" href="{{ route('nauczyciel.create') }}"><i class="fa fa-plus"></i></a>
-    </td></tr>
-  </tbody>
+      <tr class="create"><td colspan="12"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+   </tbody>
 </table>
+<input id="countTeachers" type="hidden" value="{{ count($teachers) + session()->get('TeacherPage')*20-20 }}" />

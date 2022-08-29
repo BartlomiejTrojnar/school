@@ -30,7 +30,7 @@ function refreshRow(id, lp=0, version) {  // odświeżenie wiersza z klasą o po
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasa/refreshRow",
+        url: "http://localhost/school/klasa/refreshRow",
         data: { id: id, version: "forIndex", lp: lp },
         success: function(result) {
             if(version=="add"){
@@ -62,7 +62,7 @@ function showCreateRow() {
     $.ajax({
         method: "GET",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasa/create",
+        url: "http://localhost/school/klasa/create",
         data: { version: "forIndex" },
         success: function(result) { $('table#grades').append(result); },
         error: function() {
@@ -76,14 +76,12 @@ function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub
     $('table#grades').delegate('#cancelAdd', 'click', function() {
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 
     $('table#grades').delegate('#add', 'click', function() {
         add();
         $('#createRow').remove();
         $('#showCreateRow').show();
-        return false;
     });
 }
 
@@ -97,7 +95,7 @@ function add() {   // zapisanie klasy w bazie danych
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasa",
+        url: "http://localhost/school/klasa",
         data: { year_of_beginning: year_of_beginning, year_of_graduation: year_of_graduation, symbol: symbol, school_id: school_id },
         success: function(id) {
             refreshRow(id, lp, "add");
@@ -117,7 +115,7 @@ function editClick() {     // kliknięcie przycisku modyfikowania klasy
         $.ajax({
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/klasa/"+id+"/edit",
+            url: "http://localhost/school/klasa/"+id+"/edit",
             data: { id: id, lp: lp, version: "forIndex" },
             success: function(result) {
                 $('tr[data-grade_id='+id+']').before(result).hide();
@@ -136,17 +134,15 @@ function updateClick() {     // ustawienie instrukcji po kliknięciu anulowania 
         var id = $(this).data('grade_id');
         $('.editRow[data-grade_id='+id+']').remove();
         $('tr[data-grade_id='+id+']').show();
-        return false;
     });
 
     $('.update').click(function(){
         var id = $(this).data('grade_id');
         update(id);
-        return false;
     });
 }
 
-function update(id) {   // zapisanie deklaracji w bazie danych
+function update(id) {   // zapisanie klasy w bazie danych
     var year_of_beginning   = $('tr[data-grade_id='+id+'] input[name="year_of_beginning"]').val();
     var year_of_graduation  = $('tr[data-grade_id='+id+'] input[name="year_of_graduation"]').val();
     var symbol              = $('tr[data-grade_id='+id+'] input[name="symbol"]').val();
@@ -156,7 +152,7 @@ function update(id) {   // zapisanie deklaracji w bazie danych
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/public/klasa/"+id,
+        url: "http://localhost/school/klasa/"+id,
         data: { id: id, year_of_beginning: year_of_beginning, year_of_graduation: year_of_graduation, symbol: symbol, school_id: school_id },
         success: function() { refreshRow(id, lp, "forIndex"); },
         error: function() {
@@ -166,13 +162,13 @@ function update(id) {   // zapisanie deklaracji w bazie danych
     });
 }
 
-function destroyClick() {  // usunięcie deklaracji (z bazy danych)
+function destroyClick() {  // usunięcie klasy (z bazy danych)
     $('table#grades').delegate('button.destroy', 'click', function() {
         var id = $(this).data('grade_id');
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/public/klasa/" + id,
+            url: "http://localhost/school/klasa/" + id,
             success: function() { $('tr[data-grade_id='+id+']').remove(); },
             error: function() {
                 var error = '<tr><td colspan="4" class="error">Błąd usuwania klasy.</td></tr>';
