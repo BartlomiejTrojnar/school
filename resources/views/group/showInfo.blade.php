@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <th>godziny</th>
-    <td data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
+    <td class="c" data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
       <button id="hourSubtract" class="btn-xs btn-primary" data-group_id="{{$group->id}}">
         <i class="fas fa-minus"></i>
       </button>
@@ -27,7 +27,7 @@
   </tr>
   <tr>
     <th>uwagi</th>
-    <td>{{ $group->comments }}</td>
+    <td class="c">{{ $group->comments }}</td>
   </tr>
   <tr>
     <th>nauczyciele</th>
@@ -79,8 +79,11 @@
 
   <tr>
     <th>liczba uczniów</th>
-    <td>{{ $group->students->count() }}</td>
+    <td class="c">{{ $group->students->count() }}</td>
   </tr>
 </table>
 
-<p><button class="btn btn-primary" id="groupExtension">Przedłuż grupę</button> do <input type="date" id="dateGroupExtension" value="{{$group->end}}"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> </p>
+<p>Przedłuż grupę do <input type="date" id="dateGroupExtension" value="{{$group->end}}"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> <button class="btn btn-primary" id="groupExtension">przedłuż</button>
+  <button class="btn btn-primary" id="groupExtension4">przedłuż do 2023-04-28</button>
+  <button class="btn btn-primary" id="groupExtension123">przedłuż do 2023-06-23</button>
+</p>

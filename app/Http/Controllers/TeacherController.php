@@ -83,7 +83,7 @@ class TeacherController extends Controller
     public function show($id, TeacherRepository $teacherRepo, SchoolYearRepository $syRepo, GradeRepository $gradeRepo, SubjectRepository $subjectRepo,
         GroupRepository $groupRepo, SchoolRepository $schoolRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
 
-        if(empty(session()->get('teacherView')))  session()->put('teacherView', 'showInfo');
+        if(empty(session()->get('teacherView')))  session()->put('teacherView', 'info');
         if($view)  session()->put('teacherView', $view);
         $this->teacher = $teacherRepo -> find($id);
         session()->put('teacherSelected', $id);

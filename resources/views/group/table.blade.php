@@ -101,7 +101,7 @@
             <td><a href="{{ route('przedmiot.show', $group->subject_id) }}">{{ $group->subject->name }}</a></td>
             <td>{{ $group->level }}</td>
             <td>{{ $group->comments }}</td>
-            <td class="small">{{ $group->start }} - {{ $group->end }}</td>
+            <td class="small @if(substr($group->end,0,4)==2023) btn-danger @endif">{{ $group->start }} - {{ $group->end }}</td>
             <td class="c">{{ $group->hours }}</td>
             <!-- nauczyciele -->
             <td class="small">
@@ -148,3 +148,8 @@
    </tbody>
 </table>
 <a class="btn btn-danger" href="{{ route('grupa.editComments') }}">zmień uwagi</a>
+<?php
+   $countHours=0;
+   foreach($groups as $group)    $countHours += $group->hours;
+?>
+<p>Liczba godzin: {{$countHours}}</p>

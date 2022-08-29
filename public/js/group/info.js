@@ -110,6 +110,37 @@ function groupExtensionClick() {
     });
 }
 
+function groupExtension123Click() {
+    $('button#groupExtension123').bind('click', function(){
+        var group_id = $("#groupExtensionId").val();
+        var dateGroupExtension = '2023-06-23';
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/group/extension/",
+            data: { group_id: group_id, dateGroupExtension: dateGroupExtension },
+            success: function(result) { if(result==1) window.location.reload(); else alert(result); },
+            error: function(result) { alert("Error: "+result); },
+        });
+        return false;
+    });
+}
+
+function groupExtension4Click() {
+    $('button#groupExtension4').bind('click', function(){
+        var group_id = $("#groupExtensionId").val();
+        var dateGroupExtension = '2023-04-28';
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/group/extension/",
+            data: { group_id: group_id, dateGroupExtension: dateGroupExtension },
+            success: function(result) { if(result==1) window.location.reload(); else alert(result); },
+            error: function(result) { alert("Error: "+result); },
+        });
+        return false;
+    });
+}
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
@@ -117,4 +148,6 @@ $(document).ready(function() {
     teacherRemoveClick();
     gradeRemoveClick();
     groupExtensionClick();
+    groupExtension123Click();
+    groupExtension4Click();
 });
