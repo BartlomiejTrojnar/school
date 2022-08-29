@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -52,6 +52,7 @@ class TeacherController extends Controller
     }
 
     public function store(Request $request) {
+        //return $request->first_name;
         $this -> validate($request, [
           'first_name' => 'max:16',
           'last_name' => 'required|max:18',
@@ -75,7 +76,7 @@ class TeacherController extends Controller
         $teacher->order = $request->order;
         $teacher -> save();
 
-        return redirect($request->history_view);
+        return $teacher->id;
     }
 
     public function change($id) { session()->put('teacherSelected', $id); }
@@ -83,7 +84,7 @@ class TeacherController extends Controller
     public function show($id, TeacherRepository $teacherRepo, SchoolYearRepository $syRepo, GradeRepository $gradeRepo, SubjectRepository $subjectRepo,
         GroupRepository $groupRepo, SchoolRepository $schoolRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
 
-            if(empty(session()->get('teacherView')))  session()->put('teacherView', 'showInfo');
+            if(empty(session()->get('teacherView')))  session()->put('teacherView', 'info');
         if($view)  session()->put('teacherView', $view);
         $this->teacher = $teacherRepo -> find($id);
         session()->put('teacherSelected', $id);
@@ -92,11 +93,11 @@ class TeacherController extends Controller
         list($this->previous, $this->next) = $teacherRepo -> nextAndPreviousRecordId($teachers, $id);
 
         switch( session()->get('teacherView') ) {
-            case 'showInfo':        return $this -> showInfo();
-            case 'showSubjects':    return $this -> showSubjects();
-            case 'showGroups':      return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
-            case 'showGrades':      return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
-            case 'showLessonPlans': return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
+            case 'info':        return $this -> showInfo();
+            case 'przedmioty':  return $this -> showSubjects();
+            case 'grupy':       return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
+            case 'klasy':       return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
+            case 'planlekcji':  return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('teacherView'));
         }
@@ -125,21 +126,21 @@ class TeacherController extends Controller
         else $year = date('Y');
         $grades = $gradeRepo -> getFilteredAndSorted($year, 0);
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year, "name"=>"grade_id"]);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year, "name"=>"grade_id"]);
 
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
 
         $levelSelected = session()->get('levelSelected');
         $levels = array('rozszerzony', 'podstawowy');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
         $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $this->teacher->id);
         $teacherGroups = view('group.table', ["groups"=>$groups, "subTitle"=>"grupy nauczyciela", "version"=>"forTeacher", "start"=>$start, "end"=>$end,
-            "gradeSelectField"=>$gradeSelectField, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>"", "grade_id"=>0]);
+            "gradeSF"=>$gradeSF, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>"", "schoolYearSF"=>"", "grade_id"=>0]);
         $js = "group/operations.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherGroups]);
     }
@@ -176,14 +177,14 @@ class TeacherController extends Controller
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
 
-    public function edit($id, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
-        $teacher = $teacher -> find($id);
+    public function edit(Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
+        $teacher = $teacher -> find($request->id);
         $classrooms = $classroomRepo->getAllSorted();
         $schoolYears = $schoolYearRepo->getAllSorted();
-        return view('teacher.edit', ["teacher"=>$teacher])
-            -> nest('classroomSelectField', 'classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id])
-            -> nest('firstYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id'])
-            -> nest('lastYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
+        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
+        $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
+        return view('teacher.edit', ["teacher"=>$teacher, "lp"=>$request->lp, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
     }
 
     public function update($id, Request $request, Teacher $teacher) {
@@ -211,13 +212,13 @@ class TeacherController extends Controller
         $teacher->order = $request->order;
         $teacher->save();
 
-        return redirect($request->history_view);
+        return $teacher->id;
     }
 
     public function destroy($id, Teacher $teacher) {
         $teacher = $teacher -> find($id);
-        $teacher->delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
+        $teacher -> delete();
+        return 1;
     }
 
     public function printOrder(TeacherRepository $teacherRepo) {
@@ -230,5 +231,10 @@ class TeacherController extends Controller
         $teacher->order = $request->order;
         $teacher->save();
         return $teacher->id;
+    }
+
+    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
+        $this->teacher = $teacherRepo -> find($request->id);
+        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
     }
 }
