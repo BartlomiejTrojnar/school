@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -101,7 +101,7 @@
             <td><a href="{{ route('przedmiot.show', $group->subject_id) }}">{{ $group->subject->name }}</a></td>
             <td>{{ $group->level }}</td>
             <td>{{ $group->comments }}</td>
-            <td class="small @if(substr($group->end,0,4)==2023) btn-danger @endif">{{ $group->start }} - {{ $group->end }}</td>
+            <td class="small">{{ $group->start }} - {{ $group->end }}</td>
             <td class="c">{{ $group->hours }}</td>
             <!-- nauczyciele -->
             <td class="small">
