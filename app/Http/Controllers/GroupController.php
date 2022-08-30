@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.08.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -73,8 +73,8 @@ class GroupController extends Controller
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelected = session() -> get('subjectSelected');
         $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
-        $levels = array('podstawowy', 'rozszerzony', 'nieokreślony');
-        $levelSelected = 'podstawowy';
+        $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
+        $levelSelected = '';
         $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
         $teacher = session()->get('teacherSelected');
 
@@ -274,7 +274,7 @@ class GroupController extends Controller
         $group = $group -> find($request->id);
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$group->subject_id]);
-        $levels = array('podstawowy', 'rozszerzony', 'nieokreślony');
+        $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
         $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$group->level]);
         return view('group.editRow', ["version"=>$request->version, "group"=>$group, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField]);
     }

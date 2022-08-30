@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -113,16 +113,16 @@ class SubjectController extends Controller
         $schoolYear = session()->get('schoolYearSelected');
         if( !empty($schoolYear) )  $schoolYear = $syRepo -> find( $schoolYear );
         $grades = $gradeRepo -> getFilteredAndSorted(substr($schoolYear->date_end, 0, 4), 0);
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>substr($schoolYear->date_end, 0, 4)]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>substr($schoolYear->date_end, 0, 4)]);
         $levels = array('rozszerzony', 'podstawowy');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
         $teachers = $teacherRepo -> getAll();
         $teacherSelected = session()->get('teacherSelected');
-        $teacherSelectField = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
+        $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
         $groupTable = view('group.table', ["subTitle"=>"grupy przedmiotu", "groups"=>$groups, "link"=>true, "start"=>$start, "end"=>$end,
-            "grade_id"=>$gradeSelected, "gradeSelectField"=>$gradeSelectField, "subjectSelectField"=>"",
-            "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField, "schoolYearSelectField"=>""]);
-        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupTable]);
+            "grade_id"=>$gradeSelected, "gradeSF"=>$gradeSF, "subjectSF"=>"",
+            "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>"", "version"=>"forSubject"]);
+        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupTable, "js"=>""]);
     }
 
     private function showExamDescriptions($subject, $sessionRepo, $examDescriptionRepo) {
