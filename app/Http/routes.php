@@ -162,7 +162,7 @@ Route::post('/grupa_uczniowie/getGroupStudents', 'GroupStudentController@getGrou
 Route::post('/grupa_uczniowie/getAnotherTimeGroupStudents', 'GroupStudentController@getAnotherTimeGroupStudents');
 Route::post('/grupa_uczniowie/getStudentGroups', 'GroupStudentController@getStudentGroups');
 Route::delete('/grupa_uczniowie/delete/{id}', 'GroupStudentController@delete');
-Route::get('/groupStudent/exportGroup/{group_id}', array('as'=>'groupStudent.exportGroup', 'uses'=>'GroupStudentExportController@group'));
+Route::get('/groupStudent/exportGroups', array('as'=>'groupStudent.exportGroups', 'uses'=>'GroupStudentExportController@groups'));
 
 
 // -------------------------------------------------------------------------------------------------------- //

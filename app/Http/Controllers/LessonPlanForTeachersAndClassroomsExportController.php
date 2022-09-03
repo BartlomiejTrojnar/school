@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;

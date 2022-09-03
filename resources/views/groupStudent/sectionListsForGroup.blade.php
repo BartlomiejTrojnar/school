@@ -12,7 +12,6 @@
 <p id="buttons">
    <button class="btn btn-primary" id="addAllStudents">dodaj wszystkich</button>
    <button class="btn btn-primary" id="addCheckedStudents">dodaj zaznaczonych</button>
-   <a class="btn btn-primary" href="{{ route('groupStudent.exportGroup', $group->id) }}">eksportuj (Excel)</a>
 </p>
 
 <div class="col-md-6">

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.08.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -367,8 +367,10 @@ class GroupController extends Controller
         // przedłużenie czasu przynależności uczniów do grupy (tych, którzy należeli do dotychczasowej daty końcowej grupy)
         $groupStudents = $groupStudentRepo -> getGroupStudents($request->group_id, $group->end);
         foreach($groupStudents as $groupStudent) {
-            $groupStudent->end = $request->dateGroupExtension;
-            $groupStudent -> save();
+            if($groupStudent->end == $group->end) {
+                $groupStudent->end = $request->dateGroupExtension;
+                $groupStudent -> save();
+            }
         }
 
         $group->end = $request->dateGroupExtension;
