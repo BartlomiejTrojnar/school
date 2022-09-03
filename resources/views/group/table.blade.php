@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.09.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -153,3 +153,4 @@
    foreach($groups as $group)    $countHours += $group->hours;
 ?>
 <p>Liczba godzin: {{$countHours}}</p>
+<a class="btn btn-primary" href="{{ route('groupStudent.exportGroups') }}">eksportuj (Excel)</a>
