@@ -1,5 +1,5 @@
 <ul id="studentGroupToWhichHeBelongedAtAnotherTime">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 04.09.2022 *********************** -->
    @foreach($studentGroups as $studentGroup)
       <li data-student_group="{{ $studentGroup->id }}" class="{{$studentGroup->group->level}}">
          [{{$studentGroup->group->id}}]

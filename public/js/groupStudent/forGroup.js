@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.09.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
@@ -294,8 +294,10 @@ function showOrHideOneStudent(group_student_id, start, end) {
     if(start>dateView || end<dateView) {
         $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").addClass('hide');
         $("#listGroupStudentsInOtherTime li[data-group_student_id='"+group_student_id+"']").removeClass('hide');
+        $("#countStudents").html( $("#countStudents").html()-1 );
     }
     else {
+        alert(300);
         $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").removeClass('hide');
         $("#listGroupStudentsInOtherTime li[data-group_student_id='"+group_student_id+"']").addClass('hide');
     }
