@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.09.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
 
 // -------------------------------- zarządzanie klasami ucznia --------------------------------- //
@@ -12,6 +12,7 @@ function refreshRowForStudentGrades(id, lp, add=false) {    // odświeżenie wie
             if(add){
                 $('#studentGrades tr.create').before(result);
                 $('#showCreateRow').show();
+                showCreateFormForBookOfStudentClick();
             }
             else {
                 $('tr.editRow[data-student_grade_id='+id+']').remove();

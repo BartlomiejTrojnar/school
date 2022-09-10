@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.07.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.09.2022 *********************** -->
 <!-- otwarcie wiersza dla ucznia -->
 @if($studentGrade->student->sex == 'mężczyzna')
    <tr class="man c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
@@ -8,9 +8,12 @@
 
    <td>{{$lp}}</td>
    <!-- numer z księgi ucznia -->
-   <td>
+   <td class="showCreateFormForBookOfStudent">
       @foreach($studentGrade->student->bookOfStudents as $book) {{ $book->number }} @endforeach
-      @if(count($studentGrade->student->bookOfStudents)==0) <a href="{{ route('ksiega_uczniow.create', "student_id=".$studentGrade->student->id) }}"><i class="fas fa-plus"></i></a> @endif
+      @if(count($studentGrade->student->bookOfStudents)==0)
+         <button class="btn btn-secondary"><i class="fas fa-plus"></i></button>
+         <aside class="createForm"></aside>
+      @endif
    </td>
 
    <!-- klasa ucznia -->
