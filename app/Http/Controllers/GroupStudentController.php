@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -175,11 +175,11 @@ class GroupStudentController extends Controller
     }
 
     public function removeYesterday(Request $request, GroupStudent $groupStudent) {
-        $dateEnd = $request->dateEnd;
+        $end = $request->end;
         $studentGroups = $groupStudent -> where('student_id', '=', $request->student_id) -> get();
         foreach($studentGroups as $studentGroup)
-            if($studentGroup->start <= $dateEnd && $studentGroup->end > $dateEnd) {
-                $studentGroup->end = $dateEnd;
+            if($studentGroup->start <= $end && $studentGroup->end > $end) {
+                $studentGroup->end = $end;
                 $studentGroup -> save();
             }
         return 1;

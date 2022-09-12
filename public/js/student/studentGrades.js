@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
 
 // -------------------------------- zarządzanie klasami ucznia --------------------------------- //
@@ -694,6 +694,9 @@ function removeFromGroups(student_id, end) {     // usunięcie ucznia z wszystki
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/groupStudent/removeYesterday",
         data: { student_id: student_id, end: end },
+        success: function(result) {
+            alert(result);
+        },
         error: function() {
             var error = '<tr><td colspan="6" class="error">Błąd usuwania ucznia z grup.</td></tr>';
             $('#studentGrades tr.create').before(error);
