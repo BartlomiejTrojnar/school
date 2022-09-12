@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
@@ -43,23 +43,18 @@ function showOrHideGroups() {
 function dateViewChange() {     // po zmianie widocznej na stronie daty widoku
     $('#dateView').bind('blur', function() {
         var dateView = $('#dateView').val();
-        sessionDateViewPut(dateView);
-        showOrHideGroups();
-
-        var group_id = $('#group_id').val();
-        $('#listOutsideGroupStudents').html('<li>aktualizacja...</li>');
-        refreshOutsideGroupStudentsList(group_id, dateView);
-    });
-}
-
-function sessionDateViewPut(dateView) {     // zapamiętanie wybranej daty jako daty widoku w sesji
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/rememberDates",
-        data: { dateView: dateView },
-        success: function(result) { alert(result); },
-        error: function(result) { alert(result); }
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/rememberDates",
+            data: { dateView: dateView },
+            success: function()  {
+                showOrHideGroups();
+                var group_id = $('#group_id').val();
+                $('#listOutsideGroupStudents').html('<li>aktualizacja...</li>');
+                refreshOutsideGroupStudentsList(group_id, dateView);
+            },
+        });
     });
 }
 

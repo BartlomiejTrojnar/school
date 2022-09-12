@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania grup ucznia ----------------------- //
 
 function showOrHideGroups() {
@@ -30,23 +30,19 @@ function showOrHideGroups() {
 
 function dateViewChange() {     // po zmianie widocznej na stronie daty widoku
     $('#dateView').bind('blur', function() {
-        var dateView = $('#dateView').val();
-        $.when( sessionDateViewPut(dateView) ).then(function() {
-            showOrHideGroups();
-            refreshOtherGroupsInStudentsClass();
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/rememberDates",
+            data: { dateView: $('#dateView').val() },
+            success: function()  {
+                showOrHideGroups();
+                refreshOtherGroupsInStudentsClass();
+            },
         });
-        return;
     });
 }
 
-function sessionDateViewPut(dateView) {     // zapamiętanie wybranej daty jako daty widoku w sesji
-    $.ajax({
-        type: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/rememberDates",
-        data: { dateView: dateView },
-    });
-}
 // ------------------------ modyfikacja przynależności ucznia do grupy ------------------------- //
 function refreshOtherGroupsInStudentsClass() {  // odświeżenie listy z innymi grupami w klasie ucznia
     var student = $('#student_id').val();
