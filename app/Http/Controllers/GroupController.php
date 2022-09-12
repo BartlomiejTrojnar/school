@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.08.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -205,7 +205,7 @@ class GroupController extends Controller
 
         $gradeSelected = session()->get('gradeSelected');
         $subjectSelected = session()->get('subjectSelected');
-        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected);
+        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected);
         list($this->previous, $this->next) = $groupRepo -> nextAndPreviousRecordId($groups, $id);
 
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
