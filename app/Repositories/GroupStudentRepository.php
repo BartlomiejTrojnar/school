@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 use App\Models\GroupStudent;

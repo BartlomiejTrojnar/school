@@ -248,6 +248,7 @@ function datesValidate(start, end) {      // sprawdzenie czy daty są prawidłow
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
+    alert(251);
     showOrHideGroups();
     editClick();
     destroyClick();

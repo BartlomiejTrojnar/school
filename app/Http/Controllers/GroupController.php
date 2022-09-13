@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -13,6 +13,7 @@ use App\Repositories\GroupTeacherRepository;
 use App\Repositories\LessonRepository;
 use App\Repositories\LessonPlanRepository;
 use App\Repositories\SchoolYearRepository;
+use App\Repositories\StudentGradeRepository;
 use App\Repositories\SubjectRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Http\Request;
@@ -197,7 +198,7 @@ class GroupController extends Controller
 
     public function change($id) {  session()->put('groupSelected', $id);  }
 
-    public function show($id, GroupRepository $groupRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, LessonRepository $lessonRepo, $view='') {
+    public function show($id, GroupRepository $groupRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, GroupStudentRepository $groupStudentRepo, StudentGradeRepository $studentGradeRepo, LessonPlanRepository $lessonPlanRepo, LessonRepository $lessonRepo, $view='') {
         session()->put('groupSelected', $id);
         if(empty( session()->get('groupView') ))  session()->put('groupView', 'showInfo');
         if($view) session()->put('groupView', $view);
@@ -217,7 +218,7 @@ class GroupController extends Controller
 
         switch( session() -> get('groupView') ) {
             case 'showInfo':        return $this -> showInfo($gradeRepo);
-            case 'showStudents':    return $this -> showStudents($schoolYearRepo, $groupStudentRepo);
+            case 'showStudents':    return $this -> showStudents($schoolYearRepo, $groupStudentRepo, $studentGradeRepo);
             case 'showLessonPlan':  return $this -> showLessonPlan($lessonPlanRepo);
             case 'showLessons':     return $this -> showLessons($lessonRepo);
             default:
@@ -236,14 +237,20 @@ class GroupController extends Controller
         return view('group.show', ["group"=>$this->group, "year"=>$this->year, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupInfo]);
     }
 
-    private function showStudents($schoolYearRepo, $groupStudentRepo) {
+    private function showStudents($schoolYearRepo, $groupStudentRepo, $studentGradeRepo) {
         $dateView = session()->get('dateView');
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($dateView);
         $groupStudents = $groupStudentRepo -> getGroupStudents($this->group->id);
-        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group, "year"=>$this->year]);
+        $year = substr($dateView,0,4);
+        if( substr($dateView,5,2)>=8 )  $year++;
+        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group, "year"=>$year]);
         $listGroupStudentsInOtherTime = view('groupStudent.listGroupStudentsInOtherTime', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
-        $outsideGroupStudents = $groupStudentRepo -> getOutsideGroupStudents($this->group, $dateView);
-        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
+        $grades = [];
+        foreach($this->group->grades as $groupGrade)  $grades[] = $groupGrade->grade_id;
+        $gradesStudents = $studentGradeRepo -> getStudentsFromGrades($grades);
+        $outsideGroupStudents = [];
+        foreach($gradesStudents as $gradeStudent)   $outsideGroupStudents[] = $gradeStudent->student;
+        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "year"=>$year]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);
