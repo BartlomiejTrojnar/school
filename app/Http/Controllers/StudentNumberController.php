@@ -2,7 +2,6 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.02.2022 ------------------------ //
 namespace App\Http\Controllers;
 
-use App\Models\StudentGrade;
 use App\Models\StudentNumber;
 use App\Repositories\StudentNumberRepository;
 
@@ -13,7 +12,6 @@ use Illuminate\Http\Request;
 
 class StudentNumberController extends Controller
 {
-    /*
     public function orderBy($column) {
         if(session()->get('StudentNumberOrderBy[0]') == $column)
             if(session()->get('StudentNumberOrderBy[1]') == 'desc')  session()->put('StudentNumberOrderBy[1]', 'asc');
@@ -26,7 +24,7 @@ class StudentNumberController extends Controller
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
+
     public function create(Request $request, StudentNumberRepository $snRepo, GradeRepository $gradeRepo, StudentGradeRepository $studentGradeRepo, SchoolYearRepository $syRepo) {
         if( $request->version=="forStudent" )   return $this -> createForStudent($request->student_id, $snRepo, $gradeRepo, $syRepo);
         if( $request->version=="forGrade" )     return $this -> createForGrade($request->grade_id, $snRepo, $studentGradeRepo, $syRepo);
