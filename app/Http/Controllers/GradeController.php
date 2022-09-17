@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -179,18 +179,18 @@ class GradeController extends Controller
         $schoolYears = $schoolYearRepo -> getAllSorted();
         if(session()->get('schoolYearSelected')) {
             $schoolYear = $schoolYearRepo -> find( session()->get('schoolYearSelected') );
-            $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear->id, "name"=>"school_year_id" ]);
+            $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear->id, "name"=>"school_year_id" ]);
             $studentNumbers = $studentNumberRepo -> getGradeNumbersForSchoolYear($this->grade->id, $schoolYear->id);
         }
         else {
             $schoolYear = $schoolYearRepo -> find( $schoolYearRepo -> getSchoolYearIdForDate(date('Y-m-d')) );
-            $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>"school_year_id" ]);
+            $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>"school_year_id" ]);
             $studentNumbers = $studentNumberRepo -> getGradeNumbers($this->grade->id);
         }
         $yearOfStudy = substr($schoolYear->date_end,0,4) - ($this->grade->year_of_beginning+1);
         if(substr($schoolYear->date_end,5,2)) $yearOfStudy++;
 
-        $tableForGrade = view('studentNumber.tableForGrade', ["schoolYearSelectField"=>$schoolYearSelectField, "studentNumbers"=>$studentNumbers, "grade"=>$this->grade]);
+        $tableForGrade = view('studentNumber.tableForGrade', ["schoolYearSF"=>$schoolYearSF, "studentNumbers"=>$studentNumbers, "grade"=>$this->grade, "dateView"=>session()->get('dateView')]);
         $count = count($studentNumbers);
         $sectionForGrade = view('studentNumber.sectionForGrade', ["grade"=>$this->grade, "tableForGrade"=>$tableForGrade, "count"=>$count, "yearOfStudy"=>$yearOfStudy]);
         $css = "grade/studentNumbers.css";

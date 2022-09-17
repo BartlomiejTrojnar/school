@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 ------------------------ //
 // -------------------- wydarzenia na stronie wyświetlania numerów uczniów --------------------- //
 function helpButtonsClick() { // obsługa kliknięcia w któryś z przycisków pomocy
     $('.answer').hide();
@@ -66,7 +66,7 @@ function refreshSection(grade_id) {  // odświeżenie tabeli z numerami uczniów
             confirmNumbersClick();
             addNumbersForGradeClick();
         },
-        error: function() {
+        error: function(wynik) {
             var error = '<p class="error">Błąd odświeżania tabeli z numerami ucznia.</p>';
             $('section#main-content ul.nav').after(error);
         },
