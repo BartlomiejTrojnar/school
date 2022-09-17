@@ -250,7 +250,7 @@ class GroupController extends Controller
         $gradesStudents = $studentGradeRepo -> getStudentsFromGrades($grades);
         $outsideGroupStudents = [];
         foreach($gradesStudents as $gradeStudent)   $outsideGroupStudents[] = $gradeStudent->student;
-        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "year"=>$year]);
+        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "year"=>$year, "grades"=>$grades]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);

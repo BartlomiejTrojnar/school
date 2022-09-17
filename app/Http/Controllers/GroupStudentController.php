@@ -70,7 +70,10 @@ class GroupStudentController extends Controller
         $groupStudent->end = $request->end;
         $groupStudent -> save();
         $schoolYear = session()->get('schoolYearSelected');
-        return view('groupStudent.liForStudentGroup', ["groupStudent"=>$groupStudent, "dateView"=>$request->start, "schoolYear"=>$schoolYear]);
+        $dateView = $request->start;
+        $year = substr($dateView, 0, 4);
+        if( substr($dateView, 5, 2) >= 8 )  $year++;
+        return view('groupStudent.liForStudentGroup', ["groupStudent"=>$groupStudent, "dateView"=>$request->start, "schoolYear"=>$schoolYear, "year"=>$year]);
     }
 
     public function addManyStudent(Request $request) {

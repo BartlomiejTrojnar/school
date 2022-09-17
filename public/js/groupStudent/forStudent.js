@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania grup ucznia ----------------------- //
 
 function showOrHideGroups() {
@@ -248,7 +248,6 @@ function datesValidate(start, end) {      // sprawdzenie czy daty są prawidłow
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
-    alert(251);
     showOrHideGroups();
     editClick();
     destroyClick();
