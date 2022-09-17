@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -45,11 +45,10 @@ class GroupStudentController extends Controller
     public function getOutsideGroupStudentsList(Request $request, Group $group, GroupStudentRepository $groupStudentRepo, SchoolYearRepository $schoolYearRepo) {
         $group = $group -> find($request->group_id);
         $outsideGroupStudents = $groupStudentRepo -> getOutsideGroupStudents($group, $request->dateView);
-
-        $schoolYearRepo = new SchoolYearRepository(new SchoolYear);
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($request->dateView);
-
-        return view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "dateView"=>$request->dateView, "schoolYear"=>$schoolYear]);
+        $year = substr($request->dateView, 0, 4);
+        if( substr($request->dateView, 5, 2)>=8 )  $year++;
+        return view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "year"=>$year]);
     }
 /*
     public function getStudentGroups(Request $request, GroupStudentRepository $groupStudentRepo, SchoolYearRepository $schoolYearRepo) {

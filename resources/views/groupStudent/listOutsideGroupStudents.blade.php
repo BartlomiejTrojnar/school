@@ -3,7 +3,7 @@
 @endif
 
 <ul id="listOutsideGroupStudents">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 *********************** -->
    @foreach($outsideGroupStudents as $outsideGroupStudent)
       @foreach($outsideGroupStudent -> grades as $studentGrade)
          <li data-student_id="{{ $outsideGroupStudent->id }}" data-grade_id="{{ $studentGrade->grade_id }}" data-grade_start="{{ $studentGrade->start }}" data-grade_end="{{ $studentGrade->end }}">

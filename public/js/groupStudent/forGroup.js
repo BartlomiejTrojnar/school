@@ -1,7 +1,7 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
-function showOrHideGroups() {
+function showOrHideStudents() {
     var dateView = $('#dateView').val();
     var count=0, countStudents=0;
     var groupGrades = [];
@@ -53,9 +53,9 @@ function dateViewChange() {     // po zmianie widocznej na stronie daty widoku
             url: "http://localhost/school/rememberDates",
             data: { dateView: dateView },
             success: function()  {
-                showOrHideGroups();
-                var group_id = $('#group_id').val();
+                showOrHideStudents();
                 $('#listOutsideGroupStudents').html('<li>aktualizacja...</li>');
+                var group_id = $('#group_id').val();
                 refreshOutsideGroupStudentsList(group_id, dateView);
             },
         });
@@ -398,13 +398,13 @@ function gradeClick() {
     $("#groupGrades button").click(function() {
         if( $(this).hasClass('on') )   $(this).addClass('off').removeClass('on');
         else $(this).removeClass('off').addClass('on');
-        showOrHideGroups();
+        showOrHideStudents();
     });
 }
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
-    showOrHideGroups();
+    showOrHideStudents();
     dateViewChange();
     outsideGroupStudentClick();
     addAllStudentClick();
