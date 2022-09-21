@@ -29,7 +29,6 @@ function showOrHideGroup() {
         });
         countStudents($(this).data('group_id'), dateView);
     });
-
 }
 
 function showOrHideLesson() {
@@ -58,10 +57,11 @@ function showOrHideLesson() {
         if(start <= dateView && end >= dateView) {
             var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
             $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html(hours);
-            if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
+            //if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
         }
         var studentsCount = $('#gradeGroups li[data-group_id="'+group_id+'"] .studentsCount').html();
         $('#gradePlan li[data-group_id="'+group_id+'"] .studentsCount').html(studentsCount);
+        $('li[data-group_id="2907"] .groupStudents').removeClass('hidden');
     });
 }
 
@@ -293,7 +293,8 @@ function decreaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zmnie
     var hours = $('li.group[data-group_id=' +group_id+ '] span.hours var').html();
     hours = parseInt(hours) - 1;
     $('li.group[data-group_id=' +group_id+ '] span.hours var').html(hours);
-    if(hours<1) $('li.group[data-group_id=' +group_id+ ']').fadeOut(1500);
+    alert(298);
+    //if(hours<1) $('li.group[data-group_id=' +group_id+ ']').fadeOut(1500);
 }
 function increaseVisibleGroupHours(group_id) {      // funkcja odczytuje i zwiększa liczbę godzin do obsadzenia dla grupy
     var hours = $('li.group[data-group_id=' +group_id+ '] span.hours var').html();

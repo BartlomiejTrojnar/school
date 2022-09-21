@@ -24,7 +24,7 @@
          $studyYear = substr($dateView, 0, 4) - $group->grades[0]->grade->year_of_beginning;
          if( substr($dateView, 5, 2)>=8 ) $studyYear++;
       ?>
-      <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
+      <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}" style="background: brown; padding: 0;">
          <span class="groupDates"><span class="start">{{$group->start}}</span> : <span class="end">{{$group->end }}</span></span><br />
          {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
          {{ $group->subject->short_name }} 
@@ -43,10 +43,14 @@
          @endforeach
 
          <!-- uczniowie -->
-         <ol class="groupStudents hidden">
+         <ol class="groupStudents hidden" style="padding: 10px; text-align: left;">
             @foreach($group->students as $groupStudent)
-               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">   
-                  {{ $groupStudent->start }} {{ $groupStudent->end}} {{ $groupStudent->student_id }}
+               @foreach($groupStudent->student->grades as $studentGrade)
+                  <li class="gradeInfo" data-start="{{$studentGrade->start}}" data-end="{{$studentGrade->end}}">{{ $studentGrade->grade->id }}</li>
+               @endforeach
+
+               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">
+                  {{ $groupStudent->student->first_name }} {{ $groupStudent->student->last_name }}
                </li>
             @endforeach
          </ol>
