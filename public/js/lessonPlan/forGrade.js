@@ -1,14 +1,18 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
 function countStudents(group, dateView) {
-    var countStudents = 0;
+    var countStudents = 0, countGradeStudents = 0;
     $('li[data-group_id='+group+'] .groupStudents li').each(function() {
         if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+        $(this).children('em.gradeInfo').each(function() {
+            if( $(this).html() == 279 && $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countGradeStudents++;
+        });
     });
-    $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+    if(countStudents == countGradeStudents)     $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+    else $('li[data-group_id='+group+'] .studentsCount').html(countGradeStudents+"("+countStudents+")");
 }
 
 function showOrHideGroup() {
@@ -57,11 +61,10 @@ function showOrHideLesson() {
         if(start <= dateView && end >= dateView) {
             var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
             $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html(hours);
-            //if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
+            if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
         }
         var studentsCount = $('#gradeGroups li[data-group_id="'+group_id+'"] .studentsCount').html();
         $('#gradePlan li[data-group_id="'+group_id+'"] .studentsCount').html(studentsCount);
-        $('li[data-group_id="2907"] .groupStudents').removeClass('hidden');
     });
 }
 
