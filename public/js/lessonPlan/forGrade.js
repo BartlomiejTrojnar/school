@@ -1,13 +1,18 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 // ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
 function countStudents(group, dateView) {
-    var countStudents = 0;
+    var countStudents = 0, countGradeStudents = 0;
+    var grade_id = $('#grade_id').val();
     $('li[data-group_id='+group+'] .groupStudents li').each(function() {
         if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+        $(this).children('em.gradeInfo').each(function() {
+            if( $(this).html() == grade_id && $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countGradeStudents++;
+        });
     });
-    $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+    if(countStudents == countGradeStudents)     $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
+    else $('li[data-group_id='+group+'] .studentsCount').html(countGradeStudents+"("+countStudents+")");
 }
 
 function showOrHideGroup() {
@@ -304,6 +309,16 @@ function dropLessonInGradeGroupList() {     // opuszczenie lekcji w polu zawiera
     });
 }
 
+function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // zapisanie zmian lekcji w bazie danych
+    $.ajax({
+        method: "PUT",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/plan_lekcji/"+id,
+        data: { id: id, group_id: group_id, lesson_hour_id: lessonhour_id, classroom_id: classroom_id, start: start, end: end },
+        success: function(result) { return result; },
+        error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja update'); return false; }
+    });
+}
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {

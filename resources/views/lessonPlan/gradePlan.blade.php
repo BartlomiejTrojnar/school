@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 14.06.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -42,10 +42,13 @@
             <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">/{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/</span>
          @endforeach
          <!-- uczniowie -->
-         <ol class="groupStudents hidden">
+         <ol class="groupStudents hidden" style="padding: 10px; text-align: left;">
             @foreach($group->students as $groupStudent)
-               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">   
-                  {{ $groupStudent->start }} {{ $groupStudent->end}} {{ $groupStudent->student_id }}
+               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">
+                  {{ $groupStudent->student->first_name }} {{ $groupStudent->student->last_name }}
+                  @foreach($groupStudent->student->grades as $studentGrade)
+                     <em class="gradeInfo" data-start="{{$studentGrade->start}}" data-end="{{$studentGrade->end}}">{{ $studentGrade->grade->id }}</em>
+                  @endforeach
                </li>
             @endforeach
          </ol>
