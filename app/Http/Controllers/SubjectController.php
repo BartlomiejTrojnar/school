@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.08.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -149,7 +149,7 @@ class SubjectController extends Controller
         $subTitle = "podręczniki dla przedmiotu";
         $textbooks = $subject -> textbooks;
         $textbookTable = view('textbook.tableForSubject', ["subTitle"=>$subTitle, "textbooks"=>$textbooks]);
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable]);
+        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable, "js"=>""]);
     }
 
     public function edit(Request $request, Subject $subject) {
