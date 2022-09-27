@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 01.12.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -8,7 +8,6 @@
 @section('java-script')
    <script src="{{ asset('public/js/'.$js) }}"></script>
 @endsection
-
 
 @section('header')
    <aside id="arrow_left"><a href="{{ route('deklaracja.show', $previous) }}"><i class='fa fa-chevron-left'></i></a></aside>

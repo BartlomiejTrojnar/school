@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.11.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
 // -------------------- wydarzenia na stronie egzaminów dla opisu egzaminu --------------------- //
 
 // ----------------------------- zarządzanie egzaminami ------------------------------ //
@@ -79,6 +79,8 @@ function add(version) {   // zapisanie egzaminu w bazie danych
     var type                = $('#createRow select[name="exam_type"]').val();
     var comments            = $('#createRow input[name="comments"]').val();
     var lp = $('input[name="lp"]').val();
+    alert(82);
+    return;
 
     $.ajax({
         method: "POST",
@@ -170,7 +172,6 @@ function destroyClick() {  // usunięcieegzaminu (z bazy danych)
     });
 }
 
-
 function showExamsCreateForDeclarationClick() {
     $('#showExamsCreateForDeclaration').click(function(){
         declaration_id = $('input#declaration_id').val();
@@ -201,33 +202,28 @@ function createManyExamsClick() {     // ustawienie instrukcji po kliknięciu an
     });
 
     $('#createManyExams button').click(function() {
-        addExamsForDeclaration();
+        var examsDN = [];
+        count = 0;
+        // zapamiętanie wszystkich zaznaczonych (opisów) egzaminów
+        $('#createManyExams li.checked').each(function() {  examsDN[count++] = $(this).data("exam_description_id");  });
+        var declaration_id = $('#createManyExams input[name="declaration_id"]').val();
+        addExamsForDeclaration(declaration_id, examsDN);
         $.when( $('#createManyExams').animate({opacity: '0%'}, 1500) ).then( function() {
             $('#createManyExams').remove();
         } );
     });
 }
 
-function addExamsForDeclaration() {   // zapisanie egzaminu w bazie danych
-    var declaration_id = $('#createManyExams input[name="declaration_id"]').val();
-    var exam_description_id=0;
-    var lp = $('input[name="lp"]').val();
-
-    $('#createManyExams li').each(function() {
-        if( $(this).hasClass("checked") ) {
-            exam_description_id = $(this).data("exam_description_id");
-            $.ajax({
-                method: "POST",
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                url: "http://localhost/school/egzamin",
-                data: { declaration_id: declaration_id, exam_description_id: exam_description_id, term_id: "", points: "", type: 1, comments: "" },
-                success: function(id) {  refreshRow(id, "forDeclaration", "add", lp++);  },
-                error: function(result) {  alert("BŁĄD:"+result);  },
-            });
-        }
-    });
+function addExamsForDeclaration(declaration_id, examsDN) {   // zapisanie w bazie danych serii egzaminów dla deklaracji
+    $.ajax({
+        type: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/exam/addExamsForDeclaration",
+        data: { declaration_id: declaration_id, examsDN: examsDN },
+        success: function() {     location.reload();  },
+        error: function() { alert('Błąd: exam/operations.js - funkcja addExamsForDeclaration'); }
+	});
 }
-
 
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //

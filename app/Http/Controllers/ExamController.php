@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.11.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Exam;
 
@@ -110,6 +110,20 @@ class ExamController extends Controller
         $exam -> save();
 
         return $exam->id;
+    }
+
+    public function addExamsForDeclaration(Request $request) {
+        $n = count($request->examsDN);
+        for($i=0; $i<$n; $i++) {
+            $exam = new Exam;
+            $exam->declaration_id = $request->declaration_id;
+            $exam->exam_description_id = $request->examsDN[$i];
+            $exam->term_id = NULL;
+            $exam->type = 1;
+            $exam->points = NULL;
+            $exam->comments = NULL;
+            $exam -> save();
+        }
     }
 
     public function edit(Request $request, ExamRepository $examRepo, DeclarationRepository $declarationRepo, ExamDescriptionRepository $examDescriptionRepo, TermRepository $termRepo) {
