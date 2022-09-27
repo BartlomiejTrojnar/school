@@ -112,14 +112,20 @@ class ExamController extends Controller
         return $exam->id;
     }
 
-    public function addExamsForDeclaration(Request $request) {
+    public function addExamsForDeclaration(Request $request, ExamDescriptionRepository $examDescriptionRepo) {
         $n = count($request->examsDN);
         for($i=0; $i<$n; $i++) {
             $exam = new Exam;
             $exam->declaration_id = $request->declaration_id;
             $exam->exam_description_id = $request->examsDN[$i];
+            $eDN = $examDescriptionRepo -> find($request->examsDN[$i]);
+            $exam->type = 2;
+            if($eDN->subject_id==3 && $eDN->level=='podstawowy') $exam->type = 1;
+            if($eDN->subject_id==4 && $eDN->level=='podstawowy') $exam->type = 1;
+            if($eDN->subject_id==12 && $eDN->level=='podstawowy') $exam->type = 1;
+            if($eDN->subject_id==3 && $eDN->type=='ustny') $exam->type = 1;
+            if($eDN->subject_id==4 && $eDN->type=='ustny') $exam->type = 1;
             $exam->term_id = NULL;
-            $exam->type = 1;
             $exam->points = NULL;
             $exam->comments = NULL;
             $exam -> save();

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Declaration;
 
@@ -19,7 +19,7 @@ class DeclarationRepository extends BaseRepository {
          $gradeRepo = new GradeRepository(new Grade);
          $grade = $gradeRepo -> find($grade_id);
          $date = $grade->year_of_graduation.'-04-20';
-         $records = $records -> where('grade_id', '=', $grade_id) -> where('date_start', '<=', $date) -> where('date_end', '>=', $date);
+         $records = $records -> where('grade_id', '=', $grade_id) -> where('start', '<=', $date) -> where('end', '>=', $date);
       }
       if($session_id) $records = $records -> where('session_id', '=', $session_id);
       if($student_id) $records = $records -> where('declarations.student_id', '=', $student_id);

@@ -220,7 +220,7 @@ function addExamsForDeclaration(declaration_id, examsDN) {   // zapisanie w bazi
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/exam/addExamsForDeclaration",
         data: { declaration_id: declaration_id, examsDN: examsDN },
-        success: function() {     location.reload();  },
+        success: function() { location.reload();  },
         error: function() { alert('Błąd: exam/operations.js - funkcja addExamsForDeclaration'); }
 	});
 }
