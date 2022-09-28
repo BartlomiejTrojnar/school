@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 01.12.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Session;
 use App\Repositories\SessionRepository;
@@ -37,8 +37,8 @@ class SessionController extends Controller
 
     public function create() {
         $types = array('maj', 'sierpień', 'styczeń');
-        $sessionTypeSelectField = view('session.typeSelectField', ["types"=>$types, "typeSelected"=>'maj']);
-        return view('session.create', ["typeSelectField"=>$sessionTypeSelectField]);
+        $sessionTypeSF = view('session.typeSelectField', ["types"=>$types, "typeSelected"=>'maj']);
+        return view('session.create', ["typeSF"=>$sessionTypeSF]);
     }
 
     public function store(Request $request) {
@@ -82,20 +82,20 @@ class SessionController extends Controller
     private function showExamDescriptions($session, $subjectRepo, $examDescriptionRepo) {
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelected = session()->get('subjectSelected');
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
 
         $examTypes = array('pisemny', 'ustny');
         $examTypeSelected = session()->get('typeSelected');
-        $examTypeSelectField = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
+        $examTypeSF = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
 
         $levels = array('rozszerzony', 'podstawowy', 'nieustalony', 'dwujęzyczny');
         $levelSelected = session()->get('levelSelected');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $examDescriptions = $examDescriptionRepo -> getFilteredAndSorted($subjectSelected, $session->id, $examTypeSelected, $levelSelected);
         $countDesc = count($examDescriptions);
         $examDescriptionsTable = view('examDescription.tableForSession', ["examDescriptions"=>$examDescriptions, "countDesc"=>$countDesc,
-            "subjectSelectField"=>$subjectSelectField, "examTypeSelectField"=>$examTypeSelectField, "levelSelectField"=>$levelSelectField]);
+            "subjectSF"=>$subjectSF, "examTypeSF"=>$examTypeSF, "levelSF"=>$levelSF]);
 
         $js = "examDescription/session.js";
         return view('session.show', ["session"=>$session, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$examDescriptionsTable]);            
@@ -104,9 +104,9 @@ class SessionController extends Controller
     private function showDeclarations($session, $gradeRepo, $declarationRepo) {
         $gradeSelected = session()->get('gradeSelected');
         $grades = $gradeRepo -> getAllSorted();
-        $gradeSelectField = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
         $declarations = $declarationRepo -> getFilteredAndSortedAndPaginate($session->id, $gradeSelected, 0);
-        $declarationTable = view('declaration.tableForSession', ["declarations"=>$declarations, "gradeSelectField"=>$gradeSelectField]);
+        $declarationTable = view('declaration.tableForSession', ["declarations"=>$declarations, "gradeSF"=>$gradeSF]);
         $css = "";
         $js = "declaration/operations.js";
         return view('session.show', ["session"=>$session, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$declarationTable, "css"=>$css, "js"=>$js]);
@@ -116,17 +116,17 @@ class SessionController extends Controller
         $examDescriptionRepo = new ExamDescriptionRepository(new ExamDescription);
         $examDescriptions = $examDescriptionRepo -> getAllSorted();
         $examDescriptionSelected = session()->get('examDescriptionSelected');
-        $examDescriptionSelectField = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$examDescriptionSelected]);
+        $examDescriptionSF = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$examDescriptionSelected]);
 
         $classroomRepo = new ClassroomRepository(new Classroom);
         $classrooms = $classroomRepo -> getAllSorted();
         $classroomSelected = session()->get('classroomSelected');
-        $classroomSelectField = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$classroomSelected]);
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$classroomSelected]);
 
         $termRepo = new TermRepository(new Term);
         $terms = $termRepo -> getFilteredAndSorted($examDescriptionSelected, $classroomSelected, $session->id);
-        $termsTable = view('term.table', ["terms"=>$terms, "subTitle"=>"terminy w sesji", "examDescriptionSelectField"=>$examDescriptionSelectField,
-            "classroomSelectField"=>$classroomSelectField, "sessionSelectField"=>""]);
+        $termsTable = view('term.table', ["terms"=>$terms, "subTitle"=>"terminy w sesji", "examDescriptionSF"=>$examDescriptionSF,
+            "classroomSF"=>$classroomSF, "sessionSF"=>""]);
         $css = "";
         $js = "";
 
@@ -136,8 +136,8 @@ class SessionController extends Controller
     public function edit($id, Session $session) {
         $session = $session -> find($id);
         $types = array('maj', 'sierpień', 'styczeń');
-        $sessionTypeSelectField = view('session.typeSelectField', ["types"=>$types, "typeSelected"=>$session->type]);
-        return view('session.edit', ["session"=>$session, "typeSelectField"=>$sessionTypeSelectField]);
+        $sessionTypeSF = view('session.typeSelectField', ["types"=>$types, "typeSelected"=>$session->type]);
+        return view('session.edit', ["session"=>$session, "typeSF"=>$sessionTypeSF]);
     }
 
     public function update(Request $request, Session $session) {

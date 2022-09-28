@@ -19,9 +19,9 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/showInfo') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/showTerms') }}">terminy <i class='fa fa-list'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/showExams') }}">zdający/egzaminy <i class='fa fa-users'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/terminy') }}">terminy <i class='fa fa-list'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('opis_egzaminu/'.$examDescription->id.'/egzaminy') }}">zdający/egzaminy <i class='fa fa-users'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('opis_egzaminu.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>
 

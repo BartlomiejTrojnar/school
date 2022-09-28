@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Exam;
 
@@ -30,17 +30,17 @@ class ExamController extends Controller
         if($request->version=="manyExamsForDeclaration")    return $this -> createManyExamsForDeclaration($request->declaration_id, $declarationRepo, $examDescriptionRepo);
         $examTypes = array('obowiązkowy', 'dodatkowy');
         $examTypeSelected = 'obowiązkowy';
-        $examTypeSelectField = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
+        $examTypeSF = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
 
         if($request->version=="forExamDescription")
-            return $this -> createForExamDescription($request->exam_description_id, $examDescriptionRepo, $declarationRepo, $termRepo, $examTypeSelectField);
+            return $this -> createForExamDescription($request->exam_description_id, $examDescriptionRepo, $declarationRepo, $termRepo, $examTypeSF);
 
         $Declaration = $declarationRepo -> find($request->declaration_id);
         $session_id = $Declaration->session_id;
         if($request->version=="forStudentDeclaration")
-            return $this -> createForStudentDeclaration($Declaration, $session_id, $examDescriptionRepo, $termRepo, $examTypeSelectField);
+            return $this -> createForStudentDeclaration($Declaration, $session_id, $examDescriptionRepo, $termRepo, $examTypeSF);
 
-        return $this -> createForDeclaration($request->declaration_id, $declarationRepo, $examDescriptionRepo, $termRepo, $examTypeSelectField);
+        return $this -> createForDeclaration($request->declaration_id, $declarationRepo, $examDescriptionRepo, $termRepo, $examTypeSF);
     }
 
     private function createManyExamsForDeclaration($declaration_id, $declarationRepo, $examDescriptionRepo) {
@@ -53,7 +53,7 @@ class ExamController extends Controller
         return view('exam.createManyForDeclaration', ["declaration_id"=>$declaration_id, "examDescriptions"=>$examDescriptions]);
     }
 
-    private function createForDeclaration($declaration_id, $declarationRepo, $examDescriptionRepo, $termRepo, $examTypeSelectField) {
+    private function createForDeclaration($declaration_id, $declarationRepo, $examDescriptionRepo, $termRepo, $examTypeSF) {
         $declaration = $declarationRepo -> find($declaration_id);
         $session_id = $declaration->session_id;
         $subject_id = session()->get('subjectSelected');
@@ -64,29 +64,29 @@ class ExamController extends Controller
         $exam_description = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$examDescriptionSelected]);
         $classroom_id = session()->get('classroomSelected');
         $terms = $termRepo -> getFilteredAndSorted($session_id, $examDescriptionSelected, $classroom_id);
-        $termSelectField = view('term.selectField', ["terms"=>$terms, "termSelected"=>session()->get('termSelected')]);
-        return view('exam.create', ["version"=>"forDeclaration", "exam_description"=>$exam_description, "declaration"=>$declaration_id, "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField]);
+        $termSF = view('term.selectField', ["terms"=>$terms, "termSelected"=>session()->get('termSelected')]);
+        return view('exam.create', ["version"=>"forDeclaration", "exam_description"=>$exam_description, "declaration"=>$declaration_id, "termSF"=>$termSF, "examTypeSF"=>$examTypeSF]);
     }
 
-    private function createForExamDescription($exam_description_id, $examDescriptionRepo, $declarationRepo, $termRepo, $examTypeSelectField) {
+    private function createForExamDescription($exam_description_id, $examDescriptionRepo, $declarationRepo, $termRepo, $examTypeSF) {
         $exam_description = $examDescriptionRepo -> find($exam_description_id);
         $session_id = $exam_description->session_id;
         $declarations = $declarationRepo -> getFilteredAndSorted($session_id);
         $declaration = view('declaration.selectField', ["declarations"=>$declarations, "declarationSelected"=>session()->get('declarationSelected')]);
         $classroom_id = session()->get('classroomSelected');
         $terms = $termRepo -> getFilteredAndSorted($session_id, $exam_description_id, $classroom_id);
-        $termSelectField = view('term.selectField', ["terms"=>$terms, "termSelected"=>session()->get('termSelected')]);
-        return view('exam.create', ["version"=>"forExamDescription", "exam_description"=>$exam_description_id, "declaration"=>$declaration, "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField]);
+        $termSF = view('term.selectField', ["terms"=>$terms, "termSelected"=>session()->get('termSelected')]);
+        return view('exam.create', ["version"=>"forExamDescription", "exam_description"=>$exam_description_id, "declaration"=>$declaration, "termSF"=>$termSF, "examTypeSF"=>$examTypeSF]);
     }
 
-    private function createForStudentDeclaration($Declaration, $session_id, $examDescriptionRepo, $termSelectField, $examTypeSelectField) {
+    private function createForStudentDeclaration($Declaration, $session_id, $examDescriptionRepo, $termSF, $examTypeSF) {
         $subject_id = session()->get('subjectSelected');
         $exam_type = session()->get('typeSelected');
         $level = session()->get('levelSelected');
         $examDescriptions = $examDescriptionRepo -> getFilteredAndSorted($subject_id, $session_id, $exam_type, $level);
         $exam_description = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>0]);
         $declaration = $Declaration->id;
-        return view('exam.createForStudentDeclaration', ["exam_description"=>$exam_description, "declaration"=>$declaration, "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField]);
+        return view('exam.createForStudentDeclaration', ["exam_description"=>$exam_description, "declaration"=>$declaration, "termSF"=>$termSF, "examTypeSF"=>$examTypeSF]);
     }
 
     public function store(Request $request) {
@@ -140,9 +140,9 @@ class ExamController extends Controller
         $declaration = view('declaration.selectField', ["declarations"=>$declarations, "declarationSelected"=>$exam->declaration_id]);
         $classroom_id = session()->get('classroomSelected');
         $terms = $termRepo -> getFilteredAndSorted($session_id, $exam->exam_description_id, $classroom_id);
-        $termSelectField = view('term.selectField', ["terms"=>$terms, "termSelected"=>$exam->term_id]);
+        $termSF = view('term.selectField', ["terms"=>$terms, "termSelected"=>$exam->term_id]);
         $examTypes = array('obowiązkowy', 'dodatkowy');
-        $examTypeSelectField = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$exam->type]);
+        $examTypeSF = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$exam->type]);
 
         if($request->version=="forStudentDeclaration") {
             $subject_id = session()->get('subjectSelected');
@@ -150,7 +150,7 @@ class ExamController extends Controller
             $level = session()->get('levelSelected');
             $examDescriptions = $examDescriptionRepo -> getFilteredAndSorted($subject_id, $session_id, $exam_type, $level);
             $exam_description = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$exam->exam_description_id]);
-            return view('exam.editForStudentDeclaration', ["exam"=>$exam, "version"=>$request->version, "declaration"=>$declaration, "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField, "exam_description"=>$exam_description]);
+            return view('exam.editForStudentDeclaration', ["exam"=>$exam, "version"=>$request->version, "declaration"=>$declaration, "termSF"=>$termSF, "examTypeSF"=>$examTypeSF, "exam_description"=>$exam_description]);
         }
         if($request->version=="forDeclaration") {
             $subject_id = session()->get('subjectSelected');
@@ -163,7 +163,7 @@ class ExamController extends Controller
             $exam_description = $exam->exam_description_id;
         }
 
-        return view('exam.edit', ["exam"=>$exam, "lp"=>$request->lp, "version"=>$request->version, "declaration"=>$declaration, "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField, "exam_description"=>$exam_description]);
+        return view('exam.edit', ["exam"=>$exam, "lp"=>$request->lp, "version"=>$request->version, "declaration"=>$declaration, "termSF"=>$termSF, "examTypeSF"=>$examTypeSF, "exam_description"=>$exam_description]);
     }
 
     public function update(Request $request, $id, Exam $exam) {

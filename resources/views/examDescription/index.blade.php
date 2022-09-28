@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 20.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -33,10 +33,10 @@
 
          <tr>
             <td></td>
-            <td><?php  print_r($sessionSelectField);  ?></td>
-            <td><?php  print_r($subjectSelectField);  ?></td>
-            <td><?php  print_r($examTypeSelectField);  ?></td>
-            <td><?php  print_r($levelSelectField);  ?></td>
+            <td><?php  print_r($sessionSF);  ?></td>
+            <td><?php  print_r($subjectSF);  ?></td>
+            <td><?php  print_r($examTypeSF);  ?></td>
+            <td><?php  print_r($levelSF);  ?></td>
             <td colspan="5"></td>
          </tr>
       </thead>
@@ -59,7 +59,7 @@
                </a></td>
                <td>{{ $examDescription->type }}</td>
                <td>{{ $examDescription->level }}</td>
-               <td>{{ $examDescription->max_points }}</td>
+               <td class="c">{{ $examDescription->max_points }}</td>
                <td class="c">{{ count($examDescription->exams) }}</td>
                <td class="c small">{{ substr($examDescription->created_at, 0, 10) }}</td>
                <td class="c small">{{ substr($examDescription->updated_at, 0, 10) }}</td>

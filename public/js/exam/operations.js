@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
 // -------------------- wydarzenia na stronie egzaminów dla opisu egzaminu --------------------- //
 
 // ----------------------------- zarządzanie egzaminami ------------------------------ //
@@ -79,8 +79,6 @@ function add(version) {   // zapisanie egzaminu w bazie danych
     var type                = $('#createRow select[name="exam_type"]').val();
     var comments            = $('#createRow input[name="comments"]').val();
     var lp = $('input[name="lp"]').val();
-    alert(82);
-    return;
 
     $.ajax({
         method: "POST",

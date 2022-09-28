@@ -1,11 +1,11 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.10.2021 *********************** -->
 <tr class="editRow" data-session_id="{{$session->id}}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
    <form action="{{ route('sesja.update', $session->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
       <td></td>
       <td><input type="number" name="year" min="2005" required value="{{ $session->year }}" /></td>
-      <td><?php  print_r($typeSelectField);  ?></td>
+      <td><?php  print_r($typeSF);  ?></td>
       
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
       <td colspan="4" class="c">

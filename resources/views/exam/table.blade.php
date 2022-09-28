@@ -1,5 +1,5 @@
 <section id="examsTable">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
    <p class="c" style="color: #ff9;"><strong><em>Znaleziono {{$countExams}} egzaminów.</em></strong></p>
    <table id="exams">
       <thead>
@@ -20,9 +20,9 @@
          @if($version!="forDeclaration")
             <tr>
                <td></td>
-               <td><?php  print_r($declarationSelectField);  ?></td>
-               <td><?php  print_r($termSelectField);  ?></td>
-               <td><?php  print_r($examTypeSelectField);  ?></td>
+               <td><?php  print_r($declarationSF);  ?></td>
+               <td><?php  print_r($termSF);  ?></td>
+               <td><?php  print_r($examTypeSF);  ?></td>
                <td colspan="5"></td>
             </tr>
          @endif

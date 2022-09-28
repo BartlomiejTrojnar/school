@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 26.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $examDescriptions->render() !!}
 @endif
@@ -23,9 +23,9 @@
       </tr>
       <tr>
          <td></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
-         <td><?php  print_r($examTypeSelectField);  ?></td>
-         <td><?php  print_r($levelSelectField);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
+         <td><?php  print_r($examTypeSF);  ?></td>
+         <td><?php  print_r($levelSF);  ?></td>
          <td colspan="6"></td>
       </tr>
    </thead>
