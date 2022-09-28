@@ -16,6 +16,10 @@
    <input type="hidden" id="declaration_id" value="{{ $declaration->id }}" />
 @endsection
 
+@section('title')
+   <title>{{ $declaration->student->first_name }} {{ $declaration->student->second_name }} {{ $declaration->student->last_name }} - deklaracja maturalna</title>
+@endsection
+
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
       <li class="nav-item"><a class="nav-link" href="{{ url('deklaracja/'.$declaration->id) }}">informacje <i class='fas fa-info-circle'></i></a></li>

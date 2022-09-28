@@ -8,6 +8,9 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
+  @section('title')
+    @show
+
   <title>{{ config('app.name', 'Group Manager') }}</title>
 
   <!-- Styles -->
