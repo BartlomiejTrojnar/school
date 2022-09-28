@@ -58,17 +58,17 @@ class SessionController extends Controller
 
     public function show($id, SessionRepository $sessionRepo, DeclarationRepository $decRe, ExamDescriptionRepository $examDRe, GradeRepository $grRe, SubjectRepository $suRe, $view='') {
         session() -> put('sessionSelected', $id);
-        if( empty(session() -> get('sessionView')) )  session() -> put('sessionView', 'showInfo');
+        if( empty(session() -> get('sessionView')) )  session() -> put('sessionView', 'info');
         if($view)  session() -> put('sessionView', $view);
         $session = $sessionRepo -> find($id);
         $sessions = $sessionRepo -> getAllSorted();
         list($this->previous, $this->next) = $sessionRepo -> nextAndPreviousRecordId($sessions, $id);
 
         switch( session() -> get('sessionView') ) {
-            case 'showInfo':                return $this -> showInfo($session);
-            case 'showExamDescriptions':    return $this -> showExamDescriptions($session, $suRe, $examDRe);
-            case 'showDeclarations':        return $this -> showDeclarations($session, $grRe, $decRe);
-            case 'showTerms':               return $this -> showTerms($session);
+            case 'info':            return $this -> showInfo($session);
+            case 'opisyegzaminow':  return $this -> showExamDescriptions($session, $suRe, $examDRe);
+            case 'deklaracje':      return $this -> showDeclarations($session, $grRe, $decRe);
+            case 'terminy':         return $this -> showTerms($session);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
         }

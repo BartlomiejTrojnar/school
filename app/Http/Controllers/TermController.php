@@ -80,15 +80,15 @@ class TermController extends Controller
     }
 
     public function show($id, TermRepository $termRepo, $view='') {
-        if( empty(session() -> get('termView')) )  session() -> put('termView', 'showInfo');
+        if( empty(session() -> get('termView')) )  session() -> put('termView', 'info');
         if($view)  session() -> put('termView', $view);
         $this->term = $termRepo -> find($id);
         $terms = $termRepo -> getFilteredAndSorted(0,0,0);
         list($this->previous, $this->next) = $termRepo -> nextAndPreviousRecordId($terms, $id);
 
         switch(session()->get('termView')) {
-            case 'showInfo':    return $this -> showInfo();
-            case 'showExams':   return $this -> showExams();
+            case 'info':        return $this -> showInfo();
+            case 'egzaminy':    return $this -> showExams();
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
         }

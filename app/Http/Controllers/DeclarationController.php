@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Declaration;
 use App\Repositories\DeclarationRepository;
@@ -114,9 +114,7 @@ class DeclarationController extends Controller
 
     public function change($id) {  session()->put('declarationSelected', $id);  }
 
-    public function show($id, DeclarationRepository $declarationRepo, ExamRepository $examRepo, $view='') {
-        if(empty(session()->get('declarationView')))  session()->put('declarationView', 'showInfo');
-        if($view)  session()->put('declarationView', $view);
+    public function show($id, DeclarationRepository $declarationRepo, ExamRepository $examRepo) {
         $declaration = $declarationRepo -> find($id);
         $declarations = $declarationRepo -> getFilteredAndSorted(session()->get('sessionSelected'), session()->get('gradeSelected'), session()->get('studentSelected'));
         list($this->previous, $this->next) = $declarationRepo -> nextAndPreviousRecordId($declarations, $id);

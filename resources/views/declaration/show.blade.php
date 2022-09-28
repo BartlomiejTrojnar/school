@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -18,7 +18,7 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('deklaracja/'.$declaration->id.'/showInfo') }}">informacje <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('deklaracja/'.$declaration->id) }}">informacje <i class='fas fa-info-circle'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('deklaracja.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>
 
