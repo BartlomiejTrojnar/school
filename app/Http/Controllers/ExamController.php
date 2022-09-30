@@ -34,7 +34,7 @@ class ExamController extends Controller
         }
 
         $Declaration = $declarationRepo -> find($request->declaration_id);
-        $this -> createForDeclaration($request->version, $Declaration, $examDescriptionRepo, $termRepo);
+        return $this -> createForDeclaration($request->version, $Declaration, $examDescriptionRepo, $termRepo);
     }
 
     private function createForDeclaration($version, $Declaration, $examDescriptionRepo, $termRepo) {
