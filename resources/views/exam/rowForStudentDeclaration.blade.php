@@ -1,6 +1,6 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 *********************** -->
 <tr data-exam_id="{{$exam->id}}">
-   <td>***
+   <td>
       {{ $exam->examDescription->session->year }} {{ $exam->examDescription->session->type }}
       <spam style="color: yellow;">{{ $exam->examDescription->subject->name }}</spam> {{ $exam->examDescription->type }} {{ $exam->examDescription->level }}
    </td>

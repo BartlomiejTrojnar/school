@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
@@ -220,7 +220,7 @@ class StudentController extends Controller
 
     private function showDeclarations() {
         $declarations = $this->student -> declarations;
-        $subView = view('declaration.sectionForStudent', ["declarations"=>$declarations, "studentSelectField"=>'', "sessionSelectField"=>'', "gradeSelectField"=>""]);
+        $subView = view('declaration.sectionForStudent', ["declarations"=>$declarations, "studentSF"=>'', "sessionSF"=>'', "gradeSF"=>""]);
         $css = "declaration/forStudent.css";
         $js = "declaration/forStudent.js";
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subView]);

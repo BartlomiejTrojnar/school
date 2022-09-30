@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.11.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania deklaracji ucznia -------------------- //
 
 // ------------------------------ zarządzanie deklaracjami ucznia ------------------------------ //

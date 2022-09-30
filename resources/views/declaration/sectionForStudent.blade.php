@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 18.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 *********************** -->
 <section id="declarations">
    <h2>Deklaracje ucznia</h2>
 
@@ -7,7 +7,7 @@
       <div class="declaration" data-declaration_id="{{ $declaration->id }}">
          <header>
             <i class="fa fa-minus" style="float: left; margin: 18px;"></i>
-            <a href="{{ route('deklaracja.show', $declaration->id.'/showExams') }}">{{ $declaration->application_number }} {{ $declaration->session->year }} {{ $declaration->session->type }}</a>,
+            <a href="{{ route('deklaracja.show', $declaration->id) }}">{{ $declaration->application_number }} {{ $declaration->session->year }} {{ $declaration->session->type }}</a>,
             kod ucznia: {{ $declaration->student_code }}; 
             liczba egzaminów: {{ count($declaration->exams) }}
             <span>
