@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 *********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -17,7 +17,7 @@
 @endsection
 
 @section('title')
-   <title>{{ $declaration->student->first_name }} {{ $declaration->student->second_name }} {{ $declaration->student->last_name }} - deklaracja maturalna</title>
+   <title>{{ $declaration->student->last_name }} {{ $declaration->student->first_name }} {{ $declaration->student->second_name }} - deklaracja maturalna</title>
 @endsection
 
 @section('main-content')
