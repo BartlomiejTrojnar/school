@@ -6,7 +6,7 @@
          @if($examDesc->subject->name == 'język polski' && $examDesc->type=='pisemny' && $examDesc->level=='podstawowy') <?php $checked=true; ?> @endif
          @if($examDesc->subject->name == 'język polski' && $examDesc->type=='ustny') <?php $checked=true; ?> @endif
          @if($examDesc->subject->name == 'język angielski' && $examDesc->type=='pisemny' && $examDesc->level=='podstawowy') <?php $checked=true; ?> @endif
-         @if($examDesc->subject->name == 'język angielski' && $examDesc->type=='ustny') <?php $checked=true; ?> @endif
+         @if($examDesc->subject->name == 'język angielski' && $examDesc->type=='ustny' && $examDesc->level != 'dwujęzyczny') <?php $checked=true; ?> @endif
          @if($examDesc->subject->name == 'matematyka' && $examDesc->type=='pisemny' && $examDesc->level=='podstawowy') <?php $checked=true; ?> @endif
 
          <li @if($checked) class="checked" @endif data-exam_description_id="{{$examDesc->id}}">
