@@ -241,6 +241,10 @@ function updateDeclaration(declaration_id) {        // zmiana pola modyfikowania
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/deklaracja/updateExams/"+declaration_id,
+        success: function() {
+            const d = new Date();
+            $('#updated_at').html(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDay()).addClass('small btn-danger');
+        },
         error: function() { alert('Błąd modyfikowania deklracji! (funkcja updateDeclaration, exam/operations.js)'); },
     });
 }

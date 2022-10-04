@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 04.10.2022 *********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -47,6 +47,14 @@
       <tr>
          <th>liczba egzaminów</th>
          <td class="c">{{ count($declaration->exams) }}</td>
+      </tr>
+      <tr>
+         <th>data wprowadzenia</th>
+         <td class="c small">{{ substr($declaration->created_at, 0, 10) }}</td>
+      </tr>
+      <tr>
+         <th>data ostatniej zmiany</th>
+         <td class="c small" id="updated_at">{{ substr($declaration->updated_at, 0, 10) }}</td>
       </tr>
    </table>
 
