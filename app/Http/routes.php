@@ -269,6 +269,7 @@ Route::post('/deklaracja/storeForGrade', array('as'=>'deklaracja.storeForGrade',
 Route::resource('/deklaracja', 'DeclarationController');
 Route::get('/deklaracja/orderBy/{column}', array('as'=>'deklaracja.orderBy', 'uses'=>'DeclarationController@orderBy'));
 Route::get('/deklaracja/change/{id}', 'DeclarationController@change');
+Route::put('/deklaracja/updateExams/{id}', 'DeclarationController@updateExams');
 Route::get('/deklaracja/{id}/{view?}', 'DeclarationController@show');
 Route::post('/declaration/refreshRow', 'DeclarationController@refreshRow');
 Route::post('/declaration/refreshForStudent', 'DeclarationController@refreshForStudent');

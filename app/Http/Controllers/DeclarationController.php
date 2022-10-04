@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Declaration;
 use App\Repositories\DeclarationRepository;
@@ -170,6 +170,13 @@ class DeclarationController extends Controller
         $declaration->student_code = $request->student_code;
         $declaration -> save();
 
+        return $declaration->id;
+    }
+
+    public function updateExams($id, Declaration $declaration) {      // zmiana daty modyfikowania deklaracji po zmianie egzaminów dla deklaracji
+        $declaration = $declaration -> find($id);
+        $declaration->updated_at = date('Y-m-d');
+        $declaration -> save();
         return $declaration->id;
     }
 

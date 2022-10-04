@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.10.2022 ------------------------ //
 // -------------------- wydarzenia na stronie egzaminów dla opisu egzaminu --------------------- //
 
 // ----------------------------- zarządzanie egzaminami ------------------------------ //
@@ -85,7 +85,10 @@ function add(version) {   // zapisanie egzaminu w bazie danych
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/egzamin",
         data: { declaration_id: declaration_id, exam_description_id: exam_description_id, term_id: term_id, points: points, type: type, comments: comments },
-        success: function(id) {  refreshRow(id, version, 'add', lp);  },
+        success: function(id) {
+            refreshRow(id, version, 'add', lp);
+            updateDeclaration(declaration_id);
+        },
         error: function() {
             var error = '<tr><td colspan="9" class="error">Błąd dodawania egzaminu.</td></tr>';
             $('#exams tr.create').before(error);
@@ -145,7 +148,10 @@ function update(id, version, lp) {   // zapisanie egzaminu w bazie danych
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/egzamin/"+id,
         data: { id: id, declaration_id: declaration_id, exam_description_id: exam_description_id, term_id: term_id, type: type, points: points, comments: comments },
-        success: function() {   refreshRow(id, version, "edit", lp); },
+        success: function() {
+            refreshRow(id, version, "edit", lp);
+            updateDeclaration(declaration_id);
+        },
         error: function() {
             var error = '<tr><td colspan="9" class="error">Błąd modyfikowania egzaminu.</td></tr>';
             $('tr[data-exam_id='+id+'].editRow').after(error).hide();
@@ -156,11 +162,15 @@ function update(id, version, lp) {   // zapisanie egzaminu w bazie danych
 function destroyClick() {  // usunięcieegzaminu (z bazy danych)
     $('#exams').delegate('.destroy', 'click', function() {
         var id = $(this).data('exam_id');
+        var declaration_id = $('#declaration_id').val();
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/egzamin/" + id,
-            success: function() {   $('tr[data-exam_id='+id+']').remove();  },
+            success: function() {
+                $('tr[data-exam_id='+id+']').remove();
+                if(declaration_id)  updateDeclaration(declaration_id);
+            },
             error: function() {
                 var error = '<tr><td colspan="9" class="error">Błąd usuwania egzaminu.</td></tr>';
                 $('tr[data-exam_id='+id+']').after(error).hide();
@@ -218,9 +228,21 @@ function addExamsForDeclaration(declaration_id, examsDN) {   // zapisanie w bazi
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/exam/addExamsForDeclaration",
         data: { declaration_id: declaration_id, examsDN: examsDN },
-        success: function() { location.reload();  },
+        success: function() {
+            updateDeclaration(declaration_id);
+            location.reload();
+        },
         error: function() { alert('Błąd: exam/operations.js - funkcja addExamsForDeclaration'); }
 	});
+}
+
+function updateDeclaration(declaration_id) {        // zmiana pola modyfikowania deklaracji (po zmianie egzaminów na deklaracji)
+    $.ajax({
+        method: "PUT",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/deklaracja/updateExams/"+declaration_id,
+        error: function() { alert('Błąd modyfikowania deklracji! (funkcja updateDeclaration, exam/operations.js)'); },
+    });
 }
 
 
