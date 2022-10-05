@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.10.2022 ------------------------ //
 // -------------------- wydarzenia na stronie egzaminów dla opisu egzaminu --------------------- //
 
 // ----------------------------- zarządzanie egzaminami ------------------------------ //
@@ -229,8 +229,8 @@ function addExamsForDeclaration(declaration_id, examsDN) {   // zapisanie w bazi
         url: "http://localhost/school/exam/addExamsForDeclaration",
         data: { declaration_id: declaration_id, examsDN: examsDN },
         success: function() {
-            updateDeclaration(declaration_id);
             location.reload();
+            updateDeclaration(declaration_id);
         },
         error: function() { alert('Błąd: exam/operations.js - funkcja addExamsForDeclaration'); }
 	});

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.10.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -10,6 +10,7 @@
 @endsection
 
 @section('main-content')
+   <h1>Dodawanie dla klasy</h1>
    <form action="{{ route('deklaracja.storeForGrade') }}" method="post" role="form">
    {{ csrf_field() }}
       <table>
