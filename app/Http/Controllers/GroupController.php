@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -48,7 +48,7 @@ class GroupController extends Controller
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
-        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
+        $groups = $groupRepo -> getFilteredAndSortedAndPaginate($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
         $groupTable = view('group.table', ["groups"=>$groups, "links"=>true, "subTitle"=>"", "start"=>$start, "end"=>$end, "grade_id"=>$gradeSelected, "version"=>"forIndex",
             "gradeSF"=>$gradeSF, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>$schoolYearSF]);
 
