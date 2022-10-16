@@ -1,4 +1,3 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.09.2021 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -32,9 +31,7 @@
       <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/nauczyciele') }}">nauczyciele <i class='fas fa-chalkboard-teacher'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/zadania') }}">zadania <i class='fa fa-tasks'></i></a></li>
-      <?php /*
-         <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/showEnlargements') }}">rozszerzenia</a></li>
-      */ ?>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/rozszerzenia') }}">rozszerzenia</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/oceny') }}">oceny <i class="fa fa-star-half-empty"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/deklaracje') }}">deklaracje <i class="far fa-newspaper"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">powrót <i class='fa fa-undo'></i></a></li>
