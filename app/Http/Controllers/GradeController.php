@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -117,22 +117,14 @@ class GradeController extends Controller
             case 'uczniowie':   return $this -> showStudents($syR, $sgR);
             case 'daneuczniow': return $this -> showStudentsAll();
             case 'numery':      return $this -> showNumbers($syR, $snR);
-            case 'grupy':       return $this -> showGroup($subR, $tR, $gR);
+            case 'grupy':       return $this -> showGroups($subR, $tR, $gR);
             case 'planlekcji':  return $this -> showLessonPlan($gR, $lpR, $syR);
             case 'nauczyciele': return $this -> showTeachers();
+            case 'oceny':       return $this -> showRatings();
             case 'deklaracje':  return $this -> showDeclarations($dR);
             case 'zadania':     return $this -> showTasks();
-/*
-          case 'showEnlargements':
-              return view('grade.showEnlargements', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-              exit;
-          break;
-          case 'showRatings':
-              return view('grade.showRatings', ["grade"=>$grade, "previous"=>$previous, "next"=>$next]);
-              exit;
-          break;
-*/
-          default:
+            case 'rozszerzenia':return $this -> showEnlargements();
+            default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('gradeView'));
         }
     }
@@ -198,7 +190,7 @@ class GradeController extends Controller
         return view('grade.show', ["grade"=>$this->grade, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "year"=>$this->year, "subView"=>$sectionForGrade]);
     }
 
-    private function showGroup($subjectRepo, $teacherRepo, $groupRepo) {
+    private function showGroups($subjectRepo, $teacherRepo, $groupRepo) {
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
@@ -253,6 +245,16 @@ class GradeController extends Controller
 
         return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next,
             "css"=>"", "js"=>"", "subView"=>$taskRatingTable]);
+    }
+
+    private function showRatings() {
+        $ratingsTable = view('rating.tableForGrade', []);
+        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$ratingsTable]);
+    }
+
+    private function showEnlargements() {
+        $enlargementsTable = view('enlargement.tableForGrade', []);
+        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$enlargementsTable]);
     }
 
     private function showDeclarations($declarationRepo) {
