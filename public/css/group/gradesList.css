@@ -1,0 +1,14 @@
+/* -------------------------- STYLE DLA STRONY Z LISTĄ KLAS DLA GRUPY -------------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 ------------------------ */
+
+/* ------------------------------- skrypt /grupa_klasy/gradesList ------------------------------ */
+button {
+    border: 3px solid #ddd;
+    border-radius: 5px;
+    font-size: large;
+    padding: 10px;
+}
+button.checked  {    background: yellowgreen;  }
+button.abled    {    background: green; cursor:copy;   }
+button.disabled {    background: #ddd;  color: #999; cursor: not-allowed; }
+button.errorChecked    {    background: #511;    }

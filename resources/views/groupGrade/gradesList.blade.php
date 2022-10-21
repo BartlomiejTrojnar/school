@@ -1,8 +1,12 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
    <script src="{{ asset('public/js/group/grades.js') }}"></script>
+@endsection
+
+@section('css')
+   <link href="{{ asset('public/css/'.$css) }}" rel="stylesheet">
 @endsection
 
 @section('header')
@@ -13,63 +17,35 @@
    <form action="{{ route('grupa_klasy.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <input type="hidden" name="group_id" value="{{ $group_id }}" />
-      <table>
+      <table id="gradesTable">
          <tr>
-            <th><label for="grade_id">klasa</label></th>
-            <td id="grades_list">
-               <ul class="list-group" style="float: left;">
-                  <?php $count=0; ?>
-                  @foreach($grades as $grade)
-                     <?php $count++; ?>
-                     @if( $count > 1 && $grade->year_of_graduation != $grades[($count)-2]->year_of_graduation )
-                        </ul>
-                        <ul class="list-group" style="float: left;">
-                     @endif
-                     @if( array_search($grade->id, $gradesSelected) )
-                        <li class="list-group-item list-group-item-dark active">
-                           {{$grade->id}}
-                           @if( $schoolYear )
-                              <button data-checked="1" data-grade="{{$grade->id}}" class="btn btn-danger" data-year="{{$grade->year_of_graduation}}">
-                                 {{ substr($schoolYear->date_end,0,4) - $grade->year_of_beginning}} {{$grade->symbol}}
-                              <i class="fa fa-remove"></i></button>
-                           @else
-                              <button data-checked="1" data-grade="{{$grade->id}}" class="btn btn-danger" data-year="{{$grade->year_of_graduation}}">
-                                 {{$grade->year_of_beginning}}-{{$grade->year_of_graduation}} {{$grade->symbol}}
-                              <i class="fa fa-users"></i><i class="fa fa-remove"></i></button>
-                           @endif
-                        </li>
-                     @else
-                        <li class="list-group-item list-group-item-dark">
-                           {{$grade->id}}
-                           @if( $schoolYear )
-                              @if($gradeSelectedYear==0 || $gradeSelectedYear == $grade->year_of_graduation)
-                                 <button data-checked="0" data-grade="{{$grade->id}}" class="btn btn-info" data-year="{{$grade->year_of_graduation}}">
-                                    {{ substr($schoolYear->date_end,0,4) - $grade->year_of_beginning }} {{$grade->symbol}}
-                                 <i class="fa fa-users"></i></button>
-                              @else
-                                 <button data-checked="0" data-grade="{{$grade->id}}" class="btn btn-info disabled" data-year="{{$grade->year_of_graduation}}">
-                                    {{ substr($schoolYear->date_end,0,4) - $grade->year_of_beginning }} {{$grade->symbol}}
-                                 <i class="fa fa-users"></i></button>
-                              @endif
-                           @else
-                             @if($gradeSelectedYear==0 || $gradeSelectedYear == $grade->year_of_graduation)
-                                 <button data-checked="0" data-grade="{{$grade->id}}" class="btn btn-info" data-year="{{$grade->year_of_graduation}}">
-                                    {{$grade->year_of_beginning}}-{{$grade->year_of_graduation}} {{$grade->symbol}}
-                                 <i class="fa fa-users"></i><i class="fa fa-plus"></i></button>
-                             @else
-                                 <button data-checked="0" data-grade="{{$grade->id}}" class="btn btn-info disabled" data-year="{{$grade->year_of_graduation}}">
-                                    {{$grade->year_of_beginning}}-{{$grade->year_of_graduation}} {{$grade->symbol}}
-                                 <i class="fa fa-users"></i><i class="fa fa-plus"></i></button>
-                             @endif
-                           @endif
-                        </li>
-                     @endif
-                  @endforeach
-               </ul>
-            </td>
+            <th>klasy 1</th>
+            <th>klasy 2</th>
+            <th>klasy 3</th>
+            <th>klasy 4</th>
+            <th>klasy LOD</th>
          </tr>
 
-         <tr class="submit"><td colspan="2">
+         <tr>
+            {{ createTD(1, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
+            {{ createTD(2, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
+            {{ createTD(3, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
+            {{ createTD(4, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
+
+            <td id="grades_list_5"><ul class="list-group">
+               @foreach($grades as $grade)
+                  @if( $grade->school_id!=1 )
+                     @if( array_search($grade->id, $gradesSelected) )
+                        {{ createLi($grade, $year, "errorChecked") }}
+                     @else
+                        {{ createLi($grade, $year, "disabled") }}
+                     @endif
+                  @endif   <!-- koniec sprawdzenia czy szkoła to II LO -->
+               @endforeach
+            </ul></td>
+         </tr>
+
+         <tr class="submit"><td colspan="5">
             @if( $version=="forIndex" )
                <a class="btn btn-primary" href="{{ route('grupa.index') }}">zapisz</a>
             @endif
@@ -83,3 +59,40 @@
       </table>
    </form>
 @endsection
+
+<?php
+   function createLi($grade, $year, $type) {
+      ?>
+      <li class="list-group-item">
+         <button class="{{ $type }}" data-grade="{{ $grade->id }}" data-year="{{ $grade->year_of_beginning }}">
+            {{ $year - $grade->year_of_beginning }}{{ $grade->symbol }}
+            @if( $type=="abled" )
+               <i class="fa fa-plus"></i>
+            @elseif( $type=="disabled" )
+               <i class="fas fa-lock"></i>
+            @else
+               <i class="fa fa-remove"></i>
+            @endif
+         </button>
+      </li>
+      <?php
+   }
+
+   function createTD($yearOfStudy, $yearSelected, $year, $grades, $gradesSelected) {
+      if($yearOfStudy==$yearSelected) {   $type1 = "checked";  $type2 = "abled"; }
+      else {   $type1 = "errorChecked";   $type2 = "disabled"; }
+      ?>
+      <td id="grades_list_{{ $yearOfStudy }}"><ul class="list-group">
+         @foreach($grades as $grade)
+            @if( $grade->school_id==1 && $grade->year_of_beginning==$year-$yearOfStudy )
+               @if( array_search($grade->id, $gradesSelected) )
+                  {{ createLi($grade, $year, $type1) }}
+               @else
+                  {{ createLi($grade, $year, $type2) }}
+               @endif   <!-- koniec sprawdzenia czy klasa jest zaznaczona (wybrana do grupy) -->
+            @endif   <!-- koniec sprawdzenia czy szkoła to II LO -->
+         @endforeach
+      </ul></td>
+      <?php
+   }
+?>

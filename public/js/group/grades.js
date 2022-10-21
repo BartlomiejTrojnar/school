@@ -1,22 +1,31 @@
-// ----------------------- (C) mgr inż. Bartłomiej Trojnar; (I) maj 2020 ----------------------- //
-// ----------------------- wydarzenia na stronie wyświetlania klas w grupie ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 ------------------------ //
+// --------------------- wydarzenia na stronie wyświetlania klas w grupie ---------------------- //
 
-
-// ---------------------------- DODAWANIE LUB USUWANIE KLASY Z GRUPY ---------------------------- //
-// ------------------------------ przypisanie operacji do kliknięć ------------------------------ //
+// --------------------------- DODAWANIE LUB USUWANIE KLASY Z GRUPY ---------------------------- //
+// ----------------------------- przypisanie operacji do kliknięć ------------------------------ //
 function gradeClick() {
-    $('#grades_list button').bind('click', function(){
-        var isChecked = $(this).data('checked');
-        if(isChecked) {
+    $('#gradesTable button').bind('click', function(){
+        if( $(this).hasClass("disabled") ) return false;
+        if( $(this).hasClass("errorChecked") ) {
+            $(this).addClass("disabled").removeClass("errorChecked");
             removeGradeFromGroup( $(this).data('grade') );
             unblockButtonsIfNoneSelected();
+            return false;
         }
-        else {
-            //$(this).data('checked', 1);
-            addGradeToGroup( $(this).data('grade') );
+
+        if( $(this).hasClass("abled") ) {
             blockButtonsFromOtherYears( $(this).data('year') );
+            addGradeToGroup( $(this).data('grade') );
+            $(this).addClass("checked").removeClass("abled");
+            return false;
         }
-        return false;
+
+        if( $(this).hasClass("checked") ) {
+            $(this).addClass("abled").removeClass("checked");
+            removeGradeFromGroup( $(this).data('grade') );
+            unblockButtonsIfNoneSelected();
+            return false;
+        }
     });
 }
 
@@ -28,9 +37,6 @@ function addGradeToGroup(grade_id)  {
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         data: { "group_id": group_id, "grade_id": grade_id },
         success: function(result) {
-            $('button[data-grade="' +grade_id+ '"]').removeClass('btn-info');
-            $('button[data-grade="' +grade_id+ '"]').addClass('btn-danger');
-            $('button[data-grade="' +grade_id+ '"]').attr('data-checked', 1);
             $('button[data-grade="' +grade_id+ '"]').attr('data-id', result);
             $('button[data-grade="' +grade_id+ '"] i').removeClass('fa-plus');
             $('button[data-grade="' +grade_id+ '"] i').addClass('fa-remove');
@@ -52,9 +58,6 @@ function removeGradeFromGroup(grade_id)  {
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         data: { "group_id": group_id, "grade_id": grade_id },
         success: function(result) {
-            $('button[data-grade="' +grade_id+ '"]').addClass('btn-info');
-            $('button[data-grade="' +grade_id+ '"]').removeClass('btn-danger');
-            $('button[data-grade="' +grade_id+ '"]').attr('data-checked', 0);
             $('button[data-grade="' +grade_id+ '"]').attr('data-id', 0);
             $('button[data-grade="' +grade_id+ '"] i').removeClass('fa-remove');
             $('button[data-grade="' +grade_id+ '"] i').addClass('fa-plus');
@@ -71,8 +74,8 @@ function removeGradeFromGroup(grade_id)  {
 function blockButtonsFromOtherYears(year)  {  $('button[data-year!="' + year + '"]').addClass('disabled'); }
 
 function unblockButtonsIfNoneSelected()  {
-    var buttonList = $('button[data-checked="1"]');
-    if( buttonList.length <= 1)  $('button[data-year]').removeClass('disabled');
+    var buttonList = $('button.checked');
+    if( buttonList.length < 1)  $('button[data-year]').removeClass('disabled').addClass("abled");
 }
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //

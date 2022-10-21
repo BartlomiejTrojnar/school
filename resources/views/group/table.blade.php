@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -121,8 +121,13 @@
                   foreach($group->students as $groupStudent) {
                      if($groupStudent->end >= $start && $groupStudent->start <= $end) {
                         $countAllStudents++;
-                        foreach($groupStudent->student->grades as $studentGrade)
-                           if($studentGrade->end >= $start && $studentGrade->start <= $end && $studentGrade->grade_id==$grade_id)  $countGradeStudents++;
+                        foreach($groupStudent->student->grades as $studentGrade) {
+                           if(!empty($grade_id)) {
+                              if($studentGrade->end >= $start && $studentGrade->start <= $end && $studentGrade->grade_id==$grade_id)  $countGradeStudents++;
+                           }
+                           else
+                              if($studentGrade->end >= $start && $studentGrade->start <= $end)  $countGradeStudents++;
+                        }
                      }
                   }
                ?>
