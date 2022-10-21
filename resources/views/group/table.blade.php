@@ -1,10 +1,10 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
 
 <div style="box-shadow: 5px 5px 3px #f80; display: inline; float: right;">
-   <?php echo $schoolYearSelectField; ?>
+   <?php echo $schoolYearSF; ?>
 </div>
 
 <h2>{{ $subTitle }}</h2>
@@ -66,9 +66,9 @@
 
       <tr>
          <td></td>
-         <td><?php  print_r($gradeSelectField);  ?></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
-         <td><?php  print_r($levelSelectField);  ?></td>
+         <td><?php  print_r($gradeSF);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
+         <td><?php  print_r($levelSF);  ?></td>
          <td></td>
          <td colspan="2" class="small">
             między <input type="date" id="start" name="start" value="{{ $start }}" />
@@ -76,7 +76,7 @@
             a <input type="date" id="end" name="end" value="{{ $end }}" />
             <input type="hidden" id="rememberDates" value="1" />
          </td>
-         <td colspan="2"><?php  print_r($teacherSelectField);  ?></td>
+         <td colspan="2"><?php  print_r($teacherSF);  ?></td>
          <td colspan="3"></td>
       </tr>
    </thead>
@@ -121,8 +121,13 @@
                   foreach($group->students as $groupStudent) {
                      if($groupStudent->end >= $start && $groupStudent->start <= $end) {
                         $countAllStudents++;
-                        foreach($groupStudent->student->grades as $studentGrade)
-                           if($studentGrade->end >= $start && $studentGrade->start <= $end && $studentGrade->grade_id==$grade_id)  $countGradeStudents++;
+                        foreach($groupStudent->student->grades as $studentGrade) {
+                           if(!empty($grade_id)) {
+                              if($studentGrade->end >= $start && $studentGrade->start <= $end && $studentGrade->grade_id==$grade_id)  $countGradeStudents++;
+                           }
+                           else
+                              if($studentGrade->end >= $start && $studentGrade->start <= $end)  $countGradeStudents++;
+                        }
                      }
                   }
                ?>
