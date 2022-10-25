@@ -22,12 +22,13 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showInfo') }}">informacje  <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showGrades') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showGroups') }}">grupy <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showLessonPlan') }}">plan lekcji <i class="fa fa-calendar"></i></a></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showTasks') }}">zadania <i class='fa fa-tasks'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showDeclarations') }}">deklaracje <i class="far fa-newspaper"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/info') }}">informacje  <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/klasy') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/grupy') }}">grupy <i class='fa fa-users'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/zadania') }}">zadania <i class='fa fa-tasks'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/swiadectwa') }}">świadectwa <i class="fa fa-certificate"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/deklaracje') }}">deklaracje <i class="far fa-newspaper"></i></a></li>
    <?php /*
       <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showEnlargements') }}">rozszerzenia</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showRatings') }}">oceny</a></li>
