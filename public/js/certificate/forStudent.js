@@ -72,8 +72,8 @@ function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub
 
 function add() {   // zapisanie świadectwa w bazie danych
     var student_id      = $('#createRow input[name="student_id"]').val();
-    var type            = $('#createRow input[name="type"]').val();
-    var templates_id    = $('#createRow input[name="templates_id"]').val();
+    var type            = $('#createRow select[name="type"]').val();
+    var templates_id    = $('#createRow select[name="templates_id"]').val();
     var council_date    = $('#createRow input[name="council_date"]').val();
     var date_of_issue   = $('#createRow input[name="date_of_issue"]').val();
 

@@ -1,6 +1,7 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.10.2022 ------------------------ //
 namespace App\Http\Controllers;
+
 use App\Models\Student;
 use App\Repositories\StudentRepository;
 
@@ -91,7 +92,7 @@ class StudentController extends Controller
     public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
         GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, $view='') {
         session() -> put('studentSelected', $id);
-        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'showInfo');
+        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
         $this->student = $studentRepo -> find($id);
 
