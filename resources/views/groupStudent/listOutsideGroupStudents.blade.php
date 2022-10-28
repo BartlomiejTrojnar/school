@@ -1,9 +1,12 @@
+<?php echo $groupSF; ?>
+<button class="btn btn-primary" id="selectStudentsFromGroup">zaznacz grupę</button>
+
 @if(!count($outsideGroupStudents))
    <p>Dla podanej daty nie znaleziono uczniów należących do klasy.</p>
 @endif
 
 <ul id="listOutsideGroupStudents">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 *********************** -->
    @foreach($outsideGroupStudents as $outsideGroupStudent)
       @foreach($outsideGroupStudent -> grades as $studentGrade)
          @foreach($grades as $grade)   <!-- sprawdzanie czy klasa ucznia jest jedną z klas grupy -->

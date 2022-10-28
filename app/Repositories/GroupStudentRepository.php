@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -22,6 +22,11 @@ class GroupStudentRepository extends BaseRepository {
          -> orderBy( session()->get('GroupStudentOrderBy[0]'), session()->get('GroupStudentOrderBy[1]') )
          -> orderby('students.last_name') -> orderby('students.first_name')
          -> distinct() -> get();
+      return $records;
+   }
+
+   public function getStudentsFromGroup($group_id) {  //pobranie tylko identyfikatorów uczniów ze wskazanej grupy
+      $records = $this->model -> where('group_students.group_id', '=', $group_id) -> get();
       return $records;
    }
 /*

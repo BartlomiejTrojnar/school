@@ -150,6 +150,7 @@ Route::delete('/grupa_klasy/{GroupGrade_id}', 'GroupGradeController@destroy');
 
 Route::get('/groupStudent/orderBy/{column}', array('as'=>'groupStudent.orderBy', 'uses'=>'GroupStudentController@orderBy'));
 Route::post('/groupStudent/refreshOtherGroupsInStudentsClass', 'GroupStudentController@refreshOtherGroupsInStudentsClass');
+Route::post('/groupStudent/getStudentsFromGroup', 'GroupStudentController@getStudentsFromGroup' );
 Route::post('/groupStudent/getOutsideGroupStudents', 'GroupStudentController@getOutsideGroupStudentsList' );
 Route::post('/groupStudent/removeYesterday', 'GroupStudentController@removeYesterday' );
 Route::post('/groupStudent/addStudent', 'GroupStudentController@addStudent');
