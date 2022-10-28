@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -26,6 +26,13 @@ class GroupStudentController extends Controller
             session()->put('GroupStudentOrderBy[1]', 'asc');
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    public function getStudentsFromGroup(Request $request, GroupStudentRepository $groupStudentRepo) {
+        $groupStudents = $groupStudentRepo -> getStudentsFromGroup($request->group_id);
+        $students = [];
+        foreach($groupStudents as $gs)  $students[] = $gs->student_id;
+        return $students;
     }
 
     public function getGroupStudents(Request $request, GroupStudentRepository $groupStudentRepo, GroupRepository $groupRepo, SchoolYearRepository $schoolYearRepo) {

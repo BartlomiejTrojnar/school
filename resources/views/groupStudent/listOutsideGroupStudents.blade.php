@@ -1,9 +1,12 @@
+<?php echo $groupSF; ?>
+<button class="btn btn-primary" id="selectStudentsFromGroup">zaznacz grupę</button>
+
 @if(!count($outsideGroupStudents))
    <p>Dla podanej daty nie znaleziono uczniów należących do klasy.</p>
 @endif
 
 <ul id="listOutsideGroupStudents">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 *********************** -->
    @foreach($outsideGroupStudents as $outsideGroupStudent)
       @foreach($outsideGroupStudent -> grades as $studentGrade)
          <li data-student_id="{{ $outsideGroupStudent->id }}" data-grade_id="{{ $studentGrade->grade_id }}" data-grade_start="{{ $studentGrade->start }}" data-grade_end="{{ $studentGrade->end }}">

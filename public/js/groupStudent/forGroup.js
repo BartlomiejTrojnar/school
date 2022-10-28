@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideGroups() {
@@ -396,6 +396,27 @@ function gradeClick() {
     });
 }
 
+function selectStudentsFromGroupClick() {
+    $("#selectStudentsFromGroup").click(function() {
+        var group_id = $('select[name="selectedGroupID"]').val();
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/groupStudent/getStudentsFromGroup",
+            data: { group_id: group_id },
+            success: function(students) {
+                $.each(students, function(lp, id) {
+                    $('li[data-student_id="'+id+'"]').animate({ marginLeft: "+=10px"}, "slow").addClass('checked').prepend('<span class="glyphicon glyphicon-ok"></span>');
+                    $('li[data-student_id="'+id+'"]').animate({ backgroundColor: "#004400" }, 500);
+                });
+            },
+            error: function(result) {
+                alert('Błąd: groupStudent.js - funkcja selectStudentsFromGroupClick'); alert(result);
+            }
+        });
+    });
+}
+
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     showOrHideGroups();
@@ -406,4 +427,5 @@ $(document).ready(function() {
     groupStudentEditClick();
     groupStudentDeleteClick();
     gradeClick();
+    selectStudentsFromGroupClick();
 });
