@@ -287,3 +287,4 @@ Route::post('/exam/addExamsForDeclaration', 'ExamController@addExamsForDeclarati
 
 // -------------------------------------------------------------------------------------------------------- //
 Route::resource('/certificate', 'CertificateController');
+Route::post('/certificate/refreshRow', 'CertificateController@refreshRow');

@@ -1,30 +1,35 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.10.2022 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania świadectw ucznia --------------------- //
-/*
-// ------------------------------ zarządzanie deklaracjami ucznia ------------------------------ //
-function refreshDeclaration(id, add=0) {  // odświeżenie kontenera z deklaracją
+
+// ------------------------------ zarządzanie świadectwa ucznia ------------------------------ //
+function refreshRow(id, lp=995, add=0) {  // odświeżenie wiersza ze świadectwem
+    alert('Dokończyć odświeżanie wiersza ze świadectwem');
+    return;
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/declaration/refreshForStudent",
-        data: { id: id },
+        url: "http://localhost/school/certificate/refreshRow",
+        data: { id: id, lp: lp },
         success: function(result) {
             if(add){
+                alert(result);
                 $('section#declarations footer').before(result);
                 $('.declaration[data-declaration_id="'+id+'"] header').hide().show(500);
             }
             else {
-                $('.declaration[data-declaration_id="'+id+'"]').replaceWith(result);
-                $('.declaration[data-declaration_id="'+id+'"] header').hide().show(500);
+                $('tr[data-certificate_id="'+id+'"]').replaceWith(result);
+                $('tr[data-certificate_id="'+id+'"]').hide().show(500);
             }   
         },
         error: function() {
-            var error = '<p class="error">Błąd! Nie mogę załadować deklaracji.</p>';
-            $('.declaration[data-declaration_id="'+id+'"]').append(error);
+            var error = '<tr><td class="error" colspan="6">Błąd! Nie mogę załadować świadectwa.</td></tr>';
+            $('tr[data-certificate_id="'+id+'"]').before(error);
+            $('td.error').hide().show(500);
+            
         },
     });
 }
-*/
+
 function showCreateRowClick() {
     $('#showCreateRow').click(function(){
         showCreateRow();
@@ -93,46 +98,48 @@ function add() {   // zapisanie świadectwa w bazie danych
         },
     });
 }
-/*
-function editClick() {     // kliknięcie przycisku modyfikowania deklaracji
-    $('#declarations').delegate('button.edit', 'click', function() {
-        var id = $(this).data('declaration_id');
+
+function editClick() {     // kliknięcie przycisku modyfikowania świadectwa
+    $('#certificatesTable').delegate('button.edit', 'click', function() {
+        var id = $(this).data('certificate_id');
         $.ajax({
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/deklaracja/"+id+"/edit",
+            url: "http://localhost/school/certificate/"+id+"/edit",
             data: { id: id, version: "forStudent" },
             success: function(result) {
-                $.when( $('.declaration[data-declaration_id="'+id+'"] header').hide(500) ).then(  function() {
-                    $('.declaration[data-declaration_id="'+id+'"] header').replaceWith(result);
-                    $('.declaration[data-declaration_id="'+id+'"] header').show(700);
+                $.when( $('tr[data-certificate_id="'+id+'"]').hide(500) ).then(  function() {
+                    $('tr[data-certificate_id="'+id+'"]').replaceWith(result);
+                    $('tr[data-certificate_id="'+id+'"]').hide().show(500);
                     updateClick();
                 });
             },
             error: function() {
-                var error = '<p class="error">Błąd tworzenia wiersza z formularzem dodawania deklaracji.</p>';
-                $('.declaration[data-declaration_id="'+id+'"]').append(error);
+                var error = '<tr><td class="error" colspan="6">Błąd tworzenia wiersza z formularzem dodawania deklaracji.</td></tr>';
+                $('tr[data-certificate_id="'+id+'"]').before(error);
+                $('td.error').hide().show(500);
             },
         });
     });
 }
 
-function updateClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania deklaracji
+function updateClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania świadectwa
     $('.cancelUpdate').click(function() {
-        var id = $(this).attr('data-declaration_id')
-        $.when( $('header.editTable[data-declaration_id='+id+']').hide(500) ).then(  function() {
-            refreshDeclaration( $(this).data('declaration_id') );
+        var id = $(this).attr('data-certificate_id');
+        var lp = $(this).parent().parent().parent().children(":first").children().html();
+        $.when( $('tr[data-certificate_id='+id+']').hide(500) ).then(  function() {
+            refreshRow( id, lp );
         });
     });
 
     $('.update').click(function(){
-        var id = $(this).attr('data-declaration_id');
-        $.when( $('header.editTable[data-declaration_id='+id+']').hide(500) ).then(  function() {
-            update(id);
-        });
+        //var id = $(this).attr('data-declaration_id');
+        //$.when( $('header.editTable[data-declaration_id='+id+']').hide(500) ).then(  function() {
+        //    update(id);
+        //});
     });
 }
-
+/*
 function update(id) {   // zapisanie deklaracji w bazie danych
     var student_id          = $('header[data-declaration_id='+id+'] input[name="student_id"]').val();
     var session_id          = $('header[data-declaration_id='+id+'] select[name="session_id"]').val();
@@ -347,7 +354,7 @@ function plusClick() {     // pokazanie egzaminów dla deklaracji
 $(document).ready(function() {
     showCreateRowClick();
     addClick();
-    //editClick();
+    editClick();
     //destroyClick();
 
     //showExamCreateRowClick();

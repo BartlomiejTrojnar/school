@@ -23,7 +23,7 @@
             <tr data-certificate_id="{{ $certificate->id }}">
                <td>{{ ++$count }}</td>
                <td>{{ $certificate->type }}</td>
-               <td>{{ $certificate->templates_id }}</td>
+               <td>{{ $certificate->template }}</td>
                <td>{{ $certificate->council_date }}</td>
                <td>{{ $certificate->date_of_issue }}</td>
 

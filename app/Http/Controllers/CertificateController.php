@@ -53,15 +53,13 @@ class CertificateController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function edit(Request $request, Certificate $certificate) {
+        $certificate = $certificate -> find($request->id);
+        $types = array("arkusz", "świadectwo");
+        $typeSF = view('certificate.typeSelectField', ["types"=>$types, "typeSelected"=>$certificate->type]);
+        $templates = CertificateTemplate::all();
+        $templateSF = view('certificate.templateSelectField', ["templates"=>$templates, "tempSelected"=>$certificate->templates_id]);
+        return view('certificate.edit', ["certificate"=>$certificate, "version"=>$request->version, "typeSF"=>$typeSF, "templateSF"=>$templateSF]);
     }
 
     /**
@@ -85,5 +83,10 @@ class CertificateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function refreshRow(Request $request, Certificate $certificate) {
+        $certificate = $certificate -> find($request->id);
+        return view('certificate.row', ["certificate"=>$certificate, "version"=>$request->version, "lp"=>$request->lp]);
     }
 }
