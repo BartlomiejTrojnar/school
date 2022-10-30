@@ -2,6 +2,7 @@
 
 @section('css')
    <link href="{{ asset('public/css/'.$css) }}" rel="stylesheet">
+   
 @endsection
 
 @section('java-script')
@@ -22,17 +23,18 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showInfo') }}">informacje  <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showGrades') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showGroups') }}">grupy <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showLessonPlan') }}">plan lekcji <i class="fa fa-calendar"></i></a></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showTasks') }}">zadania <i class='fa fa-tasks'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showDeclarations') }}">deklaracje <i class="far fa-newspaper"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/info') }}">informacje <i class="bi bi-info-circle"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/klasy') }}">klasy <i class="bi bi-mortarboard"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/rozszerzenia') }}">rozszerzenia <i class="bi bi-palette2"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/grupy') }}">grupy <i class="bi bi-people-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/planlekcji') }}">plan lekcji <i class="bi bi-calendar2-range-fill"></i></a></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/zadania') }}">zadania <i class="bi bi-list-task"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/swiadectwa') }}">świadectwa <i class="bi bi-award"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/deklaracje') }}">deklaracje <i class="bi bi-motherboard-fill"></i></a></li>
    <?php /*
-      <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showEnlargements') }}">rozszerzenia</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('uczen/'.$student->id.'/showRatings') }}">oceny</a></li>
    */ ?>
-      <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">powrót <i class='fa fa-undo'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">powrót <i class="bi bi-arrow-up-square"></i></a></li>
    </ul>
 
    <?php  echo $subView;  ?>
