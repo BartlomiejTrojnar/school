@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -88,7 +88,7 @@ class GradeController extends Controller
 
     public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR, GroupRepository $gR,
             LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR, $view='') {
-        if( empty(session()->get('gradeView')) )  session()->put('gradeView', 'showInfo');
+        if( empty(session()->get('gradeView')) )  session()->put('gradeView', 'info');
         if($view)  session()->put('gradeView', $view);
         if(!empty($id)) {
             $this->grade = $gradeRepo -> find($id);
@@ -113,7 +113,7 @@ class GradeController extends Controller
         }
 
         switch(session()->get('gradeView')) {
-            case 'showInfo':        return $this -> showInfo();
+            case 'info':        return $this -> showInfo();
             case 'uczniowie':   return $this -> showStudents($syR, $sgR);
             case 'daneuczniow': return $this -> showStudentsAll();
             case 'numery':      return $this -> showNumbers($syR, $snR);
