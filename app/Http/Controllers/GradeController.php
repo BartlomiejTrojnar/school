@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -7,6 +7,7 @@ use App\Repositories\GradeRepository;
 use App\Models\TaskRating;
 use App\Models\Teacher;
 use App\Repositories\DeclarationRepository;
+use App\Repositories\EnlargementRepository;
 use App\Repositories\GroupRepository;
 use App\Repositories\LessonPlanRepository;
 use App\Repositories\SchoolRepository;
@@ -87,7 +88,7 @@ class GradeController extends Controller
     public function change($id) {  session()->put('gradeSelected', $id);  }
 
     public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR, GroupRepository $gR,
-            LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR, $view='') {
+            LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR, EnlargementRepository $eR, $view='') {
         if( empty(session()->get('gradeView')) )  session()->put('gradeView', 'info');
         if($view)  session()->put('gradeView', $view);
         if(!empty($id)) {
@@ -123,7 +124,7 @@ class GradeController extends Controller
             case 'oceny':       return $this -> showRatings();
             case 'deklaracje':  return $this -> showDeclarations($dR);
             case 'zadania':     return $this -> showTasks();
-            case 'rozszerzenia':return $this -> showEnlargements();
+            case 'rozszerzenia':return $this -> showEnlargements($eR);
             default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('gradeView'));
         }
@@ -252,8 +253,9 @@ class GradeController extends Controller
         return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$ratingsTable]);
     }
 
-    private function showEnlargements() {
-        $enlargementsTable = view('enlargement.tableForGrade', []);
+    private function showEnlargements($enlargementRepo) {
+        $enlargements = $enlargementRepo -> getFilteredAndSorted($this->grade->id);
+        $enlargementsTable = view('enlargement.tableForGrade', ["enlargements"=>$enlargements]);
         return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$enlargementsTable]);
     }
 
