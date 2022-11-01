@@ -1,11 +1,11 @@
 <?php
-
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 01.11.2022 ------------------------ //
 namespace App\Http\Controllers;
+use App\Models\Enlargement;
 
+use App\Repositories\StudentGradeRepository;
+use App\Repositories\SubjectRepository;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class EnlargementController extends Controller
 {
@@ -51,15 +51,16 @@ class EnlargementController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function edit(Request $request, Enlargement $enlargement, StudentGradeRepository $studentGradeRepo, SubjectRepository $subjectRepo) {
+        $enlargement = $enlargement -> find($request->id);
+        $grades[0] = session()->get('gradeSelected');
+        $studentGrades = $studentGradeRepo -> getStudentsFromGrades($grades, 0);
+        $students = [];
+        foreach($studentGrades as $studentGrade) $students[] = $studentGrade->student;
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$enlargement->student_id]);
+        $subjects = $subjectRepo -> getActualAndSorted();
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$enlargement->subject_id]);
+        return view('enlargement.edit', ["enlargement"=>$enlargement, "version"=>$request->version, "studentSF"=>$studentSF, "subjectSF"=>$subjectSF]);
     }
 
     /**

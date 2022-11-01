@@ -256,7 +256,8 @@ class GradeController extends Controller
     private function showEnlargements($enlargementRepo) {
         $enlargements = $enlargementRepo -> getFilteredAndSorted($this->grade->id);
         $enlargementsTable = view('enlargement.tableForGrade', ["enlargements"=>$enlargements]);
-        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$enlargementsTable]);
+        $js = "enlargement/operations.js";
+        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$enlargementsTable]);
     }
 
     private function showDeclarations($declarationRepo) {

@@ -118,6 +118,8 @@ Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::delete('/nauczany_przedmiot/delete/{id}', 'TaughtSubjectController@destroy');
 // -------------------------------------------------------------------------------------------------------- //
 
+Route::resource('/rozszerzenie', 'EnlargementController');
+
 Route::get('/grupa/editComments', array('as'=>'grupa.editComments', 'uses'=>'GroupController@editComments'));
 Route::post('/grupa/updateComments', array('as'=>'grupa.updateComments', 'uses'=>'GroupController@updateComments'));
 Route::get('/grupa/compare', array('as'=>'grupa.compare', 'uses'=>'GroupCompareController@compare'));
