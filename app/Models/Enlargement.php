@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enlargement extends Model
 {
+    public $timestamps = false;
+
     public function __construct() {
         if( empty(session() -> get('EnlargementOrderBy[0]')) )    session() -> put('EnlargementOrderBy[0]', 'student_id');
         if( empty(session() -> get('EnlargementOrderBy[1]')) )    session() -> put('EnlargementOrderBy[1]', 'asc');

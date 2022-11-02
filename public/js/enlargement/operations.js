@@ -28,31 +28,41 @@ function studentChanged() {  // wybór ucznia w polu select
 */
 
 // ------------------------------ zarządzanie deklaracjami sesji ------------------------------- //
-/*
-function refreshRow(id, version, type, lp=0) {  // odświeżenie wiersza z opisem egzaminem o podanym identyfikatorze
+function refreshRow(id, version, operation) {  // odświeżenie wiersza z rozszerzeniem o podanym identyfikatorze
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/declaration/refreshRow",
-        data: { id: id, version: version, lp: lp },
+        url: "http://localhost/school/enlargement/refreshRow",
+        data: { id: id, version: version },
         success: function(result) {
-            if(type=="add"){
+            if(operation=="add"){
                 $('tr.create').before(result);
                 $('#showCreateRow').show();
             }
             else {
-                $('tr.editRow[data-declaration_id='+id+']').remove();
-                $('tr[data-declaration_id='+id+']').replaceWith(result);
+                $.when( $('.editRow[data-enlargement_id='+id+']').fadeOut(500) ).then(function() {
+                    $('.editRow[data-enlargement_id='+id+']').remove();
+                    $('[data-enlargement_id='+id+']').replaceWith(result);
+                    $('[data-enlargement_id='+id+']').hide().fadeIn(1000);
+                });
             }
         },
         error: function() {
-            if(version=="forIndex" || version=="forGrade") colspan=9;
-            var error = '<tr><td class="error" colspan="'+colspan+'">Błąd odświeżania wiersza deklaracji!</td></tr>';
-            $('tr.create').before(error);
+            var error = '<tr><td class="error" colspan="6">Błąd odświeżania wiersza rozszerzenia!</td></tr>';
+            if(operation=="add") {
+                $('tr.create').before(error);
+            }
+            else {
+                $('.editRow[data-enlargement_id='+id+']').before(error);
+                $('.error').hide().fadeIn(750);
+                $.when( $('.editRow[data-enlargement_id='+id+']').fadeOut(500) ).then(function() {
+                    $('.editRow[data-enlargement_id='+id+']').remove();
+                });
+            }
         },
     });
 }
-
+/*
 function showCreateRowClick() {
     $('#showCreateRow').click(function(){
         var version = $(this).data('version');
@@ -148,41 +158,44 @@ function editClick() {     // kliknięcie przycisku modyfikowania rozszerzenia
 
 function updateClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania rozszerzenia
     $('.cancelUpdate').click(function() {
-        //var id = $(this).data('declaration_id');
-        //$('.editRow[data-declaration_id='+id+']').remove();
-        //$('tr[data-declaration_id='+id+']').show();
+        var id = $(this).data('enlargement_id');
+        $.when( $('.editRow[data-enlargement_id='+id+']').hide(500) ).then(function() {
+            $('.editRow[data-enlargement_id='+id+']').remove();
+            $('tr[data-enlargement_id='+id+']').fadeOut(1).fadeIn(1000);
+        });        
     });
 
     $('.update').click(function(){
-        //var version = $(this).data('version');
-        //update( $(this).attr('data-declaration_id'), version, lp );
+        update( $(this).attr('data-enlargement_id'), $(this).data('version') );
     });
 }
-/*
-function update(id, version, lp) {   // zapisanie deklaracji w bazie danych
-    var student_id          = $('tr[data-declaration_id='+id+'] select[name="student_id"]').val();
-    if(version=="forStudent")
-        student_id = $('tr[data-declaration_id='+id+'] input[name="student_id"]').val();
-    var session_id = $('tr[data-declaration_id='+id+'] select[name="session_id"]').val();
-    if(version=="forSession")
-        session_id = $('tr[data-declaration_id='+id+'] input[name="session_id"]').val();
-    var application_number  = $('tr[data-declaration_id='+id+'] input[name="application_number"]').val();
-    var student_code        = $('tr[data-declaration_id='+id+'] input[name="student_code"]').val();
+
+function update(id, version) {   // zapisanie rozszerzenia w bazie danych
+    var student_id  = $('tr[data-enlargement_id='+id+'] select[name="student_id"]').val();
+    var subject_id  = $('tr[data-enlargement_id='+id+'] select[name="subject_id"]').val();
+    var level       = $('tr[data-enlargement_id='+id+'] input[name="level"]').val();
+    var choice      = $('tr[data-enlargement_id='+id+'] input[name="choice"]').val();
+    var resignation = $('tr[data-enlargement_id='+id+'] input[name="resignation"]').val();
 
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/deklaracja/"+id,
-        data: { id: id, student_id: student_id, session_id: session_id, application_number: application_number, student_code: student_code },
-        success: function() { refreshRow(id, version, "edit", lp); },
+        url: "http://localhost/school/rozszerzenie/"+id,
+        data: { id: id, student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
+        success: function(wynik) {
+            refreshRow(id, version, "edit");
+        },
         error: function() {
-            if(version=="forIndex" || version=="forGrade") colspan=9;
-            var error = '<tr><td colspan="'+colspan+'" class="error">Błąd modyfikowania deklaracji.</td></tr>';
-            $('tr[data-declaration_id='+id+'].editRow').after(error).hide();
+            var error = '<tr><td colspan="6" class="error">Błąd modyfikowania rozszerznia.</td></tr>';
+            $.when( $('.editRow[data-enlargement_id='+id+']').hide(500) ).then(function() {
+                $('.editRow[data-enlargement_id='+id+']').after(error).remove();
+                $('td.error').hide().fadeIn(750);
+                $('[data-enlargement_id='+id+']').fadeIn(1500);
+            });
         },
     });
 }
-
+/*
 function destroyClick() {  // usunięcie deklaracji (z bazy danych)
     $('#declarations').delegate('.destroy', 'click', function() {
         var id = $(this).data('declaration_id');

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 01.11.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.11.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Enlargement;
 
@@ -63,16 +63,21 @@ class EnlargementController extends Controller
         return view('enlargement.edit', ["enlargement"=>$enlargement, "version"=>$request->version, "studentSF"=>$studentSF, "subjectSF"=>$subjectSF]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update($id, Request $request, Enlargement $enlargement) {
+        $enlargement = $enlargement -> find($id);
+        $this->validate($request, [
+          'student_id' => 'required',
+          'subject_id' => 'required',
+        ]);
+
+        $enlargement->student_id = $request->student_id;
+        $enlargement->subject_id = $request->subject_id;
+        $enlargement->level = $request->level;
+        $enlargement->choice = $request->choice;
+        if($request->resignation=="")   $enlargement->resignation = NULL;
+        else $enlargement->resignation = $request->resignation;
+        $enlargement -> save();
+        return $enlargement->id;
     }
 
     /**
@@ -84,5 +89,10 @@ class EnlargementController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function refreshRow(Request $request, Enlargement $enlargement) {
+        $enlargement = $enlargement -> find($request->id);
+        return view('enlargement.row', ["enlargement"=>$enlargement, "version"=>$request->version]);
     }
 }
