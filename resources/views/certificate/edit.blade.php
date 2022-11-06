@@ -7,8 +7,8 @@
       <td><input type="hidden" name="student_id" value="{{ $certificate->student_id }}" /></td>
       <td><?php echo $typeSF; ?></td>
       <td><?php echo $templateSF; ?></td>
-      <td><input type="date" name="type" value="{{ $certificate->council_date }}" /></td>
-      <td><input type="date" name="type" value="{{ $certificate->date_of_issue }}" /></td>
+      <td><input type="date" name="council_date" value="{{ $certificate->council_date }}" /></td>
+      <td><input type="date" name="date_of_issue" value="{{ $certificate->date_of_issue }}" /></td>
 
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
       <td class="c" style="width: 250px;">

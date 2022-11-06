@@ -3,7 +3,7 @@
 @endsection
 
 <section id="certificatesSection">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 25.10.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2022 *********************** -->
    <h2>Świadectwa ucznia</h2>
    <table id="certificatesTable">
       <thead>

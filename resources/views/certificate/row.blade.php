@@ -1,5 +1,5 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.11.2021 *********************** -->
 <tr data-certificate_id="{{ $certificate->id }}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2022 *********************** -->
    <td>{{ $lp }}</td>
    <td>{{ $certificate->type }}</td>
    <td>{{ $certificate->templates_id }}</td>

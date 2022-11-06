@@ -1,9 +1,8 @@
 <tr id="createRow">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 26.10.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2022 *********************** -->
    <form action="{{ route('certificate.store') }}" method="post" role="form">
       {{ csrf_field() }}
       @if($version=="forStudent")   <td><input type="hidden" name="student_id" value="{{$student}}" /></td> @endif
-
       <td><?php echo $typeSF; ?></td>
       <td><?php echo $templateSF; ?></td>
       <td><input type="date" name="council_date" /></td>
