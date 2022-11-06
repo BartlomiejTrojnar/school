@@ -284,3 +284,8 @@ Route::post('/egzamin/refreshRow', 'ExamController@refreshRow');
 Route::resource('/egzamin', 'ExamController');
 Route::get('/egzamin/orderBy/{column}', array('as'=>'egzamin.orderBy', 'uses'=>'ExamController@orderBy'));
 Route::post('/exam/addExamsForDeclaration', 'ExamController@addExamsForDeclaration');
+
+
+// -------------------------------------------------------------------------------------------------------- //
+Route::resource('/certificate', 'CertificateController');
+Route::post('/certificate/refreshRow', 'CertificateController@refreshRow');
