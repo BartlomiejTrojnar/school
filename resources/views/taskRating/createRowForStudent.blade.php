@@ -5,8 +5,8 @@
       <td><?php  print_r($taskSelectField);  ?></td>
       <td><input type="date" name="deadline" required /></td>
       <td><input type="date" name="implementation_date" /></td>
-      <td><input type="number" name="version" size="2" maxlength="1" min="1" max="9" required /></td>
-      <td><input type="text" name="importance" size="3" maxlength="4" required /></td>
+      <td><input type="number" name="version" size="2" maxlength="1" min="1" max="9" required style="border: 3px solid red; background: #f88;" /></td>
+      <td><input type="text" name="importance" size="3" maxlength="4" required style="border: 3px solid red; background: #f88;" /></td>
       <td><input type="date" name="rating_date" /></td>
       <td>
          <input type="text" name="points" size="3" maxlength="4" />

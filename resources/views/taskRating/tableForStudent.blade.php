@@ -26,7 +26,7 @@
             if($taskRating->importance) $sumPoints += $taskRating->points/$taskRating->task->points + 0.3;
             $sumImportances += $taskRating->importance;
          ?>
-         <tr data-task-rating-id="{{$taskRating->id}}">
+         <tr data-task_rating_id="{{$taskRating->id}}">
             <td class="lp"><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ ++$count }}</a></td>
             <td><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>
             <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
@@ -39,24 +39,27 @@
             <td>{{ $taskRating->comments }}</td>
             <td class="diary c">
                @if($taskRating->diary)
-                  <button class="btn-warning entry-diary" data-task_rating_id="{{$taskRating->id}}"><i class='fas fa-circle'></i></button>
+                  <button class="btn-warning entry-diary" data-task_rating_id="{{ $taskRating->id }}"><i class='fas fa-circle'></i></button>
                @else
-                  <button class="btn-warning no-diary" data-task_rating_id="{{$taskRating->id}}"><i class='far fa-circle'></i></button>
+                  <button class="btn-warning no-diary" data-task_rating_id="{{ $taskRating->id }}"><i class='far fa-circle'></i></button>
                @endif
             </td>
             <td class="entry_date">{{ substr($taskRating->entry_date, 0, 10) }}</td>
 
             <!-- modyfikowanie i usuwanie -->
             <td class="improvement edit destroy c">
-               <button class="improvement btn btn-primary" data-taskRatingId="{{ $taskRating->id }}"><i class="fa fa-edit"></i></button>
-               <button class="edit btn btn-primary" data-taskRatingId="{{ $taskRating->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-taskRatingId="{{ $taskRating->id }}"><i class="fas fa-remove"></i></button>
+               <button class="improvement btn btn-primary"  data-task_rating_id="{{ $taskRating->id }}" title="poprawa"><i class="fa fa-edit"></i></button>
+               <button class="edit btn btn-primary"         data-task_rating_id="{{ $taskRating->id }}" title="edytuj"><i class="fa fa-edit"></i></button>
+               <button class="destroy btn btn-primary"      data-task_rating_id="{{ $taskRating->id }}" title="usuń"><i class="fas fa-remove"></i></button>
             </td>
          </tr>
       @endforeach
       @endif
 
-      <tr class="create"><td colspan="13"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button></td></tr>
+      <tr class="create"><td colspan="13">
+         <input type="number" name="lp" id="lp" value="{{ $count }}" hidden>
+         <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      </td></tr>
       <tr class="c"><td colspan="13"><a class="btn btn-primary" href="{{ route('ocena_zadania.editStudentRatings') }}">zmień wszystkie</a></td></tr>
    </table>
 

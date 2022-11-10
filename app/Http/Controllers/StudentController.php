@@ -90,7 +90,7 @@ class StudentController extends Controller
     public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
         GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
         session() -> put('studentSelected', $id);
-        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'showInfo');
+        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
         $this->student = $studentRepo -> find($id);
 
@@ -108,13 +108,13 @@ class StudentController extends Controller
         }
 
         switch(session() -> get('studentView')) {
-            case 'showInfo':    return $this -> showInfo();
-            case 'showGrades':  return $this -> showGrades($sgRepo, $snRepo, $schoolYearRepo);
-            case 'showGroups':  return $this -> showGroups($groupStudentRepo, $schoolYearRepo);
-            case 'showLessonPlan':  return $this -> showLessonPlan($lessonPlanRepo);
-            case 'showTasks':   return $this -> showTasks();
-            case 'showDeclarations':    return $this -> showDeclarations();
-            case 'showExams':    return $this -> showExams();
+            case 'info':        return $this -> showInfo();
+            case 'klasy':       return $this -> showGrades($sgRepo, $snRepo, $schoolYearRepo);
+            case 'grupy':       return $this -> showGroups($groupStudentRepo, $schoolYearRepo);
+            case 'planlekcji':  return $this -> showLessonPlan($lessonPlanRepo);
+            case 'zadania':     return $this -> showTasks();
+            case 'deklaracje':  return $this -> showDeclarations();
+            case 'egzaminy':    return $this -> showExams();
 /*
           case 'showEnlargements':
               return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);

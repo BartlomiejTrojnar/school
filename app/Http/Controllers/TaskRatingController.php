@@ -113,15 +113,15 @@ class TaskRatingController extends Controller
 
         $taskRating = new TaskRating;
         $taskRating->student_id = $request->student_id;
-        $taskRating->task_id = $request->task_id;
-        $taskRating->deadline = $request->deadline;
+        $taskRating->task_id    = $request->task_id;
+        $taskRating->deadline   = $request->deadline;
         $taskRating->implementation_date = $request->implementation_date;
-        $taskRating->version = $request->version;
+        $taskRating->version    = $request->version;
         $taskRating->importance = $request->importance;
-        $taskRating->rating_date = $request->rating_date;
-        $taskRating->points = $request->points;
-        $taskRating->rating = $request->rating;
-        $taskRating->comments = $request->comments;
+        $taskRating->rating_date= $request->rating_date;
+        $taskRating->points     = $request->points;
+        $taskRating->rating     = $request->rating;
+        $taskRating->comments   = $request->comments;
         if($request->diary=="on") $taskRating->diary = true; else $taskRating->diary = false;
         $taskRating->entry_date = $request->entry_date;
         $taskRating -> save();
@@ -164,14 +164,14 @@ class TaskRatingController extends Controller
     public function edit($id, TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo, StudentRepository $studentRepo) {
         $taskRating = $taskRatingRepo -> find($id);
         $tasks = $taskRepo->getAllSorted();
-        $students = $studentRepo->getAllSorted();
-
         $taskSelected = $taskRating->task_id;
-        $studentSelected = $taskRating->student_id;
+        $taskSF = view('task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected]);
 
-        return view('taskRating.edit', ["taskRating"=>$taskRating])
-            -> nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected])
-            -> nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+        //$students = $studentRepo->getAllSorted();
+        //$studentSelected = $taskRating->student_id;
+        //$studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+
+        return view('taskRating.edit', ["taskRating"=>$taskRating, "taskSF"=>$taskSF]);
     }
 
     public function editLotTaskRatings(TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo) {
