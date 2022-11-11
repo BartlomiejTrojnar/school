@@ -225,6 +225,7 @@ Route::post('/ocena_zadania/writeInTheDiary/{id}', 'TaskRatingController@writeIn
 Route::post('/ocena_zadania/removeFromDiary/{id}', 'TaskRatingController@removeFromDiary');
 Route::post('/diaryYesNo/change/{value}', 'TaskRatingController@diaryYesNoChange');
 Route::get('/ocena_zadania/improvement/{id}', array('as'=>'ocena_zadania.improvement', 'uses'=>'TaskRatingController@improvement'));
+Route::post('/ocena_zadania/refreshRow', 'TaskRatingController@refreshRow');
 Route::post('/ocena_zadania/refreshTable', 'TaskRatingController@refreshTable');
 Route::resource('/ocena_zadania', 'TaskRatingController');
 Route::get('/ocena_zadania/orderBy/{column}', array('as'=>'ocena_zadania.orderBy', 'uses'=>'TaskRatingController@orderBy'));

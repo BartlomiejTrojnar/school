@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 06.05.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.11.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Repositories\StudentRepository;
@@ -88,7 +88,7 @@ class StudentController extends Controller
     public function change($id) {  session()->put('studentSelected', $id);  }
 
     public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
-        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
+        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, TaskRatingRepository $taskRatingRepo, $view='') {
         session() -> put('studentSelected', $id);
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
@@ -112,7 +112,7 @@ class StudentController extends Controller
             case 'klasy':       return $this -> showGrades($sgRepo, $snRepo, $schoolYearRepo);
             case 'grupy':       return $this -> showGroups($groupStudentRepo, $schoolYearRepo);
             case 'planlekcji':  return $this -> showLessonPlan($lessonPlanRepo);
-            case 'zadania':     return $this -> showTasks();
+            case 'zadania':     return $this -> showTasks($taskRatingRepo);
             case 'deklaracje':  return $this -> showDeclarations();
             case 'egzaminy':    return $this -> showExams();
 /*
@@ -209,13 +209,11 @@ class StudentController extends Controller
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentPlan]);
     }
 
-    private function showTasks() {
-        $css = "/student/taskRating.css";
+    private function showTasks($taskRatingRepo) {
+        $css = "/taskRating/forStudent.css";
         $js = "/taskRating/forStudent.js";
-        $subTitle = "Zadania ucznia";
-        $taskRatingRepo = new TaskRatingRepository(new TaskRating);
         $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);
-        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings]);
+        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "taskRatings"=>$taskRatings]);
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable]);
     }
 

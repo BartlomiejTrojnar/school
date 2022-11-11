@@ -1,3 +1,4 @@
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.11.2022 *********************** -->
 <section id="taskRatingsTable">
    <h2>Oceny zadań ucznia</h2>
    <table id="taskRatings">
@@ -37,7 +38,7 @@
             <td>{{ $taskRating->points }} ({{ number_format($taskRating->points/$taskRating->task->points*100, 1) }}%)</td>
             <td>{{ $taskRating->rating }}</td>
             <td>{{ $taskRating->comments }}</td>
-            <td class="diary c">
+            <td class="diary">
                @if($taskRating->diary)
                   <button class="btn-warning entry-diary" data-task_rating_id="{{ $taskRating->id }}"><i class='fas fa-circle'></i></button>
                @else
@@ -47,7 +48,7 @@
             <td class="entry_date">{{ substr($taskRating->entry_date, 0, 10) }}</td>
 
             <!-- modyfikowanie i usuwanie -->
-            <td class="improvement edit destroy c">
+            <td class="improvement edit destroy">
                <button class="improvement btn btn-primary"  data-task_rating_id="{{ $taskRating->id }}" title="poprawa"><i class="fa fa-edit"></i></button>
                <button class="edit btn btn-primary"         data-task_rating_id="{{ $taskRating->id }}" title="edytuj"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary"      data-task_rating_id="{{ $taskRating->id }}" title="usuń"><i class="fas fa-remove"></i></button>

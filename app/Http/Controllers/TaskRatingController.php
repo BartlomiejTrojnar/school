@@ -262,7 +262,7 @@ class TaskRatingController extends Controller
         if($request->entry_date=="" || $request->entry_date=="0000-00-00") $taskRating->entry_date = null;
         $taskRating -> save();
 
-        return redirect($request->historyView);
+        return $taskRating->id;
     }
 
     public function updateLotTaskRatings(Request $request, TaskRating $taskRating) {
@@ -400,6 +400,16 @@ class TaskRatingController extends Controller
         $taskRating -> delete();
         return 1;
         //return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    public function refreshRow(Request $request, TaskRatingRepository $taskRatingRepo) {
+        $taskRating = $taskRatingRepo -> find($request->id);
+        return view('taskRating.row', ["taskRating"=>$taskRating, "lp"=>$request->lp]);
+
+        return $request->version;
+        //$student = $studentRepo -> find($request->student_id);
+        //$declarations = $student -> declarations;
+        //return view('declaration.tableForStudent', ["declarations"=>$declarations]);
     }
 
     public function refreshTable(Request $request, TaskRatingRepository $taskRatingRepo) {
