@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.11.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 *********************** -->
 <section id="taskRatingsTable">
    <h2>Oceny zadań ucznia</h2>
    <table id="taskRatings">
@@ -29,7 +29,7 @@
          ?>
          <tr data-task_rating_id="{{$taskRating->id}}">
             <td class="lp"><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ ++$count }}</a></td>
-            <td><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>
+            <td style="text-align: left;"><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>
             <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
             <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
             <td>{{ $taskRating->version }}</td>

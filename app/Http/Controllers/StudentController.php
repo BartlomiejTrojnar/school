@@ -210,7 +210,7 @@ class StudentController extends Controller
     }
 
     private function showTasks($taskRatingRepo) {
-        $css = "/taskRating/forStudent.css";
+        $css = "/taskRating/style.css";
         $js = "/taskRating/forStudent.js";
         $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);
         $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "taskRatings"=>$taskRatings]);
