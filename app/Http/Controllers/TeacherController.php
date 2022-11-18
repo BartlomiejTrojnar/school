@@ -51,10 +51,10 @@ class TeacherController extends Controller
     public function create(ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
         $classrooms = $classroomRepo -> getAllSorted();
         $schoolYears = $schoolYearRepo -> getAllSorted();
-        return view('teacher.create')
-            -> nest('classroomSelectField', 'classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>0])
-            -> nest('firstYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id'])
-            -> nest('lastYearSelectField', 'schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>0]);
+        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id']);
+        $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
+        return view('teacher.create', ["classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
     }
 
     public function store(Request $request) {
@@ -68,20 +68,20 @@ class TeacherController extends Controller
         ]);
 
         $teacher = new Teacher;
-        $teacher->first_name = $request->first_name;
-        $teacher->last_name = $request->last_name;
-        $teacher->family_name = $request->family_name;
-        $teacher->short = $request->short;
+        $teacher->first_name    = $request->first_name;
+        $teacher->last_name     = $request->last_name;
+        $teacher->family_name   = $request->family_name;
+        $teacher->short  = $request->short;
         $teacher->degree = $request->degree;
         $teacher->classroom_id = $request->classroom_id;
         if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
         $teacher->first_year_id = $request->first_year_id;
-        $teacher->last_year_id = $request->last_year_id;
+        $teacher->last_year_id  = $request->last_year_id;
         if($teacher->last_year_id == 0) $teacher->last_year_id = NULL;
         $teacher->order = $request->order;
         $teacher -> save();
 
-        return redirect($request->history_view);
+        return $teacher->id;
     }
 
     public function change($id) { session()->put('teacherSelected', $id); }
