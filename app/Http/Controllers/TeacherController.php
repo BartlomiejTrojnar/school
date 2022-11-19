@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -62,15 +62,15 @@ class TeacherController extends Controller
         ]);
 
         $teacher = new Teacher;
-        $teacher->first_name = $request->first_name;
-        $teacher->last_name = $request->last_name;
-        $teacher->family_name = $request->family_name;
-        $teacher->short = $request->short;
+        $teacher->first_name    = $request->first_name;
+        $teacher->last_name     = $request->last_name;
+        $teacher->family_name   = $request->family_name;
+        $teacher->short  = $request->short;
         $teacher->degree = $request->degree;
         $teacher->classroom_id = $request->classroom_id;
         if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
         $teacher->first_year_id = $request->first_year_id;
-        $teacher->last_year_id = $request->last_year_id;
+        $teacher->last_year_id  = $request->last_year_id;
         if($teacher->last_year_id == 0) $teacher->last_year_id = NULL;
         $teacher->order = $request->order;
         $teacher -> save();
@@ -176,14 +176,14 @@ class TeacherController extends Controller
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
 
-    public function edit(Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
-        $teacher = $teacher -> find($request->id);
+    public function edit($id, Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
+        $teacher = $teacher -> find($id);
         $classrooms = $classroomRepo->getAllSorted();
         $schoolYears = $schoolYearRepo->getAllSorted();
         $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
         $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
         $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
-        return view('teacher.edit', ["teacher"=>$teacher, "lp"=>$request->lp, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
+        return view('teacher.edit', ["teacher"=>$teacher, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF, "lp"=>$request->lp]);
     }
 
     public function update($id, Request $request, Teacher $teacher) {
@@ -197,11 +197,11 @@ class TeacherController extends Controller
           'order' => 'required|integer|between:0,20',
         ]);
 
-        $teacher->first_name = $request->first_name;
-        $teacher->last_name = $request->last_name;
-        $teacher->family_name = $request->family_name;
-        $teacher->short = $request->short;
-        $teacher->degree = $request->degree;
+        $teacher->first_name    = $request->first_name;
+        $teacher->last_name     = $request->last_name;
+        $teacher->family_name   = $request->family_name;
+        $teacher->short         = $request->short;
+        $teacher->degree        = $request->degree;
         $teacher->classroom_id = $request->classroom_id;
         if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
         $teacher->first_year_id = $request->first_year_id;
@@ -218,6 +218,11 @@ class TeacherController extends Controller
         $teacher = $teacher -> find($id);
         $teacher -> delete();
         return 1;
+    }
+
+    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
+        $this->teacher = $teacherRepo -> find($request->id);
+        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
     }
 
     public function printOrder(TeacherRepository $teacherRepo) {

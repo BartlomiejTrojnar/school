@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ********************** -->
 @extends('layouts.app')
 
 @section('css')
