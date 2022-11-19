@@ -36,7 +36,7 @@
       <?php $count = 0;    if(isset($_GET['page'])) $count += ($_GET['page']-1) * 20;  ?>
       @foreach($teachers as $teacher)
       <?php $count++; ?>
-      <tr>
+      <tr data-teacher_id="{{ $teacher->id }}">
          <td>{{ $count }}</td>
          <td>{{ $teacher->degree }}</td>
          <td>{{ $teacher->first_name }}</td>
@@ -52,14 +52,9 @@
          <td>@if($teacher->last_year_id) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
          <td class="c">{{ $teacher->order }}</td>
          <td class="c small">{{ substr($teacher->updated_at, 0, 10) }}</td>
-         <td class="edit"><a class="btn btn-primary" href="{{ route('nauczyciel.edit', $teacher->id) }}"><i class="fa fa-edit"></i></a></td>
-         
-         <td class="destroy">
-            <form action="{{ route('nauczyciel.destroy', $teacher->id) }}" method="post" id="delete-form-{{$teacher->id}}">
-               {{ csrf_field() }}
-               {{ method_field('DELETE') }}
-               <button class="btn btn-primary"><i class="fa fa-remove"></i></button>
-            </form>
+         <td class="edit destroy c">
+            <button class="edit btn btn-primary"    data-teacher_id="{{ $teacher->id }}"><i class="fa fa-edit"></i></button>
+            <button class="destroy btn btn-primary" data-teacher_id="{{ $teacher->id }}"><i class="fas fa-remove"></i></button>
          </td>
       </tr>
       @endforeach
