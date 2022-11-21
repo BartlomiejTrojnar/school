@@ -236,9 +236,4 @@ class TeacherController extends Controller
         $teacher->save();
         return $teacher->id;
     }
-
-    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
-        $this->teacher = $teacherRepo -> find($request->id);
-        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
-    }
 }
