@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.11.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 
@@ -38,7 +38,7 @@ class GroupRepository extends BaseRepository {
    }
 
    public function getAllFilteredAndSorted($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
-      return $this -> findGroups($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) -> get();
+      return $this -> findGroups($grade_id, $subject_id, $level, $start, $end, $teacher_id) -> get();
    }
 
    public function findGroups($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {

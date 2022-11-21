@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.11.2022 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania nauczycieli ---------------------- //
 function schoolYearChanged() {  // wybór roku szkolnego w polu select
     $('select[name="schoolYear_id"]').bind('change', function(){

@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 21.11.2022 ********************** -->
 @if( !empty( $links ) )
    {!! $teachers->render() !!}
 @endif
@@ -41,7 +41,7 @@
          <td>{{ $count }}</td>
          <td>{{ $teacher->degree }}</td>
          <td>{{ $teacher->first_name }}</td>
-         <td><a href="{{ route('nauczyciel.show', $teacher->id.'/showSubjects') }}">{{ $teacher->last_name }}</a></td>
+         <td><a href="{{ route('nauczyciel.show', $teacher->id.'/planlekcji') }}">{{ $teacher->last_name }}</a></td>
          <td>{{ $teacher->family_name }}</td>
          <td>{{ $teacher->short }}</td>
          <td>
