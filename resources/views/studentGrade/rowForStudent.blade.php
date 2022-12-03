@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
 <!-- otwarcie wiersza dla ucznia -->
 @if($studentGrade->student->sex == 'mężczyzna')
    <tr class="man c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
@@ -11,7 +11,7 @@
    <td class="showCreateFormForBookOfStudent">
       @foreach($studentGrade->student->bookOfStudents as $book) {{ $book->number }} @endforeach
       @if(count($studentGrade->student->bookOfStudents)==0)
-         <button class="btn btn-secondary"><i class="fas fa-plus"></i></button>
+         <button class="btn btn-secondary"><i class="fa fa-plus"></i></button>
          <aside class="createForm"></aside>
       @endif
    </td>
@@ -38,6 +38,6 @@
    <!-- modyfikowanie i usuwanie -->
    <td class="destroy edit c">
       <button class="edit btn btn-primary"    data-student_grade_id="{{ $studentGrade->id }}"><i class="fa fa-edit"></i></button>
-      <button class="destroy btn btn-primary" data-student_grade_id="{{ $studentGrade->id }}"><i class="fas fa-remove"></i></button>
+      <button class="destroy btn btn-primary" data-student_grade_id="{{ $studentGrade->id }}"><i class="fa fa-remove"></i></button>
    </td>
 </tr>

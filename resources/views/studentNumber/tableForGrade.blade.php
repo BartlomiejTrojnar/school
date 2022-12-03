@@ -1,5 +1,5 @@
 <table>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 16.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
    <tr>
       <th>lp</th>
       <?php
@@ -40,7 +40,7 @@
          </td>
          <td class="destroy edit c">
             <button class="edit btn btn-primary"    data-student_number_id="{{ $sn->id }}"><i class="fa fa-edit"></i></button>
-            <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fas fa-remove"></i></button>
+            <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fa fa-remove"></i></button>
          </td>
       </tr>
    @endforeach

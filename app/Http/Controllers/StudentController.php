@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -84,7 +84,7 @@ class StudentController extends Controller
 
         if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
         //return redirect($request->history_view);
-        return redirect( 'uczen/' .$student->id. '/showGrades');
+        return redirect( 'uczen/' .$student->id. '/klasy');
     }
 
     public function change($id) {  session()->put('studentSelected', $id);  }
@@ -136,9 +136,8 @@ class StudentController extends Controller
     private function showInfo() {
         $css = "student/studentGrades.css";
         $js = "student/studentGrades.js";
-
-        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'student.showInfo', ["student"=>$this->student]);
+        $studentInfo = view('student.showInfo', ["student"=>$this->student, "year"=>$this->year]);
+        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentInfo]);
     }
 
     private function showGrades($studentGradeRepo, $studentNumberRepo, $schoolYearRepo) {
@@ -148,12 +147,11 @@ class StudentController extends Controller
 
         $studentNumbersView = "tu będą numery ucznia";
         $studentNumbers = $studentNumberRepo -> getStudentNumbers($this->student->id);
-        $year = date('Y');
         if( !empty(session()->get('schoolYearSelected')) ) {
             $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
             $this->year = substr($schoolYear->date_end, 0, 4);
         }
-        $studentNumbersView = view('studentNumber.tableForStudent', ["studentNumbers"=>$studentNumbers, "student"=>$this->student->id, "yearOfStudy"=>$year]);
+        $studentNumbersView = view('studentNumber.tableForStudent', ["studentNumbers"=>$studentNumbers, "student"=>$this->student->id, "yearOfStudy"=>$this->year]);
 
         // przygotowanie widoku z tabelą klas ucznia
         $dateView = session() -> get('dateView');
@@ -165,24 +163,12 @@ class StudentController extends Controller
 
     private function showGroups($groupStudentRepo, $schoolYearRepo) {
         $dateView = session() -> get('dateView');
-        // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
-        $year = 0;
-        if( !empty(session()->get('schoolYearSelected')) ) {
-            $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
-            $year = substr($schoolYear->date_end, 0, 4);
-        }
-        if($year==0) {
-            $year=9999;
-            foreach($this->student->grades as $sg) if( substr($sg->start, 0, 4) < $year) $year = substr($sg->start, 0, 4);
-            $year++;
-        }
-
         // znalezienie grup ucznia
         $studentGroups = $groupStudentRepo -> getStudentGroups($this->student->id);
         // lista grup do których uczeń należy
-        $studentList = view('groupStudent.listForStudent', ["studentGroups"=>$studentGroups, "year"=>$year, "dateView"=>$dateView]);
+        $studentList = view('groupStudent.listForStudent', ["studentGroups"=>$studentGroups, "year"=>$this->year, "dateView"=>$dateView]);
         // lista grup do których uczeń należał w innym czasie
-        $studentListOutside = view('groupStudent.listOfStudentGroupToWhichHeBelongedAtAnotherTime', ["studentGroups"=>$studentGroups, "year"=>$year, "dateView"=>$dateView]);
+        $studentListOutside = view('groupStudent.listOfStudentGroupToWhichHeBelongedAtAnotherTime', ["studentGroups"=>$studentGroups, "year"=>$this->year, "dateView"=>$dateView]);
         // lista innych grup w klasie ucznia
         // znalezienie aktualnej klasy dla ucznia
         $grade_id=0;

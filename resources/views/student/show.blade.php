@@ -17,7 +17,7 @@
    <aside id="arrow_right">
       <a href="{{ route('uczen.show', $next) }}"> <i class='fa fa-chevron-right'></i> </a>
    </aside>
-   <h1>{{ $student->first_name }} {{ $student->second_name }} {{ $student->last_name }}</h1>
+   <h1>{{ $student->first_name }} <span class="small">{{ $student->second_name }}</span> {{ $student->last_name }}</h1>
    <input id="student_id" type="hidden" name="student_id" value="{{$student->id}}" />
 @endsection
 

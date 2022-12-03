@@ -1,5 +1,5 @@
 <section id="studentNumbers">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.01.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
    <h3>numery w dziennikach</h3>
    <table>
       <tr>
@@ -32,7 +32,7 @@
 
             <td class="destroy edit">
                <button class="edit btn btn-primary"    data-student_number_id="{{ $sn->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fas fa-remove"></i></button>
+               <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach

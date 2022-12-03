@@ -1,5 +1,5 @@
 <tr class="c number_row confirmation{{$sn->confirmation_number}}" data-student_number_id="{{ $sn->id }}" data-school_year_id="{{ $sn->school_year_id }}" style="display: none;">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.01.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ********************** -->
    <td>
       @if( $yearOfStudy )
          {{ $yearOfStudy - $sn->grade->year_of_beginning }}{{ $sn->grade->symbol }}
@@ -20,6 +20,6 @@
 
    <td class="destroy edit">
       <button class="edit btn btn-primary"    data-student_number_id="{{ $sn->id }}"><i class="fa fa-edit"></i></button>
-      <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fas fa-remove"></i></button>
+      <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fa fa-remove"></i></button>
    </td>
 </tr>

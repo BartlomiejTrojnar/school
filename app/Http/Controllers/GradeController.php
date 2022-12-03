@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -161,8 +161,8 @@ class GradeController extends Controller
          if(empty($studentsOutOfDate)) $studentsOutOfDate=0;
 
          $selectedSex = 'kobieta';
-         $sexSelectField = view('student.sexSelectField', ["sex"=>$selectedSex]);
-         $studentsTable = view('student.table', ["grade"=>$this->grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy", "showDateView"=>true, "sexSelectField"=>$sexSelectField]);
+         $sexSF = view('student.sexSelectField', ["sex"=>$selectedSex]);
+         $studentsTable = view('student.table', ["grade"=>$this->grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy", "showDateView"=>true, "sexSF"=>$sexSF]);
          $studentsOutOfDateTable = view('student.table', ["grade"=>$this->grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy", "showDateView"=>false]);
 
          return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$studentsTable, "subView2"=>$studentsOutOfDateTable]);

@@ -1,5 +1,5 @@
 <tr class="c editRow" data-student_number_id="{{$studentNumber->id}}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 29.07.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ********************** -->
    <form action="{{ route('numery_ucznia.update', $studentNumber->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
@@ -7,9 +7,9 @@
       <td>
          <input type="hidden" name="id" value="{{$studentNumber->id}}" />
          <input type="hidden" name="student_id" value="{{$studentNumber->student_id}}" />
-         <?php  echo $gradeSelectField;  ?>
+         <?php  echo $gradeSF;  ?>
       </td>
-      <td> <?php  echo $schoolYearSelectField;  ?> </td>
+      <td> <?php  echo $schoolYearSF;  ?> </td>
 
       <!-- pole z numerem ucznia -->
       <td>
