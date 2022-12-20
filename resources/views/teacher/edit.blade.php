@@ -1,5 +1,5 @@
-<tr class="editRow" data-teacher_id="{{ $teacher->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ********************** -->
+<tr class="editRow" data-teacher_id="{{ $teacher->id }}" hidden>
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ********************** -->
    <form action="{{ route('nauczyciel.update', $teacher->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
@@ -15,10 +15,10 @@
       <td><?php  print_r($classroomSF);  ?></td>
       <td><?php  print_r($firstYearSF);  ?></td>
       <td><?php  print_r($lastYearSF);  ?></td>
-      <td><input type="text" name="order" value="{{ $teacher->order }}" size="2" maxlength="2" /></td>
+      <td><input type="number" name="order" value="{{ $teacher->order }}" size="2" min="1" max="20" required /></td>
 
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
-      <td class="c" colspan="2" style="width: 225px;">
+      <td class="c" style="width: 225px;" colspan="2">
          <button class="update btn btn-primary"       data-teacher_id="{{ $teacher->id }}">zapisz zmiany</button>
          <button class="cancelUpdate btn btn-primary" data-teacher_id="{{ $teacher->id }}">anuluj</button>
       </td>

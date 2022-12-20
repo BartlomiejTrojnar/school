@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.11.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -21,8 +21,8 @@ class TeacherController extends Controller
         if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
         $teachers = $teacherRepo -> getAllSortedAndPaginate();
         $schoolYears = $schoolYearRepo -> getAllSorted();
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $teacherTable = view('teacher.table', ["teachers"=>$teachers, "links"=>true, "subTitle"=>"", "schoolYearSelectField"=>$schoolYearSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
+        $teacherTable = view('teacher.table', ["teachers"=>$teachers, "links"=>true, "subTitle"=>"", "schoolYearSF"=>$schoolYearSF]);
         return view('teacher.index', ["teacherTable"=>$teacherTable]);
     }
 
@@ -176,14 +176,14 @@ class TeacherController extends Controller
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
 
-    public function edit($id, Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
-        $teacher = $teacher -> find($id);
+    public function edit(Request $request, Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
+        $teacher = $teacher -> find($request->id);
         $classrooms = $classroomRepo->getAllSorted();
         $schoolYears = $schoolYearRepo->getAllSorted();
         $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
         $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
         $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
-        return view('teacher.edit', ["teacher"=>$teacher, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF, "lp"=>$request->lp]);
+        return view('teacher.edit', ["teacher"=>$teacher, "lp"=>$request->lp, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
     }
 
     public function update($id, Request $request, Teacher $teacher) {
@@ -220,11 +220,6 @@ class TeacherController extends Controller
         return 1;
     }
 
-    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
-        $this->teacher = $teacherRepo -> find($request->id);
-        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
-    }
-
     public function printOrder(TeacherRepository $teacherRepo) {
         $teachers = $teacherRepo -> getAll();
         return view('teacher.printOrder', ["teachers"=>$teachers]);
@@ -235,5 +230,10 @@ class TeacherController extends Controller
         $teacher->order = $request->order;
         $teacher->save();
         return $teacher->id;
+    }
+
+    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
+        $this->teacher = $teacherRepo -> find($request->id);
+        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
     }
 }

@@ -1,5 +1,5 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 13.10.2021 ********************** -->
-<tr class="editRow" data-grade_id="{{$grade->id}}">>
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 20.12.2021 ********************** -->
+<tr class="editRow" data-grade_id="{{$grade->id}}">
    <form action="{{ route('klasa.update', $grade->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}

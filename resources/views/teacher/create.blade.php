@@ -1,7 +1,8 @@
 <tr id="createRow">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.11.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ********************** -->
    <form action="{{ route('nauczyciel.store') }}" method="post" role="form">
       {{ csrf_field() }}
+
       <td colspan="2"><input type="text" name="degree" size="8" maxlength="10" /></td>
       <td><input type="text" name="first_name" size="12" maxlength="16" /></td>
       <td><input type="text" name="last_name" size="12" maxlength="18" required /></td>
@@ -10,7 +11,7 @@
       <td><?php  print_r($classroomSF);  ?></td>
       <td><?php  print_r($firstYearSF);  ?></td>
       <td><?php  print_r($lastYearSF);  ?></td>
-      <td><input type="number" name="order" min="1" max="20" size="2" /></td>
+      <td><input type="number" name="order" min="1" max="20" size="2" required /></td>
 
       <!-- komórka z przyciskami dodawania i anulowania -->
       <td class="c" colspan="4" style="width: 175px;">
