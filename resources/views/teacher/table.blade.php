@@ -1,5 +1,4 @@
 <!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 20.12.2021 ********************** -->
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 21.11.2022 ********************** -->
 @if( !empty( $links ) )
    {!! $teachers->render() !!}
 @endif
@@ -55,7 +54,7 @@
 
             <td class="edit destroy c">
                <button class="edit btn btn-primary"      data-teacher_id="{{ $teacher->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary"   data-teacher_id="{{ $teacher->id }}"><i class="fas fa-remove"></i></button>
+               <button class="destroy btn btn-primary"   data-teacher_id="{{ $teacher->id }}"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach
