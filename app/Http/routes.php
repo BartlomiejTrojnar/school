@@ -38,9 +38,10 @@ Route::post('/type/change/{type}', 'SessionVariablesController@typeChange');
 /* --------------------------------------------------------------------------- */
 
 Route::resource('/szkola', 'SchoolController');
-Route::post('/szkola/change/{id}', 'SchoolController@change');
 Route::get('/szkola/orderBy/{column}', array('as'=>'szkola.orderBy', 'uses'=>'SchoolController@orderBy'));
 Route::get('/szkola/{id}/{view?}', 'SchoolController@show');
+Route::post('/szkola/change/{id}', 'SchoolController@change');
+Route::post('/szkola/refreshRow', 'SchoolController@refreshRow');
 
 Route::resource('/rok_szkolny', 'SchoolYearController');
 Route::post('/rok_szkolny/change/{id}', 'SchoolYearController@change');

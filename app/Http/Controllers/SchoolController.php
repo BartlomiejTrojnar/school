@@ -11,6 +11,42 @@ use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+    public function create() {  return view('school.create');  }
+
+    public function store(Request $request) {
+        $this -> validate($request, [ 'name' => 'required|max:45', 'id_OKE' => 'max:12', ]);
+        $school = new School;
+        $school->name = $request->name;
+        $school->id_OKE = $request->id_OKE;
+        $school -> save();
+        return $school->id;
+    }
+
+    public function edit($id, SchoolRepository $schoolRepo) {
+        $school = $schoolRepo -> find($id);
+        return view('school.edit', ["school"=>$school]);
+    }
+
+    public function update($id, Request $request, School $school) {
+        $school = School::find($id);
+        $this -> validate($request, [ 'name' => 'required|max:45', 'id_OKE' => 'max:12', ]);
+        $school->name = $request->name;
+        $school->id_OKE = $request->id_OKE;
+        $school -> save();
+        return $school->id;
+    }
+
+    public function destroy($id, School $school) {
+        $school = School::find($id);
+        $school -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, SchoolRepository $schoolRepo) {
+        $this->school = $schoolRepo -> find($request->id);
+        return view('school.row', ["school"=>$this->school, "lp"=>$request->lp]);
+    }
+
     public function index(SchoolRepository $schoolRepo) {
         $schools = $schoolRepo -> getAllSorted();
         return view('school.index', ["schools"=>$schools]);
@@ -26,26 +62,9 @@ class SchoolController extends Controller
             session()->put('SchoolOrderBy[3]', session()->get('SchoolOrderBy[1]'));
             session()->put('SchoolOrderBy[1]', 'asc');
         }
-
         return redirect( route('szkola.index') );
     }
-
-    public function create() {  return view('school.create');  }
-
-    public function store(Request $request) {
-        $this -> validate($request, [
-          'name' => 'required|max:45',
-          'id_OKE' => 'max:12',
-        ]);
-
-        $school = new School;
-        $school->name = $request->name;
-        $school->id_OKE = $request->id_OKE;
-        $school -> save();
-
-        return redirect($request->history_view);
-    }
-
+/*
     public function change($id) {  session()->put('schoolSelected', $id);  }
 
     public function show($id, SchoolRepository $schoolRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, $view='') {
@@ -98,29 +117,5 @@ class SchoolController extends Controller
         $js = "school/grade.js";
         return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$gradeTable, "css"=>$css, "js"=>$js]);
     }
-
-    public function edit($id, SchoolRepository $schoolRepo) {
-        $school = $schoolRepo -> find($id);
-        return view('school.edit', ["school"=>$school]);
-    }
-
-    public function update($id, Request $request, School $school) {
-        $school = School::find($id);
-        $this -> validate($request, [
-          'name' => 'required|max:45',
-          'id_OKE' => 'max:12',
-        ]);
-
-        $school->name = $request->name;
-        $school->id_OKE = $request->id_OKE;
-        $school->save();
-
-        return redirect($request->history_view);
-    }
-
-    public function destroy($id, School $school) {
-        $school = School::find($id);
-        $school -> delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
+    */
 }
