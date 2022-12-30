@@ -1,5 +1,5 @@
 <tr data-teacher_id="{{ $teacher->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2021 ********************** -->
    <td>{{ $lp }}</td>
    <td>{{ $teacher->degree }}</td>
    <td>{{ $teacher->first_name }}</td>
@@ -7,15 +7,12 @@
    <td>{{ $teacher->family_name }}</td>
    <td>{{ $teacher->short }}</td>
    <td>
-      @if($teacher->classroom_id)
-         <a href="{{ route('sala.show', $teacher->classroom_id) }}">{{ $teacher->classroom->name }}</a>
-      @endif
+      @if($teacher->classroom_id)   <a href="{{ route('sala.show', $teacher->classroom_id) }}">{{ $teacher->classroom->name }}</a> @endif
    </td>
    <td>@if($teacher->first_year_id) {{ substr($teacher->first_year->date_start, 0, 4) }} @endif</td>
-   <td>@if($teacher->last_year_id) {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
+   <td>@if($teacher->last_year_id)  {{ substr($teacher->last_year->date_end, 0, 4) }} @endif</td>
    <td>{{ $teacher->order }}</td>
-   <td class="small c">{{ substr($teacher->updated_at, 0, 10) }}</td>
-
+   <td class="updated">{{ substr($teacher->updated_at, 0, 10) }}</td>
    <td class="edit destroy c">
       <button class="edit btn btn-primary"      data-teacher_id="{{ $teacher->id }}"><i class="fa fa-edit"></i></button>
       <button class="destroy btn btn-primary"   data-teacher_id="{{ $teacher->id }}"><i class="fa fa-remove"></i></button>

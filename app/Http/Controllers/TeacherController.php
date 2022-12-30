@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -17,13 +17,86 @@ use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
+    public function create(ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
+        $classrooms = $classroomRepo -> getAllSorted();
+        $schoolYears = $schoolYearRepo -> getAllSorted();
+        $classroomSF = view('classroom.selectField',  ["classrooms"=>$classrooms, "classroomSelected"=>0]);
+        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id']);
+        $lastYearSF  = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
+        return view('teacher.create', ["classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
+    }
+
+    public function store(Request $request) {
+        $this -> validate($request, [ 'first_name' => 'max:16', 'last_name' => 'required|max:18', 'family_name' => 'max:15',
+                'short' => 'max:2', 'degree' => 'max:10', 'order' => 'required|integer|between:0,20', ]);
+
+        $teacher = new Teacher;
+        $teacher->first_name    = $request->first_name;
+        $teacher->last_name     = $request->last_name;
+        $teacher->family_name   = $request->family_name;
+        $teacher->short         = $request->short;
+        $teacher->degree        = $request->degree;
+        $teacher->classroom_id  = $request->classroom_id;
+        if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
+        $teacher->first_year_id = $request->first_year_id;
+        $teacher->last_year_id = $request->last_year_id;
+        if($teacher->last_year_id == 0) $teacher->last_year_id = NULL;
+        $teacher->order = $request->order;
+        $teacher -> save();
+
+        return $teacher->id;
+    }
+
+    public function edit(Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
+        $teacher = $teacher -> find($request->id);
+        $classrooms = $classroomRepo->getAllSorted();
+        $schoolYears = $schoolYearRepo->getAllSorted();
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
+        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
+        $lastYearSF  = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
+        return view('teacher.edit', ["teacher"=>$teacher, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
+    }
+
+    public function update(Request $request, Teacher $teacher) {
+        $teacher = $teacher -> find($request->id);
+        $this->validate($request, [ 'first_name' => 'max:16', 'last_name' => 'required|max:18', 'family_name' => 'max:15',
+                'short' => 'max:2', 'degree' => 'max:10', 'order' => 'required|integer|between:0,20', ]);
+
+        $teacher->first_name    = $request->first_name;
+        $teacher->last_name     = $request->last_name;
+        $teacher->family_name   = $request->family_name;
+        $teacher->short         = $request->short;
+        $teacher->degree        = $request->degree;
+        $teacher->classroom_id  = $request->classroom_id;
+        if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
+        $teacher->first_year_id = $request->first_year_id;
+        if($teacher->first_year_id==0) $teacher->first_year_id = NULL;
+        $teacher->last_year_id = $request->last_year_id;
+        if($teacher->last_year_id==0) $teacher->last_year_id = NULL;
+        $teacher->order = $request->order;
+        $teacher -> save();
+
+        return $teacher->id;
+    }
+
+    public function destroy($id, Teacher $teacher) {
+        $teacher = $teacher -> find($id);
+        $teacher -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
+        $this->teacher = $teacherRepo -> find($request->id);
+        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
+    }
+
     public function index(TeacherRepository $teacherRepo, SchoolYearRepository $schoolYearRepo) {
         if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
         $teachers = $teacherRepo -> getAllSortedAndPaginate();
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $teacherTable = view('teacher.table', ["teachers"=>$teachers, "links"=>true, "subTitle"=>"", "schoolYearSF"=>$schoolYearSF]);
-        return view('teacher.index', ["teacherTable"=>$teacherTable]);
+        $teacherTable = view('teacher.table', ["teachers"=>$teachers, "schoolYearSF"=>$schoolYearSF]);
+        return view('teacher.index', ["teachersTable"=>$teacherTable]);
     }
 
     public function orderBy($column) {
@@ -42,43 +115,11 @@ class TeacherController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create(ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
-        $classrooms = $classroomRepo -> getAllSorted();
-        $schoolYears = $schoolYearRepo -> getAllSorted();
-        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>0]);
-        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'first_year_id']);
-        $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>'last_year_id']);
-        return view('teacher.create', ["classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
+    private function setPage() {
+        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
+        else if( !empty(session()->get('TeacherPage')) )
+        return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
     }
-
-    public function store(Request $request) {
-        $this -> validate($request, [
-          'first_name' => 'max:16',
-          'last_name' => 'required|max:18',
-          'family_name' => 'max:15',
-          'short' => 'max:2',
-          'degree' => 'max:10',
-          'order' => 'required|integer|between:0,20',
-        ]);
-
-        $teacher = new Teacher;
-        $teacher->first_name    = $request->first_name;
-        $teacher->last_name     = $request->last_name;
-        $teacher->family_name   = $request->family_name;
-        $teacher->short  = $request->short;
-        $teacher->degree = $request->degree;
-        $teacher->classroom_id = $request->classroom_id;
-        if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
-        $teacher->first_year_id = $request->first_year_id;
-        $teacher->last_year_id  = $request->last_year_id;
-        if($teacher->last_year_id == 0) $teacher->last_year_id = NULL;
-        $teacher->order = $request->order;
-        $teacher -> save();
-
-        return $teacher->id;
-    }
-
-    public function change($id) { session()->put('teacherSelected', $id); }
 
     public function show($id, TeacherRepository $teacherRepo, SchoolYearRepository $syRepo, GradeRepository $gradeRepo, SubjectRepository $subjectRepo,
         GroupRepository $groupRepo, SchoolRepository $schoolRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
@@ -175,50 +216,8 @@ class TeacherController extends Controller
         $js = "lessonPlan/forTeacher.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
-
-    public function edit(Request $request, Teacher $teacher, ClassroomRepository $classroomRepo, SchoolYearRepository $schoolYearRepo) {
-        $teacher = $teacher -> find($request->id);
-        $classrooms = $classroomRepo->getAllSorted();
-        $schoolYears = $schoolYearRepo->getAllSorted();
-        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
-        $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
-        $lastYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
-        return view('teacher.edit', ["teacher"=>$teacher, "lp"=>$request->lp, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
-    }
-
-    public function update($id, Request $request, Teacher $teacher) {
-        $teacher = $teacher -> find($id);
-        $this->validate($request, [
-          'first_name' => 'max:16',
-          'last_name' => 'required|max:18',
-          'family_name' => 'max:15',
-          'short' => 'max:2',
-          'degree' => 'max:10',
-          'order' => 'required|integer|between:0,20',
-        ]);
-
-        $teacher->first_name    = $request->first_name;
-        $teacher->last_name     = $request->last_name;
-        $teacher->family_name   = $request->family_name;
-        $teacher->short         = $request->short;
-        $teacher->degree        = $request->degree;
-        $teacher->classroom_id = $request->classroom_id;
-        if($teacher->classroom_id==0) $teacher->classroom_id = NULL;
-        $teacher->first_year_id = $request->first_year_id;
-        if($teacher->first_year_id==0) $teacher->first_year_id = NULL;
-        $teacher->last_year_id = $request->last_year_id;
-        if($teacher->last_year_id==0) $teacher->last_year_id = NULL;
-        $teacher->order = $request->order;
-        $teacher->save();
-
-        return $teacher->id;
-    }
-
-    public function destroy($id, Teacher $teacher) {
-        $teacher = $teacher -> find($id);
-        $teacher -> delete();
-        return 1;
-    }
+/*
+    public function change($id) { session()->put('teacherSelected', $id); }
 
     public function printOrder(TeacherRepository $teacherRepo) {
         $teachers = $teacherRepo -> getAll();
@@ -231,9 +230,5 @@ class TeacherController extends Controller
         $teacher->save();
         return $teacher->id;
     }
-
-    public function refreshRow(Request $request, TeacherRepository $teacherRepo) {
-        $this->teacher = $teacherRepo -> find($request->id);
-        return view('teacher.row', ["teacher"=>$this->teacher, "lp"=>$request->lp]);
-    }
+*/
 }
