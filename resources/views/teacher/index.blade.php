@@ -1,7 +1,8 @@
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2022 ********************** -->
 @extends('layouts.app')
 
 @section('java-script')
-   <script language="javascript" type="text/javascript" src="{{ asset('public/js/teacher/index.js') }}"></script>
+   <script language="javascript" type="text/javascript" src="{{ url('public/js/teacher/index.js') }}"></script>
 @endsection
 
 @section('header')
@@ -9,6 +10,5 @@
 @endsection
 
 @section('main-content')
-   <?php echo $teacherTable; ?>
-   <a class="btn btn-danger" href="{{ route('nauczyciel.printOrder') }}">ustaw kolejność nauczycieli</a>
+   <?php echo $teachersTable; ?>
 @endsection

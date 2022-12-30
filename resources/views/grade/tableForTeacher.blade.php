@@ -9,8 +9,8 @@
          ?>
       </tr> 
       <tr>
-         <td colspan="2"><?php  print_r($schoolYearSelectField);  ?></td>
-         <td><?php  print_r($schoolSelectField);  ?></td>
+         <td colspan="2"><?php  print_r($schoolYearSF);  ?></td>
+         <td><?php  print_r($schoolSF);  ?></td>
       </tr>
    </thead>
 
