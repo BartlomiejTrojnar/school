@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.07.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\School;
 use App\Repositories\SchoolRepository;
@@ -52,6 +52,57 @@ class SchoolController extends Controller
         return view('school.index', ["schools"=>$schools]);
     }
 
+    public function show($id, SchoolRepository $schoolRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, $view='') {
+        session()->put('schoolSelected', $id);
+        if(empty(session()->get('schoolView')))  session()->put('schoolView', 'info');
+        if(!empty($view))  session()->put('schoolView', $view);
+        $this->school = $schoolRepo -> find($id);
+
+        $schools = $schoolRepo -> getAllSorted();
+        list($this->previous, $this->next) = $schoolRepo -> nextAndPreviousRecordId($schools, $id);
+
+        switch( session()->get('schoolView') ) {
+            case 'info':        return $this -> showInfo();
+            case 'uczniowie':   return $this -> showStudents($studentRepo, $gradeRepo, $schoolYearRepo);
+            case 'klasy':       return $this -> showGrades($gradeRepo, $schoolYearRepo);
+            default:
+                printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));
+        }
+    }
+
+    private function showInfo() {
+        $schoolInfo = view('school.showInfo', ["school"=>$this->school]);
+        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$schoolInfo]);
+    }
+
+    private function showStudents($studentRepo, $gradeRepo, $schoolYearRepo) {
+        $students = $studentRepo -> getStudentsFromSchool($this->school->id);
+        $grades = $gradeRepo -> getAllSorted();
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>session() -> get('gradeSelected') ]);
+        $schoolYears = $schoolYearRepo -> getAllSorted();
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
+
+        // przygotowanie widoków
+        $studentsTable = view('student.tableForSchool', ["school"=>$this->school, "students"=>$students, "gradeSF"=>$gradeSF, "schoolYearSF"=>$schoolYearSF, "showDateView"=>0]);
+        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentsTable, "css"=>"", "js"=>""]);
+    }
+
+    private function showGrades($gradeRepo, $schoolYearRepo) {
+        $schoolYearSelected = session()->get('schoolYearSelected');
+        $schoolYears = $schoolYearRepo -> getAllSorted();
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        if($schoolYearSelected) {
+            $schoolYear = $schoolYearRepo -> find($schoolYearSelected);
+            $year = substr($schoolYear->date_end, 0, 4);
+        }
+        else $year=0;
+        $grades = $gradeRepo -> getFilteredAndSortedAndPaginate($year, $this->school->id);
+        $gradeTable = view('grade.tableForSchool', ["grades"=>$grades, "schoolYearSF"=>$schoolYearSF, "year"=>$year]);
+        $css = "";
+        $js = "school/grade.js";
+        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$gradeTable, "css"=>$css, "js"=>$js]);
+    }
+
     public function orderBy($column) {
         if(session()->get('SchoolOrderBy[0]') == $column)
             if(session()->get('SchoolOrderBy[1]') == 'desc')  session()->put('SchoolOrderBy[1]', 'asc');
@@ -66,56 +117,5 @@ class SchoolController extends Controller
     }
 /*
     public function change($id) {  session()->put('schoolSelected', $id);  }
-
-    public function show($id, SchoolRepository $schoolRepo, StudentRepository $studentRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, $view='') {
-        session()->put('schoolSelected', $id);
-        if(empty(session()->get('schoolView')))  session()->put('schoolView', 'showInfo');
-        if(!empty($view))  session()->put('schoolView', $view);
-        $this->school = $schoolRepo -> find($id);
-
-        $schools = $schoolRepo -> getAllSorted();
-        list($this->previous, $this->next) = $schoolRepo -> nextAndPreviousRecordId($schools, $id);
-
-        switch( session()->get('schoolView') ) {
-            case 'showInfo':        return $this -> showInfo();
-            case 'showStudents':    return $this -> showStudents($studentRepo, $gradeRepo, $schoolYearRepo);
-            case 'showGrades':      return $this -> showGrades($gradeRepo, $schoolYearRepo);
-            default:
-                printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('schoolView'));
-        }
-    }
-
-    private function showInfo() {
-        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>""])
-            -> nest('subView', 'school.showInfo', ["school"=>$this->school]);
-    }
-
-    private function showStudents($studentRepo, $gradeRepo, $schoolYearRepo) {
-        $students = $studentRepo -> getStudentsFromSchool($this->school->id);
-        $grades = $gradeRepo -> getAllSorted();
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>session() -> get('gradeSelected') ]);
-        $schoolYears = $schoolYearRepo -> getAllSorted();
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-
-        // przygotowanie widoków
-        $studentsTable = view('student.tableForSchool', ["school"=>$this->school, "students"=>$students, "gradeSelectField"=>$gradeSelectField, "schoolYearSelectField"=>$schoolYearSelectField, "showDateView"=>0]);
-        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentsTable, "css"=>"", "js"=>""]);
-    }
-
-    private function showGrades($gradeRepo, $schoolYearRepo) {
-        $schoolYearSelected = session()->get('schoolYearSelected');
-        $schoolYears = $schoolYearRepo -> getAllSorted();
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
-        if($schoolYearSelected) {
-            $schoolYear = $schoolYearRepo -> find($schoolYearSelected);
-            $year = substr($schoolYear->date_end, 0, 4);
-        }
-        else $year=0;
-        $grades = $gradeRepo -> getFilteredAndSortedAndPaginate($year, $this->school->id);
-        $gradeTable = view('grade.tableForSchool', ["grades"=>$grades, "schoolYearSelectField"=>$schoolYearSelectField, "year"=>$year]);
-        $css = "";
-        $js = "school/grade.js";
-        return view('school.show', ["school"=>$this->school, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$gradeTable, "css"=>$css, "js"=>$js]);
-    }
-    */
+   */
 }
