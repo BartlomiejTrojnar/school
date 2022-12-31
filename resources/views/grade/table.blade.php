@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.07.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 <div class="c">{!! $grades->render() !!}</div>
 <table id="grades">
    <thead>
@@ -8,11 +8,11 @@
             echo view('layouts.thSorting', ["thName"=>"klasa", "routeName"=>"klasa.orderBy", "field"=>"year_of_beginning", "sessionVariable"=>"GradeOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"szkoła", "routeName"=>"klasa.orderBy", "field"=>"school_id", "sessionVariable"=>"GradeOrderBy"]);
          ?>
-         <th>zmień/usuń</th>
+         <th>zmień / usuń</th>
       </tr> 
       <tr>
-         <td colspan="2"><?php  print_r($schoolYearSelectField);  ?></td>
-         <td><?php  print_r($schoolSelectField);  ?></td>
+         <td colspan="2"><?php  print_r($schoolYearSF);  ?></td>
+         <td><?php  print_r($schoolSF);  ?></td>
          <td colspan="2"></td>
       </tr>
    </thead>
