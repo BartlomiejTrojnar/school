@@ -94,11 +94,11 @@ Route::post('/historia_ucznia/refreshRow', 'StudentHistoryController@refreshRow'
 
 
 // -------------------------------------------------------------------------------------------------------- //
-
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/orderBy/{column}', array('as'=>'sala.orderBy', 'uses'=>'ClassroomController@orderBy'));
-Route::post('/sala/change/{id}', 'ClassroomController@change');
 Route::get('/sala/{id}/{view?}', 'ClassroomController@show');
+Route::post('/sala/change/{id}', 'ClassroomController@change');
+Route::post('/sala/refreshRow', 'ClassroomController@refreshRow');
 Route::post('/classroomPlan/showStudentListForGroup', 'LessonPlanController@showStudentListForGroup');
 
 Route::resource('/przedmiot', 'SubjectController');

@@ -152,7 +152,7 @@ function editButtonClickSuccess(id, result) {
 
 }
 
-function editRowClickButtons(lp) {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania szkoły
+function editRowClickButtons(lp) {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania roku szkolnego
     $('.cancelUpdate').click(function() { editRowClickCancel( $(this).data('school_year_id'), lp ); });
     $('.update').click(function()       { editRowClickUpdate( $(this).data('school_year_id'), lp ); });
 }
@@ -193,7 +193,7 @@ function updateError(id, lp) {
 }
 
 // --------------------------------- usuwanie roku szkolnego ----------------------------------- //
-function destroyButtonClick() {  // usunięcie szkoły (z bazy danych)
+function destroyButtonClick() {  // usunięcie roku szkolnego (z bazy danych)
     $('table#schoolYears').delegate('button.destroy', 'click', function() {
         var id = $(this).data('school_year_id');
         $.ajax({
