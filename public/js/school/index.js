@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
 // ------------------------- wydarzenia na stronie wyświetlania szkół -------------------------- //
 var fadeOutTime = 575, fadeInTime = 1275;
 

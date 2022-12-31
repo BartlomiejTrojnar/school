@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\SchoolYear;
 use App\Repositories\SchoolYearRepository;
@@ -13,12 +13,6 @@ use Illuminate\Http\Request;
 
 class SchoolYearController extends Controller
 {
-    public function index(SchoolYearRepository $schoolYearRepo) {
-        $schoolYears = $schoolYearRepo->getPaginateSorted();
-        $js = 'schoolYear/index.js';
-        return view('schoolYear.index', ["schoolYears"=>$schoolYears, "js"=>$js]);
-    }
-
     public function create() { return view('schoolYear.create'); }
 
     public function store(Request $request) {
@@ -42,6 +36,53 @@ class SchoolYearController extends Controller
 
         return $sy->id;
     }
+
+    public function edit(Request $request, SchoolYearRepository $schoolYearRepo) {
+        $schoolYear = $schoolYearRepo -> find($request->id);
+        return view('schoolYear.edit', ["schoolYear"=>$schoolYear, "lp"=>$request->lp]);
+    }
+
+    public function update(Request $request, SchoolYear $schoolYear) {
+        $schoolYear = SchoolYear::find($request->id);
+        $this->validate($request, [
+            'date_start' => 'required|date_format:"Y-m-d"',
+            'date_end' => 'required|date_format:"Y-m-d"',
+            'date_of_classification_of_the_last_grade' => 'date',
+            'date_of_graduation_of_the_last_grade' => 'date',
+            'date_of_classification' => 'date',
+            'date_of_graduation' => 'date',
+        ]);
+
+        $schoolYear->date_start = $request->date_start;
+        $schoolYear->date_end = $request->date_end;
+        $schoolYear->date_of_classification_of_the_last_grade = $request->date_of_classification_of_the_last_grade;
+        if($schoolYear->date_of_classification_of_the_last_grade=='') $schoolYear->date_of_classification_of_the_last_grade = NULL;
+        $schoolYear->date_of_graduation_of_the_last_grade = $request->date_of_graduation_of_the_last_grade;
+        $schoolYear->date_of_classification = $request->date_of_classification;
+        if($schoolYear->date_of_classification=='') $schoolYear->date_of_classification = NULL;
+        $schoolYear->date_of_graduation = $request->date_of_graduation;
+        $schoolYear -> save();
+
+        return $schoolYear->id;
+    }
+
+    public function destroy($id, SchoolYear $schoolYear) {
+        $schoolYear = SchoolYear::find($id);
+        $schoolYear -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, SchoolYearRepository $schoolYearRepo) {
+        $this->schoolYear = $schoolYearRepo -> find($request->id);
+        return view('schoolYear.row', ["sy"=>$this->schoolYear, "lp"=>$request->lp]);
+    }
+
+    public function index(SchoolYearRepository $schoolYearRepo) {
+        $schoolYears = $schoolYearRepo -> getPaginateSorted();
+        $js = 'schoolYear/index.js';
+        return view('schoolYear.index', ["schoolYears"=>$schoolYears, "js"=>$js]);
+    }
+/*
 
     public function change($id) {  session()->put('schoolYearSelected', $id);  }
 
@@ -135,42 +176,5 @@ class SchoolYearController extends Controller
         $textbooksTable = view('textbook.table', ["textbooks"=>$textbooks, "subTitle"=>"Wybrane podręczniki", "subjectSelectField"=>""]);
         return view('schoolYear.show', ["schoolYear"=>$this->schoolYear, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$textbooksTable]);
     }
-
-    public function edit(Request $request, SchoolYearRepository $schoolYearRepo) {
-        $schoolYear = $schoolYearRepo -> find($request->id);
-        return view('schoolYear.edit', ["schoolYear"=>$schoolYear, "lp"=>$request->lp]);
-    }
-
-    public function update(Request $request, SchoolYear $schoolYear) {
-        $schoolYear = SchoolYear::find($request->id);
-        $this->validate($request, [
-            'date_start' => 'required|date_format:"Y-m-d"',
-            'date_end' => 'required|date_format:"Y-m-d"',
-            'date_of_classification_of_the_last_grade' => 'date',
-            'date_of_graduation_of_the_last_grade' => 'date',
-            'date_of_classification' => 'date',
-            'date_of_graduation' => 'date',
-        ]);
-
-        $schoolYear->date_start = $request->date_start;
-        $schoolYear->date_end = $request->date_end;
-        $schoolYear->date_of_classification_of_the_last_grade = $request->date_of_classification_of_the_last_grade;
-        $schoolYear->date_of_graduation_of_the_last_grade = $request->date_of_graduation_of_the_last_grade;
-        $schoolYear->date_of_classification = $request->date_of_classification;
-        $schoolYear->date_of_graduation = $request->date_of_graduation;
-        $schoolYear->save();
-
-        return $schoolYear->id;
-    }
-
-    public function destroy($id, SchoolYear $schoolYear) {
-        $schoolYear = SchoolYear::find($id);
-        $schoolYear -> delete();
-        return 1;
-    }
-
-    public function refreshRow(Request $request, SchoolYearRepository $schoolYearRepo) {
-        $this->schoolYear = $schoolYearRepo -> find($request->id);
-        return view('schoolYear.row', ["sy"=>$this->schoolYear, "lp"=>$request->lp]);
-    }
+*/
 }
