@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -15,12 +15,72 @@ use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
-    public function index(SubjectRepository $subjectRepo) {
-        $subjects = $subjectRepo -> getAllSortedAndPaginate();
-        $js = "subject/index.js";
-        return view('subject.index', ["js"=>$js]) -> nest('subjectTable', 'subject.table', ["subjects"=>$subjects, "subTitle"=>"", "links"=>true]);
+    public function create() {  return view('subject.create');  }
+
+    public function store(Request $request) {
+        $this->validate($request, [
+            'name' => 'required|max:60',
+            'short_name' => 'max:15',
+            'order_in_the_sheet' => 'integer|between:1,99',
+        ]);
+
+        $subject = new Subject;
+        $subject->name = $request->name;
+        $subject->short_name = $request->short_name;
+        $subject->actual = $request->actual;
+        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
+        $subject->order_in_the_sheet = $request->order_in_the_sheet;
+        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
+        $subject->expanded = $request->expanded;
+        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
+        $subject -> save();
+
+        return $subject->id;
     }
 
+    public function edit(Request $request, Subject $subject) {
+        $subject = $subject -> find($request->id);
+        return view('subject.edit', ["subject"=>$subject, "lp"=>$request->lp]);
+    }
+
+    public function update($id, Request $request, Subject $subject) {
+        $subject = $subject -> find($id);
+        $this->validate($request, [
+            'name' => 'required|max:60',
+            'short_name' => 'max:15',
+            'order_in_the_sheet' => 'integer|between:1,25',
+        ]);
+
+        $subject->name = $request->name;
+        $subject->short_name = $request->short_name;
+        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
+        $subject->order_in_the_sheet = $request->order_in_the_sheet;
+        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
+        $subject->expanded = $request->expanded;
+        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
+        $subject -> save();
+
+        return $subject->id;
+    }
+
+    public function destroy($id, Subject $subject) {
+        $subject = $subject -> find($id);
+        $subject -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, SubjectRepository $subjectRepo) {
+        $this->subject = $subjectRepo -> find($request->id);
+        return view('subject.row', ["subject"=>$this->subject, "lp"=>$request->lp]);
+    }
+
+    public function index(SubjectRepository $subjectRepo) {
+        $subjects = $subjectRepo -> getAllSortedAndPaginate();
+        return view('subject.index', ["subjects"=>$subjects]);
+    }
+
+
+/*
     public function orderBy($column) {
         if(session()->get('SubjectOrderBy[0]') == $column)
             if(session()->get('SubjectOrderBy[1]') == 'desc')  session()->put('SubjectOrderBy[1]', 'asc');
@@ -37,28 +97,6 @@ class SubjectController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create() {  return view('subject.create');  }
-
-    public function store(Request $request) {
-        $this->validate($request, [
-          'name' => 'required|max:60',
-          'short_name' => 'max:15',
-          'order_in_the_sheet' => 'integer|between:1,99',
-        ]);
-
-        $subject = new Subject;
-        $subject->name = $request->name;
-        $subject->short_name = $request->short_name;
-        $subject->actual = $request->actual;
-        if($request->actual) $subject->actual=1;    else $subject->actual=0;
-        $subject->order_in_the_sheet = $request->order_in_the_sheet;
-        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        $subject->expanded = $request->expanded;
-        if($request->expanded) $subject->expanded=1;    else $subject->expanded=0;
-        $subject->save();
-
-        return $subject->id;
-    }
 
     public function change($id) {  session()->put('subjectSelected', $id);   }
 
@@ -152,39 +190,5 @@ class SubjectController extends Controller
         return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable, "js"=>""]);
     }
 
-    public function edit(Request $request, Subject $subject) {
-        $subject = $subject -> find($request->id);
-        return view('subject.edit', ["subject"=>$subject, "lp"=>$request->lp]);
-    }
-
-    public function update($id, Request $request, Subject $subject) {
-        $subject = $subject -> find($id);
-        $this->validate($request, [
-          'name' => 'required|max:60',
-          'short_name' => 'max:15',
-          'order_in_the_sheet' => 'integer|between:1,25',
-        ]);
-
-        $subject->name = $request->name;
-        $subject->short_name = $request->short_name;
-        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
-        $subject->order_in_the_sheet = $request->order_in_the_sheet;
-        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        $subject->expanded = $request->expanded;
-        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
-        $subject->save();
-
-        return $subject->id;
-    }
-
-    public function destroy($id, Subject $subject) {
-        $subject = $subject -> find($id);
-        $subject -> delete();
-        return 1;
-    }
-
-    public function refreshRow(Request $request, SubjectRepository $subjectRepo) {
-        $this->subject = $subjectRepo -> find($request->id);
-        return view('subject.row', ["subject"=>$this->subject, "lp"=>$request->lp]);
-    }
+    */
 }
