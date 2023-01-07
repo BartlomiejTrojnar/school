@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2023 ------------------------ //
 // ------ skrypt zawierający wzory najczęściej wykonywanych operacji w widokach "/index" ------- //
 const FADE_OUT=575, FADE_IN=1275;
 

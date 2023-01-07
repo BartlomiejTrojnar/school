@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\SchoolYear;
 use App\Repositories\SchoolYearRepository;
@@ -173,7 +173,6 @@ class SchoolYearController extends Controller
         $textbooksTable = view('textbook.table', ["textbooks"=>$textbooks, "subTitle"=>"Wybrane podręczniki", "subjectSF"=>""]);
         return view('schoolYear.show', ["schoolYear"=>$this->schoolYear, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$textbooksTable]);
     }
-/*
+
     public function change($id) {  session()->put('schoolYearSelected', $id);  }
-    */
 }
