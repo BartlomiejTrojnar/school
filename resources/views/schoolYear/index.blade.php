@@ -1,8 +1,8 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 08.01.2023 ********************** -->
 @extends('layouts.app')
 
 @section('java-script')
-   <script language="javascript" type="text/javascript" src="{{ url('public/js/'.$js) }}"></script>
+   <script language="javascript" type="module" src="{{ url('public/js/'.$js) }}"></script>
 @endsection
 
 @section('header')
