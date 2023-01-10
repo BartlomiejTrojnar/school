@@ -1,5 +1,5 @@
 <tr class="editRow" data-subject_id="{{ $subject->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.01.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('przedmiot.update', $subject->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}

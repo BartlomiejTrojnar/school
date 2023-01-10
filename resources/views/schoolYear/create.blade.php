@@ -1,5 +1,5 @@
 <tr id="createRow" class="c">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('rok_szkolny.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <td colspan="2"><input type="date" name="dateStart" required autofocus /></td>

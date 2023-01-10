@@ -1,5 +1,5 @@
 <tr id="createRow">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('sala.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <td colspan="2"><input type="text" name="name" size="15" maxlength="20" required autofocus /></td>

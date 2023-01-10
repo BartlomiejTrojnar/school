@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\School;
 use App\Repositories\SchoolRepository;
@@ -22,9 +22,9 @@ class SchoolController extends Controller
         return $school->id;
     }
 
-    public function edit($id, SchoolRepository $schoolRepo) {
+    public function edit($id, Request $request, SchoolRepository $schoolRepo) {
         $school = $schoolRepo -> find($id);
-        return view('school.edit', ["school"=>$school]);
+        return view('school.edit', ["school"=>$school, "lp"=>$request->lp]);
     }
 
     public function update($id, Request $request, School $school) {

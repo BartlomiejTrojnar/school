@@ -1,11 +1,11 @@
 <tr class="editRow" data-school_year_id="{{ $schoolYear->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('rok_szkolny.update', $schoolYear->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
-      <td colspan="2">
+      <td><var class="lp">{{ $lp }}</var></td>
+      <td>
          <input type="hidden" name="id" value="{{ $schoolYear->id }}" />
-         <input type="hidden" name="lp" value="{{ $lp }}" />
          <input type="date" name="dateStart" value="{{ $schoolYear->date_start }}" required />
       </td>
       <td><input type="date" name="dateEnd" value="{{ $schoolYear->date_end }}" required /></td>

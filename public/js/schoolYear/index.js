@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 // ------------------------- wydarzenia dla widoku rok_szkolny/index  -------------------------- //
 const FADE_OUT=575, SLIDE_UP=1250, SLIDE_DOWN=1250;
 const NUMBER_OF_FIELDS=8, TABLE_NAME="#schoolYears", DATA_NAME="school_year_id", INPUT_NAME="dateStart", ROUTE_NAME="rok_szkolny";
@@ -138,45 +138,3 @@ $(document).ready(function() {
     clicEditRowButtons();
     clickDestroyButton();
 });
-
-/*
-function add() {   // zapisanie roku szkolnego w bazie danych
-    var dateStart = $('#createRow input[name="dateStart"]').val();
-    var dateEnd = $('#createRow input[name="dateEnd"]').val();
-    var date_of_classification_of_the_last_grade = $('#createRow input[name="date_of_classification_of_the_last_grade"]').val();
-    var date_of_graduation_of_the_last_grade = $('#createRow input[name="date_of_graduation_of_the_last_grade"]').val();
-    var date_of_classification = $('#createRow input[name="date_of_classification"]').val();
-    var date_of_graduation = $('#createRow input[name="date_of_graduation"]').val();
-
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/rok_szkolny",
-        data: { date_start: dateStart, date_end: dateEnd, date_of_classification_of_the_last_grade: date_of_classification_of_the_last_grade,
-            date_of_graduation_of_the_last_grade: date_of_graduation_of_the_last_grade, date_of_classification: date_of_classification, date_of_graduation: date_of_graduation },
-        success: function(id) { addSuccess(id); },
-        error: function() { addError(); },
-    });
-}
-
-
-// ------------------------------- modyfikowanie roku szkolnego -------------------------------- //
-function update(id, lp) {   // zapisanie zmian w bazie danych
-    var dateStart                                   = $('tr[data-school_year_id='+id+'] input[name="dateStart"]').val();
-    var dateEnd                                     = $('tr[data-school_year_id='+id+'] input[name="dateEnd"]').val();
-    var date_of_classification_of_the_last_grade    = $('tr[data-school_year_id='+id+'] input[name="date_of_classification_of_the_last_grade"]').val();
-    var date_of_graduation_of_the_last_grade        = $('tr[data-school_year_id='+id+'] input[name="date_of_graduation_of_the_last_grade"]').val();
-    var date_of_classification                      = $('tr[data-school_year_id='+id+'] input[name="date_of_classification"]').val();
-    var date_of_graduation                          = $('tr[data-school_year_id='+id+'] input[name="date_of_graduation"]').val();
-
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/rok_szkolny/"+id,
-        data: { id: id, date_start: dateStart, date_end: dateEnd, date_of_classification_of_the_last_grade: date_of_classification_of_the_last_grade,
-            date_of_graduation_of_the_last_grade: date_of_graduation_of_the_last_grade, date_of_classification: date_of_classification, date_of_graduation: date_of_graduation },
-        success: function() { refreshRow(id, lp, false); },
-        error:   function() { updateError(id, lp); },
-    });
-}
-*/

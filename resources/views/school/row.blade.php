@@ -1,5 +1,5 @@
 <tr data-school_id="{{ $school->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <td>{{ $lp }}</td>
    <td><a href="{{ route('szkola.show', $school->id.'/info') }}">{{ $school->name }}</a></td>
    <td>{{ $school->id_OKE }}</td>

@@ -1,5 +1,5 @@
 <tr data-subject_id="{{ $subject->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.01.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <td>{{ $lp }}</td>
    <td><a href="{{ route('przedmiot.show', $subject->id) }}">{{ $subject->name }}</a></td>
    <td>{{ $subject->short_name }}</a></td>

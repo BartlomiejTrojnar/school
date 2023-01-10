@@ -1,5 +1,5 @@
 <tr data-school_year_id="{{ $sy->id }}" class="c">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <td>{{ $lp }}</td>
    <td>{{ $sy->date_start }}</td>
    <td><a href="{{ route('rok_szkolny.show', $sy->id) }}">{{ $sy->date_end }}</a></td>

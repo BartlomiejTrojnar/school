@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 // ---------------------------- wydarzenia dla widoku szkola/index  ---------------------------- //
 const FADE_OUT=575, SLIDE_UP=1250, SLIDE_DOWN=1250;
 const NUMBER_OF_FIELDS=4, TABLE_NAME="#schools", DATA_NAME="school_id", INPUT_NAME="name", ROUTE_NAME="szkola";

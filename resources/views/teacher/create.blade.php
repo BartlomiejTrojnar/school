@@ -1,5 +1,5 @@
 <tr id="createRow">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('nauczyciel.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <td colspan="2"><input type="text" name="degree" size="8" maxlength="10" /></td>

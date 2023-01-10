@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -54,7 +54,7 @@ class TeacherController extends Controller
         $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$teacher->classroom_id]);
         $firstYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->first_year_id, "name"=>'first_year_id']);
         $lastYearSF  = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$teacher->last_year_id, "name"=>'last_year_id']);
-        return view('teacher.edit', ["teacher"=>$teacher, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF]);
+        return view('teacher.edit', ["teacher"=>$teacher, "classroomSF"=>$classroomSF, "firstYearSF"=>$firstYearSF, "lastYearSF"=>$lastYearSF, "lp"=>$request->lp]);
     }
 
     public function update(Request $request, Teacher $teacher) {

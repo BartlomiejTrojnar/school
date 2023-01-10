@@ -1,9 +1,10 @@
 <tr class="editRow" data-school_id="{{ $school->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('szkola.update', $school->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
-      <td colspan="2">
+      <td><var class="lp">{{ $lp }}</var></td>
+      <td>
          <input type="hidden" name="id" value="{{ $school->id }}" />
          <input type="text" name="name" value="{{ $school->name }}" size="40" required />
       </td>

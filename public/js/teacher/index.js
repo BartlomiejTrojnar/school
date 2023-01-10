@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 // -------------------------- wydarzenia dla widoku przedmiot/index  --------------------------- //
 const FADE_OUT=575, FADE_IN=5275, SLIDE_UP=1250, SLIDE_DOWN=1250;
 const NUMBER_OF_FIELDS=12, TABLE_NAME="#teachers", DATA_NAME="teacher_id", INPUT_NAME="degree", ROUTE_NAME="nauczyciel";
