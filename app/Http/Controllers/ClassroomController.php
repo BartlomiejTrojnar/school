@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Repositories\ClassroomRepository;
@@ -33,9 +33,9 @@ class ClassroomController extends Controller
         return $classroom->id;
     }
 
-    public function edit($id, Classroom $classroom) {
+    public function edit($id, Request $request, Classroom $classroom) {
         $classroom = $classroom -> find($id);
-        return view('classroom.edit', ["classroom"=>$classroom]);
+        return view('classroom.edit', ["classroom"=>$classroom, "lp"=>$request->lp]);
     }
 
     public function update($id, Request $request, Classroom $classroom) {
