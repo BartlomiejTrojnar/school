@@ -26,22 +26,10 @@ section#subjectsList li, section#unlearningTeachersList li {
     min-width: 200px;
     margin: 5px;
 }
-section#subjectsList li:nth-child(2n) {
-    float: right;
-}
+section#subjectsList li:nth-child(2n) { float: right; }
 section#taughtSubjectsList li span, section#subjectTeachersList li span, div#token, div#url,
-div#subject-id, div#teacher-id
-{
-    display: none;
-}
-li time {
-    display: none;
-}
+div#subject-id, div#teacher-id  { display: none; }
+li var { display: none; }
 
-section#unlearningTeachersList li:hover {
-    background: orange;
-}
-section#subjectTeachersList li:hover {
-    background: blue;
-    color: white;
-}
+section#unlearningTeachersList li:hover { background: #fa0; }
+section#subjectTeachersList li:hover    { background: #00f; color: white; }

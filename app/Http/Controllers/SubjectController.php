@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -79,8 +79,6 @@ class SubjectController extends Controller
         return view('subject.index', ["subjects"=>$subjects]);
     }
 
-
-/*
     public function orderBy($column) {
         if(session()->get('SubjectOrderBy[0]') == $column)
             if(session()->get('SubjectOrderBy[1]') == 'desc')  session()->put('SubjectOrderBy[1]', 'asc');
@@ -97,9 +95,6 @@ class SubjectController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-
-    public function change($id) {  session()->put('subjectSelected', $id);   }
-
     public function show($id, SubjectRepository $subjectRepo, SchoolYearRepository $syR, GradeRepository $gradeRepo, TeacherRepository $tR, GroupRepository $groupRepo, SessionRepository $sessionRepo, ExamDescriptionRepository $edR, $view='') {
         if(empty(session()->get('subjectView')) || session()->get('subjectView')=='change')  session()->put('subjectView', 'info');
         if($view)  session()->put('subjectView', $view);
@@ -110,24 +105,24 @@ class SubjectController extends Controller
         list($this->previous, $this->next) = $subjectRepo -> nextAndPreviousRecordId($subjects, $id);
 
         switch(session()->get('subjectView')) {
-            case 'info':            return $this -> showInfo($this->subject);
-            case 'nauczyciele':     return $this -> showTeachers($this->subject, $syR);
+            case 'info':            return $this -> showInfo();
+            case 'nauczyciele':     return $this -> showTeachers($syR);
             case 'grupy':           return $this -> showGroups($syR, $gradeRepo, $tR, $groupRepo);
-            case 'opisy-egzaminow': return $this -> showExamDescriptions($this->subject, $sessionRepo, $edR);
-            case 'podreczniki':     return $this -> showTextbooks($this->subject);
+            case 'opisy-egzaminow': return $this -> showExamDescriptions($sessionRepo, $edR);
+            case 'podreczniki':     return $this -> showTextbooks();
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('subjectView'));
         }
     }
 
-    private function showInfo($subject) {
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "js"=>""])
-            -> nest('subView', 'subject.showInfo', ["subject"=>$subject]);
+    private function showInfo() {
+        $subjectInfo = view('subject.info', ["subject"=>$this->subject]);
+        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "js"=>"", "subView"=>$subjectInfo]);
     }
 
-    private function showTeachers($subject, $schoolYearRepo) {
+    private function showTeachers($schoolYearRepo) {
         $schoolYears = $schoolYearRepo->getAllSorted();
-        $subjectTeachers = $subject -> teachers;
+        $subjectTeachers = $this->subject -> teachers;
         $js = "teacher/forSubject.js";
         //$schoolYear_id = session() -> get('schoolYearSelected');
         //if(!$schoolYear_id) $schoolYear_id=0;
@@ -138,11 +133,14 @@ class SubjectController extends Controller
         //}
         $unlearningTeachers = TaughtSubject::unlearningTeachers($subjectTeachers);
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $subjectTeachersView = view('teacher.viewForSubject', ["subject"=>$subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSF"=>$schoolYearSF]);
-        return view('subject.show', ["subject"=>$subject, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subjectTeachersView]);
+        $subjectTeachersView = view('teacher.viewForSubject', ["subject"=>$this->subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSF"=>$schoolYearSF]);
+        return view('subject.show', ["subject"=>$this->subject, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subjectTeachersView]);
     }
 
     private function showGroups($syRepo, $gradeRepo, $teacherRepo, $groupRepo) {
+        printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok grup do poprawy.</p>');
+        return;
+
         $gradeSelected = session()->get('gradeSelected');
         $levelSelected = session()->get('levelSelected');
         $start = session() -> get('dateView');
@@ -164,6 +162,9 @@ class SubjectController extends Controller
     }
 
     private function showExamDescriptions($subject, $sessionRepo, $examDescriptionRepo) {
+        printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok opisów egzaminu do poprawy.</p>');
+        return;
+
         $sessions = $sessionRepo -> getAllSorted();
         $sessionSelected = session()->get('sessionSelected');
         $sessionSF = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
@@ -190,5 +191,5 @@ class SubjectController extends Controller
         return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable, "js"=>""]);
     }
 
-    */
+    //  public function change($id) {  session()->put('subjectSelected', $id);   }
 }
