@@ -1,5 +1,5 @@
 <tr data-teacher_id="{{ $teacher->id }}">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 15.01.2023 ********************** -->
    <td>{{ $lp }}</td>
    <td>{{ $teacher->degree }}</td>
    <td>{{ $teacher->first_name }}</td>

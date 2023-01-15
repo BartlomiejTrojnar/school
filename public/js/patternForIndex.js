@@ -1,6 +1,6 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.01.2023 ------------------------ //
 // ------ skrypt zawierający wzory najczęściej wykonywanych operacji w widokach "/index" ------- //
-const FADE_OUT=575, FADE_IN=1275, SLIDE_DOWN=1250;
+const FADE_OUT=575, FADE_IN=1275;
 
 // --------------------- odświeżanie i dowawanie wierszy w tabeli rekordów --------------------- //
 export class RefreshRowService {

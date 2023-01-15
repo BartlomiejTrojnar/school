@@ -55,6 +55,7 @@ Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/orderBy/{column}', array('as'=>'uczen.orderBy', 'uses'=>'StudentController@orderBy'));
 Route::post('/uczen/change/{id}', 'StudentController@change');
 Route::get('/uczen/{id}/{view?}', 'StudentController@show');
+Route::post('/uczen/refreshRow', 'StudentController@refreshRow');
 
 Route::post('/book_of_student/refreshRow', 'BookOfStudentController@refreshRow');
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
