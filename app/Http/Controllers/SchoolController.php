@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\School;
 use App\Repositories\SchoolRepository;
@@ -115,7 +115,6 @@ class SchoolController extends Controller
         }
         return redirect( route('szkola.index') );
     }
-/*
+
     public function change($id) {  session()->put('schoolSelected', $id);  }
-   */
 }
