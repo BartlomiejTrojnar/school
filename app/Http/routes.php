@@ -57,9 +57,9 @@ Route::post('/uczen/change/{id}', 'StudentController@change');
 Route::get('/uczen/{id}/{view?}', 'StudentController@show');
 Route::post('/uczen/refreshRow', 'StudentController@refreshRow');
 
-Route::post('/book_of_student/refreshRow', 'BookOfStudentController@refreshRow');
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
 Route::get('/ksiega_uczniow/orderBy/{column}', array('as'=>'ksiega_uczniow.orderBy', 'uses'=>'BookOfStudentController@orderBy'));
+Route::post('/ksiega_uczniow/refreshRow', 'BookOfStudentController@refreshRow');
 
 Route::post('/klasa/refreshRow', 'GradeController@refreshRow');
 Route::get('/klasa/orderBy/{column}', array('as'=>'klasa.orderBy', 'uses'=>'GradeController@orderBy'));

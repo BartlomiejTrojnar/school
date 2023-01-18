@@ -1,9 +1,9 @@
 <tr class="create" id="createRow" style="display: none;">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.01.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 18.01.2023 *********************** -->
    <form action="{{ route('ksiega_uczniow.store') }}" method="post" role="form">
       {{ csrf_field() }}
-      <td colspan="2"><?php   print_r($schoolSelectField);  ?></td>
-      <td><?php   print_r($studentSelectField);  ?></td>
+      <td colspan="2"><?php   print_r($schoolSF);  ?></td>
+      <td><?php   print_r($studentSF);  ?></td>
       <td><input type="number" name="number" min="1" required value="{{ $proposedNumber }}" /></td>
 
       <td colspan="4">
