@@ -1,3 +1,4 @@
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.01.2023 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -5,7 +6,7 @@
 @endsection
 
 @section('java-script')
-   <script language="javascript" type="text/javascript" src="{{ asset('public/js/teacherPrintOrder.js') }}"></script>
+   <script language="javascript" type="text/javascript" src="{{ asset('public/js/teacher/teacherPrintOrder.js') }}"></script>
 @endsection
 
 @section('header')

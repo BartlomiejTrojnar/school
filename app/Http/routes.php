@@ -108,10 +108,10 @@ Route::get('/przedmiot/orderBy/{column}', array('as'=>'przedmiot.orderBy', 'uses
 Route::get('/przedmiot/{id}/{view?}', 'SubjectController@show');
 Route::post('/przedmiot/refreshRow', 'SubjectController@refreshRow');
 
+Route::get('/nauczyciel/printOrder', array('as'=>'nauczyciel.printOrder', 'uses'=>'TeacherController@printOrder'));
 Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/orderBy/{column}', array('as'=>'nauczyciel.orderBy', 'uses'=>'TeacherController@orderBy'));
 Route::get('/nauczyciel/{id}/{view?}', 'TeacherController@show');
-Route::get('/nauczyciel/printOrder', array('as'=>'nauczyciel.printOrder', 'uses'=>'TeacherController@printOrder'));
 Route::post('/nauczyciel/change/{id}', 'TeacherController@change');
 Route::post('/nauczyciel/setPrintOrder', 'TeacherController@setPrintOrder');
 Route::post('/nauczyciel/refreshRow', 'TeacherController@refreshRow');

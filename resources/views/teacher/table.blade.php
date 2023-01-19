@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.12.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 19.01.2023 ********************** -->
 @if( !count($teachers) && (empty($_GET['page']) || $_GET['page']>1) )
    <ul class="pagination">
       <li><a id="jumpToThePage" href="{{route('nauczyciel.index', 'page=1')}}">1</a></li>

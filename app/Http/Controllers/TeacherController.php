@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -95,30 +95,7 @@ class TeacherController extends Controller
         $teachers = $teacherRepo -> getAllSortedAndPaginate();
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $teacherTable = view('teacher.table', ["teachers"=>$teachers, "schoolYearSF"=>$schoolYearSF]);
-        return view('teacher.index', ["teachersTable"=>$teacherTable]);
-    }
-
-    public function orderBy($column) {
-        if(session()->get('TeacherOrderBy[0]') == $column)
-            if(session()->get('TeacherOrderBy[1]') == 'desc')   session()->put('TeacherOrderBy[1]', 'asc');
-            else  session()->put('TeacherOrderBy[1]', 'desc');
-        else {
-            session()->put('TeacherOrderBy[4]', session()->get('TeacherOrderBy[2]'));
-            session()->put('TeacherOrderBy[2]', session()->get('TeacherOrderBy[0]'));
-            session()->put('TeacherOrderBy[0]', $column);
-            session()->put('TeacherOrderBy[5]', session()->get('TeacherOrderBy[3]'));
-            session()->put('TeacherOrderBy[3]', session()->get('TeacherOrderBy[1]'));
-            session()->put('TeacherOrderBy[1]', 'asc');
-        }
-
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
-
-    private function setPage() {
-        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
-        else if( !empty(session()->get('TeacherPage')) )
-        return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
+        return view('teacher.index', ["teachers"=>$teachers, "schoolYearSF"=>$schoolYearSF]);
     }
 
     public function show($id, TeacherRepository $teacherRepo, SchoolYearRepository $syRepo, GradeRepository $gradeRepo, SubjectRepository $subjectRepo,
@@ -216,8 +193,6 @@ class TeacherController extends Controller
         $js = "lessonPlan/forTeacher.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }
-/*
-    public function change($id) { session()->put('teacherSelected', $id); }
 
     public function printOrder(TeacherRepository $teacherRepo) {
         $teachers = $teacherRepo -> getAll();
@@ -227,8 +202,33 @@ class TeacherController extends Controller
     public function setPrintOrder(Request $request, Teacher $teacher) {
         $teacher = $teacher -> find($request->teacher_id);
         $teacher->order = $request->order;
-        $teacher->save();
+        $teacher -> save();
         return $teacher->id;
     }
+
+    public function orderBy($column) {
+        if(session()->get('TeacherOrderBy[0]') == $column)
+            if(session()->get('TeacherOrderBy[1]') == 'desc')   session()->put('TeacherOrderBy[1]', 'asc');
+            else  session()->put('TeacherOrderBy[1]', 'desc');
+        else {
+            session()->put('TeacherOrderBy[4]', session()->get('TeacherOrderBy[2]'));
+            session()->put('TeacherOrderBy[2]', session()->get('TeacherOrderBy[0]'));
+            session()->put('TeacherOrderBy[0]', $column);
+            session()->put('TeacherOrderBy[5]', session()->get('TeacherOrderBy[3]'));
+            session()->put('TeacherOrderBy[3]', session()->get('TeacherOrderBy[1]'));
+            session()->put('TeacherOrderBy[1]', 'asc');
+        }
+
+        return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    private function setPage() {
+        if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
+        else if( !empty(session()->get('TeacherPage')) )
+        return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
+    }
+
+/*
+    public function change($id) { session()->put('teacherSelected', $id); }
 */
 }
