@@ -1,5 +1,5 @@
 <section id="studentGrades">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
    <aside style="float: right;">data widoku: {{$dateView}}<input id="yesterday" type="hidden" value="{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}" /></aside>
    <h2>klasy ucznia</h2>
    <table id="studentGradesTable">
@@ -30,7 +30,7 @@
             @endforeach
             @if(count($sg->student->bookOfStudents)==0)
                <td class="showCreateFormForBookOfStudent">
-                  <button class="btn btn-secondary"><i class="fas fa-plus"></i></button>
+                  <button class="btn btn-secondary"><i class="fa fa-plus"></i></button>
                   <aside class="createForm"></aside>
                </td>
             @endif
@@ -54,9 +54,9 @@
 
             <!-- modyfikowanie i usuwanie -->
             <td class="destroy edit c" style="width: 150px;">
-               <button class="edit btn btn-primary" data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-student_grade_id="{{ $sg->id }}"><i class="fas fa-remove"></i></button>
-               <button class="removeYesterday btn btn-primary" data-student_grade_id="{{ $sg->id }}" title="usuń z klasy od wczoraj [{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}] (wraz z usunięciem z grup)"><i class="fas fa-user-slash"></i></button>
+               <button class="edit btn btn-primary"            data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
+               <button class="destroy btn btn-primary"         data-student_grade_id="{{ $sg->id }}"><i class="fa fa-remove"></i></button>
+               <button class="removeYesterday btn btn-primary" data-student_grade_id="{{ $sg->id }}" title="usuń z klasy od wczoraj [{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}] (wraz z usunięciem z grup)"><i class="fa fa-user-times"></i></button>
             </td>
          </tr>
       @endforeach

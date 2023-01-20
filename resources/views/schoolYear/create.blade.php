@@ -1,5 +1,5 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.06.2022 ********************** -->
 <tr id="createRow" class="c">
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('rok_szkolny.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <td colspan="2"><input type="date" name="dateStart" required autofocus /></td>
@@ -10,9 +10,9 @@
       <td><input type="date" name="date_of_graduation" /></td>
 
       <!-- komórka z przyciskami dodawania i anulowania -->
-      <td class="c" colspan="1" style="width: 175px;">
-         <button id="add" class="btn btn-primary">dodaj</button>
-         <button id="cancelAdd" class="btn btn-primary">anuluj</button>
+      <td class="c" style="width: 175px;">
+         <button id="add"        class="btn btn-primary">dodaj</button>
+         <button id="cancelAdd"  class="btn btn-primary">anuluj</button>
       </td>
    </form>
 </tr>

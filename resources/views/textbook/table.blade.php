@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 12.07.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 @if( !empty( $links ) )
    {!! $textbooks->render() !!}
 @endif
@@ -23,7 +23,7 @@
 
       <tr>
          <td></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
          <td colspan="8"></td>
       </tr>
    </thead>

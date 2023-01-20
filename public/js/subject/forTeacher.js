@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
 // --------- wydarzenia na stronie wyświetlania nauczanych przedmiotów dla nauczyciela --------- //
 
 // ---------------------- DODAWANIE PRZEDMIOTU do nauczanych przedmiotów ----------------------- //
@@ -6,7 +6,7 @@ function addSubjectDrag(indicatorCSS) {
     $(indicatorCSS).attr('draggable', 'true');
     $(indicatorCSS).bind('dragstart', function(event) {
         var data = event.originalEvent.dataTransfer;
-        data.setData("subject_id", $(this).attr("data-subject-id"));
+        data.setData("subject_id", $(this).data("subject_id"));
         return true;
     });
 }
@@ -25,25 +25,22 @@ function addSubjectDrop(indicatorCSS) {
 }
 
 function addSubject(subject_id) {
-    var teacher_id = $('div#teacher-id').text();
-    var url = $('div#url').text();
-    var token = $('div#token input').val();
-    var subjectName = $('li[data-subject-id=' +subject_id+ ']').text();
-    var li_1 = '<li class="list-group-item active" type="button" data-subject-name="' +subjectName+ '" data-subject-id="';
-    var li_2 = '" data-taught-subject-id="';;
-    var li_3 = '">' +subjectName+ '<span class="url">http://localhost/school/nauczany_przedmiot/delete/';
-    var li_4 = '</span></li>';
+    var teacher_id = $('#teacher_id').val();
+    var subjectName = $('li[data-subject_id=' +subject_id+ ']').text();
+    var li_1  = '<li class="list-group-item active" type="button" data-subject_name="' +subjectName;
+    li_1 += '" data-subject_id="' +subject_id+ '" data-taughtsubject_id="';
+    var li_2 = '">' +subjectName+ '</li>';
 
     $.ajax({
-        type: "POST",
+        method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: url,
-        data: { subject_id: subject_id, teacher_id: teacher_id, _token: token },
+        url: "http://localhost/school/nauczany_przedmiot",
+        data: { subject_id: subject_id, teacher_id: teacher_id },
         success: function(last_id) {
-            $('li[data-subject-id=' +subject_id+ ']').remove();
-            var li = li_1 + subject_id + li_2 +last_id+ li_3 + last_id + li_4;
+            $('li[data-subject_id="' +subject_id+ '"]').remove();
+            var li = li_1 + last_id + li_2;
             $('#taughtSubjectsList ul').append(li);
-            deleteSubjectDrag('li[data-subject-id=' +subject_id+ ']');
+            deleteSubjectDrag('li[data-taughtsubject_id="' +last_id+ '"]');
         },
         error: function(blad) { alert('Błąd'+blad); }
     });
@@ -54,12 +51,10 @@ function deleteSubjectDrag(indicatorCSS) {
     $(indicatorCSS).attr('draggable', 'true');
     $(indicatorCSS).bind('dragstart', function(event) {	// podniesienie elementu
         var data = event.originalEvent.dataTransfer;
-        var id = $(this).attr("data-taught-subject-id");
-        var url = $('li[data-taught-subject-id='+id+'] span').html();
+        var id = $(this).data("taughtsubject_id");
         data.setData("taughtSubject_id", id);
-        data.setData("url", url);
-        data.setData("subject_id", $(this).attr("data-subject-id"));
-        data.setData("subjectName", $(this).attr("data-subject-name"));
+        data.setData("subject_id", $(this).data("subject_id"));
+        data.setData("subjectName", $(this).data("subject_name"));
         return true;
     });
 }
@@ -67,7 +62,7 @@ function deleteSubjectDrag(indicatorCSS) {
 function deleteSubjectDrop(indicatorCSS) {
     $(indicatorCSS).bind('drop', function(event) {
         var data = event.originalEvent.dataTransfer;
-        deleteSubject(data.getData('url'), data.getData('taughtSubject_id'), data.getData('subject_id'), data.getData('subjectName'));
+        deleteSubject(data.getData('taughtSubject_id'), data.getData('subject_id'), data.getData('subjectName'));
         if(event.preventDefault) event.preventDefault();
         return false;
     });
@@ -77,18 +72,17 @@ function deleteSubjectDrop(indicatorCSS) {
     });
 }
 
-function deleteSubject(url, id, subject_id, subjectName) {
-    var token = $('div#token input').val();
+function deleteSubject(id, subject_id, subjectName) {
+    var li = '<li class="list-group-item" data-subject_id="' +subject_id+ '" type="button">' +subjectName+ '</li>';
 
     $.ajax({
         type: "DELETE",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: url,
-        data: { id: id, _token: token },
-        success: function(dane) {
-            $('li[data-taught-subject-id='+id+']').remove();
-            $('#subjectsList ul').append( '<li class="list-group-item" data-subject-id="' +subject_id+ '" type="button">' +subjectName+ '</li>' );
-            addSubjectDrag('li[data-subject-id=' +subject_id+ ']');
+        url: "http://localhost/school/nauczany_przedmiot/"+id,
+        success: function() {
+            $('li[data-taughtsubject_id="' +id+ '"]').remove();
+            $('#subjectsList ul').append( li );
+            addSubjectDrag('li[data-subject_id="' +subject_id+ '"]');
         },
         error: function(blad) { alert(blad); }
     });

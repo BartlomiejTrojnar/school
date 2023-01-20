@@ -38,9 +38,10 @@ Route::post('/type/change/{type}', 'SessionVariablesController@typeChange');
 /* --------------------------------------------------------------------------- */
 
 Route::resource('/szkola', 'SchoolController');
-Route::post('/szkola/change/{id}', 'SchoolController@change');
 Route::get('/szkola/orderBy/{column}', array('as'=>'szkola.orderBy', 'uses'=>'SchoolController@orderBy'));
 Route::get('/szkola/{id}/{view?}', 'SchoolController@show');
+Route::post('/szkola/change/{id}', 'SchoolController@change');
+Route::post('/szkola/refreshRow', 'SchoolController@refreshRow');
 
 Route::resource('/rok_szkolny', 'SchoolYearController');
 Route::post('/rok_szkolny/change/{id}', 'SchoolYearController@change');
@@ -54,10 +55,11 @@ Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/orderBy/{column}', array('as'=>'uczen.orderBy', 'uses'=>'StudentController@orderBy'));
 Route::post('/uczen/change/{id}', 'StudentController@change');
 Route::get('/uczen/{id}/{view?}', 'StudentController@show');
+Route::post('/uczen/refreshRow', 'StudentController@refreshRow');
 
-Route::post('/book_of_student/refreshRow', 'BookOfStudentController@refreshRow');
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
 Route::get('/ksiega_uczniow/orderBy/{column}', array('as'=>'ksiega_uczniow.orderBy', 'uses'=>'BookOfStudentController@orderBy'));
+Route::post('/ksiega_uczniow/refreshRow', 'BookOfStudentController@refreshRow');
 
 Route::post('/klasa/refreshRow', 'GradeController@refreshRow');
 Route::get('/klasa/orderBy/{column}', array('as'=>'klasa.orderBy', 'uses'=>'GradeController@orderBy'));
@@ -93,11 +95,11 @@ Route::post('/historia_ucznia/refreshRow', 'StudentHistoryController@refreshRow'
 
 
 // -------------------------------------------------------------------------------------------------------- //
-
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/orderBy/{column}', array('as'=>'sala.orderBy', 'uses'=>'ClassroomController@orderBy'));
-Route::post('/sala/change/{id}', 'ClassroomController@change');
 Route::get('/sala/{id}/{view?}', 'ClassroomController@show');
+Route::post('/sala/change/{id}', 'ClassroomController@change');
+Route::post('/sala/refreshRow', 'ClassroomController@refreshRow');
 Route::post('/classroomPlan/showStudentListForGroup', 'LessonPlanController@showStudentListForGroup');
 
 Route::resource('/przedmiot', 'SubjectController');
@@ -106,13 +108,13 @@ Route::get('/przedmiot/orderBy/{column}', array('as'=>'przedmiot.orderBy', 'uses
 Route::get('/przedmiot/{id}/{view?}', 'SubjectController@show');
 Route::post('/przedmiot/refreshRow', 'SubjectController@refreshRow');
 
-Route::post('/nauczyciel/change/{id}', 'TeacherController@change');
 Route::get('/nauczyciel/printOrder', array('as'=>'nauczyciel.printOrder', 'uses'=>'TeacherController@printOrder'));
-Route::post('/nauczyciel/setPrintOrder', 'TeacherController@setPrintOrder');
-Route::post('/nauczyciel/refreshRow', 'TeacherController@refreshRow');
 Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/orderBy/{column}', array('as'=>'nauczyciel.orderBy', 'uses'=>'TeacherController@orderBy'));
 Route::get('/nauczyciel/{id}/{view?}', 'TeacherController@show');
+Route::post('/nauczyciel/change/{id}', 'TeacherController@change');
+Route::post('/nauczyciel/setPrintOrder', 'TeacherController@setPrintOrder');
+Route::post('/nauczyciel/refreshRow', 'TeacherController@refreshRow');
 
 Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::delete('/nauczany_przedmiot/delete/{id}', 'TaughtSubjectController@destroy');
@@ -287,3 +289,8 @@ Route::post('/egzamin/refreshRow', 'ExamController@refreshRow');
 Route::resource('/egzamin', 'ExamController');
 Route::get('/egzamin/orderBy/{column}', array('as'=>'egzamin.orderBy', 'uses'=>'ExamController@orderBy'));
 Route::post('/exam/addExamsForDeclaration', 'ExamController@addExamsForDeclaration');
+
+
+// -------------------------------------------------------------------------------------------------------- //
+Route::resource('/certificate', 'CertificateController');
+Route::post('/certificate/refreshRow', 'CertificateController@refreshRow');

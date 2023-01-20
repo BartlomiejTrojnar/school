@@ -1,17 +1,30 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.07.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
 // ----------------- wydarzenia na stronie wyświetlania nauczanych przedmiotów ----------------- //
-
 
 function showAndHiddenTeacher() {   // pokazanie lub ukrycie nauczycieli dla wybranego roku szkolnego
     var start, end, schoolYear_id;
     schoolYear_id = $('select[name="schoolYear_id"]').val();
     if(schoolYear_id) {
         $("#unlearningTeachersList li").each(function() {
-            $(this).show();
-            start = $(this).children(".start").html();
-            end = $(this).children(".end").html();
-            if(start>schoolYear_id || end<schoolYear_id)  $(this).hide();
-            if(schoolYear_id>=start && end=="")      $(this).show();
+            $(this).hide();
+            start = parseInt($(this).children(".start").html());
+            end   = $(this).children(".end").html();
+            if(end != "")   end = parseInt(end);
+            if(schoolYear_id>=start && schoolYear_id<=end)  $(this).show();
+            if(schoolYear_id>=start && end=="")             $(this).show();
+            if(schoolYear_id==0) $(this).show();
+        });    
+    }
+
+    if(schoolYear_id) {
+        $("#subjectTeachersList li").each(function() {
+            $(this).hide();
+            start = parseInt($(this).children(".start").html());
+            end   = $(this).children(".end").html();
+            if(end != "")   end = parseInt(end);
+            if(schoolYear_id>=start && schoolYear_id<=end)  $(this).show();
+            if(schoolYear_id>=start && end=="")             $(this).show();
+            if(schoolYear_id==0) $(this).show();
         });    
     }
 }
@@ -36,7 +49,7 @@ function addTeacherDrag(indicatorCSS) {
     $(indicatorCSS).attr('draggable', 'true');
     $(indicatorCSS).bind('dragstart', function(event) {	// podniesienie elementu
         var data = event.originalEvent.dataTransfer;
-        data.setData("teacher_id", $(this).attr("data-teacher-id"));
+        data.setData("teacher_id", $(this).data("teacher_id"));
         return true;
     });
 }
@@ -55,26 +68,27 @@ function addTeacherDrop(indicatorCSS) {
 }
 
 function addTeacher(teacher_id) {
-    var subject_id = $('div#subject-id').html();
-    var url = $('div#url').text();
-    var token = $('div#token input').val();
-    var teacherName = $('li[data-teacher-id=' +teacher_id+ ']').text();
-    var li_1 = '<li class="list-group-item active" type="button" data-teacher-name="' +teacherName+ '" data-teacher-id="';
-    var li_2 = '" data-taught-subject-id="';
-    var li_3 = '">' +teacherName+ '<span class="url">http://localhost/school/nauczany_przedmiot/delete/';
-    var li_4 = '</span></li>';
+    var subject_id = $('div#subject_id').html();
+    var teacherName = $('li[data-teacher_id=' +teacher_id+ '] data.teacherName').val();
+    var start = $('li[data-teacher_id=' +teacher_id+ '] var.start').html();
+    var end = $('li[data-teacher_id=' +teacher_id+ '] var.end').html();
+    var li_1 = '<li class="list-group-item active" data-taughtsubject_id="';
+    var li_2 = '" data-teacher_id="';
+    var li_3 = '" type="button"><data class="teacherName" value="' +teacherName+ '">' +teacherName+ '</data>';
+    var li_4 = '<var class="start">' +start+ '</var><var class="end">' +end+ '</var></li>';
 
     $.ajax({
-        url: url,
-        method: "post",
-        data: { subject_id: subject_id, teacher_id: teacher_id, _token: token },
+        method: "POST",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        url: "http://localhost/school/nauczany_przedmiot",
+        data: { subject_id: subject_id, teacher_id: teacher_id },
         success: function(last_id) {
-            $('li[data-teacher-id=' +teacher_id+ ']').remove();
-            var li = li_1 + teacher_id + li_2 +last_id+ li_3 + last_id + li_4;
+            $('li[data-teacher_id=' +teacher_id+ ']').remove();
+            var li = li_1 + last_id + li_2 + teacher_id + li_3 + li_4;
             $('#subjectTeachersList ul').append(li);
-            deleteTeacherDrag('li[data-teacher-id=' +teacher_id+ ']');
+            deleteTeacherDrag('li[data-teacher_id=' +teacher_id+ ']');
         },
-        error: function(blad) { alert('Błąd'+blad); }
+        error: function(blad) { alert(92); alert('Błąd'+blad); }
     });
 }
 
@@ -84,12 +98,11 @@ function deleteTeacherDrag(indicatorCSS) {
     $(indicatorCSS).attr('draggable', 'true');
     $(indicatorCSS).bind('dragstart', function(event) {
         var data = event.originalEvent.dataTransfer;
-        var id = $(this).attr("data-taught-subject-id");
-        var url = $('li[data-taught-subject-id='+id+'] span').html();
+        var id = $(this).data("taughtsubject_id");
+        var teacherName = $('li[data-taughtsubject_id="'+id+'"] data.teacherName').val();
         data.setData("taughtSubject_id", id);
-        data.setData("url", url);
-        data.setData("teacher_id", $(this).attr("data-teacher-id"));
-        data.setData("teacherName", $(this).attr("data-teacher-name"));
+        data.setData("teacher_id", $(this).data("teacher_id"));
+        data.setData("teacherName", teacherName);
         return true;
     });
 }
@@ -98,9 +111,8 @@ function deleteTeacherDrop(indicatorCSS) {
     $(indicatorCSS).bind('drop', function(event) {
         var data = event.originalEvent.dataTransfer;
         var id = data.getData('taughtSubject_id');
-        $('li[data-taught-subject-id='+id+'] span').remove();
-        var teacherName = $('li[data-taught-subject-id='+id+']').html();
-        deleteTeacher(data.getData('url'), data.getData('taughtSubject_id'), data.getData('teacher_id'), teacherName);
+        $('li[data-taughtsubject_id='+id+'] data.url').remove();
+        deleteTeacher(id, data.getData('teacher_id'), data.getData('teacherName'));
         if(event.preventDefault) event.preventDefault();
         return false;
     });
@@ -110,18 +122,21 @@ function deleteTeacherDrop(indicatorCSS) {
     });
 }
 
-function deleteTeacher(url, id, teacher_id, teacherName) {
-    var token = $('div#token input').val();
+function deleteTeacher(id, teacher_id, teacherName) {
+    var start = $('li[data-taughtsubject_id="' +id+ '"] .start').html();
+    var end = $('li[data-taughtsubject_id="' +id+ '"] .end').html();
+    var li = '<li class="list-group-item" data-teacher_id="' +teacher_id+ '" type="button">';
+    li += '<data class="teacherName" value="' +teacherName+ '">' +teacherName+ '</data>';
+    li += '<var class="start">' +start+ '</var><var class="end">' +end+ '</var></li>';
 
     $.ajax({
         type: "DELETE",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: url,
-        data: { id: id, _token: token },
+        url: "http://localhost/school/nauczany_przedmiot/"+id,
         success: function() {
-            $('li[data-taught-subject-id='+id+']').remove();
-            $('#unlearningTeachersList ul').append( '<li class="list-group-item" data-teacher-id="' +teacher_id+ '" type="button">' +teacherName+ '</li>' );
-            addTeacherDrag('li[data-teacher-id=' +teacher_id+ ']');
+            $('li[data-taughtsubject_id="' +id+ '"]').remove();
+            $('#unlearningTeachersList ul').append( li );
+            addTeacherDrag('li[data-teacher_id=' +teacher_id+ ']');
         },
         error: function(blad) { alert(blad); }
     });
@@ -135,6 +150,6 @@ $(document).ready(function() {
 
     addTeacherDrag('#unlearningTeachersList li');
     addTeacherDrop('#subjectTeachersList');
-    deleteTeacherDrop('#unlearningTeachersList');
     deleteTeacherDrag('#subjectTeachersList li');
+    deleteTeacherDrop('#unlearningTeachersList');
 });

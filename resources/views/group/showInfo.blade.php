@@ -33,7 +33,7 @@
     <th>nauczyciele</th>
     <td class="teachers" style="min-width: 400px;">
       <aside style="float: right; margin-left: 10px;">
-        <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">
+        <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">zmień
            <i class='fas fa-chalkboard-teacher' style="font-size: 24px;"></i>
         </a>
       </aside>
@@ -43,7 +43,7 @@
             {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
           </a>
           <a href="{{ route('grupa_nauczyciele.edit', $groupTeacher->id) }}">
-            <i class="fa fa-edit"></i>
+            <i class="fas fa-edit"></i>
           </a>
           <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
             <i class="fa fa-remove"></i>

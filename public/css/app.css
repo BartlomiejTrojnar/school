@@ -1,4 +1,4 @@
-/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.10.2021 ------------------------ */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ------------------------ */
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css?family=Kurale');
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
@@ -84,6 +84,10 @@ td.edit, td.destroy, td.copy {
     width: 100px;
     text-align: center;
 }
+td.created, td.updated {
+    font-size: smaller;
+    text-align: center;
+}
 
 
 /* ----------------------------------------- HIPERŁĄCZA ----------------------------------------- */
@@ -156,6 +160,10 @@ input, select, textarea {
 input[readonly] {
     background: #ebb;
     border: 2px solid #b80;
+}
+input[required] {
+    border: 2px solid red;
+    background: #dd9;
 }
 
 

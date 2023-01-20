@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 29.08.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -20,10 +20,10 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/przedmioty') }}">przedmioty <i class='fas fa-chalkboard'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/grupy') }}">grupy <i class='fas fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/klasy') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/info') }}">informacje <i class='fa fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/przedmioty') }}">przedmioty <i class='fa fa-chalkboard'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/grupy') }}">grupy <i class='fa fa-users'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/klasy') }}">klasy <i class='fa fa-user-graduate'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('nauczyciel/'.$teacher->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>

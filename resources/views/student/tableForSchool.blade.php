@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 27.07.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 <h2>uczniowie szkoły</h2>
 <div class="c">{!! $students->render() !!}</div>
 
@@ -26,8 +26,8 @@
 
       <tr class="c">
          <td>-</td>
-         <td colspan="3"><?php  print_r($schoolYearSelectField);  ?></td>
-         <td colspan="3"><?php  print_r($gradeSelectField);  ?></td>
+         <td colspan="3"><?php  print_r($schoolYearSF);  ?></td>
+         <td colspan="3"><?php  print_r($gradeSF);  ?></td>
          <td colspan="2">-</td>
       </tr>
    </thead>

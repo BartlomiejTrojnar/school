@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 04.07.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -22,7 +22,7 @@
       <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/klasy') }}">klasy <i class='fas fa-user-graduate'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/uczniowie') }}">uczniowie <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/podręczniki') }}">podręczniki <i class='fas fa-book'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/podreczniki') }}">podręczniki <i class='fas fa-book'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/nauczyciele') }}">nauczyciele <i class='fas fa-chalkboard-teacher'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('rok_szkolny/'.$schoolYear->id.'/grupy') }}">grupy <i class='fas fa-users'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('rok_szkolny.index') }}">powrót <i class='fa fa-undo'></i></a></li>

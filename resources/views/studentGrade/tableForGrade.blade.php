@@ -1,5 +1,5 @@
 <section id="studentGrades">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.05.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
    <h2>uczniowe w klasie</h2>
    @if( !empty($grade) )
       <div id="gradeButtons" class="c">
@@ -35,11 +35,8 @@
       <?php $count = 0; ?>
       @foreach($studentGrades as $sg)
          <!-- otwarcie wiersza dla ucznia -->
-         @if($sg->student->sex == 'mężczyzna')
-           <tr class="man" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
-         @else
-           <tr class="woman" data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
-         @endif
+         <tr @if($sg->student->sex == 'mężczyzna') class="man" @else class="woman" @endif 
+            data-start="{{ $sg->start }}" data-end="{{ $sg->end }}" data-student_grade_id="{{ $sg->id }}">
 
             <td>{{ ++$count }}</td>
             <!-- numer z księgi ucznia -->
@@ -54,7 +51,7 @@
                   <button class="showCreateForm" data-student_id="{{$sg->student->id}}" data-studentGradeId="{{ $sg->id }}">dodaj</button>
                @endif
             </td>
-            <td><a href="{{ route('uczen.show', $sg->student->id) }}">{{ $sg->student->first_name }} {{ $sg->student->second_name }} {{ $sg->student->last_name }}</a></td>
+            <td><a href="{{ route('uczen.show', $sg->student->id) }}">{{ $sg->student->first_name }} <span class="small">{{ $sg->student->second_name }}</span> {{ $sg->student->last_name }}</a></td>
 
             <!-- klasa ucznia -->
             <td class="c">
@@ -75,8 +72,8 @@
 
             <!-- modyfikowanie i usuwanie -->
             <td class="destroy edit c">
-               <button class="edit btn btn-primary" data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-student_grade_id="{{ $sg->id }}"><i class="fas fa-remove"></i></button>
+               <button class="edit btn btn-primary"    data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
+               <button class="destroy btn btn-primary" data-student_grade_id="{{ $sg->id }}"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach

@@ -1,167 +1,139 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.07.2022 ------------------------ //
-// ---------------------- wydarzenia na stronie wyświetlania przedmiotów ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ------------------------ //
+// -------------------------- wydarzenia dla widoku przedmiot/index  --------------------------- //
+const FADE_OUT=575, FADE_IN=5275, SLIDE_UP=1250, SLIDE_DOWN=1250;
+const NUMBER_OF_FIELDS=7, TABLE_NAME="#subjects", DATA_NAME="subject_id", INPUT_NAME="name";
 
-// --------------------------------- zarządzanie przedmiotami ---------------------------------- //
-function refreshRow(id, lp, version="edit") {  // odświeżenie wiersza z przedmiotem o podanym identyfikatorze
+import '../patternForIndex.js';
+import { CreateRowService, RefreshRowService } from '../patternForIndex.js';
+import { EditRowService } from '../patternForIndex.js';
+
+
+// ------------------- odświeżanie wiersza tabeli z informacjami o rekordzie ------------------- //
+function refreshRow(id, lp, operation="add", success="true") {   // odświeżenie wiersza z informajami o rekordzie o podanym identyfikatorze
+    var RefreshRow = new RefreshRowService(NUMBER_OF_FIELDS, TABLE_NAME, DATA_NAME);
+    if(!success)
+        switch(operation) {
+            case "update": RefreshRow.updateError(id, "Błąd w trakcie modyfikowania przedmiotu."); break;
+            case "add": RefreshRow.addError("Błąd w trakcie dodawania przedmiotu."); return;
+            case "destroy": RefreshRow.destroyError(id, "Nie można usunąć przedmiotu. Prawdopodobnie istnieją powiązane rekordy."); return;
+        }
+    if(operation=="destroy")        { RefreshRow.destroySuccess(id); return; }
+
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/przedmiot/refreshRow",
         data: { id: id, lp: lp },
-        success: function(result) {
-            if(version=="add"){
-                $('tr.create').before(result);
-                $('#showCreateRow').show();
-                $('#countSubjects').html(lp);
-            }
-            else {
-                $('tr.editRow[data-subject_id='+id+']').remove();
-                $('tr[data-subject_id='+id+']').replaceWith(result);
-            }
-        },
-        error: function() {
-            var error = '<tr><td class="error" colspan="7">Błąd odświeżania wiersza z przedmiotem.</td></tr>';
-            $('tr.create').before(error);
-        },
+        success: function(result) { RefreshRow.success(id, result, operation); },
+        error: function() { RefreshRow.error(id, operation, "Błąd odświeżania wiersza z przedmiotem."); },
     });
 }
 
-function showCreateRowClick() {     // kliknięcie w przycisk dodawania - pokazanie wiersza dodawania przemiotu
-    $('#showCreateRow').click(function(){
-        $(this).hide();
-        $('table#subjects').animate({width: '1000px'}, 500);
-        showCreateRow();
+// ----------------------------------- zarządzanie rekordami ----------------------------------- //
+// --------- formularz dodawania: tworzenie formularza, anulowanie i dodawanie rekordu --------- //
+function clickCreateRowButtons() {   // kliknięcie przycisku dodawania
+    $('#showCreateRow').click(function(){       // tworzenie formularza dodawania
+        $('tr#createRow').remove();
+        var communique = "Błąd tworzenia wiersza z formularzem dodawania przedmiotu.";
+        var inputName = "name";
+        var CreateRow = new CreateRowService(NUMBER_OF_FIELDS, TABLE_NAME, communique, inputName);
+        $(TABLE_NAME).animate({width: '70%'}, 500);
+        $.when( $(this).slideUp(SLIDE_UP) ).then(function() { CreateRow.show("przedmiot"); });
+    });
+
+    $(TABLE_NAME).delegate('button#cancelAdd', 'click', function() {    // kliknięcie przycisku "anuluj"
+        $.when( $('#createRow').fadeOut(FADE_OUT) ).then(function() {
+            $('#createRow').remove();
+            $('#showCreateRow').slideDown(SLIDE_DOWN);
+        });
+    });
+
+    $(TABLE_NAME).delegate('button#add', 'click', function() {          // kliknięcie przycisku "dodaj"
+        $.when( $('#createRow').fadeOut(FADE_OUT) ).then(function() {
+            $('#showCreateRow').slideDown(SLIDE_DOWN);
+            add();
+        });
     });
 }
 
-function showCreateRow() {      // załadowanie wiersza dodawania przedmiotu
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/przedmiot/create",
-        success: function(result) {
-            $('table#subjects').append(result);
-            $('input[name="name"]').focus();
-        },
-        error: function() {
-            var error = '<tr><td colspan="7" class="error">Błąd tworzenia wiersza z formularzem dodawania przedmiotu.</td></tr>';
-            $('table#subjects tr.create').after(error);
-        },
-    });
-}
-
-function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania przedmiotu
-    $('table#subjects').delegate('#cancelAdd', 'click', function() {
-        $('#createRow').remove();
-        $('#showCreateRow').show();
-    });
-
-    $('table#subjects').delegate('#add', 'click', function() {
-        add();
-        $('#createRow').remove();
-        $('#showCreateRow').show();
-    });
-}
-
-function add() {   // zapisanie przedmiotu w bazie danych
+// ----------------------------- wstawienie rekordu do bazy danych ----------------------------- //
+function add() {
     var name        = $('#createRow input[name="name"]').val();
     var short_name  = $('#createRow input[name="short_name"]').val();
     var actual      = $('#createRow input[name="actual"]').prop('checked');
     var order_in_the_sheet = $('#createRow input[name="order_in_the_sheet"]').val();
     var expanded = $('#createRow input[name="expanded"]').prop('checked');
-    var lp = parseInt( $('#countSubjects').html() );
-    
+    var lp = parseInt( $('#countSubjects').val() ) + 1;
+
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/przedmiot",
         data: { name: name, short_name: short_name, actual: actual, order_in_the_sheet: order_in_the_sheet, expanded: expanded },
-        success: function(id) { refreshRow(id, lp+1, "add"); },
-        error: function() {
-            var error = '<tr><td colspan="7" class="error">Błąd dodawania przedmiotu.</td></tr>';
-            $('table#subjects tr.create').after(error);
-        },
+        success: function(id) { refreshRow(id, lp, "add", true); },
+        error: function() { refreshRow(0, lp, "add", false); },
     });
 }
 
-function editClick() {     // kliknięcie przycisku modyfikowania przedmiotu
-    $('table#subjects').delegate('button.edit', 'click', function() {
-        var id = $(this).data('subject_id');
-        var lp = $(this).parent().parent().children(":first").html();
-        $.ajax({
-            type: "GET",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/przedmiot/"+id+"/edit",
-            data: { id: id, lp: lp },
-            success: function(result) {
-                $('tr[data-subject_id='+id+']').before(result).hide();
-                updateClick();
-            },
-            error: function() {
-                var error = '<tr><td colspan="7" class="error">Błąd tworzenia wiersza z formularzem modyfikowania przedmiotu.</td></tr>';
-                $('tr[data-subject_id='+id+']').after(error).hide();
-            },
-        });
+
+// -------- formularz modyfikowania: tworzenie formularza, anulowanie i zmiana rekordu --------- //
+function clicEditRowButtons() {
+    $(TABLE_NAME).delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
+        var communique = "Nie mogę utworzyć formularza do zmiany danych przedmiotu.";
+        var EditRow = new EditRowService(NUMBER_OF_FIELDS, DATA_NAME, communique, INPUT_NAME);
+        var id = $(this).data(DATA_NAME);
+        var lp = $('tr[data-' +DATA_NAME+ '="'+id+'"]').children(":first").html();
+        EditRow.show("przedmiot", id, lp);
+    });
+
+    $(TABLE_NAME).delegate('button.cancelUpdate', 'click', function() { // kliknięcie przycisku "anuluj"
+        var id = $(this).data(DATA_NAME);
+        var lp = $('var.lp').html();
+        $.when( $('.editRow[data-' +DATA_NAME+ '=' +id+ ']').fadeOut(FADE_OUT) ).then( function() { refreshRow(id, lp, "cancelUpdate", true); });
+    });
+
+    $(TABLE_NAME).delegate('button.update', 'click', function() {       // kliknięcie przycisku "zapisz"
+        var id = $(this).data(DATA_NAME);
+        var lp = $('var.lp').html();
+        $.when( $('.editRow[data-' +DATA_NAME+ '=' +id+ ']').fadeOut(FADE_OUT) ).then( function() { update(id, lp); });
     });
 }
 
-function updateClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania przedmiotu
-    $('.cancelUpdate').click(function() {
-        var id = $(this).data('subject_id');
-        $('.editRow[data-subject_id='+id+']').remove();
-        $('tr[data-subject_id='+id+']').show();
-    });
-
-    $('.update').click(function(){
-        var id = $(this).data('subject_id');
-        update(id);
-    });
-}
-
-function update(id) {   // zapisanie przedmiotu w bazie danych
+// --------------------------------- zapisywanie zmian rekordu --------------------------------- //
+function update(id, lp) {
     var name                = $('tr[data-subject_id='+id+'] input[name="name"]').val();
     var short_name          = $('tr[data-subject_id='+id+'] input[name="short_name"]').val();
     var actual              = $('tr[data-subject_id='+id+'] input[name="actual"]').prop('checked');
     var order_in_the_sheet  = $('tr[data-subject_id='+id+'] input[name="order_in_the_sheet"]').val();
     var expanded            = $('tr[data-subject_id='+id+'] input[name="expanded"]').prop('checked');
-    var lp                  = parseInt( $('tr[data-subject_id='+id+'] var.lp').html() );
 
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/przedmiot/"+id,
         data: { id: id, name: name, short_name: short_name, actual: actual, order_in_the_sheet: order_in_the_sheet, expanded: expanded },
-        success: function() { refreshRow(id, lp); },
-        error: function() {
-            var error = '<tr><td colspan="7" class="error">Błąd modyfikowania przedmiotu.</td></tr>';
-            $('tr[data-subject_id='+id+'].editRow').after(error).hide();
-        },
+        success: function() { refreshRow(id, lp, "update", true); },
+        error:   function() { refreshRow(id, lp, "update", false); },
     });
 }
 
-function destroyClick() {  // usunięcie przedmiotu (z bazy danych)
-    $('table#subjects').delegate('button.destroy', 'click', function() {
-        var id = $(this).data('subject_id');
+// ------------------------------------- usuwanie rekordu -------------------------------------- //
+function clickDestroyButton() {
+    $(TABLE_NAME).delegate('button.destroy', 'click', function() {
+        var id = $(this).data(DATA_NAME);
         $.ajax({
             type: "DELETE",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/przedmiot/" + id,
-            success: function() { $('tr[data-subject_id='+id+']').remove(); },
-            error: function() {
-                var error = '<tr><td colspan="7" class="error">Błąd usuwania przedmiotu.</td></tr>';
-                $('tr[data-subject_id='+id+']').after(error).hide();
-            }
+            success: function() { refreshRow(id, 0, "destroy", true); },
+            error:   function() { refreshRow(id, 0, "destroy", false); }
         });
-        return false;
     });
 }
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
-    //if ( $( "#jumpToThePage" ).length ) location.href = $('#jumpToThePage').attr('href');
-
-    showCreateRowClick();
-    addClick();
-    editClick();
-    destroyClick();
+    clickCreateRowButtons();
+    clicEditRowButtons();
+    clickDestroyButton();
 });

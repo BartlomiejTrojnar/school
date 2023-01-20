@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\StudentNumber;
@@ -46,18 +46,19 @@ class StudentNumberController extends Controller
     }
 
     public function createForStudent($student_id, $snRepo, $gradeRepo, $syRepo) {
+        $schoolYear = session()->get('schoolYearSelected');
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$schoolYear+1900]);
 
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYear = session()->get('schoolYearSelected');
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear, "name"=>"school_year_id"]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear, "name"=>"school_year_id"]);
 
         $proposedNumber = $snRepo -> getLastNumber() + 1;
 
-        return view('studentNumber.createForStudent', ["student_id"=>$student_id, "gradeSelectField"=>$gradeSelectField,
-            "schoolYearSelectField"=>$schoolYearSelectField, "proposedNumber"=>$proposedNumber]);
+        return view('studentNumber.createForStudent', ["student_id"=>$student_id, "gradeSF"=>$gradeSF,
+            "schoolYearSF"=>$schoolYearSF, "proposedNumber"=>$proposedNumber]);
     }
 
     public function store(Request $request) {
@@ -134,14 +135,15 @@ class StudentNumberController extends Controller
     }
 
     public function editForStudent($id, $snRepo, $gradeRepo, $syRepo) {
+        $year = session()->get('schoolYearSelected')+1900;
         $studentNumber = $snRepo -> find($id);
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = $studentNumber->grade_id;
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year]);
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYearSelected = $studentNumber->school_year_id;
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
-        return view('studentNumber.editForStudent', ["studentNumber"=>$studentNumber, "gradeSelectField"=>$gradeSelectField, "schoolYearSelectField"=>$schoolYearSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        return view('studentNumber.editForStudent', ["studentNumber"=>$studentNumber, "gradeSF"=>$gradeSF, "schoolYearSF"=>$schoolYearSF]);
     }
 
     public function update($id, Request $request, StudentNumber $studentNumber) {

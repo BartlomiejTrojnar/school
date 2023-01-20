@@ -1,28 +1,19 @@
-<!-- ******************  (C) mgr inż. Bartłomiej Trojnar; (III) czerwiec 2021 ****************** -->
-@extends('layouts.app')
-
-@section('header')
-   <h1>Zamiana danych szkoły</h1>
-@endsection
-
-@section('main-content')
+<tr class="editRow" data-school_id="{{ $school->id }}">
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.01.2023 ********************** -->
    <form action="{{ route('szkola.update', $school->id) }}" method="post" role="form">
-   {{ csrf_field() }}
-   {{ method_field('PATCH') }}
-   <table>
-      <tr>
-         <th><label for="name">nazwa</label></th>
-         <td><input type="text" name="name" value="{{ $school->name }}" size="40" autofocus required /></td>
-      </tr>
-      <tr>
-         <th><label for="id_OKE">identyfikator OKE</label></th>
-         <td><input type="text" name="id_OKE" value="{{ $school->id_OKE }}" /></td>
-      </tr>
-      <tr class="submit"><td colspan="2">
-         <input type="hidden" name="history_view" value="{{ $_SERVER['HTTP_REFERER'] }}" />
-         <button class="btn btn-primary" type="submit">zapisz zmiany</button>
-         <a class="btn btn-primary" href="{{ route('szkola.index') }}">anuluj</a>
-      </td></tr>
-   </table>
+      {{ csrf_field() }}
+      {{ method_field('PATCH') }}
+      <td><var class="lp">{{ $lp }}</var></td>
+      <td>
+         <input type="hidden" name="id" value="{{ $school->id }}" />
+         <input type="text" name="name" value="{{ $school->name }}" size="40" required />
+      </td>
+      <td><input type="text" name="id_OKE" value="{{ $school->id_OKE }}" /></td>
+
+      <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
+      <td class="c" style="width: 225px;">
+         <button class="update btn btn-primary"       data-school_id="{{ $school->id }}">zapisz zmiany</button>
+         <button class="cancelUpdate btn btn-primary" data-school_id="{{ $school->id }}">anuluj</button>
+      </td>
    </form>
-@endsection
+</tr>

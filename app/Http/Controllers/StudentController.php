@@ -1,11 +1,13 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.01.2023 ------------------------ //
 namespace App\Http\Controllers;
+
 use App\Models\Student;
 use App\Repositories\StudentRepository;
 
 use App\Models\StudentHistory;
 use App\Models\TaskRating;
+use App\Repositories\CertificateRepository;
 use App\Repositories\GradeRepository;
 use App\Repositories\GroupStudentRepository;
 use App\Repositories\LessonPlanRepository;
@@ -17,25 +19,89 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+    public function create() {
+        $selectedSex = 'kobieta';
+        $sexSF = view('student.sexSelectField', ["sex"=>$selectedSex]);
+        return view('student.create', ["sexSF"=>$sexSF]);
+    }
+
+    public function store(Request $request) {
+        $this -> validate($request, ['first_name' => 'required|max:20', 'second_name' => 'max:12', 'last_name' => 'required|max:18',
+            'second_name' => 'max:15', 'sex' => 'required', 'pesel' => 'min:11|max:11|unique', 'place_of_birth' => 'max:20', ]);
+
+        $student = new Student;
+        $student->first_name = $request->first_name;
+        $student->second_name = $request->second_name;
+        $student->last_name = $request->last_name;
+        $student->family_name = $request->family_name;
+        $student->sex = $request->sex;
+        $student->PESEL = $request->PESEL;
+        $student->place_of_birth = $request->place_of_birth;
+        $student -> save();
+
+        session() -> put('studentSelected', $student->id);   // zapamiętanie właśnie dodanego ucznia
+        return $student->id;
+
+        //if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
+        //return redirect($request->history_view);
+        //return redirect( 'uczen/' .$student->id. '/klasy');
+    }
+
+    public function edit(Request $request, StudentRepository $studentRepo) {
+        $student = $studentRepo -> find($request->id);
+        $sexSF = view('student.sexSelectField', ["sex"=>$student->sex]);
+        return view('student.edit', ["student"=>$student, "sexSF"=>$sexSF, "lp"=>$request->lp]);
+    }
+
+    public function update($id, Request $request, Student $student) {
+        $student = $student -> find($id);
+        $this -> validate($request, [ 'first_name' => 'required|max:20', 'second_name' => 'max:12', 'last_name' => 'required|max:18',
+            'family_name' => 'max:15', 'sex' => 'required', 'pesel' => 'min:11|max:11|unique', 'place_of_birth' => 'max:20', ]);
+
+        $student->first_name = $request->first_name;
+        $student->second_name = $request->second_name;
+        $student->last_name = $request->last_name;
+        $student->family_name = $request->family_name;
+        $student->sex = $request->sex;
+        $student->PESEL = $request->PESEL;
+        $student->place_of_birth = $request->place_of_birth;
+        $student -> save();
+
+        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
+        return $student->id;
+        //return redirect($request->history_view);
+    }
+
+    public function destroy($id, Student $student) {
+        $student = $student -> find($id);
+        $student -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, StudentRepository $studentRepo) {
+        $this->student = $studentRepo -> find($request->id);
+        return view('student.row', ["student"=>$this->student, "lp"=>$request->lp]);
+    }
+
     public function index(StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, GradeRepository $gradeRepo) {
-        $students = Student::select('students.*')
-            -> leftjoin('student_grades', 'students.id', '=', 'student_grades.student_id');
+        $students = Student::select('students.*') -> leftjoin('student_grades', 'students.id', '=', 'student_grades.student_id');
         if( session() -> get('schoolYearSelected') ) {
             $schoolYear = $schoolYearRepo -> find( session() -> get('schoolYearSelected') );
-            $students = $students
-                -> where('start', '>=', $schoolYear->date_start)
-                -> where('end', '<=', $schoolYear->date_end);
+
+            //$students = 
+                //-> where('start', '>=', $schoolYear->date_start)
+                //-> where('end', '<=', $schoolYear->date_end) -> orwhere('end', '=', NULL);
         }
         if( session() -> get('gradeSelected') )     $students = $students -> where('grade_id', '=', session() -> get('gradeSelected'));
         $students = $studentRepo -> sortAndPaginateRecords($students);
 
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $grades = $gradeRepo -> getAllSorted();
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>session() -> get('gradeSelected') ]);
-        return view('student.index', ["students"=>$students, "schoolYearSelectField"=>$schoolYearSelectField, "gradeSelectField"=>$gradeSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>session() -> get('gradeSelected') ]);
+        return view('student.index', ["students"=>$students, "schoolYearSF"=>$schoolYearSF, "gradeSF"=>$gradeSF]);
     }
-
+/*
     public function orderBy($column) {
         if(session()->get('StudentOrderBy[0]') == $column)
             if(session()->get('StudentOrderBy[1]') == 'desc')   session()->put('StudentOrderBy[1]', 'asc');
@@ -51,45 +117,12 @@ class StudentController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create() {
-        $selectedSex = 'kobieta';
-        return view('student.create')
-            -> nest('sexSelectField', 'student.sexSelectField', ["sex"=>$selectedSex]);
-    }
-
-    public function store(Request $request) {
-        $this -> validate($request, [
-          'first_name' => 'required|max:20',
-          'second_name' => 'max:12',
-          'last_name' => 'required|max:18',
-          'second_name' => 'max:15',
-          'sex' => 'required',
-          'pesel' => 'min:11|max:11|unique',
-          'place_of_birth' => 'max:20',
-        ]);
-
-        $student = new Student;
-        $student->first_name = $request->first_name;
-        $student->second_name = $request->second_name;
-        $student->last_name = $request->last_name;
-        $student->family_name = $request->family_name;
-        $student->sex = $request->sex;
-        $student->PESEL = $request->PESEL;
-        $student->place_of_birth = $request->place_of_birth;
-        $student -> save();
-
-        session() -> put('studentSelected', $student->id);   // zapamiętanie właśnie dodanego ucznia
-
-        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
-        //return redirect($request->history_view);
-        return redirect( 'uczen/' .$student->id. '/showGrades');
-    }
-
     public function change($id) {  session()->put('studentSelected', $id);  }
 
     public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
-        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, $view='') {
+        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, $view='') {
         session() -> put('studentSelected', $id);
+        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
         $this->student = $studentRepo -> find($id);
@@ -125,6 +158,7 @@ class StudentController extends Controller
               exit;
           break;
 */
+/*
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('studentView'));
         }
@@ -133,9 +167,8 @@ class StudentController extends Controller
     private function showInfo() {
         $css = "student/studentGrades.css";
         $js = "student/studentGrades.js";
-
-        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'student.showInfo', ["student"=>$this->student]);
+        $studentInfo = view('student.showInfo', ["student"=>$this->student, "year"=>$this->year]);
+        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentInfo]);
     }
 
     private function showGrades($studentGradeRepo, $studentNumberRepo, $schoolYearRepo) {
@@ -145,12 +178,11 @@ class StudentController extends Controller
 
         $studentNumbersView = "tu będą numery ucznia";
         $studentNumbers = $studentNumberRepo -> getStudentNumbers($this->student->id);
-        $year = date('Y');
         if( !empty(session()->get('schoolYearSelected')) ) {
             $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
             $this->year = substr($schoolYear->date_end, 0, 4);
         }
-        $studentNumbersView = view('studentNumber.tableForStudent', ["studentNumbers"=>$studentNumbers, "student"=>$this->student->id, "yearOfStudy"=>$year]);
+        $studentNumbersView = view('studentNumber.tableForStudent', ["studentNumbers"=>$studentNumbers, "student"=>$this->student->id, "yearOfStudy"=>$this->year]);
 
         // przygotowanie widoku z tabelą klas ucznia
         $dateView = session() -> get('dateView');
@@ -162,24 +194,12 @@ class StudentController extends Controller
 
     private function showGroups($groupStudentRepo, $schoolYearRepo) {
         $dateView = session() -> get('dateView');
-        // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
-        $year = 0;
-        if( !empty(session()->get('schoolYearSelected')) ) {
-            $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
-            $year = substr($schoolYear->date_end, 0, 4);
-        }
-        if($year==0) {
-            $year=9999;
-            foreach($this->student->grades as $sg) if( substr($sg->start, 0, 4) < $year) $year = substr($sg->start, 0, 4);
-            $year++;
-        }
-
         // znalezienie grup ucznia
         $studentGroups = $groupStudentRepo -> getStudentGroups($this->student->id);
         // lista grup do których uczeń należy
-        $studentList = view('groupStudent.listForStudent', ["studentGroups"=>$studentGroups, "year"=>$year, "dateView"=>$dateView]);
+        $studentList = view('groupStudent.listForStudent', ["studentGroups"=>$studentGroups, "year"=>$this->year, "dateView"=>$dateView]);
         // lista grup do których uczeń należał w innym czasie
-        $studentListOutside = view('groupStudent.listOfStudentGroupToWhichHeBelongedAtAnotherTime', ["studentGroups"=>$studentGroups, "year"=>$year, "dateView"=>$dateView]);
+        $studentListOutside = view('groupStudent.listOfStudentGroupToWhichHeBelongedAtAnotherTime', ["studentGroups"=>$studentGroups, "year"=>$this->year, "dateView"=>$dateView]);
         // lista innych grup w klasie ucznia
         // znalezienie aktualnej klasy dla ucznia
         $grade_id=0;
@@ -218,50 +238,21 @@ class StudentController extends Controller
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable]);
     }
 
+    private function showCertificates($certificateRepo) {
+        $css = "";
+        $js = "certificate/forStudent.js";
+        $subTitle = "Świadectwa";
+        $certificates = $certificateRepo -> getFilteredAndSorted($this->student->id);
+        $certificatesTable = view('certificate.tableForStudent', ["student"=>$this->student, "subTitle"=>$subTitle, "certificates"=>$certificates]);
+        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$certificatesTable]);
+    }
+
     private function showDeclarations() {
         $declarations = $this->student -> declarations;
         $subView = view('declaration.sectionForStudent', ["declarations"=>$declarations, "studentSF"=>'', "sessionSF"=>'', "gradeSF"=>""]);
         $css = "declaration/forStudent.css";
         $js = "declaration/forStudent.js";
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subView]);
-    }
-
-    public function edit($id, StudentRepository $studentRepo) {
-        $student = $studentRepo -> find($id);
-        return view('student.edit', ["student"=>$student])
-            -> nest('sexSelectField', 'student.sexSelectField', ["sex"=>$student->sex]);
-    }
-
-    public function update($id, Request $request, Student $student) {
-        $student = $student -> find($id);
-        $this -> validate($request, [
-          'first_name' => 'required|max:20',
-          'second_name' => 'max:12',
-          'last_name' => 'required|max:18',
-          'second_name' => 'max:15',
-          'sex' => 'required',
-          'pesel' => 'min:11|max:11|unique',
-          'place_of_birth' => 'max:20',
-        ]);
-
-        $student->first_name = $request->first_name;
-        $student->second_name = $request->second_name;
-        $student->last_name = $request->last_name;
-        $student->family_name = $request->family_name;
-        $student->sex = $request->sex;
-        $student->PESEL = $request->PESEL;
-        $student->place_of_birth = $request->place_of_birth;
-        $student -> save();
-
-        if($request->history_view == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
-        return redirect($request->history_view);
-    }
-
-    public function destroy($id, Student $student) {
-        $student = $student -> find($id);
-        $student -> delete();
-        if($_SERVER['HTTP_REFERER'] == 'http://localhost/szkola/public/uczen/search_results') return redirect('uczen');
-        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function search() { return view('student.search'); }
@@ -275,4 +266,5 @@ class StudentController extends Controller
         //$students = $studentRepo -> sortAndPaginateRecords($students);
         return view('student.searchResults', ["students"=>$students, "request"=>$request]);
     }
+*/
 }

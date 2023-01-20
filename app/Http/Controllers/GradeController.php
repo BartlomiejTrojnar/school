@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -21,6 +21,84 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
+    public function create(Request $request, SchoolRepository $schoolRepo) {
+        if($request->version == "forSchool")    return view('grade.createForSchool', ["school_id"=>$request->school_id]);
+        if($request->version == "forSchoolYear") return $this -> createRow($schoolRepo);
+        return $this -> createRow($schoolRepo);
+    }
+
+    private function createRow($schoolRepo) {
+        $schools = $schoolRepo -> getAllSorted();
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>1]);
+        return view('grade.create', ["schoolSF"=>$schoolSF]);
+    }
+
+    public function store(Request $request) {
+        $this -> validate($request, [
+            'year_of_beginning' => 'required|integer|min:1900',
+            'year_of_graduation' => 'required|integer|min:1905',
+            'symbol' => 'max:2',
+            'school_id' => 'required',
+        ]);
+
+        $grade = new Grade;
+        $grade->year_of_beginning = $request->year_of_beginning;
+        $grade->year_of_graduation = $request->year_of_graduation;
+        $grade->symbol = $request->symbol;
+        $grade->school_id = $request->school_id;
+        $grade -> save();
+        return $grade->id;
+    }
+
+    public function edit(Request $request, Grade $grade, SchoolRepository $schoolRepo) {
+        $grade = $grade -> find($request->id);
+        if($request->version == "forSchool")    return view('grade.editForSchool', ["grade"=>$grade, "lp"=>$request->lp]);
+        return $this -> editForIndex($grade, $schoolRepo, $request->lp);
+    }
+
+    private function editForIndex($grade, $schoolRepo, $lp) {
+        $schools = $schoolRepo -> getAllSorted();
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$grade->school_id]);
+        return view('grade.edit', ["grade"=>$grade, "schoolSF"=>$schoolSF, "lp"=>$lp]);
+    }
+
+    public function update($id, Request $request, Grade $grade) {
+        $grade = $grade -> find($id);
+        $this -> validate($request, [
+            'year_of_beginning' => 'required|integer|min:1900',
+            'year_of_graduation' => 'required|integer|min:1905',
+            'symbol' => 'max:2',
+            'school_id' => 'required',
+        ]);
+
+        $grade->year_of_beginning = $request->year_of_beginning;
+        $grade->year_of_graduation = $request->year_of_graduation;
+        $grade->symbol = $request->symbol;
+        $grade->school_id = $request->school_id;
+        $grade -> save();
+        return $grade->id;
+    }
+
+    public function destroy($id, Grade $grade)  {
+        $grade = $grade -> find($id);
+        $grade -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo) {
+        $this->grade = $gradeRepo -> find($request->id);
+
+        $schoolYearSelected = session()->get('schoolYearSelected');
+        if($schoolYearSelected) {
+            $schoolYear = $schoolYearRepo -> find($schoolYearSelected);
+            $year = substr($schoolYear->date_end, 0, 4);
+        }
+        else $year=0;
+
+        if($request->version == "forSchool")    return view('grade.rowForSchool', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
+        return view('grade.row', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
+    }
+
     public function index(GradeRepository $gradeRepo, SchoolRepository $schoolRepo, SchoolYearRepository $schoolYearRepo)   {
         $schoolYearSelected = session()->get('schoolYearSelected');
         if($schoolYearSelected) {
@@ -31,12 +109,10 @@ class GradeController extends Controller
         $schoolSelected = session()->get('schoolSelected');
         $grades = $gradeRepo -> getFilteredAndSortedAndPaginate($year, $schoolSelected);
         $schools = $schoolRepo -> getAllSorted();
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
         $schoolYears = $schoolYearRepo -> getAllSorted();
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
-
-        $tableForIndex = view('grade.table', ["grades"=>$grades, "schoolSelectField"=>$schoolSelectField, "schoolYearSelectField"=>$schoolYearSelectField, "year"=>$year, "links"=>true]);
-        return view('grade.index', ["grades"=>$grades, "tableForIndex"=>$tableForIndex]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        return view('grade.index', ["grades"=>$grades, "schoolYearSF"=>$schoolYearSF, "schoolSF"=>$schoolSF, "year"=>$year]);
     }
 
     public function orderBy($column)    {
@@ -54,37 +130,7 @@ class GradeController extends Controller
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-
-    public function create(Request $request, SchoolRepository $schoolRepo) {
-        if($request->version == "forIndex")     return $this -> createRow($schoolRepo);
-        if($request->version == "forSchool")    return view('grade.createForSchool', ["school_id"=>$request->school_id]);
-        if($request->version == "forSchoolYear") return $this -> createRow($schoolRepo);
-        return $request->version;
-    }
-
-    private function createRow($schoolRepo) {
-        $schools = $schoolRepo -> getAllSorted();
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>9]);
-        return view('grade.create', ["schoolSelectField"=>$schoolSelectField]);
-    }
-
-    public function store(Request $request) {
-        $this -> validate($request, [
-          'year_of_beginning' => 'required|integer|min:1900',
-          'year_of_graduation' => 'required|integer|min:1905',
-          'symbol' => 'max:2',
-          'school_id' => 'required',
-        ]);
-
-        $grade = new Grade;
-        $grade->year_of_beginning = $request->year_of_beginning;
-        $grade->year_of_graduation = $request->year_of_graduation;
-        $grade->symbol = $request->symbol;
-        $grade->school_id = $request->school_id;
-        $grade -> save();
-        return $grade->id;
-    }
-
+/*
     public function change($id) {  session()->put('gradeSelected', $id);  }
 
     public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR, GroupRepository $gR,
@@ -161,8 +207,8 @@ class GradeController extends Controller
          if(empty($studentsOutOfDate)) $studentsOutOfDate=0;
 
          $selectedSex = 'kobieta';
-         $sexSelectField = view('student.sexSelectField', ["sex"=>$selectedSex]);
-         $studentsTable = view('student.table', ["grade"=>$this->grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy", "showDateView"=>true, "sexSelectField"=>$sexSelectField]);
+         $sexSF = view('student.sexSelectField', ["sex"=>$selectedSex]);
+         $studentsTable = view('student.table', ["grade"=>$this->grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy", "showDateView"=>true, "sexSF"=>$sexSF]);
          $studentsOutOfDateTable = view('student.table', ["grade"=>$this->grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy", "showDateView"=>false]);
 
          return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$studentsTable, "subView2"=>$studentsOutOfDateTable]);
@@ -269,42 +315,6 @@ class GradeController extends Controller
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$declarationsTable, "css"=>$css, "js"=>$js]);
     }
 
-    public function edit(Request $request, Grade $grade, SchoolRepository $schoolRepo) {
-        $grade = $grade -> find($request->id);
-        if($request->version == "forIndex")     return $this -> editForIndex($grade, $schoolRepo, $request->lp);
-        if($request->version == "forSchool")    return view('grade.editForSchool', ["grade"=>$grade, "lp"=>$request->lp]);
-        return $request->version;
-    }
-
-    private function editForIndex($grade, $schoolRepo, $lp) {
-        $schools = $schoolRepo -> getAllSorted();
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$grade->school_id]);
-        return view('grade.edit', ["grade"=>$grade, "schoolSelectField"=>$schoolSelectField, "lp"=>$lp]);
-    }
-
-    public function update($id, Request $request, Grade $grade) {
-        $grade = $grade -> find($id);
-        $this -> validate($request, [
-          'year_of_beginning' => 'required|integer|min:1900',
-          'year_of_graduation' => 'required|integer|min:1905',
-          'symbol' => 'max:2',
-          'school_id' => 'required',
-        ]);
-
-        $grade->year_of_beginning = $request->year_of_beginning;
-        $grade->year_of_graduation = $request->year_of_graduation;
-        $grade->symbol = $request->symbol;
-        $grade->school_id = $request->school_id;
-        $grade -> save();
-        return $grade->id;
-    }
-
-    public function destroy($id, Grade $grade)  {
-        $grade = $grade -> find($id);
-        $grade -> delete();
-        return 1;
-    }
-
     public function getDates($id, Grade $grade) {
         $grade = $grade -> find($id);
         for($i = $grade->year_of_beginning; $i<$grade->year_of_graduation; $i++) {
@@ -313,19 +323,5 @@ class GradeController extends Controller
         }
         return $dates;
     }
-
-    public function refreshRow(Request $request, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo) {
-        $this->grade = $gradeRepo -> find($request->id);
-
-        $schoolYearSelected = session()->get('schoolYearSelected');
-        if($schoolYearSelected) {
-            $schoolYear = $schoolYearRepo -> find($schoolYearSelected);
-            $year = substr($schoolYear->date_end, 0, 4);
-        }
-        else $year=0;
-
-        if($request->version == "forIndex")     return view('grade.row', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
-        if($request->version == "forSchool")    return view('grade.rowForSchool', ["grade"=>$this->grade, "year"=>$year, "lp"=>$request->lp]);
-        return $request->version;
-    }
+    */
 }
