@@ -1,8 +1,9 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.10.2022 ********************** -->
-<h2>Ocent w klasie</h2>
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 21.01.2023 ********************** -->
+<h2>Rozszerzenia w klasie</h2>
 <table id="enlargements">
    <thead>
       <tr>
+         <th>lp</th>
          <th>uczeń</th>
          <th>rozszerzenie</th>
          <th>poziom</th>
@@ -13,13 +14,15 @@
    </thead>
 
    <tbody>
+      <?php $count=0; ?>
       @foreach($enlargements as $enlargement)
          <tr data-enlargement_id="{{ $enlargement->id }}">
+            <td>{{ ++$count }}</td>
             <td>{{ $enlargement->student->first_name }} {{ $enlargement->student->last_name }}</td>
             <td>{{ $enlargement->subject->name }}</td>
             <td>{{ $enlargement->level }}</td>
-            <td>{{ $enlargement->choice }}</td>
-            <td>{{ $enlargement->resignation }}</td>
+            <td class="c">{{ $enlargement->choice }}</td>
+            <td class="c">{{ $enlargement->resignation }}</td>
 
             <!-- modyfikowanie i usuwanie -->
             <td class="destroy edit c">
@@ -28,5 +31,7 @@
             </td>
          </tr>
       @endforeach
+      <tr class="create"><td colspan="7"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
    </tbody>
 </table>
+<input type="hidden" id="countEnlargements" value="{{ count($enlargements) }}" />

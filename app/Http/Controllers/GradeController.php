@@ -53,10 +53,10 @@ class GradeController extends Controller
     public function edit(Request $request, Grade $grade, SchoolRepository $schoolRepo) {
         $grade = $grade -> find($request->id);
         if($request->version == "forSchool")    return view('grade.editForSchool', ["grade"=>$grade, "lp"=>$request->lp]);
-        return $this -> editForIndex($grade, $schoolRepo, $request->lp);
+        return $this -> editRow($grade, $schoolRepo, $request->lp);
     }
 
-    private function editForIndex($grade, $schoolRepo, $lp) {
+    private function editRow($grade, $schoolRepo, $lp) {
         $schools = $schoolRepo -> getAllSorted();
         $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$grade->school_id]);
         return view('grade.edit', ["grade"=>$grade, "schoolSF"=>$schoolSF, "lp"=>$lp]);
@@ -132,7 +132,7 @@ class GradeController extends Controller
     }
 /*
     public function change($id) {  session()->put('gradeSelected', $id);  }
-
+*/
     public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR, GroupRepository $gR,
             LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR, EnlargementRepository $eR, $view='') {
         if( empty(session()->get('gradeView')) )  session()->put('gradeView', 'info');
@@ -178,10 +178,9 @@ class GradeController extends Controller
 
     private function showInfo() {
         $subView = view('grade.showInfo', ["grade"=>$this->grade]);
-        return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next,
-            "css"=>"", "js"=>"", "subView"=>$subView]);
+        return view('grade.show', ["css"=>"", "js"=>"", "previous"=>$this->previous, "next"=>$this->next, "grade"=>$this->grade, "subView"=>$subView, "year"=>$this->year]);
     }
-
+/*
     private function showStudents($schoolYearRepo, $studentGradeRepo) { // funkcja przygotowująca i wyświetlająca widok przynależności uczniów do klasy
         $start = session()->get('dateView');
         $end = session()->get('dateEnd');
@@ -298,14 +297,14 @@ class GradeController extends Controller
         $ratingsTable = view('rating.tableForGrade', []);
         return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$ratingsTable]);
     }
-
+*/
     private function showEnlargements($enlargementRepo) {
         $enlargements = $enlargementRepo -> getFilteredAndSorted($this->grade->id);
         $enlargementsTable = view('enlargement.tableForGrade', ["enlargements"=>$enlargements]);
-        $js = "enlargement/operations.js";
-        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$enlargementsTable]);
+        $js = "enlargement/forGrade.js";
+        return view('grade.show', ["css"=>"", "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "grade"=>$this->grade, "subView"=>$enlargementsTable, "year"=>$this->year]);
     }
-
+/*
     private function showDeclarations($declarationRepo) {
         $sessionSelected = session()->get('sessionSelected');
         $declarations = $declarationRepo -> getFilteredAndSorted($sessionSelected, $this->grade->id, 0);
