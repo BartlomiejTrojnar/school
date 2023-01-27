@@ -1,5 +1,5 @@
-<tr class="editRow" data-enlargement_id="{{ $enlargement->id }}">>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.01.2023 *********************** -->
+<tr class="editRow" data-enlargement_id="{{ $enlargement->id }}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.01.2023 *********************** -->
    <form action="{{ route('rozszerzenie.update', $enlargement->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}

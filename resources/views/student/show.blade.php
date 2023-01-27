@@ -6,19 +6,15 @@
 @endsection
 
 @section('java-script')
-   <script src="{{ asset('public/js/'.$js) }}"></script>
+   <script language="javascript" type="module" src="{{ asset('public/js/'.$js) }}"></script>
 @endsection
 
 
 @section('header')
-   <aside id="arrow_left">
-      <a href="{{ route('uczen.show', $previous) }}"> <i class='fa fa-chevron-left'></i> </a>
-   </aside>
-   <aside id="arrow_right">
-      <a href="{{ route('uczen.show', $next) }}"> <i class='fa fa-chevron-right'></i> </a>
-   </aside>
+   <aside id="arrow_left"><a href="{{ route('uczen.show', $previous) }}"> <i class='fa fa-chevron-left'></i> </a></aside>
+   <aside id="arrow_right"><a href="{{ route('uczen.show', $next) }}"> <i class='fa fa-chevron-right'></i> </a></aside>
    <h1>{{ $student->first_name }} <span class="small">{{ $student->second_name }}</span> {{ $student->last_name }}</h1>
-   <input id="student_id" type="hidden" name="student_id" value="{{$student->id}}" />
+   <input id="student_id" type="hidden" name="student_id" value="{{ $student->id }}" />
 @endsection
 
 @section('main-content')

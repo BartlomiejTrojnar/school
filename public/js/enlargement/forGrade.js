@@ -129,3 +129,10 @@ function clickDestroyButton() {
         });
     });
 }
+
+// ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
+$(document).ready(function() {
+    clickCreateRowButtons();
+    clickEditRowButtons();
+    clickDestroyButton();
+});

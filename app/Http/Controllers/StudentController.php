@@ -8,6 +8,7 @@ use App\Repositories\StudentRepository;
 use App\Models\StudentHistory;
 use App\Models\TaskRating;
 use App\Repositories\CertificateRepository;
+use App\Repositories\EnlargementRepository;
 use App\Repositories\GradeRepository;
 use App\Repositories\GroupStudentRepository;
 use App\Repositories\LessonPlanRepository;
@@ -101,26 +102,9 @@ class StudentController extends Controller
         $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>session() -> get('gradeSelected') ]);
         return view('student.index', ["students"=>$students, "schoolYearSF"=>$schoolYearSF, "gradeSF"=>$gradeSF]);
     }
-/*
-    public function orderBy($column) {
-        if(session()->get('StudentOrderBy[0]') == $column)
-            if(session()->get('StudentOrderBy[1]') == 'desc')   session()->put('StudentOrderBy[1]', 'asc');
-            else    session()->put('StudentOrderBy[1]', 'desc');
-        else {
-          session()->put('StudentOrderBy[4]', session()->get('StudentOrderBy[2]'));
-          session()->put('StudentOrderBy[2]', session()->get('StudentOrderBy[0]'));
-          session()->put('StudentOrderBy[0]', $column);
-          session()->put('StudentOrderBy[5]', session()->get('StudentOrderBy[3]'));
-          session()->put('StudentOrderBy[3]', session()->get('StudentOrderBy[1]'));
-          session()->put('StudentOrderBy[1]', 'asc');
-        }
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
-
-    public function change($id) {  session()->put('studentSelected', $id);  }
 
     public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
-        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, $view='') {
+        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, EnlargementRepository $enlargementRepo, $view='') {
         session() -> put('studentSelected', $id);
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
@@ -148,6 +132,7 @@ class StudentController extends Controller
             case 'zadania':     return $this -> showTasks();
             case 'deklaracje':  return $this -> showDeclarations();
             case 'egzaminy':    return $this -> showExams();
+            case 'rozszerzenia':return $this -> showEnlargements($enlargementRepo);
 /*
           case 'showEnlargements':
               return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
@@ -158,19 +143,24 @@ class StudentController extends Controller
               exit;
           break;
 */
-/*
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('studentView'));
         }
     }
 
     private function showInfo() {
-        $css = "student/studentGrades.css";
-        $js = "student/studentGrades.js";
         $studentInfo = view('student.showInfo', ["student"=>$this->student, "year"=>$this->year]);
-        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentInfo]);
+        return view('student.show', ["css"=>"", "js"=>"", "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$studentInfo]);
     }
 
+    private function showEnlargements($enlargementRepo) {
+        $enlargements = $enlargementRepo -> getFilteredAndSorted(0, $this->student->id);
+        $enlargementsTable = view('enlargement.tableForStudent', ["enlargements"=>$enlargements]);
+        $js = "enlargement/forStudent.js";
+        return view('student.show', ["css"=>"", "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$enlargementsTable, ]);
+    }
+
+    /*
     private function showGrades($studentGradeRepo, $studentNumberRepo, $schoolYearRepo) {
         $studentGrades = $studentGradeRepo -> getStudentGrades($this->student->id);
         $studentHistory = studentHistory :: where('student_id', $this->student->id) -> orderBy('date') -> get();
@@ -266,5 +256,22 @@ class StudentController extends Controller
         //$students = $studentRepo -> sortAndPaginateRecords($students);
         return view('student.searchResults', ["students"=>$students, "request"=>$request]);
     }
+
+    public function change($id) {  session()->put('studentSelected', $id);  }
 */
+
+    public function orderBy($column) {
+        if(session()->get('StudentOrderBy[0]') == $column)
+            if(session()->get('StudentOrderBy[1]') == 'desc')   session()->put('StudentOrderBy[1]', 'asc');
+            else    session()->put('StudentOrderBy[1]', 'desc');
+        else {
+          session()->put('StudentOrderBy[4]', session()->get('StudentOrderBy[2]'));
+          session()->put('StudentOrderBy[2]', session()->get('StudentOrderBy[0]'));
+          session()->put('StudentOrderBy[0]', $column);
+          session()->put('StudentOrderBy[5]', session()->get('StudentOrderBy[3]'));
+          session()->put('StudentOrderBy[3]', session()->get('StudentOrderBy[1]'));
+          session()->put('StudentOrderBy[1]', 'asc');
+        }
+        return redirect( $_SERVER['HTTP_REFERER'] );
+    }
 }

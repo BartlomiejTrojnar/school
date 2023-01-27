@@ -1,4 +1,4 @@
-/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.12.2022 ------------------------ */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.01.2023 ------------------------ */
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css?family=Kurale');
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
@@ -189,7 +189,7 @@ p.error, li.error, td.error {
     text-align: center;
 }
 p.error {
-    background: lightgreen;
+    background: orange;
 }
 
 

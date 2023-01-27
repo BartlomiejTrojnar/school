@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.01.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Enlargement;
 
@@ -16,8 +16,8 @@ class EnlargementRepository extends BaseRepository {
       if($grade_id) {   $records = $records -> where('student_grades.grade_id', '=', $grade_id);   }
       if($student_id) $records = $records -> where('enlargements.student_id', '=', $student_id);
       $records = $records -> groupBy('enlargements.id')
-         -> orderBy( session() -> get('EnlargementOrderBy[0]'), session() -> get('EnlargementOrderBy[1]') )
-         -> orderBy( session() -> get('EnlargementOrderBy[2]'), session() -> get('EnlargementOrderBy[3]') )
+         -> orderBy( 'student_id', 'asc' )
+         -> orderBy( 'choice', 'asc' )
          -> orderBy( session() -> get('EnlargementOrderBy[4]'), session() -> get('EnlargementOrderBy[5]') );
       return $records;
    }

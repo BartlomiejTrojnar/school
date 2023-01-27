@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Enlargement;
 
@@ -9,14 +9,16 @@ use Illuminate\Http\Request;
 
 class EnlargementController extends Controller
 {
-    public function create(StudentGradeRepository $studentGradeRepo, SubjectRepository $subjectRepo) {
+    public function create(Request $request, StudentGradeRepository $studentGradeRepo, SubjectRepository $subjectRepo) {
+        $subjects = $subjectRepo -> getActualAndSorted();
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>session()->get('subjectSelected')]);
+        if($request->version == "forStudent")   return view('enlargement.createForStudent', ["subjectSF"=>$subjectSF]);
+
         $grades[0] = session()->get('gradeSelected');
         $studentGrades = $studentGradeRepo -> getStudentsFromGrades($grades, 0);
         $students = [];
         foreach($studentGrades as $studentGrade) $students[] = $studentGrade->student;
         $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>session()->get('studentSelected')]);
-        $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>session()->get('subjectSelected')]);
         return view('enlargement.create', ["studentSF"=>$studentSF, "subjectSF"=>$subjectSF]);
     }
 
@@ -35,14 +37,16 @@ class EnlargementController extends Controller
 
     public function edit(Request $request, Enlargement $enlargement, StudentGradeRepository $studentGradeRepo, SubjectRepository $subjectRepo) {
         $enlargement = $enlargement -> find($request->id);
+        $subjects = $subjectRepo -> getActualAndSorted();
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$enlargement->subject_id]);
+        if($request->version == "forStudent") return view('enlargement.editForStudent', ["enlargement"=>$enlargement, "subjectSF"=>$subjectSF]);
+
         $grades[0] = session()->get('gradeSelected');
         $studentGrades = $studentGradeRepo -> getStudentsFromGrades($grades, 0);
         $students = [];
         foreach($studentGrades as $studentGrade) $students[] = $studentGrade->student;
         $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$enlargement->student_id]);
-        $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$enlargement->subject_id]);
-        return view('enlargement.edit', ["enlargement"=>$enlargement, "version"=>$request->version, "studentSF"=>$studentSF, "subjectSF"=>$subjectSF, "lp"=>$request->lp]);
+        return view('enlargement.edit', ["enlargement"=>$enlargement, "studentSF"=>$studentSF, "subjectSF"=>$subjectSF, "lp"=>$request->lp]);
     }
 
     public function update(Request $request, Enlargement $enlargement) {
@@ -66,6 +70,7 @@ class EnlargementController extends Controller
 
     public function refreshRow(Request $request, Enlargement $enlargement) {
         $enlargement = $enlargement -> find($request->id);
+        if($request->version == "forStudent") return view('enlargement.choiceForStudent', ["enlargement"=>$enlargement, "version"=>$request->version, "lp"=>$request->lp]);
         return view('enlargement.row', ["enlargement"=>$enlargement, "version"=>$request->version, "lp"=>$request->lp]);
     }
 }
