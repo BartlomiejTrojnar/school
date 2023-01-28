@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.01.2023 ------------------------ //
 // ------------------------- wydarzenia dla widoku klasa/rozszerzenia  ------------------------- //
 const FADE_OUT=575, SLIDE_UP=1250, SLIDE_DOWN=1250;
 const NUMBER_OF_FIELDS=7, TABLE_NAME="#enlargements", DATA_NAME="enlargement_id", INPUT_NAME="level", ROUTE_NAME="rozszerzenie";
@@ -6,7 +6,6 @@ const NUMBER_OF_FIELDS=7, TABLE_NAME="#enlargements", DATA_NAME="enlargement_id"
 import '../patternForIndex.js';
 import { CreateRowService, RefreshRowService } from '../patternForIndex.js';
 import { EditRowService } from '../patternForIndex.js';
-
 
 
 // ------------------- odświeżanie wiersza tabeli z informacjami o rekordzie ------------------- //
