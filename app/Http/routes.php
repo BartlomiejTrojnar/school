@@ -120,7 +120,10 @@ Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::delete('/nauczany_przedmiot/delete/{id}', 'TaughtSubjectController@destroy');
 // -------------------------------------------------------------------------------------------------------- //
 
+Route::post('/rozszerzenie/exchangeStore', array('as'=>'rozszerzenie.exchangeStore', 'uses'=>'EnlargementController@exchangeStore'));
 Route::resource('/rozszerzenie', 'EnlargementController');
+Route::get('/rozszerzenie/exchange/{id}', 'EnlargementController@exchange');
+Route::put('/rozszerzenie/exchangeUpdate/{id}', 'EnlargementController@exchangeUpdate');
 Route::post('/rozszerzenie/refreshRow', 'EnlargementController@refreshRow');
 
 Route::get('/grupa/editComments', array('as'=>'grupa.editComments', 'uses'=>'GroupController@editComments'));

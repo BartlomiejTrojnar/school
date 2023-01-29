@@ -1,19 +1,28 @@
 <li data-enlargement_id="{{ $enlargement->id }}">
-<table class="editForm">
+<table class="exchangeForm">
 <!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 *********************** -->
    <tr>
+      <th></th>
       <th>przedmiot</th>
       <th>poziom</th>
       <th>data wyboru</th>
       <th>data rezygnacji</th>
-      <td rowspan="2" class="buttons">
+      <td rowspan="3" class="buttons">
          <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
          <button class="update btn btn-primary"       data-enlargement_id="{{ $enlargement->id }}">zapisz zmiany</button>
          <button class="cancelUpdate btn btn-primary" data-enlargement_id="{{ $enlargement->id }}">anuluj</button>
       </td>
    </tr>
-   <tr class="editRow" data-enlargement_id="{{ $enlargement->id }}">
-      <form action="{{ route('rozszerzenie.update', $enlargement->id) }}" method="post" role="form">
+   <tr>
+      <th>dotychczasowy wybór</th>
+      <td>{{ $enlargement->subject->name }}</td>
+      <td>{{ $enlargement->level }}</td>
+      <td>{{ $enlargement->choice }}</td>
+      <td>{{ $enlargement->resignation }}</td>
+   </tr>
+   <tr class="exchangeRow" data-enlargement_id="{{ $enlargement->id }}">
+      <th>zamień na</th>
+      <form action="{{ route('rozszerzenie.exchangeStore', $enlargement->id) }}" method="post" role="form">
          {{ csrf_field() }}
          {{ method_field('PATCH') }}
          <td>

@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 27.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 ------------------------ //
 // ------------------------- wydarzenia dla widoku uczeń/rozszerzenia  ------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const ROUTE_NAME="rozszerzenie";
@@ -9,6 +9,15 @@ function clickShowCreateFormButton() {
     $('#showCreateForm').click(function(){
         var CreateForm = new Form();
         CreateForm.getCreateForm();   // uruchomienie metody pobierającej formularz
+    });
+}
+
+// --------------- kliknięcie przycisku uruchamiającego formularz zamiany (dodania nowego) rozszerzenia ---------------- //
+function clickShowExchangeFormButton() {
+    $('#enlargementsSection').delegate('button.exchange', 'click', function() {     // tworzenie formularza modyfikowania
+        var ExchangeForm = new Form();
+        var id = $(this).data('enlargement_id');
+        ExchangeForm.getExchangeForm(id);
     });
 }
 
@@ -43,6 +52,18 @@ class Form {
             success: function(result) { CreateForm.showSuccess(result); },
             error: function() {  CreateForm.showError(); },
         });
+    }
+
+    getExchangeForm(id) {   // pobieranie widoku formularza zamiany
+        var ExchangeForm = new ShowForm();
+        $.ajax({
+            type: "GET",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/exchange/"+id,
+            data: { id: id },
+            success: function(result) { ExchangeForm.showSuccessForExchange(id, result); },
+            error: function() { ExchangeForm.showErrorForExchange(id); },
+         });
     }
 
     getEditForm(id) {   // pobieranie widoku formularza modyfikowania
@@ -92,6 +113,34 @@ class ShowForm {
         });
     }
 
+    showErrorForExchange(id) {      // nieudane pobranie widoku formularza zamiany
+        var communique = "Nie mogę utworzyć formularza do zamiany rozszerzenia.";
+        var error = '<li class="error">' +communique+ '</li>';
+        $('li[data-enlargement_id="' +id+ '"]').before(error);
+        $('li.error').hide().slideDown(SLIDE_DOWN);
+    }
+
+    showSuccessForExchange(id, result) {    // udane pobranie widoku formularza zamiany: pokazanie formularza na stronie
+        $('li[data-enlargement_id="' +id+ '"]').replaceWith(result);
+        $('table.editForm').hide().show(FADE_IN);
+        $('select[name="subject_id"]').focus();
+        this.clickExchangeFormButtons();
+    }
+
+    clickExchangeFormButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
+        $('.exchangeForm button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
+            var id = $(this).data("enlargement_id");
+            var result = new ShowResultForOperation(id);
+            $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.exchangeSuccess() });
+        });
+
+        $('.exchangeForm button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
+            var id = $(this).data("enlargement_id");
+            var enlargement = new Enlargement(id);
+            $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { enlargement.exchange(); });
+        });
+    }
+
     showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
         var communique = "Nie mogę utworzyć formularza do zmiany informacji o rozszerzeniu.";
         var error = '<li class="error">' +communique+ '</li>';
@@ -133,14 +182,49 @@ class Enlargement {
         var level       = $('#createForm input[name="level"]').val();
         var choice      = $('#createForm input[name="choice"]').val();
         var resignation = $('#createForm input[name="resignation"]').val();
-        var ShowResult = new ShowResultForOperation;
+        var ShowResult = new ShowResultForOperation();
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME,
             data: { student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
-            success: function(id) { ShowResult.addSuccess(id); },
+            success: function(id) { ShowResult.addSuccess(id, choice); },
             error: function() { ShowResult.addError(); },
+        });
+    }
+
+    exchange() {  // zamiana rozszerzenia
+        var id = this.id;
+        var student_id  = $('tr[data-enlargement_id="' +id+ '"] input[name="student_id"]').val();
+        var subject_id  = $('tr[data-enlargement_id="' +id+ '"] select[name="subject_id"]').val();
+        var level       = $('tr[data-enlargement_id="' +id+ '"] input[name="level"]').val();
+        var choice      = $('tr[data-enlargement_id="' +id+ '"] input[name="choice"]').val();
+        var resignation = $('tr[data-enlargement_id="' +id+ '"] input[name="resignation"]').val();
+        var ShowResult = new ShowResultForOperation(id);
+        // dodanie nowego rozszerzenia
+        $.ajax({
+            method: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME,
+            data: { student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
+            success: function(id) { ShowResult.addSuccess(id, choice); },
+            error: function() { ShowResult.addError(); },
+        });
+        // zmiana daty końcowej starego rozszerzenia
+        var day = parseInt(choice.substr(8,2));
+        var mon = parseInt(choice.substr(5,2))-1;
+        var year = parseInt(choice.substr(0,4));
+        var oldResignation = new Date(year, mon, day);
+        oldResignation.setDate(oldResignation.getDate() - 1);
+        day = oldResignation.getDate();  mon=oldResignation.getMonth()+1; year = oldResignation.getFullYear();
+        resignation = year + '-' + mon + '-' + day;
+        $.ajax({
+            method: "PUT",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/exchangeUpdate/"+id,
+            data: { id: id, resignation: resignation },
+            success: function() { ShowResult.exchangeSuccess(); },
+            error:   function() { ShowResult.exchangeError() },
         });
     }
 
@@ -157,7 +241,7 @@ class Enlargement {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/"+id,
             data: { id: id, student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
-            success: function() { ShowResult.updateSuccess() },
+            success: function() { ShowResult.updateSuccess(choice) },
             error:   function() { ShowResult.updateError() },
         });
     }
@@ -187,15 +271,33 @@ class ShowResultForOperation {
         $('p.error').hide().slideDown(SLIDE_DOWN);
     }
 
-    addSuccess(id) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
+    addSuccess(id, choice) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
         var Insert = new InsertNewEnlargementToHTML();
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
             data: { id: id, lp: 0, version: "forStudent" },
-            success: function(result) { Insert.showSuccess(result); },
+            success: function(result) { Insert.showSuccess(result, choice); },
             error: function() {  Insert.showError();  },
+        });
+    }
+
+    exchangeError() {     // nieudane zapisane zamiany wyboru rozszerzenia
+        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.');
+        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
+    }
+
+    exchangeSuccess() {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
+        var id = this.id;
+        var exchangeElement = new ExchangeElementInHTML(id);
+        $.ajax({
+            method: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            data: { id: id, lp: 0, version: "forStudent" },
+            success: function(result) { exchangeElement.showSuccess(result); },
+            error: function() {  exchangeElement.showError();  },
         });
     }
 
@@ -204,7 +306,7 @@ class ShowResultForOperation {
         $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
     }
 
-    updateSuccess() {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
+    updateSuccess(choice=0) {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
         var id = this.id;
         var updateElement = new UpdateElementInHTML(id);
         $.ajax({
@@ -212,7 +314,7 @@ class ShowResultForOperation {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
             data: { id: id, lp: 0, version: "forStudent" },
-            success: function(result) { updateElement.showSuccess(result); },
+            success: function(result) { updateElement.showSuccess(result, choice); },
             error: function() {  updateElement.showError();  },
         });
     }
@@ -225,7 +327,10 @@ class ShowResultForOperation {
     destroySuccess() {  // udane usunięcie wyboru rozszerzenia: usunięcie ze strony informacji o rekordzie
         var id = this.id;
         $.when( $('li[data-enlargement_id="' +this.id+ '"]').slideUp(SLIDE_UP) ).then(function() {
+            var destroyDIV = $('li[data-enlargement_id="' +id+ '"]').parent().parent();
             $('li[data-enlargement_id="' +id+ '"]').remove();
+            if( $(destroyDIV).children('ul').children('li').length == 0 )
+                $.when( $(destroyDIV).slideUp(SLIDE_UP) ).then(function() { $(destroyDIV).remove() });
         });
     }
 }
@@ -237,8 +342,46 @@ class InsertNewEnlargementToHTML {
         $('p.error').hide().slideDown(SLIDE_DOWN);
     }
 
-    showSuccess(result) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
-        $('#showCreateForm').before(result);
+    showSuccess(result, choice) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
+        var isAdd = false;
+        $('#enlargementsSection div').each(function() {
+            if( !isAdd && $(this).data('choice') > choice ) {
+                var newDIV = '<div data-choice="' +choice+ '">';
+                newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+                newDIV += result + '</ul></div>';
+                $(this).before(newDIV);
+                $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+                isAdd = true;    
+            }
+            if( $(this).data('choice') == choice ) {
+                $(this).children('ul').append(result);
+                isAdd = true;
+            }
+        });
+        if(!isAdd) {
+            var newDIV = '<div data-choice="' +choice+ '">';
+            newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+            newDIV += result + '</ul></div>';
+            $('#showCreateForm').before(newDIV);
+            $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+        }
+    }
+}
+
+// ---------------- odświeżenie informacji o zmienionym rekordzie w kodzie HTML ---------------- //
+class ExchangeElementInHTML {
+    constructor(id) {
+        this.id = id;
+    }
+
+    showError() {           // nieudane pobranie widoku z informacjami o zmienionym rekordzie
+        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się odświeżyć pola z wyborami rozszerzeń. Odśwież stronę by zobaczyć wyniki.');
+        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
+    }
+
+    showSuccess(result) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
+        $('li[data-enlargement_id="' +this.id+ '"]').replaceWith(result);
+        $('li[data-enlargement_id="' +this.id+ '"]').hide().slideDown(SLIDE_DOWN);
     }
 }
 
@@ -253,9 +396,37 @@ class UpdateElementInHTML {
         $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
     }
 
-    showSuccess(result) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
-        $('li[data-enlargement_id="' +this.id+ '"]').replaceWith(result);
-        $('li[data-enlargement_id="' +this.id+ '"]').hide().show(SLIDE_DOWN);    
+    showSuccess(result, choice) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
+        var oldChoice = $('li[data-enlargement_id="' +this.id+ '"]').parent().parent().children('header').children('time').html();
+        if(choice==0 || choice==oldChoice) {
+            $('li[data-enlargement_id="' +this.id+ '"]').replaceWith(result);
+            $('li[data-enlargement_id="' +this.id+ '"]').hide().slideDown(SLIDE_DOWN);
+            return;
+        }
+        $('li[data-enlargement_id="' +this.id+ '"]').remove();
+        var isAdd = false;
+        $('#enlargementsSection div').each(function() {
+            if( $(this).children('ul').children('li').length == 0 ) $.when( $(this).slideUp(SLIDE_UP) ).then(function() { $(this).remove() });
+            if( !isAdd && $(this).data('choice') > choice ) {
+               var newDIV = '<div data-choice="' +choice+ '">';
+               newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+               newDIV += result + '</ul></div>';
+               $(this).before(newDIV);
+               $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+               isAdd = true;    
+            }
+            if( $(this).data('choice') == choice ) {
+                $(this).children('ul').append(result);
+                isAdd = true;
+            }
+        });
+        if(!isAdd) {
+            var newDIV = '<div data-choice="' +choice+ '">';
+            newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+            newDIV += result + '</ul></div>';
+            $('#showCreateForm').before(newDIV);
+            $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+        }
     }
 }
 
@@ -270,6 +441,7 @@ function clickError() {     // kliknięcie dowolnego obiektu o klasie .error - u
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     clickShowCreateFormButton();
+    clickShowExchangeFormButton();
     clickShowEditFormButton();
     clickDestroyButton();
     clickError();

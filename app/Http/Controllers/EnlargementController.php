@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Enlargement;
 
@@ -31,6 +31,21 @@ class EnlargementController extends Controller
         $enlargement->choice = $request->choice;
         if($request->resignation=="")   $enlargement->resignation = NULL;
         else $enlargement->resignation = $request->resignation;
+        $enlargement -> save();
+        return $enlargement->id;
+    }
+
+    public function exchange(Request $request, Enlargement $enlargement, StudentGradeRepository $studentGradeRepo, SubjectRepository $subjectRepo) {
+        $enlargement = $enlargement -> find($request->id);
+        $subjects = $subjectRepo -> getActualAndSorted();
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$enlargement->subject_id]);
+        return view('enlargement.exchange', ["enlargement"=>$enlargement, "subjectSF"=>$subjectSF]);
+    }
+
+    public function exchangeUpdate(Request $request, Enlargement $enlargement) {
+        $enlargement = $enlargement -> find($request->id);
+        $this->validate($request, [ 'resignation' => 'required', ]);
+        $enlargement->resignation = $request->resignation;
         $enlargement -> save();
         return $enlargement->id;
     }

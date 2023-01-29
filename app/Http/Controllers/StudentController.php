@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -156,8 +156,9 @@ class StudentController extends Controller
     private function showEnlargements($enlargementRepo) {
         $enlargements = $enlargementRepo -> getFilteredAndSorted(0, $this->student->id);
         $enlargementsTable = view('enlargement.tableForStudent', ["enlargements"=>$enlargements]);
+        $css = "enlargement/forStudent.css";
         $js = "enlargement/forStudent.js";
-        return view('student.show', ["css"=>"", "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$enlargementsTable, ]);
+        return view('student.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$enlargementsTable, ]);
     }
 
     /*

@@ -1,5 +1,5 @@
 <tr data-enlargement_id="{{ $enlargement->id }}">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.01.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 *********************** -->
    <td>{{ $lp }}</td>
    <td>{{ $enlargement->student->first_name }} {{ $enlargement->student->last_name }}</td>
    <td>{{ $enlargement->subject->name }}</td>
