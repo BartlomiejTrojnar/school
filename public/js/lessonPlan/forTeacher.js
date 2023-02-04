@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ------------------------ //
 // ---------------- wydarzenia na stronie wyświetlania planu lekcji nauczyciela ---------------- //
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
@@ -251,14 +251,31 @@ function changeAndFormatDate(date, day) {  // zmiana daty o podaną liczbę dni 
 
 // po zmianie widocznej na stronie daty widoku
 function dateViewChange() {
-    $('#dateView').bind('blur', function() {
+    var newDate = "";
+    var oldDate = "";
+
+    $('#dateView').bind('focusin', function() {
+        $('#dateViewOld').val( newDate );
+    });
+
+    $('#dateView').bind('focusout', function() {
+        newDate = $('#dateView').val();
+        oldDate = $('#dateViewOld').val();
+        oldYear = oldDate.substring(0, 4);
+        if( parseInt(oldDate.substring(5, 7)) >= 8 ) oldYear++;
         // zapamiętanie wybranej daty widoku
         $.ajax({
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/rememberDates",
             data: { dateView: $('#dateView').val() },
-            success: function()  {  showOrHideLesson();  },
+            success: function()  {
+                newYear = newDate.substring(0, 4);
+                if( parseInt(newDate.substring(5, 7)) >= 8 ) newYear++;
+                $('#przyklad').html( oldYear + " -> " + newYear );
+                if( newYear != oldYear && oldYear != "" ) setTimeout(function() {    window.location.reload(1); }, 500);
+                showOrHideLesson();
+            },
         });
     });
 }
@@ -266,10 +283,10 @@ function dateViewChange() {
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     showOrHideLesson();
-    dragTeacherGroup();
-    dragLesson();
-    dropInLessonPlan();
-    dropLessonInTeacherGroupList();
-    dropLessonInCompleteRemoveField();
+    // dragTeacherGroup();
+    // dragLesson();
+    // dropInLessonPlan();
+    // dropLessonInTeacherGroupList();
+    // dropLessonInCompleteRemoveField();
     dateViewChange();
 });

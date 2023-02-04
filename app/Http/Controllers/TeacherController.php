@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -98,11 +98,11 @@ class TeacherController extends Controller
         list($this->previous, $this->next) = $teacherRepo -> nextAndPreviousRecordId($teachers, $id);
 
         switch( session()->get('teacherView') ) {
-            case 'showInfo':        return $this -> showInfo();
-            case 'showSubjects':    return $this -> showSubjects();
-            case 'showGroups':      return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
-            case 'showGrades':      return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
-            case 'showLessonPlans': return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
+            case 'info':        return $this -> showInfo();
+            case 'przedmioty':  return $this -> showSubjects();
+            case 'grupy':       return $this -> showGroups($syRepo, $gradeRepo, $subjectRepo, $groupRepo);
+            case 'klasy':       return $this -> showGrades($syRepo, $gradeRepo, $schoolRepo);
+            case 'planlekcji':  return $this -> showLessonPlans($groupRepo, $lessonPlanRepo, $syRepo);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('teacherView'));
         }

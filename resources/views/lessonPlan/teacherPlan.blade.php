@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -8,6 +8,8 @@
 <section id="lessonPlanHeader" style="text-align: center;">
    <strong>plan lekcji dla daty:
       <input type="date" id="dateView" value="{{ $dateView }}" />
+      <input type="date" id="dateViewOld" value="" style="background: #fbb; border: 3px solid #b00; box-shadow: 4px 4px #000;" />
+      <span id="przyklad"></span>
    </strong>
    <div id="completeRemove">upuść lekcję tutaj by całkiem usunąć</div>
    <ul id="schoolYearEnds" class="hidden">
