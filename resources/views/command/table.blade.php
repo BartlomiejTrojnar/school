@@ -1,6 +1,6 @@
 <!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
 @section('java-script')
-   <script language="javascript" type="text/javascript" src="{{ url('public/js/command/operations.js') }}"></script>
+   <script language="javascript" type="module" src="{{ url('public/js/command/forTask.js') }}"></script>
 @endsection
 
 <h2>polecenia</h2>

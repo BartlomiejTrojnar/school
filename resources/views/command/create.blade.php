@@ -1,4 +1,4 @@
-<tr id="createRow" style="opacity: 0.01; margin-top: -50px;">
+<tr id="createRow">
 <!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
    <form action="{{ route('polecenie.store') }}" method="post" role="form">
       {{ csrf_field() }}
