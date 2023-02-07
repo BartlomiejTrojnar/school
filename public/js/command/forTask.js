@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 ------------------------ //
 // ---------------------------- wydarzenia dla widoku zadanie/info  ---------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const ROUTE_NAME="polecenie", NUMBER_OF_FIELDS = 8, TABLE_NAME="#commands", DATA_NAME="command_id";
@@ -12,33 +12,24 @@ function clickShowCreateRowButton() {
     });
 }
 
-// --------------- kliknięcie przycisku uruchamiającego formularz zamiany (dodania nowego) rozszerzenia ---------------- //
-// function clickShowExchangeFormButton() {
-    // $('#enlargementsSection').delegate('button.exchange', 'click', function() {     // tworzenie formularza modyfikowania
-        // var ExchangeForm = new Form();
-        // var id = $(this).data('enlargement_id');
-        // ExchangeForm.getExchangeForm(id);
-    // });
-// }
-
 // --------------- kliknięcie przycisku uruchamiającego formularz modyfikowania ---------------- //
-// function clickShowEditFormButton() {
-    // $('#enlargementsSection').delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
-        // var EditForm = new Form();
-        // var id = $(this).data('enlargement_id');
-        // EditForm.getEditForm(id);
-    // });
-// }
+function clickShowEditFormButton() {
+    $('#commands').delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
+        var EditForm = new Form();
+        var id = $(this).data(DATA_NAME);
+        var lp = $('tr[data-' +DATA_NAME+ '="'+id+'"]').children(":first").html();
+        EditForm.getEditForm(id, lp);
+    });
+}
 
 // --------------------------- kliknięcie przycisku usuwania rekordu --------------------------- //
-// function clickDestroyButton() {
-    // $('#enlargementsSection').delegate('button.destroy', 'click', function() {
-        // var id = $(this).data("enlargement_id");
-        // var enlargement = new Enlargement(id);
-        // enlargement.delete();
-    // });
-// }
-
+function clickDestroyButton() {
+    $('#commands').delegate('button.destroy', 'click', function() {
+        var id = $(this).data(DATA_NAME);
+        var command = new Command(id);
+        command.delete();
+    });
+}
 
 // ------------------------------- pobieranie widoku formularzy -------------------------------- //
 class Form {
@@ -54,17 +45,17 @@ class Form {
         });
     }
 
-    // getEditForm(id) {   // pobieranie widoku formularza modyfikowania
-        // var EditForm = new ShowForm();
-        // $.ajax({
-            // type: "GET",
-            // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            // url: "http://localhost/school/" +ROUTE_NAME+ "/"+id+"/edit",
-            // data: { id: id, lp: 0, version: "forStudent" },
-            // success: function(result) { EditForm.showSuccessForEdit(id, result); },
-            // error: function() { EditForm.showErrorForEdit(id); },
-        //  });
-    // }
+    getEditForm(id, lp) {   // pobieranie widoku formularza modyfikowania
+        var EditRow = new ShowRow();
+        $.ajax({
+            type: "GET",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/"+id+"/edit",
+            data: { id: id, lp: lp },
+            success: function(result) { EditRow.showSuccessForEdit(id, result); },
+            error: function() { EditRow.showErrorForEdit(id); },
+         });
+    }
 }
 
 // -------------------- wyświetlanie widoku formularza lub błędu na stronie -------------------- //
@@ -101,63 +92,37 @@ class ShowRow {
         });
     }
 
-    // showErrorForExchange(id) {      // nieudane pobranie widoku formularza zamiany
-        // var communique = "Nie mogę utworzyć formularza do zamiany rozszerzenia.";
-        // var error = '<li class="error">' +communique+ '</li>';
-        // $('li[data-enlargement_id="' +id+ '"]').before(error);
-        // $('li.error').hide().slideDown(SLIDE_DOWN);
-    // }
+    showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
+        var communique = "Nie mogę utworzyć formularza do zmiany informacji o poleceniu.";
+        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +DATA_NAME+ '="'+id+'"]').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
+    }
 
-    // showSuccessForExchange(id, result) {    // udane pobranie widoku formularza zamiany: pokazanie formularza na stronie
-        // $('li[data-enlargement_id="' +id+ '"]').replaceWith(result);
-        // $('table.editForm').hide().show(FADE_IN);
-        // $('select[name="subject_id"]').focus();
-        // this.clickExchangeFormButtons();
-    // }
+    showSuccessForEdit(id, result) {    // udane pobranie widoku formularza dodawania: pokazanie formularza na stronie
+        $.when( $('tr[data-' +DATA_NAME+ '="'+id+'"]').fadeOut(FADE_OUT) ).then(function() {
+            $('tr[data-' +DATA_NAME+ '="'+id+'"]').replaceWith(result);
+            $('tr.editRow[data-' +DATA_NAME+ '="'+id+'"]').hide().fadeIn(FADE_IN);
+            $('input[name="number"]').focus();
+            ShowRow.clickEditRowButtons();
+        });
+    }
 
-    // clickExchangeFormButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
-        // $('.exchangeForm button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
-            // var id = $(this).data("enlargement_id");
-            // var result = new ShowResultForOperation(id);
-            // $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.exchangeSuccess() });
-        // });
+    static clickEditRowButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
+        $('.editRow button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
+            var id = $(this).data(DATA_NAME);
+            var lp = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="lp"]').val();
+            var result = new ShowResultForOperation(id);
+            $.when( $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.updateSuccess(lp) });
+        });
 
-        // $('.exchangeForm button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
-            // var id = $(this).data("enlargement_id");
-            // var enlargement = new Enlargement(id);
-            // $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { enlargement.exchange(); });
-        // });
-    // }
-
-    // showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
-        // var communique = "Nie mogę utworzyć formularza do zmiany informacji o rozszerzeniu.";
-        // var error = '<li class="error">' +communique+ '</li>';
-        // $('li[data-enlargement_id="' +id+ '"]').before(error);
-        // $('li.error').hide().slideDown(SLIDE_DOWN);
-    // }
-
-    // showSuccessForEdit(id, result) {    // udane pobranie widoku formularza dodawania: pokazanie formularza na stronie
-        // $('li[data-enlargement_id="' +id+ '"]').replaceWith(result);
-        // $('table.editForm').hide().show(FADE_IN);
-        // $('select[name="subject_id"]').focus();
-        // this.clickEditFormButtons();
-    // }
-
-    // clickEditFormButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
-        // $('.editForm button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
-            // var id = $(this).data("enlargement_id");
-            // var result = new ShowResultForOperation(id);
-            // $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.updateSuccess() });
-        // });
-
-        // $('.editForm button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
-            // var id = $(this).data("enlargement_id");
-            // var enlargement = new Enlargement(id);
-            // $.when( $('li[data-enlargement_id="' +id+ '"]').hide(FADE_OUT) ).then( function() { enlargement.update(); });
-        // });
-    // }
+        $('.editRow button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
+            var id = $(this).data(DATA_NAME);
+            var command = new Command(id);
+            $.when( $('li[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { command.update(); });
+        });
+    }
 }
-
 
 // ---------------------- operacje na rekordach dotyczących rozszerzenia ----------------------- //
 class Command {
@@ -171,7 +136,8 @@ class Command {
         var command_name= $('#createRow input[name="command"]').val();
         var description = $('#createRow input[name="description"]').val();
         var points      = $('#createRow input[name="points"]').val();
-        var lp = $('#countCommands').val();
+        $('tr#createRow').remove();
+        var lp = parseInt($('#countCommands').val());
         var ShowResult = new ShowResultForOperation();
         $.ajax({
             method: "POST",
@@ -182,56 +148,22 @@ class Command {
             error: function() { ShowResult.addError(); },
         });
     }
-/*
-    exchange() {  // zamiana rozszerzenia
-        var id = this.id;
-        var student_id  = $('tr[data-enlargement_id="' +id+ '"] input[name="student_id"]').val();
-        var subject_id  = $('tr[data-enlargement_id="' +id+ '"] select[name="subject_id"]').val();
-        var level       = $('tr[data-enlargement_id="' +id+ '"] input[name="level"]').val();
-        var choice      = $('tr[data-enlargement_id="' +id+ '"] input[name="choice"]').val();
-        var resignation = $('tr[data-enlargement_id="' +id+ '"] input[name="resignation"]').val();
-        var ShowResult = new ShowResultForOperation(id);
-        // dodanie nowego rozszerzenia
-        $.ajax({
-            method: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME,
-            data: { student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
-            success: function(id) { ShowResult.addSuccess(id, choice); },
-            error: function() { ShowResult.addError(); },
-        });
-        // zmiana daty końcowej starego rozszerzenia
-        var day = parseInt(choice.substr(8,2));
-        var mon = parseInt(choice.substr(5,2))-1;
-        var year = parseInt(choice.substr(0,4));
-        var oldResignation = new Date(year, mon, day);
-        oldResignation.setDate(oldResignation.getDate() - 1);
-        day = oldResignation.getDate();  mon=oldResignation.getMonth()+1; year = oldResignation.getFullYear();
-        resignation = year + '-' + mon + '-' + day;
-        $.ajax({
-            method: "PUT",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME+ "/exchangeUpdate/"+id,
-            data: { id: id, resignation: resignation },
-            success: function() { ShowResult.exchangeSuccess(); },
-            error:   function() { ShowResult.exchangeError() },
-        });
-    }
 
     update() {  // zapisywanie zmian rekordu
         var id = this.id;
-        var student_id  = $('tr[data-enlargement_id="' +id+ '"] input[name="student_id"]').val();
-        var subject_id  = $('tr[data-enlargement_id="' +id+ '"] select[name="subject_id"]').val();
-        var level       = $('tr[data-enlargement_id="' +id+ '"] input[name="level"]').val();
-        var choice      = $('tr[data-enlargement_id="' +id+ '"] input[name="choice"]').val();
-        var resignation = $('tr[data-enlargement_id="' +id+ '"] input[name="resignation"]').val();
+        var task_id     = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="task_id"]').val();
+        var number      = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="number"]').val();
+        var command_name= $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="command"]').val();
+        var description = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="description"]').val();
+        var points      = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="points"]').val();
+        var lp          = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="lp"]').val();
         var ShowResult = new ShowResultForOperation(id);
         $.ajax({
             method: "PUT",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/"+id,
-            data: { id: id, student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
-            success: function() { ShowResult.updateSuccess(choice) },
+            data: { id: id, task_id: task_id, number: number, command: command_name, description: description, points: points },
+            success: function() { ShowResult.updateSuccess(lp) },
             error:   function() { ShowResult.updateError() },
         });
     }
@@ -248,7 +180,6 @@ class Command {
         });
 
     }
-*/
 }
 
 // ------------------------- pokazywanie wyników operacji na rekordach ------------------------- //
@@ -258,7 +189,6 @@ class ShowResultForOperation {
     }
 
     addError() {        // nieudane dodanie nowego wyboru rozszerzenia
-        $('tr#createRow').remove();
         var communique = "Nie udało się dodać polecenia.";
         var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
         $(TABLE_NAME+ ' tr.create').before(error);
@@ -266,55 +196,49 @@ class ShowResultForOperation {
     }
 
     addSuccess(id, lp) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
-        $('tr#createRow').remove();
-        // $('tr.create').before(result);
-        // $('tr[data-' +DATA_NAME+ '="' +id+ '"]').fadeIn(FADE_IN);
         var Insert = new InsertNewCommandToHTML();
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: lp },
+            data: { id: id, lp: lp+1 },
             success: function(result) { Insert.showSuccess(result); },
             error: function() {  Insert.showError();  },
         });
     }
 
-    // updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
-        // $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.');
-        // $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
-    // }
+    updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
+        var communique = "Błąd w trakcie modyfikowania polecenia.";
+        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +DATA_NAME+ '=' +this.id+ ']').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
+    }
 
-    // updateSuccess(choice=0) {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
-        // var id = this.id;
-        // var updateElement = new UpdateElementInHTML(id);
-        // $.ajax({
-            // method: "POST",
-            // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            // url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            // data: { id: id, lp: 0, version: "forStudent" },
-            // success: function(result) { updateElement.showSuccess(result, choice); },
-            // error: function() {  updateElement.showError();  },
-        // });
-    // }
+    updateSuccess(lp) {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
+        var updateElement = new UpdateElementInHTML(this.id);
+        $.ajax({
+            method: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            data: { id: this.id, lp: lp },
+            success: function(result) { updateElement.showSuccess(result); },
+            error: function() {  updateElement.showError();  },
+        });
+    }
 
-    // destroyError() {    // nieudane usunięcie wyboru rozszerzenia
-        // $('li[data-enlargement_id="' +this.id+ '"]').before('<li class="error">Nie udało się usunąć wyboru rozszerzenia.</li>');
-        // $('li.error').hide().slideDown(SLIDE_DOWN);
-    // }
+    destroyError() {    // nieudane usunięcie wyboru rozszerzenia
+        var communique = "Błąd w trakcie usuwania polecenia.";
+        var error = '<tr data-' +DATA_NAME+ '="' +this.id+ '"><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +DATA_NAME+ '=' +this.id+ ']').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
+    }
 
-    // destroySuccess() {  // udane usunięcie wyboru rozszerzenia: usunięcie ze strony informacji o rekordzie
-        // var id = this.id;
-        // $.when( $('li[data-enlargement_id="' +this.id+ '"]').slideUp(SLIDE_UP) ).then(function() {
-            // var destroyDIV = $('li[data-enlargement_id="' +id+ '"]').parent().parent();
-            // $('li[data-enlargement_id="' +id+ '"]').remove();
-            // if( $(destroyDIV).children('ul').children('li').length == 0 )
-                // $.when( $(destroyDIV).slideUp(SLIDE_UP) ).then(function() { $(destroyDIV).remove() });
-        // });
-    // }
+    destroySuccess() {  // udane usunięcie wyboru rozszerzenia: usunięcie ze strony informacji o rekordzie
+        var id = this.id;
+        $.when( $('tr[data-' +DATA_NAME+ '=' +id+ ']').fadeOut(FADE_OUT) )
+            .then( function() {  $('tr[data-' +DATA_NAME+ '=' +id+ ']').remove();  });
+    }
 }
-
-
 
 // ------------------- wstawienie informacji o nowym rekordzie do kodu HTML -------------------- //
 class InsertNewCommandToHTML {
@@ -326,48 +250,8 @@ class InsertNewCommandToHTML {
     }
 
     showSuccess(result) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
-        alert(result);
-        // var isAdd = false;
-        // $('#enlargementsSection div').each(function() {
-            // if( !isAdd && $(this).data('choice') > choice ) {
-                // var newDIV = '<div data-choice="' +choice+ '">';
-                // newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-                // newDIV += result + '</ul></div>';
-                // $(this).before(newDIV);
-                // $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-                // isAdd = true;    
-            // }
-            // if( $(this).data('choice') == choice ) {
-                // $(this).children('ul').append(result);
-                // isAdd = true;
-            // }
-        // });
-        // if(!isAdd) {
-            // var newDIV = '<div data-choice="' +choice+ '">';
-            // newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-            // newDIV += result + '</ul></div>';
-            // $('#showCreateForm').before(newDIV);
-            // $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-        // }
-    }
-}
-
-
-/*
-// ---------------- odświeżenie informacji o zmienionym rekordzie w kodzie HTML ---------------- //
-class ExchangeElementInHTML {
-    constructor(id) {
-        this.id = id;
-    }
-
-    showError() {           // nieudane pobranie widoku z informacjami o zmienionym rekordzie
-        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się odświeżyć pola z wyborami rozszerzeń. Odśwież stronę by zobaczyć wyniki.');
-        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
-    }
-
-    showSuccess(result) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
-        $('li[data-enlargement_id="' +this.id+ '"]').replaceWith(result);
-        $('li[data-enlargement_id="' +this.id+ '"]').hide().slideDown(SLIDE_DOWN);
+        $('tr.create').before(result);
+        $('tr[data-' +DATA_NAME+ '="' +id+ '"]').fadeIn(FADE_IN);
     }
 }
 
@@ -378,233 +262,33 @@ class UpdateElementInHTML {
     }
 
     showError() {           // nieudane pobranie widoku z informacjami o zmienionym rekordzie
-        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się odświeżyć pola z wyborami rozszerzeń. Odśwież stronę by zobaczyć wyniki.');
-        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
+        var communique = "Nie udało się odświeżyć wiersza z poleceniem. Odśwież stronę by zobaczyć wyniki.";
+        var error = '<tr data-' +DATA_NAME+ '="' +this.id+ '"><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +DATA_NAME+ '=' +this.id+ ']').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
     }
 
-    showSuccess(result, choice) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
-        var oldChoice = $('li[data-enlargement_id="' +this.id+ '"]').parent().parent().children('header').children('time').html();
-        if(choice==0 || choice==oldChoice) {
-            $('li[data-enlargement_id="' +this.id+ '"]').replaceWith(result);
-            $('li[data-enlargement_id="' +this.id+ '"]').hide().slideDown(SLIDE_DOWN);
-            return;
-        }
-        $('li[data-enlargement_id="' +this.id+ '"]').remove();
-        var isAdd = false;
-        $('#enlargementsSection div').each(function() {
-            if( $(this).children('ul').children('li').length == 0 ) $.when( $(this).slideUp(SLIDE_UP) ).then(function() { $(this).remove() });
-            if( !isAdd && $(this).data('choice') > choice ) {
-               var newDIV = '<div data-choice="' +choice+ '">';
-               newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-               newDIV += result + '</ul></div>';
-               $(this).before(newDIV);
-               $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-               isAdd = true;    
-            }
-            if( $(this).data('choice') == choice ) {
-                $(this).children('ul').append(result);
-                isAdd = true;
-            }
+    showSuccess(result) {   // poprawne pobranie widoku z informacjami o zmienionym rekordzie: wstawienie zmian do kodu HTML
+        var id = this.id;
+        $.when( $('tr[data-' +DATA_NAME+ '="' +this.id+ '"]').fadeOut(FADE_OUT) ).then(function() {
+            $('tr[data-' +DATA_NAME+ '="' +id+ '"]').replaceWith(result);
+            $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide().fadeIn(FADE_IN);
         });
-        if(!isAdd) {
-            var newDIV = '<div data-choice="' +choice+ '">';
-            newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-            newDIV += result + '</ul></div>';
-            $('#showCreateForm').before(newDIV);
-            $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-        }
     }
 }
 
 function clickError() {     // kliknięcie dowolnego obiektu o klasie .error - usunięcie go ze strony
-    $('#enlargementsSection').delegate('.error', 'click', function() {
+    $('#commands').delegate('.error', 'click', function() {
         $.when( $(this).slideUp(SLIDE_UP) ).then( function() {
             $(this).remove();
         });
     });
 }
-*/
-
-
-/*
-// ----------------------------------- zarządzanie zadaniami ----------------------------------- //
-function refreshRow(id, type, lp=0) {  // odświeżenie wiersza z zadaniem o podanym identyfikatorze
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/command/refreshRow",
-        data: { id: id, lp: lp },
-        success: function(result) {
-            if(type=="add"){
-                $('tr.create').before(result);
-                $('tr[data-command_id='+id+']').show(1000);
-                $('#showCreateRow').show();
-            }
-            else {
-                $.when( $('tr.editRow[data-command_id='+id+']').hide(1000) ).then(function() {
-                    $('tr.editRow[data-command_id='+id+']').remove();
-                    $('tr[data-command_id='+id+']').replaceWith(result);
-                    $('tr[data-command_id='+id+']').show(1000);
-                });
-            }
-        },
-        error: function() {
-            var error = '<tr><td class="error" colspan="8">Błąd odświeżania wiersza polecenia!</td></tr>';
-            $('tr.create').before(error);
-        },
-    });
-}
-
-function showCreateRowClick() {
-    $('#showCreateRow').click(function(){
-        $('#commands').animate({width: '1400px'}, 500);
-        $(this).hide();
-        showCreateRow();
-        return false;
-    });
-}
-
-function showCreateRow() {
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/polecenie/create",
-        success: function(result) {
-            $('#commands').append(result);
-            $('tr#createRow').animate({opacity: '100%'}, 2000);
-        },
-        error: function() {
-            var error = '<tr><td colspan="8" class="error">Błąd tworzenia wiersza z formularzem dodawania polecenia.</td></tr>';
-            $('#commands tr.create').after(error);
-        },
-    });
-}
-
-function addClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania polecenia
-    $('#commands').delegate('#cancelAdd', 'click', function() {
-        $.when( $('#createRow').hide(1000) ).then( function() {
-            $('#createRow').remove();
-            $('#showCreateRow').show(1000);
-        });
-    });
-
-    $('#commands').delegate('#add', 'click', function() {
-        add();
-        $.when( $('#createRow').hide(1000) ).then( function() {
-            $('#createRow').remove();
-            $('#showCreateRow').show(1000);
-        });
-    });
-}
-
-function add() {   // zapisanie zadania w bazie danych
-    var task_id      = $('#createRow input[name="task_id"]').val();
-    var number      = $('#createRow input[name="number"]').val();
-    var command     = $('#createRow input[name="command"]').val();
-    var description = $('#createRow input[name="description"]').val();
-    var points      = $('#createRow input[name="points"]').val();
-    var lp = $('input[name="lp"]').val();
-
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/polecenie",
-        data: { task_id: task_id, number: number, command: command, description: description, points: points },
-        success: function(id) {  refreshRow(id, 'add', lp);  },
-        error: function() {
-            var error = '<tr><td colspan="8" class="error">Nie można dodać polecenia!</p></td></tr>';
-            $('#commands tr.create').after(error);
-        },
-    });
-}
-
-function editClick() {     // kliknięcie przycisku modyfikowania polecenia
-    $('#commands').delegate('button.edit', 'click', function() {
-        var id = $(this).data('command_id');
-        var lp = $(this).parent().parent().children(":first").html();
-        $.ajax({
-            type: "GET",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/polecenie/"+id+"/edit",
-            data: { id: id },
-            success: function(result) {
-                $('tr[data-command_id='+id+']').before(result).hide();
-                updateClick(lp);
-            },
-            error: function() {
-                var error = '<tr><td colspan="8" class="error">Błąd tworzenia wiersza z formularzem modyfikowania polecenia.</td></tr>';
-                $('tr[data-command_id='+id+']').after(error).hide();
-            },
-        });
-    });
-}
-
-function updateClick(lp) {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania polecenia
-    $('.cancelUpdate').click(function() {
-        var id = $(this).data('command_id');
-        $.when( $('.editRow[data-command_id='+id+']').hide(1000) ).then(function() {
-            $('.editRow[data-command_id='+id+']').remove();
-            $('tr[data-command_id='+id+']').show(1000);
-        });
-    });
-
-    $('.update').click(function(){
-        var id = $(this).data('command_id');
-        update(id, lp);
-        $.when( $('.editRow[data-command_id='+id+']').hide(1000) ).then(function() {
-            $('.editRow[data-command_id='+id+']').remove();
-            $('tr[data-command_id='+id+']').show(1000);
-        });
-    });
-}
-
-function update(id, lp) {   // zapisanie zmian polecenia w bazie danych
-    var task_id     = $('tr[data-command_id='+id+'] input[name="task_id"]').val();
-    var number      = $('tr[data-command_id='+id+'] input[name="number"]').val();
-    var command     = $('tr[data-command_id='+id+'] input[name="command"]').val();
-    var description = $('tr[data-command_id='+id+'] input[name="description"]').val();
-    var points      = $('tr[data-command_id='+id+'] input[name="points"]').val();
-
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/polecenie/"+id,
-        data: { id: id, task_id: task_id, number: number, command: command, description: description, points: points },
-        success: function() { refreshRow(id, "edit", lp); },
-        error: function() {
-            var error = '<tr><td colspan="8" class="error">Nie można zmienić danych polecenia!</td></tr>';
-            $('tr[data-command_id='+id+'].editRow').after(error).hide();
-        },
-    });
-}
-
-function destroyClick() {  // usunięcie zadania (z bazy danych)
-    $('#commands').delegate('.destroy', 'click', function() {
-        var id = $(this).data('command_id');
-        $.ajax({
-            type: "DELETE",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/polecenie/" + id,
-            success: function() {
-                $.when( $('tr[data-command_id='+id+']').hide(1000) ).then(function() {
-                    $('tr[data-command_id='+id+']').remove();
-                });
-            },
-            error: function() {
-                var error = '<tr><td colspan="8" class="error">Nie można usunąć polecenia.</td></tr>';
-                $('tr[data-command_id='+id+']').after(error).hide();
-            }
-        });
-        return false;
-    });
-}
-*/
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     clickShowCreateRowButton();
-    // showCreateRowClick();
-    // addClick();
-    // editClick();
-    // destroyClick();
+    clickShowEditFormButton();
+    clickDestroyButton();
+    clickError();
 });

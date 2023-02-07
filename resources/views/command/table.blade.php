@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 *********************** -->
 @section('java-script')
    <script language="javascript" type="module" src="{{ url('public/js/command/forTask.js') }}"></script>
 @endsection
@@ -41,9 +41,7 @@
          @endforeach
       @endif
 
-      <tr class="create"><td colspan="9">
-         <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-      </td></tr>
+      <tr class="create"><td colspan="9"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button></td></tr>
    </tbody>
 </table>
 <input type="hidden" id="countCommands" value="{{ count($commands) }}" />

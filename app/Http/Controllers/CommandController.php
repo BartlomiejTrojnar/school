@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Command;
 use App\Repositories\CommandRepository;
@@ -14,15 +14,13 @@ class CommandController extends Controller {
     }
 
     public function store(Request $request) {
-        return 2;
         $this -> validate($request, [
-          'task_id' => 'required',
-          'number' => 'required|integer|min:1|max:20',
-          'command' => 'required|max:25',
-          'description' => 'max:65',
-          'points' => 'required|min:1',
+            'task_id' => 'required',
+            'number' => 'required|integer|min:1|max:20',
+            'command' => 'required|max:25',
+            'description' => 'max:65',
+            'points' => 'required|min:1',
         ]);
-
         $command = new Command;
         $command->task_id = $request->task_id;
         $command->number = $request->number;
@@ -30,27 +28,43 @@ class CommandController extends Controller {
         $command->description = $request->description;
         $command->points = $request->points;
         $command -> save();
-
         return $command->id;
+    }
+
+    public function edit(Request $request, Command $command) {
+        $command = $command -> find($request->id);
+        return view('command.edit', ["command"=>$command, "lp"=>$request->lp]);
+    }
+
+    public function update($id, Request $request, Command $command) {
+        $command = $command -> find($id);
+        $this -> validate($request, [
+            'task_id' => 'required',
+            'number' => 'required|integer|min:1|max:20',
+            'command' => 'required|max:25',
+            'description' => 'max:65',
+            'points' => 'required|min:1',
+        ]);
+        $command->task_id = $request->task_id;
+        $command->number = $request->number;
+        $command->command = $request->command;
+        $command->description = $request->description;
+        $command->points = $request->points;
+        $command -> save();
+        return $command->id;
+    }
+
+    public function destroy($id, Command $command) {
+        $command = $command -> find($id);
+        $command -> delete();
+        return 1;
     }
 
     public function refreshRow(Request $request, Command $command) {
         $command = $command -> find($request->id);
-        // $command = $command->where('id', '=', $request->id);
-        return $command->id;
         return view('command.row', ["command"=>$command, "lp"=>$request->lp]);
     }
 
-
-    /*
-    public function index(CommandRepository $commandRepo)
-    {
-        $commands = $commandRepo->getAllSorted();
-        return view('command.index')
-            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
-    }
-*/
-/*
     public function orderBy($column) {
         if(session()->get('CommandOrderBy[0]') == $column)
             if(session()->get('CommandOrderBy[1]') == 'desc')  session()->put('CommandOrderBy[1]', 'asc');
@@ -65,6 +79,16 @@ class CommandController extends Controller {
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
+
+    /*
+    public function index(CommandRepository $commandRepo)
+    {
+        $commands = $commandRepo->getAllSorted();
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
+    }
+*/
+/*
 
     public function show($id, CommandRepository $commandRepo, $view='') {
         if( empty(session() -> get('commandView')) )  session() -> put('commandView', 'showInfo');
@@ -81,37 +105,6 @@ class CommandController extends Controller {
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
         }
-    }
-
-    public function edit(Request $request, Command $command, TaskRepository $taskRepo) {
-        $command = $command -> find($request->id);
-        return view('command.edit', ["command"=>$command]);
-    }
-
-    public function update($id, Request $request, Command $command) {
-        $command = $command -> find($id);
-        $this -> validate($request, [
-          'task_id' => 'required',
-          'number' => 'required|integer|min:1|max:20',
-          'command' => 'required|max:25',
-          'description' => 'max:65',
-          'points' => 'required|min:1',
-        ]);
-
-        $command->task_id = $request->task_id;
-        $command->number = $request->number;
-        $command->command = $request->command;
-        $command->description = $request->description;
-        $command->points = $request->points;
-        $command -> save();
-
-        return $command->id;
-    }
-
-    public function destroy($id, Command $command) {
-        $command = $command -> find($id);
-        $command -> delete();
-        return 1;
     }
 
     /*

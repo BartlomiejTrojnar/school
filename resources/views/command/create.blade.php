@@ -1,5 +1,5 @@
 <tr id="createRow">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 *********************** -->
    <form action="{{ route('polecenie.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <td colspan="2"><input type="number" name="number" min="1" max="20" size="3" required /></td>
