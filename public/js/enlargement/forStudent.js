@@ -256,7 +256,6 @@ class Enlargement {
             success: function() { ShowResult.destroySuccess(); },
             error:   function() { ShowResult.destroyError(); }
         });
-
     }
 }
 

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 *********************** -->
 
 @section('css')
    <link href="{{ asset('public/css/'.$css) }}" rel="stylesheet">
@@ -19,8 +19,8 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/oceny') }}">oceny <i class='fas fa-tasks'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/info') }}">informacje <i class='fa fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('zadanie/'.$task->id.'/oceny') }}">oceny <i class='fa fa-tasks'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('zadanie.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>
 

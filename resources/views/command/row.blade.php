@@ -9,6 +9,6 @@
    <td class="c small">{{ substr($command->updated_at, 0, 10) }}</td>
    <td class="edit destroy c">
       <button class="edit btn btn-primary"      data-command_id="{{ $command->id }}"><i class="fa fa-edit"></i></button>
-      <button class="destroy btn btn-primary"   data-command_id="{{ $command->id }}"><i class="fas fa-remove"></i></button>
+      <button class="destroy btn btn-primary"   data-command_id="{{ $command->id }}"><i class="fa fa-remove"></i></button>
    </td>
 </tr>
