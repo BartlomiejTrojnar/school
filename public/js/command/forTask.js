@@ -1,7 +1,7 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 ------------------------ //
 // ---------------------------- wydarzenia dla widoku zadanie/info  ---------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
-const ROUTE_NAME="polecenie", NUMBER_OF_FIELDS = 8, TABLE_NAME="#commands";
+const ROUTE_NAME="polecenie", NUMBER_OF_FIELDS = 8, TABLE_NAME="#commands", DATA_NAME="command_id";
 
 
 // ----------------- kliknięcie przycisku uruchamiającego formularz dodawania ------------------ //
@@ -93,7 +93,6 @@ class ShowRow {
         });
     
         $('#createRow button#add').click(function() {          // kliknięcie przycisku "dodaj"
-            alert('Dokończ programować obsługę przycisku w skrypcie command/forTask.js');
             $.when( $('#createRow').fadeOut(FADE_OUT) ).then(function() {
                 $('#showCreateRow').slideDown(SLIDE_DOWN);
                 var command = new Command();
@@ -159,30 +158,31 @@ class ShowRow {
     // }
 }
 
-/*
+
 // ---------------------- operacje na rekordach dotyczących rozszerzenia ----------------------- //
-class Enlargement {
+class Command {
     constructor(id=0) {
         this.id = id;
     }
 
     add() {     // wstawienie rekordu do bazy danych
-        var student_id  = $('#student_id').val();
-        var subject_id  = $('#createForm select[name="subject_id"]').val();
-        var level       = $('#createForm input[name="level"]').val();
-        var choice      = $('#createForm input[name="choice"]').val();
-        var resignation = $('#createForm input[name="resignation"]').val();
+        var task_id     = $('#task_id').val();
+        var number      = $('#createRow input[name="number"]').val();
+        var command_name= $('#createRow input[name="command"]').val();
+        var description = $('#createRow input[name="description"]').val();
+        var points      = $('#createRow input[name="points"]').val();
+        var lp = $('#countCommands').val();
         var ShowResult = new ShowResultForOperation();
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME,
-            data: { student_id: student_id, subject_id: subject_id, level: level, choice: choice, resignation: resignation },
-            success: function(id) { ShowResult.addSuccess(id, choice); },
+            data: { task_id: task_id, number: number, command: command_name, description: description, points: points },
+            success: function(id) { ShowResult.addSuccess(id, lp); },
             error: function() { ShowResult.addError(); },
         });
     }
-
+/*
     exchange() {  // zamiana rozszerzenia
         var id = this.id;
         var student_id  = $('tr[data-enlargement_id="' +id+ '"] input[name="student_id"]').val();
@@ -248,6 +248,7 @@ class Enlargement {
         });
 
     }
+*/
 }
 
 // ------------------------- pokazywanie wyników operacji na rekordach ------------------------- //
@@ -257,107 +258,102 @@ class ShowResultForOperation {
     }
 
     addError() {        // nieudane dodanie nowego wyboru rozszerzenia
-        $('#showCreateForm').before('<p class="error">Nie udało się dodać wyboru rozszerzenia.</p>');
-        $('p.error').hide().slideDown(SLIDE_DOWN);
+        $('tr#createRow').remove();
+        var communique = "Nie udało się dodać polecenia.";
+        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $(TABLE_NAME+ ' tr.create').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
     }
 
-    addSuccess(id, choice) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
-        var Insert = new InsertNewEnlargementToHTML();
+    addSuccess(id, lp) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
+        $('tr#createRow').remove();
+        // $('tr.create').before(result);
+        // $('tr[data-' +DATA_NAME+ '="' +id+ '"]').fadeIn(FADE_IN);
+        var Insert = new InsertNewCommandToHTML();
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: 0, version: "forStudent" },
-            success: function(result) { Insert.showSuccess(result, choice); },
+            data: { id: id, lp: lp },
+            success: function(result) { Insert.showSuccess(result); },
             error: function() {  Insert.showError();  },
         });
     }
 
-    exchangeError() {     // nieudane zapisane zamiany wyboru rozszerzenia
-        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.');
-        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
-    }
+    // updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
+        // $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.');
+        // $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
+    // }
 
-    exchangeSuccess() {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
-        var id = this.id;
-        var exchangeElement = new ExchangeElementInHTML(id);
-        $.ajax({
-            method: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: 0, version: "forStudent" },
-            success: function(result) { exchangeElement.showSuccess(result); },
-            error: function() {  exchangeElement.showError();  },
-        });
-    }
+    // updateSuccess(choice=0) {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
+        // var id = this.id;
+        // var updateElement = new UpdateElementInHTML(id);
+        // $.ajax({
+            // method: "POST",
+            // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            // url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            // data: { id: id, lp: 0, version: "forStudent" },
+            // success: function(result) { updateElement.showSuccess(result, choice); },
+            // error: function() {  updateElement.showError();  },
+        // });
+    // }
 
-    updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
-        $('li[data-enlargement_id="' +this.id+ '"]').html('Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.');
-        $('li[data-enlargement_id="' +this.id+ '"]').addClass('error').show(SLIDE_DOWN);
-    }
+    // destroyError() {    // nieudane usunięcie wyboru rozszerzenia
+        // $('li[data-enlargement_id="' +this.id+ '"]').before('<li class="error">Nie udało się usunąć wyboru rozszerzenia.</li>');
+        // $('li.error').hide().slideDown(SLIDE_DOWN);
+    // }
 
-    updateSuccess(choice=0) {   // udane zapisanie zmian: pobranie widoku z informacją o zmienionym rekordzie
-        var id = this.id;
-        var updateElement = new UpdateElementInHTML(id);
-        $.ajax({
-            method: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: 0, version: "forStudent" },
-            success: function(result) { updateElement.showSuccess(result, choice); },
-            error: function() {  updateElement.showError();  },
-        });
-    }
-
-    destroyError() {    // nieudane usunięcie wyboru rozszerzenia
-        $('li[data-enlargement_id="' +this.id+ '"]').before('<li class="error">Nie udało się usunąć wyboru rozszerzenia.</li>');
-        $('li.error').hide().slideDown(SLIDE_DOWN);
-    }
-
-    destroySuccess() {  // udane usunięcie wyboru rozszerzenia: usunięcie ze strony informacji o rekordzie
-        var id = this.id;
-        $.when( $('li[data-enlargement_id="' +this.id+ '"]').slideUp(SLIDE_UP) ).then(function() {
-            var destroyDIV = $('li[data-enlargement_id="' +id+ '"]').parent().parent();
-            $('li[data-enlargement_id="' +id+ '"]').remove();
-            if( $(destroyDIV).children('ul').children('li').length == 0 )
-                $.when( $(destroyDIV).slideUp(SLIDE_UP) ).then(function() { $(destroyDIV).remove() });
-        });
-    }
+    // destroySuccess() {  // udane usunięcie wyboru rozszerzenia: usunięcie ze strony informacji o rekordzie
+        // var id = this.id;
+        // $.when( $('li[data-enlargement_id="' +this.id+ '"]').slideUp(SLIDE_UP) ).then(function() {
+            // var destroyDIV = $('li[data-enlargement_id="' +id+ '"]').parent().parent();
+            // $('li[data-enlargement_id="' +id+ '"]').remove();
+            // if( $(destroyDIV).children('ul').children('li').length == 0 )
+                // $.when( $(destroyDIV).slideUp(SLIDE_UP) ).then(function() { $(destroyDIV).remove() });
+        // });
+    // }
 }
+
+
 
 // ------------------- wstawienie informacji o nowym rekordzie do kodu HTML -------------------- //
-class InsertNewEnlargementToHTML {
+class InsertNewCommandToHTML {
     showError() {           // nieudane pobranie pola z nowym rozszerzeniem
-        $('#showCreateForm').before('<p class="error">Nie udało się odświeżyć sekcji z wyborami rozszerzeń. Odśwież stronę by zobaczyć wyniki.</p>');
-        $('p.error').hide().slideDown(SLIDE_DOWN);
+        var communique = "Nie udało się odświeżyć wiersza z poleceniem. Odśwież stronę by zobaczyć wyniki.";
+        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $(TABLE_NAME+ ' tr.create').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
     }
 
-    showSuccess(result, choice) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
-        var isAdd = false;
-        $('#enlargementsSection div').each(function() {
-            if( !isAdd && $(this).data('choice') > choice ) {
-                var newDIV = '<div data-choice="' +choice+ '">';
-                newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-                newDIV += result + '</ul></div>';
-                $(this).before(newDIV);
-                $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-                isAdd = true;    
-            }
-            if( $(this).data('choice') == choice ) {
-                $(this).children('ul').append(result);
-                isAdd = true;
-            }
-        });
-        if(!isAdd) {
-            var newDIV = '<div data-choice="' +choice+ '">';
-            newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
-            newDIV += result + '</ul></div>';
-            $('#showCreateForm').before(newDIV);
-            $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
-        }
+    showSuccess(result) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
+        alert(result);
+        // var isAdd = false;
+        // $('#enlargementsSection div').each(function() {
+            // if( !isAdd && $(this).data('choice') > choice ) {
+                // var newDIV = '<div data-choice="' +choice+ '">';
+                // newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+                // newDIV += result + '</ul></div>';
+                // $(this).before(newDIV);
+                // $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+                // isAdd = true;    
+            // }
+            // if( $(this).data('choice') == choice ) {
+                // $(this).children('ul').append(result);
+                // isAdd = true;
+            // }
+        // });
+        // if(!isAdd) {
+            // var newDIV = '<div data-choice="' +choice+ '">';
+            // newDIV += '<header>od <time datetime="' +choice+ '">' +choice+ '</time></header><ul>';
+            // newDIV += result + '</ul></div>';
+            // $('#showCreateForm').before(newDIV);
+            // $('div[data-choice="' +choice+ '"]').hide().slideDown(975);
+        // }
     }
 }
 
+
+/*
 // ---------------- odświeżenie informacji o zmienionym rekordzie w kodzie HTML ---------------- //
 class ExchangeElementInHTML {
     constructor(id) {

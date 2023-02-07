@@ -7,38 +7,14 @@ use App\Repositories\CommandRepository;
 use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 
-class CommandController extends Controller
-{
-/*
-    public function index(CommandRepository $commandRepo)
-    {
-        $commands = $commandRepo->getAllSorted();
-        return view('command.index')
-            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
-    }
-*/
-
-    public function orderBy($column) {
-        if(session()->get('CommandOrderBy[0]') == $column)
-            if(session()->get('CommandOrderBy[1]') == 'desc')  session()->put('CommandOrderBy[1]', 'asc');
-            else  session()->put('CommandOrderBy[1]', 'desc');
-        else {
-            session()->put('CommandOrderBy[4]', session()->get('CommandOrderBy[2]'));
-            session()->put('CommandOrderBy[2]', session()->get('CommandOrderBy[0]'));
-            session()->put('CommandOrderBy[0]', $column);
-            session()->put('CommandOrderBy[5]', session()->get('CommandOrderBy[3]'));
-            session()->put('CommandOrderBy[3]', session()->get('CommandOrderBy[1]'));
-            session()->put('CommandOrderBy[1]', 'asc');
-        }
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
-
+class CommandController extends Controller {
     public function create() {
         $task = session()->get('taskSelected');
         return view('command.create', ["task"=>$task]);
     }
 
     public function store(Request $request) {
+        return 2;
         $this -> validate($request, [
           'task_id' => 'required',
           'number' => 'required|integer|min:1|max:20',
@@ -56,6 +32,38 @@ class CommandController extends Controller
         $command -> save();
 
         return $command->id;
+    }
+
+    public function refreshRow(Request $request, Command $command) {
+        $command = $command -> find($request->id);
+        // $command = $command->where('id', '=', $request->id);
+        return $command->id;
+        return view('command.row', ["command"=>$command, "lp"=>$request->lp]);
+    }
+
+
+    /*
+    public function index(CommandRepository $commandRepo)
+    {
+        $commands = $commandRepo->getAllSorted();
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
+    }
+*/
+/*
+    public function orderBy($column) {
+        if(session()->get('CommandOrderBy[0]') == $column)
+            if(session()->get('CommandOrderBy[1]') == 'desc')  session()->put('CommandOrderBy[1]', 'asc');
+            else  session()->put('CommandOrderBy[1]', 'desc');
+        else {
+            session()->put('CommandOrderBy[4]', session()->get('CommandOrderBy[2]'));
+            session()->put('CommandOrderBy[2]', session()->get('CommandOrderBy[0]'));
+            session()->put('CommandOrderBy[0]', $column);
+            session()->put('CommandOrderBy[5]', session()->get('CommandOrderBy[3]'));
+            session()->put('CommandOrderBy[3]', session()->get('CommandOrderBy[1]'));
+            session()->put('CommandOrderBy[1]', 'asc');
+        }
+        return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
     public function show($id, CommandRepository $commandRepo, $view='') {
@@ -104,11 +112,6 @@ class CommandController extends Controller
         $command = $command -> find($id);
         $command -> delete();
         return 1;
-    }
-
-    public function refreshRow(Request $request, Command $command) {
-        $command = $command -> find($request->id);
-        return view('command.row', ["command"=>$command, "lp"=>$request->lp]);
     }
 
     /*

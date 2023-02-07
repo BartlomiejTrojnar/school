@@ -196,7 +196,7 @@ Route::get('/zadanie/{id}/{view?}', 'TaskController@show');
 
 Route::post('/polecenie/storeFromImport', array('as'=>'polecenie.storeFromImport', 'uses'=>'CommandExportController@storeFromImport'));
 Route::resource('/polecenie', 'CommandController');
-Route::post('/command/refreshRow', 'CommandController@refreshRow');
+Route::post('/polecenie/refreshRow', 'CommandController@refreshRow');
 Route::get('/polecenie/orderBy/{column}', array('as'=>'polecenie.orderBy', 'uses'=>'CommandController@orderBy'));
 Route::get('/polecenie/taskCommandExport/{id}', array('as'=>'polecenie.taskCommandExport', 'uses'=>'CommandExportController@taskCommandExport'));
 Route::get('/polecenie/taskCommandImport/{id}', array('as'=>'polecenie.taskCommandImport', 'uses'=>'CommandExportController@taskCommandImport'));
