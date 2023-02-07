@@ -1,0 +1,14 @@
+/* -------------------- STYLE DLA STRONY WYŚWIETLAJĄCEJ OCENY ZADAŃ UCZNIA --------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 ------------------------ */
+
+tr#createRow {
+    background: #874;
+}
+ 
+table#taskRatings { text-align: center; }
+td.edit {   min-width: 125px; background: pink;  }
+td.createButtons {   min-width: 175px;  }
+
+/* dla wiersza z formularzem dodawania oceny zadania */
+input[required], select[name="task_id"] {   background: #faa; border: 3px solid #c55; }
+select[name="task_id"] {    font-size: small; padding: 0; margin: 0; }

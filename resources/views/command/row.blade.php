@@ -1,5 +1,5 @@
-<tr data-command_id="{{$command->id}}">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
+<tr data-command_id="{{ $command->id }}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 *********************** -->
    <td>{{ $lp }}</td>
    <td class="c">{{ $command->number }}</td>
    <td><a href="{{ route('polecenie.show', $command->id) }}">{{ $command->command }}</a></td>

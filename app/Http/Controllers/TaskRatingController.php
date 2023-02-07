@@ -25,9 +25,9 @@ class TaskRatingController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create(Request $request, TaskRepository $taskRepo) {
+    public function create(Request $request, TaskRepository $taskRepo, StudentRepository $studentRepo) {
         if($request->version == "forStudent")   return $this->createRowForStudent($request->student_id, $taskRepo);
-        return $request->version;
+        if($request->version == "forTask")      return $this->createRowForTask($request->task_id, $studentRepo, $taskRepo);
     }
 
     private function createRowForStudent($student_id, $taskRepo) {
@@ -37,6 +37,18 @@ class TaskRatingController extends Controller
         $task = $taskRepo -> find($taskSelected);
 
         return view('taskRating.createRowForStudent', ["student_id"=>$student_id, "taskSelectField"=>$taskSelectField, "task"=>$task]);
+    }
+
+    private function createRowForTask($task_id, $studentRepo, $taskRepo) {
+        $gradeSelected = session() -> get('gradeSelected');
+        $groupSelected = session() -> get('groupSelected');
+        $students = $studentRepo -> getFilteredAndSorted($gradeSelected, $groupSelected);
+        $studentSelected = session() -> get('studentSelected');
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+
+        $taskSelected = session() -> get('taskSelected');
+        $task = $taskRepo -> find($taskSelected);
+        return view('taskRating.create', ["task_id"=>$task_id, "studentSF"=>$studentSF, "version"=>"forTask", "task"=>$task]);
     }
 
     // metoda tworząca kopię oceny zadania oraz wyświetlająca formularz umożliwiający modyfikację tej kopii i oryginału (poprawianie oceny zadania)
@@ -114,16 +126,23 @@ class TaskRatingController extends Controller
         $taskRating = new TaskRating;
         $taskRating->student_id = $request->student_id;
         $taskRating->task_id = $request->task_id;
-        $taskRating->deadline = $request->deadline;
-        $taskRating->implementation_date = $request->implementation_date;
+
+        //$taskRating->deadline = $request->deadline;
+        // if($request->deadline=="" || $request->deadline=="0000-00-00") $taskRating->deadline = null;
+        // $taskRating->implementation_date = $request->implementation_date;
+        // if($request->implementation_date=="" || $request->implementation_date=="0000-00-00") $taskRating->implementation_date = null;
+
         $taskRating->version = $request->version;
         $taskRating->importance = $request->importance;
-        $taskRating->rating_date = $request->rating_date;
-        $taskRating->points = $request->points;
-        $taskRating->rating = $request->rating;
-        $taskRating->comments = $request->comments;
-        if($request->diary=="on") $taskRating->diary = true; else $taskRating->diary = false;
-        $taskRating->entry_date = $request->entry_date;
+        //$taskRating->rating_date = $request->rating_date;
+        //if($request->rating_date=="" || $request->rating_date=="0000-00-00") $taskRating->rating_date = null;
+        //$taskRating->points = $request->points;
+        //$taskRating->rating = $request->rating;
+        //$taskRating->comments = $request->comments;
+        //if($request->diary=="on") $taskRating->diary = true; else $taskRating->diary = false;
+        //$taskRating->entry_date = $request->entry_date;
+        //if($request->entry_date=="" || $request->entry_date=="0000-00-00") $taskRating->entry_date = null;
+
         $taskRating -> save();
 
         return $taskRating->id;
@@ -161,17 +180,20 @@ class TaskRatingController extends Controller
         return view('taskRating.show', ["taskRating"=>$taskRating, "previous"=>$previous, "next"=>$next]);
     }
 
-    public function edit($id, TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo, StudentRepository $studentRepo) {
+    public function edit($id, Request $request, TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo, StudentRepository $studentRepo) {
         $taskRating = $taskRatingRepo -> find($id);
         $tasks = $taskRepo->getAllSorted();
-        $students = $studentRepo->getAllSorted();
-
         $taskSelected = $taskRating->task_id;
-        $studentSelected = $taskRating->student_id;
+        $taskSF = view('task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected]);
 
-        return view('taskRating.edit', ["taskRating"=>$taskRating])
-            -> nest('taskSelectField', 'task.selectField', ["tasks"=>$tasks, "taskSelected"=>$taskSelected])
-            -> nest('studentSelectField', 'student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+        if($request->version == "forStudent")   $studentSF = "";
+        else {
+            $students = $studentRepo->getAllSorted();
+            $studentSelected = $taskRating->student_id;
+            $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);    
+        }
+
+        return view('taskRating.edit', ["taskRating"=>$taskRating, "version"=>$request->version, "taskSF"=>$taskSF, "studentSF"=>$studentSF]);
     }
 
     public function editLotTaskRatings(TaskRatingRepository $taskRatingRepo, TaskRepository $taskRepo) {
@@ -262,7 +284,7 @@ class TaskRatingController extends Controller
         if($request->entry_date=="" || $request->entry_date=="0000-00-00") $taskRating->entry_date = null;
         $taskRating -> save();
 
-        return redirect($request->historyView);
+        return $taskRating->id;
     }
 
     public function updateLotTaskRatings(Request $request, TaskRating $taskRating) {
@@ -398,24 +420,11 @@ class TaskRatingController extends Controller
     public function destroy($id, TaskRating $taskRating) {
         $taskRating = $taskRating -> find($id);
         $taskRating -> delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
+        return 1;
     }
 
-    public function refreshTable(Request $request, TaskRatingRepository $taskRatingRepo) {
-        if($request->version == "forStudent")   return $this -> refreshTableForStudent($request->student_id, $taskRatingRepo);
-        return $request->version;
-        //$student = $studentRepo -> find($request->student_id);
-        //$declarations = $student -> declarations;
-        //return view('declaration.tableForStudent', ["declarations"=>$declarations]);
-    }
-
-    private function refreshTableForStudent($student_id, $taskRatingRepo) {
-        $taskRatings = $taskRatingRepo -> getStudentTaskRatings($student_id);
-        return view('taskRating.tableForStudent', ["student"=>$student_id, "subTitle"=>"zadania ucznia2", "taskRatings"=>$taskRatings]);
-        //return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable]);
-
-        //$student = $studentRepo -> find($request->student_id);
-        //$declarations = $student -> declarations;
-        //return view('declaration.tableForStudent', ["declarations"=>$declarations]);
+    public function refreshRow(Request $request, TaskRatingRepository $taskRatingRepo) {
+        $taskRating = $taskRatingRepo -> find($request->id);
+        return view('taskRating.row', ["taskRating"=>$taskRating, "lp"=>$request->lp, "version"=>$request->version]);
     }
 }

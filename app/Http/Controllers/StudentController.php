@@ -107,7 +107,6 @@ class StudentController extends Controller
         GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, EnlargementRepository $enlargementRepo, $view='') {
         session() -> put('studentSelected', $id);
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
-        if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
         $this->student = $studentRepo -> find($id);
 
@@ -219,13 +218,11 @@ class StudentController extends Controller
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentPlan]);
     }
 
-    private function showTasks() {
-        $css = "/student/taskRating.css";
-        $js = "/student/taskRating.js";
-        $subTitle = "Zadania ucznia";
-        $taskRatingRepo = new TaskRatingRepository(new TaskRating);
+    private function showTasks($taskRatingRepo) {
+        $css = "/taskRating/style.css";
+        $js = "/taskRating/forStudent.js";
         $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);
-        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings]);
+        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "taskRatings"=>$taskRatings]);
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable]);
     }
 

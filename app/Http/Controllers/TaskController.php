@@ -57,8 +57,9 @@ class TaskController extends Controller
         return $task->id;
     }
 
-    public function show($id, TaskRepository $taskRepo, CommandRepository $commandRepo, $view='') {
-        if( empty(session() -> get('taskView')) )  session() -> put('taskView', 'showInfo');
+    public function show($id, TaskRepository $taskRepo, CommandRepository $commandRepo, TaskRatingRepository $taskRatingRepo, GradeRepository $gradeRepo, GroupRepository $groupRepo, $view='') {
+        session() -> put('taskView', 'info');
+        if( empty(session() -> get('taskView')) )  session() -> put('taskView', 'info');
         if($view)  session() -> put('taskView', $view);
         session() -> put('taskSelected', $id);
         $this->task = $taskRepo -> find($id);
@@ -67,8 +68,8 @@ class TaskController extends Controller
         list($this->previous, $this->next) = $taskRepo -> nextAndPreviousRecordId($tasks, $id);
 
         switch(session()->get('taskView')) {
-            case 'showInfo':    return $this -> showInfo($commandRepo);
-            case 'showRatings': return $this -> showRatings();
+            case 'info':    return $this -> showInfo($commandRepo);
+            case 'oceny':   return $this -> showRatings($taskRatingRepo, $gradeRepo, $groupRepo);
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('taskView'));
             break;
@@ -78,33 +79,25 @@ class TaskController extends Controller
     private function showInfo($commandRepo) {
         $commands = $commandRepo -> getTaskCommands($this->task->id);
         $commandTable = view('command.table', ["task"=>$this->task, "commands"=>$commands]);
-        return view('task.show', ["task"=>$this->task, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$commandTable]);
+        return view('task.show', ["task"=>$this->task, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$commandTable, "css"=>'', "js"=>'']);
     }
 
-    private function showRatings() {
-        $subTitle = "Oceny zadania";
-        $java_script = "taskRating/taskRating.js";
-        $dateView = session() -> get('dateView');
-
-        $gradeRepo = new GradeRepository(new Grade);
+    private function showRatings($taskRatingRepo, $gradeRepo, $groupRepo) {
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
-
-        $groupRepo = new GroupRepository(new Group);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
+        $dateView = session() -> get('dateView');
         $groups = $groupRepo -> getGroups($dateView, $dateView, $gradeSelected);
         $groupSelected = session()->get('groupSelected');
-        $groupSelectField = view('group.selectField', ["groups"=>$groups, "groupSelected"=>$groupSelected, "name"=>"group_id"]);
-
+        $groupSF = view('group.selectField', ["groups"=>$groups, "groupSelected"=>$groupSelected, "name"=>"group_id"]);
         $diaryYesNoSelected = session() -> get('diaryYesNoSelected');
-        $diarySelectField = view('layouts.yesNoSelectField', ["fieldName"=>"diaryYesNo", "valueSelected"=>$diaryYesNoSelected]);
-
-        $taskRatingRepo = new TaskRatingRepository(new TaskRating);
+        $diarySF = view('layouts.yesNoSelectField', ["fieldName"=>"diaryYesNo", "valueSelected"=>$diaryYesNoSelected]);
         $taskRatings = $taskRatingRepo -> getTaskRatings($this->task->id, 0, $gradeSelected, $groupSelected, $diaryYesNoSelected);
+        $taskRatingsTable = view('taskRating.table', ["taskRatings"=>$taskRatings, "gradeSF"=>$gradeSF, "groupSF"=>$groupSF, "diarySF"=>$diarySF, "task"=>$this->task]);
 
-        return view('task.show', ["task"=>$this->task, "previous"=>$this->previous, "next"=>$this->next, "java_script"=>$java_script])
-            -> nest('subView', 'taskRating.table', ["task"=>$this->task, "subTitle"=>$subTitle, "taskRatings"=>$taskRatings, "gradeSelectField"=>$gradeSelectField,
-                "groupSelectField"=>$groupSelectField, "diarySelectField"=>$diarySelectField]);
+        $js = "taskRating/forTask.js";
+        $css = "taskRating/style.css";
+        return view('task.show', ["task"=>$this->task, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable, "js"=>$js, "css"=>$css]);
     }
 
     public function edit(Request $request, Task $task) {

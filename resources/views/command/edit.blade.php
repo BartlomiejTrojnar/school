@@ -1,5 +1,5 @@
-<tr class="editRow" data-command_id="{{$command->id}}">>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 *********************** -->
+<tr class="editRow" data-command_id="{{ $command->id }}">>
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 *********************** -->
    <form action="{{ route('polecenie.update', $command->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
@@ -10,8 +10,9 @@
 
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
       <td colspan="5" class="c">
-         <input type="hidden" name="task_id" value="{{$command->task_id}}" />
-         <input type="hidden" name="id" value="{{$command->id}}" />
+         <input type="hidden" name="task_id" value="{{ $command->task_id }}" />
+         <input type="hidden" name="id" value="{{ $command->id }}" />
+         <input type="hidden" name="lp" value="{{ $lp }}" />
          <button class="update btn btn-primary"       data-command_id="{{$command->id}}">zapisz zmiany</button>
          <button class="cancelUpdate btn btn-primary" data-command_id="{{$command->id}}">anuluj</button>
       </td>
