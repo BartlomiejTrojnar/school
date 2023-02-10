@@ -103,8 +103,9 @@ class StudentController extends Controller
         return view('student.index', ["students"=>$students, "schoolYearSF"=>$schoolYearSF, "gradeSF"=>$gradeSF]);
     }
 
-    public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo, StudentNumberRepository $snRepo,
-        GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, CertificateRepository $certificateRepo, EnlargementRepository $enlargementRepo, $view='') {
+    public function show($id, StudentRepository $studentRepo, SchoolYearRepository $schoolYearRepo, StudentGradeRepository $sgRepo,
+        StudentNumberRepository $snRepo, GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo,
+        CertificateRepository $certificateRepo, EnlargementRepository $enlargementRepo, TaskRatingRepository $taskRatingRepo, $view='') {
         session() -> put('studentSelected', $id);
         if(empty( session()->get('studentView') ))  session() -> put('studentView', 'info');
         if($view)  session() -> put('studentView', $view);
@@ -128,7 +129,7 @@ class StudentController extends Controller
             case 'klasy':       return $this -> showGrades($sgRepo, $snRepo, $schoolYearRepo);
             case 'grupy':       return $this -> showGroups($groupStudentRepo, $schoolYearRepo);
             case 'planlekcji':  return $this -> showLessonPlan($lessonPlanRepo);
-            case 'zadania':     return $this -> showTasks();
+            case 'zadania':     return $this -> showTasks($taskRatingRepo);
             case 'deklaracje':  return $this -> showDeclarations();
             case 'egzaminy':    return $this -> showExams();
             case 'rozszerzenia':return $this -> showEnlargements($enlargementRepo);
@@ -158,6 +159,14 @@ class StudentController extends Controller
         $css = "enlargement/forStudent.css";
         $js = "enlargement/forStudent.js";
         return view('student.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$enlargementsTable, ]);
+    }
+
+    private function showTasks($taskRatingRepo) {
+        $css = "/taskRating/style.css";
+        $js = "/taskRating/forStudent.js";
+        $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);
+        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "taskRatings"=>$taskRatings]);
+        return view('student.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$taskRatingsTable]);
     }
 
     /*
@@ -216,14 +225,6 @@ class StudentController extends Controller
         $js = "lessonPlan/forStudent.js";
         $studentPlan = view('lessonPlan.studentPlan', ["lessons"=>$lessons, "dateView"=>$dateView]);
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentPlan]);
-    }
-
-    private function showTasks($taskRatingRepo) {
-        $css = "/taskRating/style.css";
-        $js = "/taskRating/forStudent.js";
-        $taskRatings = $taskRatingRepo -> getStudentTaskRatings($this->student->id);
-        $taskRatingsTable = view('taskRating.tableForStudent', ["student"=>$this->student, "taskRatings"=>$taskRatings]);
-        return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$taskRatingsTable]);
     }
 
     private function showCertificates($certificateRepo) {

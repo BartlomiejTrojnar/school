@@ -1,5 +1,5 @@
 <tr class="editRow" data-task_rating_id="{{ $taskRating->id }}">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2023 *********************** -->
    <form action="{{ route('ocena_zadania.update', $taskRating->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
@@ -23,6 +23,7 @@
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
       <td colspan="2">
          <input type="hidden" name="id" value="{{ $taskRating->id }}" />
+         <input type="hidden" name="lp" value="{{ $lp }}" />
          @if($version == "forStudent") <input type="hidden" name="student_id" value="{{ $taskRating->student_id }}" /> @endif
          @if($version == "forTask")    <input type="hidden" name="task_id" value="{{ $taskRating->task_id }}" /> @endif
          <button class="update btn btn-primary"       data-task_rating_id="{{ $taskRating->id }}">zapisz zmiany</button>

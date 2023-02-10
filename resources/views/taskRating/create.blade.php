@@ -1,5 +1,5 @@
 <tr id="createRow">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2023 *********************** -->
    <form action="{{ route('ocena_zadania.store') }}" method="post" role="form">
    {{ csrf_field() }}
       @if($version=="forStudent")   <td><input type="hidden" name="student_id" value="{{ $student_id }}" /></td>  @endif
@@ -19,8 +19,6 @@
       <td><input type="text" name="comments" size="20" maxlength="50" /></td>
       <td><input type="checkbox" name="diary" /></td>
       <td><input type="date" name="entry_date" /></td>
-
-      <!-- komórka z przyciskami dodawania i anulowania -->
       <td class="createButtons" colspan="4">
          <button id="add" class="btn btn-primary">dodaj</button>
          <button id="cancelAdd" class="btn btn-primary">anuluj</button>

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2023 *********************** -->
 <section id="taskRatingsTable">
    <h2>Oceny zadań ucznia</h2>
    <table id="taskRatings">
@@ -40,18 +40,18 @@
             <td>{{ $taskRating->comments }}</td>
             <td class="diary">
                @if($taskRating->diary)
-                  <button class="btn-warning entry-diary" data-task_rating_id="{{ $taskRating->id }}"><i class='fas fa-circle'></i></button>
+                  <button class="btn-warning entry-diary" data-task_rating_id="{{ $taskRating->id }}"><i class="fa fa-check-circle"></i></button>
                @else
-                  <button class="btn-warning no-diary" data-task_rating_id="{{ $taskRating->id }}"><i class='far fa-circle'></i></button>
+                  <button class="btn-warning no-diary" data-task_rating_id="{{ $taskRating->id }}"><i class="fa fa-circle-o"></i></button>
                @endif
             </td>
             <td class="entry_date">{{ substr($taskRating->entry_date, 0, 10) }}</td>
 
             <!-- modyfikowanie i usuwanie -->
             <td class="improvement edit destroy">
-               <button class="improvement btn btn-primary"  data-task_rating_id="{{ $taskRating->id }}" title="poprawa"><i class="fa fa-edit"></i></button>
+               <button class="improvement btn btn-primary"  data-task_rating_id="{{ $taskRating->id }}" title="poprawa"><i class="fa fa-clone"></i></button>
                <button class="edit btn btn-primary"         data-task_rating_id="{{ $taskRating->id }}" title="edytuj"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary"      data-task_rating_id="{{ $taskRating->id }}" title="usuń"><i class="fas fa-remove"></i></button>
+               <button class="destroy btn btn-primary"      data-task_rating_id="{{ $taskRating->id }}" title="usuń"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach
@@ -63,6 +63,8 @@
       </td></tr>
       <tr class="c"><td colspan="13"><a class="btn btn-primary" href="{{ route('ocena_zadania.editStudentRatings') }}">zmień wszystkie</a></td></tr>
    </table>
+
+   <input id="countTaskRatings" type="hidden" value="{{ count($taskRatings) }}" />
 
    @if($sumImportances)
       <p>procent punktów: {{ number_format($sumPoints*100, 0) }} / {{ $sumImportances }} = {{ number_format($sumPoints/$sumImportances*100, 1) }}%</p>
