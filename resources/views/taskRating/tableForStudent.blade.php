@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 *********************** -->
 <section id="taskRatingsTable">
    <h2>Oceny zadań ucznia</h2>
    <table id="taskRatings">

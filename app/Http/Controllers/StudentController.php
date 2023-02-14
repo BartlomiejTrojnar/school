@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -134,10 +134,6 @@ class StudentController extends Controller
             case 'egzaminy':    return $this -> showExams();
             case 'rozszerzenia':return $this -> showEnlargements($enlargementRepo);
 /*
-          case 'showEnlargements':
-              return view('student.showEnlargements', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
-              exit;
-          break;
           case 'showRatings':
               return view('student.showRatings', ["student"=>$student, "previous"=>$previous, "next"=>$next]);
               exit;

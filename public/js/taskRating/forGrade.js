@@ -1,7 +1,7 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
 // --------------------------- wydarzenia dla widoku uczen/zadania  ---------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
-const ROUTE_NAME="ocena_zadania", NUMBER_OF_FIELDS = 13, TABLE_NAME="#taskRatings", DATA_NAME="task_rating_id";
+const ROUTE_NAME="ocena_zadania", NUMBER_OF_FIELDS = 14, TABLE_NAME="#taskRatings", DATA_NAME="task_rating_id";
 
 
 // ----------------- kliknięcie przycisku uruchamiającego formularz dodawania ------------------ //
@@ -15,10 +15,10 @@ function clickShowCreateRowButton() {
 // --------------- kliknięcie przycisku uruchamiającego formularz modyfikowania ---------------- //
 function clickShowEditRowButton() {
     $('#taskRatings').delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
-        var EditForm = new FormRow();
+        var EditFormRow = new FormRow();
         var id = $(this).data(DATA_NAME);
-        var lp = parseInt($('tr[data-' +DATA_NAME+ '="'+id+'"]').children(":first").children(":first").html());
-        EditForm.getEditFormRow(id, lp);
+        var lp = $('tr[data-' +DATA_NAME+ '="'+id+'"]').children(":first").html();
+        EditFormRow.getEditFormRow(id, lp);
     });
 }
 
@@ -39,7 +39,7 @@ class FormRow {
         $.ajax({
             method: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            data: { version: "forStudent", student_id: $('#student_id').val(), },
+            data: { version: "forGrade", student_id: $('#student_id').val(), },
             url: "http://localhost/school/" +ROUTE_NAME+ "/create",
             success: function(result) { CreateRow.showSuccess(result); },
             error: function() {  CreateRow.showError(); },
@@ -52,7 +52,7 @@ class FormRow {
             type: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/"+id+"/edit",
-            data: { id: id, lp: lp, version: "forStudent" },
+            data: { id: id, lp: lp, version: "forGrade" },
             success: function(result) { EditFormRow.showSuccessForEdit(id, result); },
             error: function() { EditFormRow.showErrorForEdit(id); },
          });
@@ -62,16 +62,16 @@ class FormRow {
 // -------------------- wyświetlanie widoku formularza lub błędu na stronie -------------------- //
 class ShowRow {
     showError() {           // nieudane pobranie widoku formularza dodawania
-        var communique = "Błąd tworzenia wiersza z formularzem dodawania informacji o ocenie zadania dla ucznia.";
+        var communique = "Błąd tworzenia wiersza z formularzem dodawania informacji o ocenie zadania w klasie.";
         var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
-        $(TABLE_NAME+ ' tr.create').after(error);
+        $(TABLE_NAME+ ' tr:last').before(error);
         $('td.error').hide().fadeIn(FADE_IN);
     }
 
     showSuccess(result) {          // udane tworzenie formularza dodawania: wyświetlenie formularza w tabeli
-        $(TABLE_NAME+ ' tr.create').before(result);
+        $(TABLE_NAME+ ' tr:last').before(result);
         $('#createRow').hide().fadeIn(FADE_IN);
-        $('select[name="task_id"]').focus();
+        $('select[name="student_id"]').focus();
         this.clickCreateRowButtons();
     }
 
@@ -131,7 +131,7 @@ class TaskRating {
     }
 
     add() {     // wstawienie rekordu do bazy danych
-        var student_id  = $('#createRow input[name="student_id"]').val();
+        var student_id  = $('#createRow select[name="student_id"]').val();
         var task_id     = $('#createRow select[name="task_id"]').val();
         var deadline    = $('#createRow input[name="deadline"]').val();
         var implementation_date = $('#createRow input[name="implementation_date"]').val();
@@ -160,7 +160,7 @@ class TaskRating {
 
     update() {  // zapisywanie zmian rekordu
         var id = this.id;
-        var student_id  = $('tr[data-task_rating_id='+id+'] input[name="student_id"]').val();
+        var student_id  = $('tr[data-task_rating_id='+id+'] select[name="student_id"]').val();
         var task_id     = $('tr[data-task_rating_id='+id+'] select[name="task_id"]').val();
         var deadline    = $('tr[data-task_rating_id='+id+'] input[name="deadline"]').val();
         var implementation_date = $('tr[data-task_rating_id='+id+'] input[name="implementation_date"]').val();
@@ -208,9 +208,9 @@ class ShowResultForOperation {
     }
 
     addError() {        // nieudane dodanie nowej oceny zadania dla ucznia
-        var communique = "Nie udało się dodać oceny zadania dla ucznia.";
+        var communique = "Nie udało się dodać oceny zadania.";
         var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
-        $(TABLE_NAME+ ' tr.create').before(error);
+        $(TABLE_NAME+ ' tr:last').before(error);
         $('td.error').hide().fadeIn(FADE_IN);
     }
 
@@ -220,7 +220,7 @@ class ShowResultForOperation {
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: lp+1, version: "forStudent" },
+            data: { id: id, lp: lp+1, version: "forGrade" },
             success: function(result) { Insert.showSuccess(result); },
             error: function() {  Insert.showError();  },
         });
@@ -242,7 +242,7 @@ class ShowResultForOperation {
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: this.id, lp: lp, version: "forStudent" },
+            data: { id: this.id, lp: lp, version: "forGrade" },
             success: function(result) { updateElement.showSuccess(result); },
             error: function() {  updateElement.showError();  },
         });
@@ -267,12 +267,12 @@ class InsertNewCommandToHTML {
     showError() {           // nieudane pobranie pola z nowym rozszerzeniem
         var communique = "Nie udało się odświeżyć wiersza oceną zadania. Odśwież stronę by zobaczyć wyniki.";
         var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
-        $(TABLE_NAME+ ' tr.create').before(error);
+        $(TABLE_NAME+ ' tr:last').before(error);
         $('td.error').hide().fadeIn(FADE_IN);
     }
 
     showSuccess(result) {   // poprawne pobranie pola z nowym rozszerzeniem - dodanie go do strony
-        $('tr.create').before(result);
+        $(TABLE_NAME+ ' tr:last').before(result);
         $('tr[data-' +DATA_NAME+ '="' +id+ '"]').fadeIn(FADE_IN);
     }
 }
@@ -348,6 +348,7 @@ function removeFromDiary(task_rating_id) {  // wpisanie informacji, że ocena ni
     });
     return false;
 }
+
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {

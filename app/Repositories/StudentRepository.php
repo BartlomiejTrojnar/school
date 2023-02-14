@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Student;
 
@@ -7,7 +7,7 @@ class StudentRepository extends BaseRepository {
    public function __construct(Student $model)  { $this->model = $model; }
 
    private function filteredAndSortedRecords($grade_id=0, $group_id=0) {
-      $records = $this->model;
+      $records = $this->model->select('students.*');
       if($grade_id) $records = $records -> join('student_grades', 'students.id', '=', 'student_grades.student_id')
          -> where('student_grades.grade_id', '=', $grade_id);
       if($group_id) $records = $records -> join('group_students', 'students.id', '=', 'group_students.student_id')

@@ -1,11 +1,9 @@
 /* -------------------- STYLE DLA STRONY WYŚWIETLAJĄCEJ OCENY ZADAŃ UCZNIA --------------------- */
-/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 12.11.2022 ------------------------ */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.02.2023 ------------------------ */
 
-tr#createRow {
-    background: #874;
-}
- 
 table#taskRatings { text-align: center; }
+
+tr#createRow { background: #874; }
 td.edit {   min-width: 125px; background: pink;  }
 td.createButtons {   min-width: 175px;  }
 

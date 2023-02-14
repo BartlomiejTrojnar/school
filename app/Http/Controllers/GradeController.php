@@ -1,11 +1,9 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
 
-use App\Models\TaskRating;
-use App\Models\Teacher;
 use App\Repositories\DeclarationRepository;
 use App\Repositories\EnlargementRepository;
 use App\Repositories\GroupRepository;
@@ -133,8 +131,9 @@ class GradeController extends Controller
 /*
     public function change($id) {  session()->put('gradeSelected', $id);  }
 */
-    public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR, GroupRepository $gR,
-            LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR, EnlargementRepository $eR, $view='') {
+    public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR,
+            GroupRepository $gR, LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR,
+            EnlargementRepository $eR, TaskRatingRepository $tRR,  $view='') {
         if( empty(session()->get('gradeView')) )  session()->put('gradeView', 'info');
         if($view)  session()->put('gradeView', $view);
         if(!empty($id)) {
@@ -169,7 +168,7 @@ class GradeController extends Controller
             case 'nauczyciele': return $this -> showTeachers();
             case 'oceny':       return $this -> showRatings();
             case 'deklaracje':  return $this -> showDeclarations($dR);
-            case 'zadania':     return $this -> showTasks();
+            case 'zadania':     return $this -> showTasks($tRR);
             case 'rozszerzenia':return $this -> showEnlargements($eR);
             default:
               printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('gradeView'));
@@ -280,19 +279,17 @@ class GradeController extends Controller
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next,
             "css"=>"", "js"=>"", "subView"=>$teacherTable]);
     }
-
-    private function showTasks() {
-        $taskRatingRepo = new TaskRatingRepository(new TaskRating);
+*/
+    private function showTasks($taskRatingRepo) {
         $taskRatings = $taskRatingRepo -> getGradeTaskRatings($this->grade->id);
         $diaryYesNoSelected = session() -> get('diaryYesNoSelected');
-        $diarySelectField = view('layouts.yesNoSelectField', ["fieldName"=>"diaryYesNo", "valueSelected"=>$diaryYesNoSelected]);
-
-        $taskRatingTable = view('taskRating.table', ["grade"=>$this->grade, "taskRatings"=>$taskRatings, "subTitle"=>"zadania w klasie", "diarySelectField"=>$diarySelectField, "task"=>""]);
-
-        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next,
-            "css"=>"", "js"=>"", "subView"=>$taskRatingTable]);
+        $diarySF = view('layouts.yesNoSelectField', ["fieldName"=>"diaryYesNo", "valueSelected"=>$diaryYesNoSelected]);
+        $taskRatingTable = view('taskRating.tableForGrade', ["diarySF"=>$diarySF, "taskRatings"=>$taskRatings]);
+        $css = "taskRating/style.css";
+        $js = "taskRating/forGrade.js";
+        return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>$css, "js"=>$js, "subView"=>$taskRatingTable]);
     }
-
+/*
     private function showRatings() {
         $ratingsTable = view('rating.tableForGrade', []);
         return view('grade.show', ["grade"=>$this->grade, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$ratingsTable]);

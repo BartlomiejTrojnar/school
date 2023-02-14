@@ -1,10 +1,10 @@
 <tr data-task_rating_id="{{ $taskRating->id }}">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 *********************** -->
    <td><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ $lp }}</a></td>
+   @if($version != "forTask") <td style="text-align: left;"><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>   @endif
    @if($version != "forStudent")
       <td style="text-align: left;"><a href="{{ route('uczen.show', $taskRating->student_id) }}">{{ $taskRating->student->first_name }} {{ $taskRating->student->last_name }}</a></td>
    @endif
-   @if($version != "forTask") <td style="text-align: left;"><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>   @endif
    <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
    <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
    <td>{{ $taskRating->version }}</td>
@@ -20,7 +20,7 @@
          <button class="btn-warning no-diary"    data-task_rating_id="{{ $taskRating->id }}"><i class="fa fa-circle-o"></i></button>
       @endif
    </td>
-   <td>{{ substr($taskRating->entry_date, 0, 10) }}</td>
+   <td class="entry_date">{{ substr($taskRating->entry_date, 0, 10) }}</td>
 
    <!-- modyfikowanie i usuwanie -->
    <td class="improvement edit destroy">
