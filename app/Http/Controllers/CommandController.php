@@ -1,10 +1,8 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Command;
 use App\Repositories\CommandRepository;
-
-use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 
 class CommandController extends Controller {
@@ -88,10 +86,8 @@ class CommandController extends Controller {
             -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
 */
-/*
-
     public function show($id, CommandRepository $commandRepo, $view='') {
-        if( empty(session() -> get('commandView')) )  session() -> put('commandView', 'showInfo');
+        if( empty(session() -> get('commandView')) )  session() -> put('commandView', 'info');
         if($view)  session() -> put('commandView', $view);
         session() -> put('commandSelected', $id);
         $command = $commandRepo -> find($id);
@@ -99,9 +95,11 @@ class CommandController extends Controller {
         list($this->previous, $this->next) = $commandRepo -> nextAndPreviousRecordId($commands, $id);
 
         switch(session()->get('commandView')) {
-            case 'showInfo':
+            case 'info':
                 return view('command.show', ["command"=>$command, "previous"=>$this->previous, "next"=>$this->next])
                     -> nest('subView', 'command.showInfo', ["command"=>$command]);
+            case 'oceny':
+                printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
         }

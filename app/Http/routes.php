@@ -205,6 +205,7 @@ Route::get('/zadanie/orderBy/{column}', array('as'=>'zadanie.orderBy', 'uses'=>'
 Route::get('/zadanie/{id}/{view?}', 'TaskController@show');
 
 
+Route::get('/polecenie/{id}/{view?}', 'CommandController@show');
 Route::post('/polecenie/storeFromImport', array('as'=>'polecenie.storeFromImport', 'uses'=>'CommandExportController@storeFromImport'));
 Route::resource('/polecenie', 'CommandController');
 Route::post('/polecenie/refreshRow', 'CommandController@refreshRow');
