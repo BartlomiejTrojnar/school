@@ -1,14 +1,14 @@
 <tr data-task_rating_id="{{ $taskRating->id }}">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 *********************** -->
    <td><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ $lp }}</a></td>
    @if($version != "forTask") <td style="text-align: left;"><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>   @endif
    @if($version != "forStudent")
       <td style="text-align: left;"><a href="{{ route('uczen.show', $taskRating->student_id) }}">{{ $taskRating->student->first_name }} {{ $taskRating->student->last_name }}</a></td>
    @endif
-   <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
-   <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
    <td>{{ $taskRating->version }}</td>
    <td>{{ $taskRating->importance }}</td>
+   <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
+   <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
    <td>{{ substr($taskRating->rating_date, 0, 10) }}</td>
    <td>{{ $taskRating->points }} ({{ number_format($taskRating->points/$taskRating->task->points*100, 1) }}%)</td>
    <td>{{ $taskRating->rating }}</td>

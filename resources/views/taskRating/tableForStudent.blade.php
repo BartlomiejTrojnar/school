@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 *********************** -->
 <section id="taskRatingsTable">
    <h2>Oceny zadań ucznia</h2>
    <table id="taskRatings">
@@ -6,10 +6,10 @@
          <th>lp</th>
          <?php
             echo view('layouts.thSorting', ["thName"=>"zadanie", "routeName"=>"ocena_zadania.orderBy", "field"=>"task_id", "sessionVariable"=>"TaskRatingkOrderBy"]);
-            echo view('layouts.thSorting', ["thName"=>"termin", "routeName"=>"ocena_zadania.orderBy", "field"=>"deadline", "sessionVariable"=>"TaskRatingkOrderBy"]);
-            echo view('layouts.thSorting', ["thName"=>"data realizacji", "routeName"=>"ocena_zadania.orderBy", "field"=>"implementation_date", "sessionVariable"=>"TaskRatingkOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"wersja", "routeName"=>"ocena_zadania.orderBy", "field"=>"version", "sessionVariable"=>"TaskRatingkOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"waga", "routeName"=>"ocena_zadania.orderBy", "field"=>"importance", "sessionVariable"=>"TaskRatingkOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"termin", "routeName"=>"ocena_zadania.orderBy", "field"=>"deadline", "sessionVariable"=>"TaskRatingkOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"data realizacji", "routeName"=>"ocena_zadania.orderBy", "field"=>"implementation_date", "sessionVariable"=>"TaskRatingkOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"data oceny", "routeName"=>"ocena_zadania.orderBy", "field"=>"rating_date", "sessionVariable"=>"TaskRatingkOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"punkty", "routeName"=>"ocena_zadania.orderBy", "field"=>"points", "sessionVariable"=>"TaskRatingkOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"ocena", "routeName"=>"ocena_zadania.orderBy", "field"=>"rating", "sessionVariable"=>"TaskRatingkOrderBy"]);
@@ -30,10 +30,10 @@
          <tr data-task_rating_id="{{$taskRating->id}}">
             <td class="lp"><a href="{{ route('ocena_zadania.show', $taskRating->id) }}">{{ ++$count }}</a></td>
             <td style="text-align: left;"><a href="{{ route('zadanie.show', $taskRating->task_id) }}">{{ $taskRating->task->name }}</a></td>
-            <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
-            <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
             <td>{{ $taskRating->version }}</td>
             <td>{{ $taskRating->importance }}</td>
+            <td>{{ substr($taskRating->deadline, 0, 10) }}</td>
+            <td>{{ substr($taskRating->implementation_date, 0, 10) }}</td>
             <td>{{ substr($taskRating->rating_date, 0, 10) }}</td>
             <td>{{ $taskRating->points }} ({{ number_format($taskRating->points/$taskRating->task->points*100, 1) }}%)</td>
             <td>{{ $taskRating->rating }}</td>

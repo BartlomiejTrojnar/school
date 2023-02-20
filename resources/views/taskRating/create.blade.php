@@ -1,15 +1,15 @@
 <tr id="createRow">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 *********************** -->
    <form action="{{ route('ocena_zadania.store') }}" method="post" role="form">
    {{ csrf_field() }}
       @if($version=="forStudent")   <td><input type="hidden" name="student_id" value="{{ $student_id }}" /></td>  @endif
       @if($version=="forTask")      <td><input type="hidden" name="task_id" value="{{ $task_id }}" /></td>        @endif
       @if($version!="forStudent")   <td><?php  print_r($studentSF);  ?></td>  @endif
       @if($version!="forTask")      <td><?php  print_r($taskSF);     ?></td>  @endif
+      <td><input type="number" name="version" size="2" maxlength="1" min="1" max="9" required /></td>
+      <td><input type="text" name="importance" size="3" maxlength="4" required /></td>
       <td><input type="date" name="deadline" required /></td>
       <td><input type="date" name="implementation_date" /></td>
-      <td><input type="number" name="version" size="2" maxlength="1" min="1" max="9" required style="border: 3px solid red; background: #f88;" /></td>
-      <td><input type="text" name="importance" size="3" maxlength="4" required style="border: 3px solid red; background: #f88;" /></td>
       <td><input type="date" name="rating_date" /></td>
       <td>
          <input type="text" name="points" size="3" maxlength="4" />
