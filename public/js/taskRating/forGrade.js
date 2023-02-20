@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 ------------------------ //
 // --------------------------- wydarzenia dla widoku uczen/zadania  ---------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const ROUTE_NAME="ocena_zadania", NUMBER_OF_FIELDS = 14, TABLE_NAME="#taskRatings", DATA_NAME="task_rating_id";
@@ -73,6 +73,7 @@ class ShowRow {
         $('#createRow').hide().fadeIn(FADE_IN);
         $('select[name="student_id"]').focus();
         this.clickCreateRowButtons();
+        this.formRowActions();
     }
 
     clickCreateRowButtons() {  // naciśnięcie przyciku w formularzu dodawania
@@ -105,6 +106,7 @@ class ShowRow {
             $('tr.editRow[data-' +DATA_NAME+ '="'+id+'"]').hide().fadeIn(FADE_IN);
             $('select[name="task_id"]').focus();
             ShowRow.clickEditRowButtons();
+            ShowRow.formEditRowActions();
         });
     }
 
@@ -121,6 +123,110 @@ class ShowRow {
             var taskRating = new TaskRating(id);
             $.when( $('li[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { taskRating.update(); });
         });
+    }
+
+    formRowActions() {  // akcje w czasie uzupełniania formularza
+        $('input[name="rating_date"]').attr("disabled", "disabled");
+        $('input[name="points"]').attr("disabled", "disabled");
+        $('input[name="rating"]').attr("disabled", "disabled");
+        $('input[name="diary"]').attr("disabled", "disabled");
+        $('input[name="entry_date"]').attr("disabled", "disabled");
+        ShowRow.implementationDateChange();
+        ShowRow.ratingDateChange();
+        ShowRow.pointsChange();
+        ShowRow.ratingChange();
+        ShowRow.diaryChange();        
+        ShowRow.entryDateChange();
+    }
+
+    static formEditRowActions() {  // akcje w czasie uzupełniania formularza
+        this.ratingAndPointsBlocking();
+        this.ratingBlocking();
+        this.diaryBlocking();
+        this.implementationDateChange();
+        this.ratingDateChange();
+        this.pointsChange();
+        this.ratingChange();
+        this.diaryChange();
+        this.entryDateChange();
+    }
+
+    static implementationDateChange() {  $('input[name="implementation_date"]').change(function() { ShowRow.ratingAndPointsBlocking(); });  }
+
+    static ratingDateChange() {  $('input[name="rating_date"]').change(function() { ShowRow.ratingBlocking(); });  }
+
+    static pointsChange() {
+        $('input[name="points"]').change(function() {
+            if( $('input[name="points"]').val()!="" && $('input[name="rating_date"]').val()=="" ) {
+                const d = new Date();
+                var year = parseInt( d.getFullYear() );
+                var month = parseInt( d.getMonth() ) + 1;
+                if(month<10) month = '0'+month;
+                var day = parseInt(d.getDate());
+                if(day<10) day = '0'+day;
+                var ratingDate = year + '-' + month + '-' + day;
+                $('input[name="rating_date"]').val( ratingDate );
+                ShowRow.ratingBlocking();
+            }
+        });
+    }
+
+    static ratingChange() {   $('input[name="rating"]').change(function() {  ShowRow.diaryBlocking();  });   }
+
+    static diaryChange() {
+        $('input[name="diary"]').change(function() {
+            if($('input[name="diary"]').is(':checked') && $('input[name="entry_date"]').val()=="" ) {
+                const d = new Date();
+                var year = parseInt( d.getFullYear() );
+                var month = parseInt( d.getMonth() ) + 1;
+                if(month<10) month = '0'+month;
+                var day = parseInt(d.getDate());
+                if(day<10) day = '0'+day;
+                var entryDate = year + '-' + month + '-' + day;
+                $('input[name="entry_date"]').val( entryDate );
+            }
+        });
+    }
+
+    static entryDateChange() {
+        $('input[name="entry_date"]').change(function() {
+            if($('input[name="entry_date"]').val()=="" )    $('input[name="diary"]').removeAttr("checked");
+            else {
+                var inp = '<input type="checkbox" name="diary" checked="checked">';
+                $('input[name="diary"]').replaceWith(inp);
+            }
+        });
+    }
+
+    static ratingAndPointsBlocking() {
+        if( $('input[name="implementation_date"]').val()!="") {
+            $('input[name="rating_date"]').removeAttr("disabled");
+            $('input[name="points"]').removeAttr("disabled");
+        }
+        else    {
+            $('input[name="rating_date"]').val('').attr("disabled", "disabled");
+            $('input[name="points"]').val('').attr("disabled", "disabled");
+            ShowRow.ratingBlocking();
+        }
+    }
+
+    static ratingBlocking() {
+        if($('input[name="rating_date"]').val()!="")    $('input[name="rating"]').removeAttr("disabled");
+        else    {
+            $('input[name="rating"]').val('').attr("disabled", "disabled");
+            this.diaryBlocking();
+        }
+    }
+
+    static diaryBlocking() {
+        if($('input[name="rating"]').val()!="") {
+            $('input[name="diary"]').removeAttr("disabled");
+            $('input[name="entry_date"]').removeAttr("disabled");
+        }
+        else    {
+            $('input[name="diary"]').attr("checked", false).attr("disabled", "disabled");
+            $('input[name="entry_date"]').val('').attr("disabled", "disabled");
+        }
     }
 }
 

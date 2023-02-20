@@ -73,7 +73,7 @@ class ShowRow {
         $('#createRow').hide().fadeIn(FADE_IN);
         $('select[name="task_id"]').focus();
         this.clickCreateRowButtons();
-        this.formRowActions();
+        ShowRow.formRowActions();
     }
 
     clickCreateRowButtons() {  // naciśnięcie przyciku w formularzu dodawania
@@ -93,12 +93,56 @@ class ShowRow {
         });
     }
 
-    formRowActions() {  // akcje w czasie uzupełniania formularza
+    showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
+        var communique = "Nie mogę utworzyć formularza do zmiany oceny zadania.";
+        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +DATA_NAME+ '="'+id+'"]').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
+    }
+
+    showSuccessForEdit(id, result) {    // udane pobranie widoku formularza dodawania: pokazanie formularza na stronie
+        $.when( $('tr[data-' +DATA_NAME+ '="'+id+'"]').fadeOut(FADE_OUT) ).then(function() {
+            $('tr[data-' +DATA_NAME+ '="'+id+'"]').replaceWith(result);
+            $('tr.editRow[data-' +DATA_NAME+ '="'+id+'"]').hide().fadeIn(FADE_IN);
+            $('select[name="task_id"]').focus();
+            ShowRow.clickEditRowButtons();
+            ShowRow.formEditRowActions();
+        });
+    }
+
+    static clickEditRowButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
+        $('.editRow button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
+            var id = $(this).data(DATA_NAME);
+            var lp = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="lp"]').val();
+            var result = new ShowResultForOperation(id);
+            $.when( $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.updateSuccess(lp) });
+        });
+
+        $('.editRow button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
+            var id = $(this).data(DATA_NAME);
+            var taskRating = new TaskRating(id);
+            $.when( $('li[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { taskRating.update(); });
+        });
+    }
+
+    static formRowActions() {  // akcje w czasie uzupełniania formularza
         $('input[name="rating_date"]').attr("disabled", "disabled");
         $('input[name="points"]').attr("disabled", "disabled");
         $('input[name="rating"]').attr("disabled", "disabled");
         $('input[name="diary"]').attr("disabled", "disabled");
         $('input[name="entry_date"]').attr("disabled", "disabled");
+        this.implementationDateChange();
+        this.ratingDateChange();
+        this.pointsChange();
+        this.ratingChange();
+        this.diaryChange();
+        this.entryDateChange();
+    }
+
+    static formEditRowActions() {  // akcje w czasie uzupełniania formularza
+        this.ratingAndPointsBlocking();
+        this.ratingBlocking();
+        this.diaryBlocking();
         this.implementationDateChange();
         this.ratingDateChange();
         this.pointsChange();
@@ -183,50 +227,6 @@ class ShowRow {
             $('input[name="diary"]').attr("checked", false).attr("disabled", "disabled");
             $('input[name="entry_date"]').val('').attr("disabled", "disabled");
         }
-    }
-
-    showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
-        var communique = "Nie mogę utworzyć formularza do zmiany oceny zadania.";
-        var error = '<tr><td colspan="' +NUMBER_OF_FIELDS+ '" class="error">' +communique+ '</td></tr>';
-        $('tr[data-' +DATA_NAME+ '="'+id+'"]').before(error);
-        $('td.error').hide().fadeIn(FADE_IN);
-    }
-
-    showSuccessForEdit(id, result) {    // udane pobranie widoku formularza dodawania: pokazanie formularza na stronie
-        $.when( $('tr[data-' +DATA_NAME+ '="'+id+'"]').fadeOut(FADE_OUT) ).then(function() {
-            $('tr[data-' +DATA_NAME+ '="'+id+'"]').replaceWith(result);
-            $('tr.editRow[data-' +DATA_NAME+ '="'+id+'"]').hide().fadeIn(FADE_IN);
-            $('select[name="task_id"]').focus();
-            ShowRow.clickEditRowButtons();
-            ShowRow.formEditRowActions();
-        });
-    }
-
-    static clickEditRowButtons() {  // naciśnięcie przyciku w formularzu modyfikowania
-        $('.editRow button.cancelUpdate').click(function() {   // kliknięcie przycisku "anuluj"
-            var id = $(this).data(DATA_NAME);
-            var lp = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="lp"]').val();
-            var result = new ShowResultForOperation(id);
-            $.when( $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { result.updateSuccess(lp) });
-        });
-
-        $('.editRow button.update').click(function() {          // kliknięcie przycisku "zapisz zmiany"
-            var id = $(this).data(DATA_NAME);
-            var taskRating = new TaskRating(id);
-            $.when( $('li[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { taskRating.update(); });
-        });
-    }
-
-    static formEditRowActions() {  // akcje w czasie uzupełniania formularza
-        this.ratingAndPointsBlocking();
-        this.ratingBlocking();
-        this.diaryBlocking();
-        this.implementationDateChange();
-        this.ratingDateChange();
-        this.pointsChange();
-        this.ratingChange();
-        this.diaryChange();
-        this.entryDateChange();
     }
 }
 
