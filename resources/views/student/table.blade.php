@@ -20,7 +20,7 @@
       ?>
       <th>wpis</th>
       <th>aktualizacja</th>
-      <th colspan="2">+/-</th>
+      <th>zmień / usuń</th>
    </tr>
 
    @if( !empty( $links ) )
@@ -38,9 +38,9 @@
    @if( !empty($students) )
    <?php $count = 0; ?>
    @foreach($students as $student)
-      <?php $count++; ?>
-      @if($student->sex == 'mężczyzna') <tr class="man"> @else <tr class="woman"> @endif
-         <td style="height: 35px;">{{ $count }}</td>
+      <?php if($student->sex == 'mężczyzna') $class="man"; else $class="woman"; ?>
+      <tr class="{{ $class }}" data-student_id="{{ $student->id }}">
+         <td style="height: 35px;">{{ ++$count }}</td>
          <td>{{ $student->first_name }}</td>
          <td>{{ $student->second_name }}</td>
          <td><a href="{{ route('uczen.show', $student->id) }}">{{ $student->last_name }}</a></td>
@@ -54,22 +54,21 @@
          <td>{{ $student->place_of_birth }}</td>
          <td class="small c">{{ substr($student->created_at, 0, 10) }}</td>
          <td class="small c">{{ substr($student->updated_at, 0, 10) }}</td>
-         <td class="edit"><a class="btn btn-primary" href="{{ route('uczen.edit', $student->id) }}"> <i class="fa fa-edit"></i> </a></td>
-         <td class="destroy">
-            <form action="{{ route('uczen.destroy', $student->id) }}" method="post" id="delete-form-{{$student->id}}">
-               {{ csrf_field() }}
-               {{ method_field('DELETE') }}
-               <button class="btn btn-primary"> <i class="fa fa-remove"></i> </button>
-            </form>
+         <td class="edit destroy c">
+            <button class="edit btn btn-primary"      data-student_id="{{ $student->id }}"><i class="fa fa-edit"></i></button>
+            <button class="destroy btn btn-primary"   data-student_id="{{ $student->id }}"><i class="fa fa-remove"></i></button>
          </td>
       </tr>
    @endforeach
    @endif
 
    @if( $showDateView )
+      <tr class="create"><td colspan="11"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      <?php /*
       <tr class="create"><td colspan="12">
          <a id="studentCreate" class="btn btn-primary" href="{{ route('uczen.create') }}"><i class="fa fa-plus"></i></a>
       </td></tr>
+      */ ?>
 
       <tr id="formStudentCreate" style="display: none;">
          <form action="{{ route('uczen.store') }}" method="post" role="form">
@@ -94,7 +93,9 @@
 </tbody>
 </table>
 
+<?php /*
 @section('java-script')
-  <script src="{{ asset('public/js/rememberDates.js') }}"></script>
-  <script src="{{ asset('public/js/student/create.js') }}"></script>
+   <script src="{{ asset('public/js/rememberDates.js') }}"></script>
+   <script src="{{ asset('public/js/student/create.js') }}"></script>
 @endsection
+*/ ?>

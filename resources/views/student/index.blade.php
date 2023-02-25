@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 15.01.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 22.02.2023 ********************** -->
 @extends('layouts.app')
 
 @section('java-script')

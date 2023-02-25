@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -165,7 +165,6 @@ class StudentController extends Controller
         return view('student.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "student"=>$this->student, "subView"=>$taskRatingsTable]);
     }
 
-    /*
     private function showGrades($studentGradeRepo, $studentNumberRepo, $schoolYearRepo) {
         $studentGrades = $studentGradeRepo -> getStudentGrades($this->student->id);
         $studentHistory = studentHistory :: where('student_id', $this->student->id) -> orderBy('date') -> get();
@@ -186,7 +185,7 @@ class StudentController extends Controller
         $js = "student/studentGrades.js";
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentGradeTable]);
     }
-
+/*
     private function showGroups($groupStudentRepo, $schoolYearRepo) {
         $dateView = session() -> get('dateView');
         // znalezienie grup ucznia
@@ -239,7 +238,7 @@ class StudentController extends Controller
         $js = "declaration/forStudent.js";
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subView]);
     }
-
+*/
     public function search() { return view('student.search'); }
 
     public function searchResults(Request $request, StudentRepository $studentRepo) {
@@ -248,12 +247,10 @@ class StudentController extends Controller
         if($request->first_name)     $students = $students -> where('first_name', $request->first_name);
         if($request->PESEL)          $students = $students -> where('PESEL', $request->PESEL);
         if($request->place_of_birth) $students = $students -> where('place_of_birth', $request->place_of_birth);
-        //$students = $studentRepo -> sortAndPaginateRecords($students);
         return view('student.searchResults', ["students"=>$students, "request"=>$request]);
     }
 
     public function change($id) {  session()->put('studentSelected', $id);  }
-*/
 
     public function orderBy($column) {
         if(session()->get('StudentOrderBy[0]') == $column)

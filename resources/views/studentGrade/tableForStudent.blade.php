@@ -1,5 +1,5 @@
 <section id="studentGrades">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 *********************** -->
    <aside style="float: right;">data widoku: {{$dateView}}<input id="yesterday" type="hidden" value="{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}" /></aside>
    <h2>klasy ucznia</h2>
    <table id="studentGradesTable">

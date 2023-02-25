@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -179,7 +179,7 @@ class GradeController extends Controller
         $subView = view('grade.showInfo', ["grade"=>$this->grade]);
         return view('grade.show', ["css"=>"", "js"=>"", "previous"=>$this->previous, "next"=>$this->next, "grade"=>$this->grade, "subView"=>$subView, "year"=>$this->year]);
     }
-/*
+
     private function showStudents($schoolYearRepo, $studentGradeRepo) { // funkcja przygotowująca i wyświetlająca widok przynależności uczniów do klasy
         $start = session()->get('dateView');
         $end = session()->get('dateEnd');
@@ -208,10 +208,10 @@ class GradeController extends Controller
          $sexSF = view('student.sexSelectField', ["sex"=>$selectedSex]);
          $studentsTable = view('student.table', ["grade"=>$this->grade, "students"=>$students, "subTitle"=>"aktualni uczniowie klasy", "showDateView"=>true, "sexSF"=>$sexSF]);
          $studentsOutOfDateTable = view('student.table', ["grade"=>$this->grade, "students"=>$studentsOutOfDate, "subTitle"=>"pozostali uczniowie klasy", "showDateView"=>false]);
-
-         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>"", "subView"=>$studentsTable, "subView2"=>$studentsOutOfDateTable]);
+         $js = "student/forGrade.js";
+         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$studentsTable, "subView2"=>$studentsOutOfDateTable]);
     }
-
+/*
     private function showNumbers($schoolYearRepo, $studentNumberRepo) {
         $schoolYears = $schoolYearRepo -> getAllSorted();
         if(session()->get('schoolYearSelected')) {

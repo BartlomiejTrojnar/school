@@ -82,7 +82,7 @@ export class CreateRowService {
             method: "GET",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/" +routeTableName+ "/create",
-            success: function(result) { CreateRowService.showSuccess(result, tableName, inputName); },
+            success: function(result) {  CreateRowService.showSuccess(result, tableName, inputName); },
             error: function() {  CreateRowService.showError(numberOfFields, communique, tableName); },
         });
     }
@@ -103,6 +103,7 @@ export class CreateRowService {
 // ---------------------------- tworzenie formularza modyfikowania ----------------------------- //
 export class EditRowService {
     constructor(numberOfFields, dataName, communique, inputName) {
+        alert(numberOfFields);
         this.numberOfFields = numberOfFields;
         this.dataName = dataName;
         this.communique = communique;
