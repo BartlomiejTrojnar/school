@@ -1,11 +1,11 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
-
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.01.2023 ------------------------ //
-// ------------------------- wydarzenia dla widoku uczeń/rozszerzenia  ------------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const TABLE_NAME="#studentGradesTable", ROUTE_NAME="klasy_ucznia", DATA_NAME="student_grade_id";
 
+import '../studentHistory/forStudent.js';
+import { StudentHistory } from '../studentHistory/forStudent.js';
+import '../studentNumber/forStudent.js';
 
 // ----------------- kliknięcie przycisku uruchamiającego formularz dodawania ------------------ //
 function clickShowCreateRowButtonForStudentGrade() {
@@ -24,6 +24,7 @@ function clickShowExchangeFormButton() {
     });
 }
 */
+/*
 // --------------- kliknięcie przycisku uruchamiającego formularz modyfikowania ---------------- //
 function clickShowEditFormButtonForStudentGrade() {
     $(TABLE_NAME).delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
@@ -41,7 +42,7 @@ function clickDestroyButtonForStudentGrade() {
         studentGrade.delete();
     });
 }
-
+*/
 // ------------------------------- pobieranie widoku formularzy -------------------------------- //
 class FormForStudentGrade {
     getCreateForm() {   // pobieranie widoku formularza dodawania
@@ -150,6 +151,7 @@ class ShowFormForStudentGrade {
         });
     }
 */
+/*
     showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
         var communique = "Nie mogę utworzyć formularza do zmiany informacji o rozszerzeniu.";
         var error = '<tr><td class="error" colspan="6">' +communique+ '</td></tr>';
@@ -183,6 +185,7 @@ class ShowFormForStudentGrade {
             $.when( $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { studentGrade.update(); });
         });
     }
+*/
 }
 
 // ---------------------- operacje na rekordach dotyczących rozszerzenia ----------------------- //
@@ -201,6 +204,8 @@ class StudentGrade {
         if(confirmationStart)   confirmationStart=1; else confirmationStart=0;
         if(confirmationEnd)     confirmationEnd=1;   else confirmationEnd=0;
         var ShowResult = new ShowResultForOperation();
+        ShowResult.addSuccess(9287);
+        return;
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -246,6 +251,7 @@ class StudentGrade {
         });
     }
 */
+/*
     update() {  // zapisywanie zmian rekordu
         var id = this.id;
         var student_id  = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="student_id"]').val();
@@ -279,7 +285,9 @@ class StudentGrade {
             error:   function() { ShowResult.destroyError(); }
         });
     }
+*/
 }
+
 
 // ------------------------- pokazywanie wyników operacji na rekordach ------------------------- //
 class ShowResultForOperation {
@@ -292,17 +300,31 @@ class ShowResultForOperation {
         $('td.error').hide().slideDown(SLIDE_DOWN);
     }
 
-    addSuccess(id) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
-        var Insert = new InsertNewStudentGradeToHTML();
-        var lp = $('#studentGradesTable tr').length-2;
-        $.ajax({
-            method: "POST",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            data: { id: id, lp: lp, version: "forStudent" },
-            success: function(result) { Insert.showSuccess(result, id); },
-            error: function() {  Insert.showError();  },
-        });
+    addSuccess() {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
+        // var Insert = new InsertNewStudentGradeToHTML();
+        // var lp = $('#studentGradesTable tr').length-2;
+        // var id = this.id;
+        // $.ajax({
+            // method: "POST",
+            // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            // url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            // data: { id: id, lp: lp, version: "forStudent" },
+            // success: function(result) { Insert.showSuccess(result, id); },
+            // error: function() {  Insert.showError();  },
+        // });
+
+
+        var SH = new StudentHistory();
+        // this.event = $('#studentGradeCreateRow input[name="start"]').val();
+        // this.confirmationDate = $('#studentGradeCreateRow input[name="confirmationStart"]').is(":checked");
+        // this.confirmationEvent = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(":checked");
+        var student_id = $('#student_id').val();
+        var start = $('#studentGradeCreateRow input[name="start"]').val();
+        var event = "przyjęto do klasy";
+        SH.getData(student_id, start, event, 1, 0);
+        SH.add();
+        // alert(309);
+
     }
 /*
     exchangeError() {     // nieudane zapisane zamiany wyboru rozszerzenia
@@ -323,6 +345,7 @@ class ShowResultForOperation {
         });
     }
 */
+/*
     updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
         $('tr[data-' +DATA_NAME+ '="' +this.id+ '"].proposedDates').remove();
         $('tr[data-' +DATA_NAME+ '="' +this.id+ '"]').html('<td colspan="6" class="error">Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.</td>');
@@ -353,6 +376,7 @@ class ShowResultForOperation {
             $('tr[data-' +DATA_NAME+ '="' +id+ '"]').remove();
         });
     }
+*/
 }
 
 // ------------------- wstawienie informacji o nowym rekordzie do kodu HTML -------------------- //
@@ -386,6 +410,7 @@ class ExchangeElementInHTML {
     }
 }
 */
+
 // ---------------- odświeżenie informacji o zmienionym rekordzie w kodzie HTML ---------------- //
 class UpdateElementInHTML {
     constructor(id) {
@@ -418,522 +443,11 @@ function clickError() {     // kliknięcie dowolnego obiektu o klasie .error - u
 
 
 /*
-// -------------------------------- zarządzanie klasami ucznia --------------------------------- //
-function refreshRowForStudentGrades(id, lp, add=false) {    // odświeżenie wiersza z podanym identyfikatorem
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/klasy_ucznia/refreshRow",
-        data: { id: id, lp: lp, version: "forStudent" },
-        success: function(result) {
-            if(add){
-                $('#studentGrades tr.create').before(result);
-                $('#showCreateRow').show();
-                showCreateFormForBookOfStudentClick();
-            }
-            else {
-                $('tr.editRow[data-student_grade_id='+id+']').remove();
-                $('tr[data-student_grade_id='+id+']').replaceWith(result);
-            }
-        },
-        error: function() {
-            var error = '<tr><td class="error" colspan="6">Błąd odświeżania wiersza z klasą ucznia.</td></tr>';
-            if(add)  $('#studentGrades table').append(error);
-            else  $('#studentGrades tr[data-student_grade_id='+id+']').replaceWith(error);
-        },
-    });
-}
-
-function showCreateRowForStudentGradeClick() {
-    $('#studentGrades .showCreateRow').click(function(){
-        $(this).hide();
-        $('#studentGrades table').animate({width: '1000px'}, 500);
-        var student_id = $('input#student_id').val();
-        showCreateRowForStudentGrade(student_id);
-        return false;
-    });
-}
-
-function showCreateRowForStudentGrade(student_id) {
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/klasy_ucznia/create",
-        data: { student_id: student_id, version: "forStudent" },
-        success: function(result) { 
-            $('#studentGrades table').append(result);
-            addStudentGradeClick();
-            proposedDateClick();
-        },
-        error: function() {
-            var error = '<tr><td colspan="6" class="error">Błąd tworzenia wiersza zformularzem dla dodawania klasy ucznia.</td></tr>';
-            $('#studentGrades tr.create').before(error);
-        },
-    });
-}
-
-function addStudentGradeClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania klasy ucznia
-    $('#studentGrades button.cancelAdd').click(function(){
-        $('#studentGradeCreateRow').remove();
-        $('#studentGradeProposedDates').remove();
-        $('#studentGrades button.showCreateRow').show();
-        return false;
-    });
-
-    $('#studentGrades button.add').click(function(){
-        addStudentGrade();
-        $('#studentGradeCreateRow').remove();
-        $('#studentGradeProposedDates').remove();
-        $('#studentGrades button.showCreateRow').show();
-        return false;
-    });
-}
-
-function addStudentGrade() {   // zapisanie klasy ucznia w bazie danych
-    var student_id  = $('#studentGradeCreateRow input[name="student_id"]').val();
-    var grade_id    = $('#studentGradeCreateRow select[name="grade_id"]').val();
-    var start  = $('#studentGradeCreateRow input[name="start"]').val();
-    var end    = $('#studentGradeCreateRow input[name="end"]').val();
-    var confirmation_start = $('#studentGradeCreateRow input[name="confirmationStart"]').is(':checked');
-    var confirmation_end   = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(':checked');
-    if(confirmation_start)  confirmation_start=1;
-    if(confirmation_end)  confirmation_end=1;
-    var lp = parseInt($('#lp').val())+1;
-
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/klasy_ucznia",
-        data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
-        success: function(id) { refreshRowForStudentGrades(id, lp, true,); },
-        error: function() {
-            var error = '<tr><td colspan="6" class="error">Błąd dodawania klasy dla ucznia.</td></tr>';
-            $('#studentGrades tr.create').before(error);
-        },
-    });
-}
-
-function editStudentGradeClick() {     // kliknięcie przycisku modyfikowania klasy ucznia
-    $('#studentGrades').delegate('button.edit', 'click', function() {
-        var id = $(this).attr('data-student_grade_id');
-        var lp = $(this).parent().parent().children(":first").html();
-        $.ajax({
-            type: "GET",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/klasy_ucznia/"+id+"/edit",
-            data: { id: id, lp: lp, version: "forStudent" },
-            success: function(result) {
-                $('tr[data-student_grade_id='+id+']').before(result).hide();
-                updateStudentGradeClick();
-                proposedDateClick();
-            },
-            error: function() {
-                var error = '<tr><td colspan="6" class="error">Błąd tworzenia wiersza z formularzem modyfikowania klasy ucznia.</td></tr>';
-                $('tr[data-student_grade_id='+id+']').after(error).hide();
-            },
-        });
-    });
-}
-
-function updateStudentGradeClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania klasy ucznia
-    $('#studentGrades .cancelUpdate').click(function(){
-        var id = $(this).data('student_grade_id');
-        $('.editRow[data-student_grade_id='+id+']').remove();
-        $('.proposedDates[data-student_grade_id='+id+']').remove();
-        $('tr[data-student_grade_id='+id+']').show();
-        return false;
-    });
-
-    $('#studentGrades .update').click(function(){
-        var id = $(this).data('student_grade_id');
-        updateStudentGrade(id);
-        $('.editRow[data-student_grade_id='+id+']').remove();
-        $('.proposedDates[data-student_grade_id='+id+']').remove();
-        return false;
-    });
-}
-
-function updateStudentGrade(id) {   // zapisanie klasy ucznia w bazie danych
-    var student_id         = $('tr[data-student_grade_id='+id+'] input[name="student_id"]').val();
-    var grade_id           = $('tr[data-student_grade_id='+id+'] select[name="grade_id"]').val();
-    var start              = $('tr[data-student_grade_id='+id+'] input[name="start"]').val();
-    var end                = $('tr[data-student_grade_id='+id+'] input[name="end"]').val();
-    var confirmation_start = $('tr[data-student_grade_id='+id+'] input[name="confirmationStart"]').is(':checked');
-    var confirmation_end   = $('tr[data-student_grade_id='+id+'] input[name="confirmationEnd"]').is(':checked');
-    if(confirmation_start) confirmation_start=1;
-    if(confirmation_end)   confirmation_end=1;
-    var lp = $('tr[data-student_grade_id='+id+'] input[name="lp"]').val();
-
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/klasy_ucznia/"+id,
-        data: { student_id: student_id, grade_id: grade_id, start: start, end: end, confirmation_start: confirmation_start, confirmation_end: confirmation_end },
-        success: function() {   refreshRowForStudentGrades(id, lp);  },
-        error: function() {
-            var error = '<tr><td colspan="6" class="error">Błąd modyfikowania klasy ucznia.</td></tr>';
-            $('tr[data-student_grade_id='+id+']').after(error).hide();
-        },
-    });
-}
-
-function destroyStudentGradeClick() {  // usunięcie klasy ucznia (z bazy danych)
-    $('#studentGrades').delegate('button.destroy', 'click', function() {
-        var id = $(this).data('student_grade_id');
-        $.ajax({
-            type: "DELETE",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/klasy_ucznia/" + id,
-            success: function() {   $('tr[data-student_grade_id='+id+']').remove(); },
-            error: function() {
-                var error = '<tr><td colspan="6" class="error">Błąd usuwania klasy ucznia.</td></tr>';
-                $('tr[data-student_grade_id='+id+']').after(error).hide();
-            }
-        });
-        return false;
-    });
-}
-
-function proposedDateClick() {
-    $('.studentGradeStart').bind('click', function(){
-        $('#start').val($(this).html());
-        return false;
-    });
-    $('.studentGradeEnd').bind('click', function(){
-        $('#end').val($(this).html());
-        return false;
-    });
-}
-
-// -------------------------------------- historia ucznia -------------------------------------- //
-function refreshRowForStudentHistory(id, add=false) {    // odświeżenie wiersza z podanym identyfikatorem
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/historia_ucznia/refreshRow",
-        data: { id: id, version: "forStudent" },
-        success: function(result) {
-            if(add) $('tr[data-student_history_id="'+id+'"]').replaceWith(result);
-            else {
-                $('tr.editRow[data-student_history_id='+id+']').remove();
-                $('tr[data-student_history_id='+id+']').replaceWith(result);
-            }
-        },
-        error: function() {
-            var error = '<tr><td class="error" colspan="3">Błąd odświeżania wiersza z historią ucznia.</td></tr>';
-            if(add) $('tr[data-student_history_id="'+id+'"]').replaceWith(error);
-            else $('tr.editRow[data-student_history_id='+id+']').before(error);
-        },
-    });
-}
-
-function showCreateRowForStudentHistoryClick() {
-    $('#studentHistory').delegate('button.showCreateRow', 'click', function() {
-        $(this).hide();
-        $('#studentHistory table').animate({width: '600px'}, 500);
-        var student_id = $('input#student_id').val();
-        showCreateRowForStudentHistory(student_id);
-        return false;
-    });
-}
-
-function showCreateRowForStudentHistory(student_id) {
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/historia_ucznia/create",
-        data: { student_id: student_id, version: "forStudent" },
-        success: function(result) {
-            $('#studentHistory table').append(result);
-            addStudentHistoryClick();
-        },
-        error: function() {
-            var error = '<td colspan="3" class="error">Błąd w czasie tworzenia formularza dodawania historii ucznia.</td>';
-            $('#studentHistory tr.create').before(error);
-        },
-    });
-}
-
-function addStudentHistoryClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania historii ucznia
-    $('#studentHistory button.cancelAdd').click(function(){
-        $('#studentHistory .createRow').remove();
-        $('#studentHistory button.showCreateRow').show();
-        return false;
-    });
-
-    $('#studentHistory button.add').click(function(){
-        addStudentHistory();
-        $('#studentHistory .createRow').remove();
-        $('#studentHistory button.showCreateRow').show();
-        return false;
-    });
-}
-
-function addStudentHistory() {   // zapisanie wpisu historii ucznia w bazie danych
-    var student_id  = $('#studentHistory input[name="student_id"]').val();
-    var date        = $('#studentHistory input[name="date"]').val();
-    var event       = $('#studentHistory input[name="event"]').val();
-    var confirmation_date   = $('#studentHistory input[name="confirmation_date"]').is(':checked');
-    var confirmation_event  = $('#studentHistory input[name="confirmation_event"]').is(':checked');
-    if(confirmation_date) confirmation_date=1;
-    if(confirmation_event) confirmation_event=1;
-    
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/historia_ucznia",
-        data: { student_id: student_id, date: date, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
-        success: function(id) {
-            $('#studentHistory tr.create').before('<tr data-student_history_id="'+id+'"><td colspan="3">ładowanie danych</td></tr>');
-            refreshRowForStudentHistory(id, true);
-        },
-        error: function() {
-            var error = '<tr><td colspan="3" class="error">Błąd w czasie dodawania historii ucznia.</td></tr>';
-            $("#studentHistory tr.create").before(error);
-        },
-    });
-    
-}
-
-function editStudentHistoryClick() {     // kliknięcie przycisku modyfikowania historii ucznia
-    $('#studentHistory').delegate('button.edit', 'click', function() {
-        var id = $(this).data('student_history_id');
-        $.ajax({
-            type: "GET",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/historia_ucznia/"+id+"/edit",
-            data: { id: id, version: "forStudent" },
-            success: function(result) {
-                $('tr[data-student_history_id='+id+']').before(result).hide();
-                updateStudentHistoryClick();
-            },
-            error: function() {
-                 var error = '<td colspan="3" class="error">Błąd w czasie tworzenia formularza do zmiany historii ucznia.</td>';
-                 $('tr[data-student_history_id='+id+']').html(error);
-            },
-        });
-    });
-}
-
-function updateStudentHistoryClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia modyfikowania historii ucznia
-    $('#studentHistory button.cancelUpdate').click(function(){
-        var id = $(this).data('student_history_id');
-        refreshRowForStudentHistory(id);
-        return false;
-    });
-
-    $('#studentHistory button.update').click(function(){
-        var id = $(this).data('student_history_id');
-        updateStudentHistory(id);
-        return false;
-    });
-}
-
-function updateStudentHistory(id) {   // zapisanie wydarzenia w bazie danych
-    var student_id  = $('tr[data-student_history_id="'+id+'"] input[name="student_id"]').val();
-    var date        = $('tr[data-student_history_id="'+id+'"] input[name="date"]').val();
-    var event       = $('tr[data-student_history_id="'+id+'"] input[name="event"]').val();
-    var confirmation_date   = $('tr[data-student_history_id="'+id+'"] input[name="confirmation_date"]').is(':checked');
-    var confirmation_event  = $('tr[data-student_history_id="'+id+'"] input[name="confirmation_event"]').is(':checked');
-    if(confirmation_date)   confirmation_date=1;
-    if(confirmation_event)  confirmation_event=1;
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/historia_ucznia/"+id,
-        data: { id: id, student_id: student_id, date: date, event: event, confirmation_date: confirmation_date, confirmation_event: confirmation_event },
-        success: function(result) { refreshRowForStudentHistory(result); },
-        error: function() {
-            var error = '<td colspan="3" class="error">Błąd w czasie modyfikowania historii ucznia.</td>';
-            $("tr[data-student_history_id='"+id+"']").html(error);
-        },
-    });
-}
-
-function destroyStudentHistoryClick() {  // usunięcie wydarzenia z historii ucznia (z bazy danych)
-    $('#studentHistory').delegate('button.destroy', 'click', function() {
-        var id = $(this).data('student_history_id');
-        $.ajax({
-            type: "DELETE",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/historia_ucznia/" + id,
-            success: function() {   $("tr[data-student_history_id='"+id+"']").remove();  },
-            error: function() {
-                var error = '<td colspan="3" class="error">Błąd usuwania historii ucznia.</td>';
-                $("tr[data-student_history_id='"+id+"']").html(error);
-            }
-        });
-        return false;
-    });
-}
-
 
 // --------------------------------------- numery ucznia --------------------------------------- //
-function refreshRowForStudentNumber(id) {  // odświeżenie wiersza tabeli z numerem ucznia (w klasie)
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/student_numbers/refreshRow",
-        data: { id: id, version: "forStudent" },
-        success: function(result) {
-            $("tr[data-student_number_id='"+id+"']").replaceWith(result);
-            $("tr[data-student_number_id='"+id+"']").fadeIn(750);
-        },
-        error: function() {
-            var error = '<tr><td colspan="4" class="error">Błąd odświeżania wiersza z numerem ucznia.</td></tr>';
-            $("tr[data-student_number_id='"+id+"']").replaceWith(error);
-        },
-    });
-}
 
-function numberClick() {    // kliknięcie w proponowany numer lub zwiększenie/zmniejszenie (dla widoku zmiany pojedynczego numeru ucznia)
-    // kliknięcie w proponowany numer - wpisanie go do pola z numerem
-    $('.studentGradeProposedNumber').click(function() {
-        $('#number').val($(this).html());
-        return false;
-    });
-}
 
-function showCreateRowForStudentNumberClick() {
-    $('#studentNumbers').delegate('.showCreateRow', 'click', function() {
-        $(this).hide();
-        $('#studentNumbers table').animate({width: '700px'}, 500);
-        var student_id = $('input#student_id').val();
-        showCreateRowForStudentNumber(student_id);
-        return false;
-    });
-}
 
-function showCreateRowForStudentNumber(student_id) {
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/numery_ucznia/create",
-        data: { student_id: student_id, version: "forStudent" },
-        success: function(result) {
-            $('#studentNumbers table').append(result);
-            addStudentNumberClick();
-            numberClick();
-        },
-        error: function() {
-            var error = '<tr><td colspan="4" class="error">Błąd w czasie tworzenia formularza dla dodawania numeru ucznia.</td></tr>';
-            $("#studentNumbers tr.create").before(error);
-        },
-    });
-}
-
-function addStudentNumberClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania numeru ucznia
-    $('#studentNumbers button.cancelAdd').click(function(){
-        $('#studentNumbers .createRow').remove();
-        $('#studentNumbers button.showCreateRow').show();
-        return false;
-    });
-
-    $('#studentNumbers button.add').click(function(){
-        addStudentNumber();
-        $('#studentNumbers .createRow').remove();
-        $('#studentNumbers button.showCreateRow').show();
-        return false;
-    });
-}
-
-function addStudentNumber() {   // zapisanie numeru w bazie danych
-    var student_id         = $('#studentNumbers input[name="student_id"]').val();
-    var grade_id           = $('#studentNumbers select[name="grade_id"]').val();
-    var school_year_id     = $('#studentNumbers select[name="school_year_id"]').val();
-    var number             = $('#studentNumbers input[name="number"]').val();
-    var confirmationNumber = $('#studentNumbers input[name="confirmationNumber"]').is(':checked');
-    if(confirmationNumber) confirmationNumber=1;
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/numery_ucznia",
-        data: { student_id: student_id, grade_id: grade_id, school_year_id: school_year_id, number: number, confirmationNumber: confirmationNumber },
-        success: function(id) {
-            $('#studentNumbers tr.create').before('<tr data-student_number_id="'+id+'"><td colspan="4">ładowanie danych</td></tr>');
-            refreshRowForStudentNumber(id);
-        },
-        error: function() {
-            var error = '<tr><td colspan="4" class="error">Błąd w czasie dodawania numeru ucznia.</td></tr>';
-            $("#studentNumbers tr.create").before(error);
-        },
-    });
-}
-
-function editStudentNumberClick() {     // kliknięcie przycisku modyfikowania numeru ucznia
-    $('#studentNumbers').delegate('.edit', 'click', function() {
-        var id = $(this).data('student_number_id');
-        $.ajax({
-            type: "GET",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/numery_ucznia/"+id+"/edit",
-            data: { id: id, version: "forStudent" },
-            success: function(result) {
-                $('tr[data-student_number_id='+id+']').before(result).hide();
-                updateStudentNumberClick();
-            },
-            error: function() {
-                 var error = '<tr><td colspan="4" class="error">Błąd w czasie tworzenia formularza do zmiany numeru ucznia.</td></tr>';
-                 $('tr[data-student_number_id='+id+']').replaceWith(error);
-            },
-        });
-    });
-}
-
-function updateStudentNumberClick() {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania numeru ucznia
-    $('#studentNumbers button.cancelUpdate').click(function(){
-        var id = $(this).data('student_number_id');
-        $.when( $('#studentNumbers tr.editRow[data-student_number_id='+id+']').hide(750) ).then(function() {
-            $('#studentNumbers tr.editRow[data-student_number_id='+id+']').remove();
-            $('#studentNumbers tr[data-student_number_id='+id+']').show(750);
-        });
-    });
-
-    $('#studentNumbers button.update').click(function(){
-        var id = $(this).data('student_number_id');
-        $.when( $('#studentNumbers tr.editRow[data-student_number_id='+id+']').hide(750) ).then(function() {
-            updateStudentNumber(id);
-            $('#studentNumbers tr.editRow[data-student_number_id='+id+']').remove();
-        });
-    });
-}
-
-function updateStudentNumber(id) {   // zapisanie numeru w bazie danych
-    var student_id          = $('tr[data-student_number_id="'+id+'"] input[name="student_id"]').val();
-    var grade_id            = $('tr[data-student_number_id="'+id+'"] select[name="grade_id"]').val();
-    var school_year_id      = $('tr[data-student_number_id="'+id+'"] select[name="school_year_id"]').val();
-    var number              = $('tr[data-student_number_id="'+id+'"] input[name="number"]').val();
-    var confirmationNumber  = $('tr[data-student_number_id="'+id+'"] input[name="confirmationNumber"]').is(':checked');
-    if(confirmationNumber)  confirmationNumber=1;
-    $.ajax({
-        method: "PUT",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/numery_ucznia/"+id,
-        data: { id: id, student_id: student_id, grade_id: grade_id, school_year_id: school_year_id, number: number, confirmationNumber: confirmationNumber },
-        success: function(id) {  refreshRowForStudentNumber(id);  },
-        error: function() {
-            var error = '<tr><td colspan="4" class="error">Błąd w czasie modyfikowania numeru ucznia.</td></tr>';
-            $("tr[data-student_number_id='"+id+"']").replaceWith(error);
-        },
-    });
-}
-
-function destroyStudentNumberClick() {  // usunięcie Numeru ucznia (z bazy danych)
-    $('#studentNumbers').delegate('.destroy', 'click', function() {
-        var id = $(this).data('student_number_id');
-        $.ajax({
-            type: "DELETE",
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/numery_ucznia/" + id,
-            success: function() {   $("tr[data-student_number_id='"+id+"']").remove();  },
-            error: function() {
-                var error = '<tr><td colspan="4" class="error">Błąd usuwania numeru ucznia.</td></tr>';
-                $("tr[data-student_number_id='"+id+"']").replaceWith(error);
-            }
-        });
-        return false;
-    });
-}
 
 // ---------------------------- zarządzanie numerami księgi uczniów ---------------------------- //
 function showCreateFormForBookOfStudentClick() {
@@ -1158,8 +672,8 @@ function updateEndStudentGrade(id, end, lp) {   // zapisanie klasy ucznia w bazi
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     clickShowCreateRowButtonForStudentGrade();
-    clickShowEditFormButtonForStudentGrade();
-    clickDestroyButtonForStudentGrade();
+    // clickShowEditFormButtonForStudentGrade();
+    // clickDestroyButtonForStudentGrade();
     // clickShowExchangeFormButton();
     clickError();
 });

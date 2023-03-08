@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\StudentNumber;
@@ -62,13 +62,7 @@ class StudentNumberController extends Controller
     }
 
     public function store(Request $request) {
-        $this->validate($request, [
-          'student_id' => 'required',
-          'grade_id' => 'required',
-          'school_year_id' => 'required',
-          'number' => 'required|integer|between:1,99',
-        ]);
-
+        $this->validate($request, [  'student_id' => 'required', 'grade_id' => 'required', 'school_year_id' => 'required', 'number' => 'required|integer|between:1,99', ]);
         $StudentNumber = new StudentNumber;
         $StudentNumber->student_id = $request->student_id;
         $StudentNumber->grade_id = $request->grade_id;
@@ -76,7 +70,6 @@ class StudentNumberController extends Controller
         $StudentNumber->number = $request->number;
         $StudentNumber->confirmation_number = $request->confirmationNumber;
         $StudentNumber -> save();
-
         return $StudentNumber->id;
     }
 

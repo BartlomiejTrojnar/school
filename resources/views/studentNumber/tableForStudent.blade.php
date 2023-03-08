@@ -1,7 +1,7 @@
 <section id="studentNumbers">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.03.2023 *********************** -->
    <h3>numery w dziennikach</h3>
-   <table>
+   <table id="studentNumbersTable">
       <tr>
          <?php
             echo view('layouts.thSorting', ["thName"=>"klasa", "routeName"=>"numery_ucznia.orderBy", "field"=>"grade_id", "sessionVariable"=>"StudentNumberOrderBy"]);
