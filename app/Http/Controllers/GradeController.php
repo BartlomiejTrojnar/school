@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 09.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -258,7 +258,7 @@ class GradeController extends Controller
 
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$groupTable]);
     }
-
+*/
     private function showLessonPlan($groupRepo, $lessonPlanRepo, $schoolYearRepo) {
         $gradeLessons = $lessonPlanRepo -> getGradeLessons($this->grade->id);
         $dateView = session()->get('dateView'); if($dateView=="") $dateView = date('Y-m-d');
@@ -269,7 +269,7 @@ class GradeController extends Controller
         $js = "lessonPlan/forGrade.js";
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next,  "css"=>"", "js"=>$js, "subView"=>$gradePlan]);
     }
-
+/*
     private function showTeachers() {
         $teacherRepo = new TeacherRepository(new Teacher);
         $teachers = $teacherRepo -> getTeachersForGrade($this->grade->id);
