@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 09.03.2023 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const TABLE_NAME="#studentGradesTable", ROUTE_NAME="klasy_ucznia", DATA_NAME="student_grade_id";
@@ -14,17 +14,18 @@ function clickShowCreateRowButtonForStudentGrade() {
         CreateForm.getCreateForm();   // uruchomienie metody pobierającej formularz
     });
 }
-/*
+
 // --------------- kliknięcie przycisku uruchamiającego formularz zamiany (dodania nowego) rozszerzenia ---------------- //
 function clickShowExchangeFormButton() {
-    $('#enlargementsSection').delegate('button.exchange', 'click', function() {     // tworzenie formularza modyfikowania
-        var ExchangeForm = new Form();
-        var id = $(this).data('enlargement_id');
-        ExchangeForm.getExchangeForm(id);
+    $(TABLE_NAME).delegate('button.exchange', 'click', function() {     // tworzenie formularza modyfikowania
+        alert('Dokończyć operację zmiany klasy');
+        // var ExchangeForm = new Form();
+        // var id = $(this).data('enlargement_id');
+        // alert('Dokończyć operację zmiany klasy');
+        // ExchangeForm.getExchangeForm(id);
     });
 }
-*/
-/*
+
 // --------------- kliknięcie przycisku uruchamiającego formularz modyfikowania ---------------- //
 function clickShowEditFormButtonForStudentGrade() {
     $(TABLE_NAME).delegate('button.edit', 'click', function() {     // tworzenie formularza modyfikowania
@@ -42,7 +43,7 @@ function clickDestroyButtonForStudentGrade() {
         studentGrade.delete();
     });
 }
-*/
+
 // ------------------------------- pobieranie widoku formularzy -------------------------------- //
 class FormForStudentGrade {
     getCreateForm() {   // pobieranie widoku formularza dodawania
@@ -117,6 +118,7 @@ class ShowFormForStudentGrade {
             $.when( $('#studentGradeCreateRow').fadeOut(FADE_OUT) ).then(function() {
                 $(TABLE_NAME+' .showCreateRow').slideDown(SLIDE_DOWN);
                 var studentGrade = new StudentGrade();
+                studentGrade.getDataFromForm('#studentGradeCreateRow');
                 studentGrade.add();
             });
         });
@@ -151,7 +153,6 @@ class ShowFormForStudentGrade {
         });
     }
 */
-/*
     showErrorForEdit(id) {              // nieudane pobranie widoku formularza modyfikowania
         var communique = "Nie mogę utworzyć formularza do zmiany informacji o rozszerzeniu.";
         var error = '<tr><td class="error" colspan="6">' +communique+ '</td></tr>';
@@ -182,10 +183,10 @@ class ShowFormForStudentGrade {
         $(TABLE_NAME).delegate('button.update', 'click', function() {     // kliknięcie przycisku "anuluj" przy modyfikowaniu
             var id = $(this).data(DATA_NAME);
             var studentGrade = new StudentGrade(id);
+            studentGrade.getDataFromForm('tr[data-' +DATA_NAME+ '="' +id+ '"]');
             $.when( $('tr[data-' +DATA_NAME+ '="' +id+ '"]').hide(FADE_OUT) ).then( function() { studentGrade.update(); });
         });
     }
-*/
 }
 
 // ---------------------- operacje na rekordach dotyczących rozszerzenia ----------------------- //
@@ -194,18 +195,26 @@ class StudentGrade {
         this.id = id;
     }
 
+    getDataFromForm(form) {
+        this.student_id         = $(form + ' input[name="student_id"]').val();
+        this.grade_id           = $(form + ' select[name="grade_id"]').val();
+        this.start              = $(form + ' input[name="start"]').val();
+        this.end                = $(form + ' input[name="end"]').val();
+        this.confirmationStart  = $(form + ' input[name="confirmationStart"]').is(":checked");
+        this.confirmationEnd    = $(form + ' input[name="confirmationEnd"]').is(":checked");
+        if(this.confirmationStart)  this.confirmationStart=1;   else this.confirmationStart=0;
+        if(this.confirmationEnd)    this.confirmationEnd=1;     else this.confirmationEnd=0;
+        this.lp = $(form + ' input[name="lp"]').val();
+    }
+
     add() {     // wstawienie rekordu do bazy danych
-        var student_id = $('#student_id').val();
-        var grade_id = $('#studentGradeCreateRow select[name="grade_id"]').val();
-        var start = $('#studentGradeCreateRow input[name="start"]').val();
-        var end   = $('#studentGradeCreateRow input[name="end"]').val();
-        var confirmationStart = $('#studentGradeCreateRow input[name="confirmationStart"]').is(":checked");
-        var confirmationEnd = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(":checked");
-        if(confirmationStart)   confirmationStart=1; else confirmationStart=0;
-        if(confirmationEnd)     confirmationEnd=1;   else confirmationEnd=0;
+        var student_id = this.student_id;
+        var grade_id = this.grade_id;
+        var start = this.start;
+        var end = this.end;
+        var confirmationStart = this.confirmationStart;
+        var confirmationEnd = this.confirmationEnd;
         var ShowResult = new ShowResultForOperation();
-        ShowResult.addSuccess(9287);
-        return;
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -251,18 +260,15 @@ class StudentGrade {
         });
     }
 */
-/*
     update() {  // zapisywanie zmian rekordu
         var id = this.id;
-        var student_id  = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="student_id"]').val();
-        var grade_id    = $('tr[data-' +DATA_NAME+ '="' +id+ '"] select[name="grade_id"]').val();
-        var start       = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="start"]').val();
-        var end         = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="end"]').val();
-        var confirmationStart   = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="confirmationStart"]').is(":checked");
-        var confirmationEnd     = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="confirmationEnd"]').is(":checked");
-        if(confirmationStart)   confirmationStart=1; else confirmationStart=0;
-        if(confirmationEnd)     confirmationEnd=1;   else confirmationEnd=0;
-        var lp = $('tr[data-' +DATA_NAME+ '="' +id+ '"] input[name="lp"]').val();
+        var student_id = this.student_id;
+        var grade_id = this.grade_id;
+        var start = this.start;
+        var end = this.end;
+        var confirmationStart = this.confirmationStart;
+        var confirmationEnd = this.confirmationEnd;
+        var lp = this.lp;
         var ShowResult = new ShowResultForOperation(id);
         $.ajax({
             method: "PUT",
@@ -285,7 +291,6 @@ class StudentGrade {
             error:   function() { ShowResult.destroyError(); }
         });
     }
-*/
 }
 
 
@@ -300,31 +305,24 @@ class ShowResultForOperation {
         $('td.error').hide().slideDown(SLIDE_DOWN);
     }
 
-    addSuccess() {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
-        // var Insert = new InsertNewStudentGradeToHTML();
-        // var lp = $('#studentGradesTable tr').length-2;
-        // var id = this.id;
-        // $.ajax({
-            // method: "POST",
-            // headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            // url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
-            // data: { id: id, lp: lp, version: "forStudent" },
-            // success: function(result) { Insert.showSuccess(result, id); },
-            // error: function() {  Insert.showError();  },
-        // });
-
-
+    addSuccess(id) {    // udane dodanie: pobranie widoku z informacją o nowym rekordzie
+        var Insert = new InsertNewStudentGradeToHTML();
+        var lp = $('#studentGradesTable tr').length-2;
+        $.ajax({
+            method: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            data: { id: id, lp: lp, version: "forStudent" },
+            success: function(result) { Insert.showSuccess(result, id); },
+            error: function() {  Insert.showError();  },
+        });
+        // dodanie odpowiedniego wpisu historii ucznia
         var SH = new StudentHistory();
-        // this.event = $('#studentGradeCreateRow input[name="start"]').val();
-        // this.confirmationDate = $('#studentGradeCreateRow input[name="confirmationStart"]').is(":checked");
-        // this.confirmationEvent = $('#studentGradeCreateRow input[name="confirmationEnd"]').is(":checked");
         var student_id = $('#student_id').val();
         var start = $('#studentGradeCreateRow input[name="start"]').val();
         var event = "przyjęto do klasy";
         SH.getData(student_id, start, event, 1, 0);
         SH.add();
-        // alert(309);
-
     }
 /*
     exchangeError() {     // nieudane zapisane zamiany wyboru rozszerzenia
@@ -345,7 +343,6 @@ class ShowResultForOperation {
         });
     }
 */
-/*
     updateError() {     // nieudane zapisane zmian wyboru rozszerzenia
         $('tr[data-' +DATA_NAME+ '="' +this.id+ '"].proposedDates').remove();
         $('tr[data-' +DATA_NAME+ '="' +this.id+ '"]').html('<td colspan="6" class="error">Nie udało się zapisać zmian. Odśwież stronę aby zobaczyć poprzedni rekord.</td>');
@@ -376,7 +373,6 @@ class ShowResultForOperation {
             $('tr[data-' +DATA_NAME+ '="' +id+ '"]').remove();
         });
     }
-*/
 }
 
 // ------------------- wstawienie informacji o nowym rekordzie do kodu HTML -------------------- //
@@ -672,8 +668,8 @@ function updateEndStudentGrade(id, end, lp) {   // zapisanie klasy ucznia w bazi
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     clickShowCreateRowButtonForStudentGrade();
-    // clickShowEditFormButtonForStudentGrade();
-    // clickDestroyButtonForStudentGrade();
-    // clickShowExchangeFormButton();
+    clickShowEditFormButtonForStudentGrade();
+    clickDestroyButtonForStudentGrade();
+    clickShowExchangeFormButton();
     clickError();
 });

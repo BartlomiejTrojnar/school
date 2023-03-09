@@ -1,5 +1,5 @@
 <section id="studentGrades">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 09.03.2023 *********************** -->
    <aside style="float: right;">data widoku: {{$dateView}}<input id="yesterday" type="hidden" value="{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}" /></aside>
    <h2>klasy ucznia</h2>
    <table id="studentGradesTable">
@@ -55,6 +55,7 @@
             <!-- modyfikowanie i usuwanie -->
             <td class="destroy edit c" style="width: 150px;">
                <button class="edit btn btn-primary"            data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
+               <button class="exchange btn btn-primary"        data-student_grade_id="{{ $sg->id }}"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary"         data-student_grade_id="{{ $sg->id }}"><i class="fa fa-remove"></i></button>
                <button class="removeYesterday btn btn-primary" data-student_grade_id="{{ $sg->id }}" title="usuń z klasy od wczoraj [{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}] (wraz z usunięciem z grup)"><i class="fa fa-user-times"></i></button>
             </td>
