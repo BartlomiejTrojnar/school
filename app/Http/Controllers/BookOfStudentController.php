@@ -26,6 +26,15 @@ class BookOfStudentController extends Controller
         return view('bookOfStudent.create', ["schoolSF"=>$schoolSF, "studentSF"=>$studentSF, "proposedNumber"=>$proposedNumber]);
     }
 
+    private function createForStudent($bookOfStudentRepo, $schoolRepo, $student_id) {
+        $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
+        
+        return view('bookOfStudent.createForStudent', ["proposedNumber"=>$proposedNumber, "schoolSelectField"=>$schoolSelectField, "student_id"=>$student_id]);
+    }
+
     public function store(Request $request) {
         $this->validate($request, [ 'school_id' => 'required', 'student_id' => 'required', 'number' => 'required|integer', ]);
         $bookOfStudent = new BookOfStudent;
@@ -100,16 +109,6 @@ class BookOfStudentController extends Controller
         return redirect( route('ksiega_uczniow.index') );
     }
 /*
-
-
-    private function createForStudent($bookOfStudentRepo, $schoolRepo, $student_id) {
-        $schools = $schoolRepo->getAllSorted();
-        $schoolSelected = session()->get('schoolSelected');
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
-        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
-        
-        return view('bookOfStudent.createForStudent', ["proposedNumber"=>$proposedNumber, "schoolSelectField"=>$schoolSelectField, "student_id"=>$student_id]);
-    }
 
     private function editForStudent($id, $schoolRepo) {
         $bookOfStudent = new BookOfStudent;

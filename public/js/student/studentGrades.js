@@ -6,6 +6,7 @@ const TABLE_NAME="#studentGradesTable", ROUTE_NAME="klasy_ucznia", DATA_NAME="st
 import '../studentHistory/forStudent.js';
 import { StudentHistory } from '../studentHistory/forStudent.js';
 import '../studentNumber/forStudent.js';
+import '../bookOfStudent/forStudent.js'
 
 // ----------------- kliknięcie przycisku uruchamiającego formularz dodawania ------------------ //
 function clickShowCreateRowButtonForStudentGrade() {
@@ -446,61 +447,6 @@ function clickError() {     // kliknięcie dowolnego obiektu o klasie .error - u
 
 
 // ---------------------------- zarządzanie numerami księgi uczniów ---------------------------- //
-function showCreateFormForBookOfStudentClick() {
-    $('.showCreateFormForBookOfStudent button').click(function(){
-        var student_id = $('input#student_id').val();
-        showCreateFormForBookOfStudent(student_id);
-        return false;
-    });
-}
-
-function showCreateFormForBookOfStudent(student_id) {
-    $.ajax({
-        method: "GET",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/ksiega_uczniow/create",
-        data: { version: "forStudent" },
-        success: function(result) {
-            $('aside.createForm').replaceWith(result);
-            addBookOfStudentClick(student_id);
-        },
-        error: function() {
-            var error = '<tr><td colspan="6" class="error">Nie można utworzyć formularza dla modyfikowania numeru księgi ucznia!</td></tr>';
-            $("#studentGradesTable tr.create").before(error);
-        },
-    });
-}
-
-function addBookOfStudentClick(student_id) {     // ustawienie instrukcji po kliknięciu anulowania lub potwierdzenia dodawania numeru księgi uczniów
-    $('.createForm .cancelAdd').click(function(){
-        $('aside.createForm').hide();
-    });
-
-    $('.createForm .add').click(function(){
-        addBookOfStudents(student_id);
-        $('aside.createForm').hide();
-    });
-}
-
-function addBookOfStudents(student_id) {   // zapisanie numeru księgi ucznia do bazy danych
-    var school_id   = $('.createForm select[name="school_id"]').val();
-    var number      = $('.createForm input[name="number"]').val();
-
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/ksiega_uczniow",
-        data: { student_id: student_id, school_id: school_id, number: number },
-        success: function() {
-            $('td.bookOfStudent').html('<td class="bookOfStudent" style="color: #f77; background-color: #228;" data-book_of_student_id="4469">'+number+'</td>');
-        },
-        error: function() {
-            var error = '<aside class="createForm" style="background: red; padding: 7px;">Błąd dodawania numeru księgi ucznia.</aside>';
-            $('aside.createForm').replaceWith(error);
-        },
-    });
-}
-
 function editBookOfStudentClick() {     // kliknięcie przycisku modyfikowania numeru księgi ucznia
     $('#studentGrades').delegate('.bookOfStudent', 'click', function() {
         var id = $(this).data('book_of_student_id');
