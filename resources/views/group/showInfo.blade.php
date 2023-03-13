@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <th>godziny</th>
-    <td data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
+    <td class="c" data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
       <button id="hourSubtract" class="btn-xs btn-primary" data-group_id="{{$group->id}}">
         <i class="fas fa-minus"></i>
       </button>
@@ -27,13 +27,13 @@
   </tr>
   <tr>
     <th>uwagi</th>
-    <td>{{ $group->comments }}</td>
+    <td class="c">{{ $group->comments }}</td>
   </tr>
   <tr>
     <th>nauczyciele</th>
     <td class="teachers" style="min-width: 400px;">
       <aside style="float: right; margin-left: 10px;">
-        <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">
+        <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">zmień
            <i class='fas fa-chalkboard-teacher' style="font-size: 24px;"></i>
         </a>
       </aside>
@@ -43,7 +43,7 @@
             {{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}
           </a>
           <a href="{{ route('grupa_nauczyciele.edit', $groupTeacher->id) }}">
-            <i class="fa fa-edit"></i>
+            <i class="fas fa-edit"></i>
           </a>
           <button class="teacherRemove" data-groupTeacher_id="{{$groupTeacher->id}}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_nauczyciele.destroy', $groupTeacher->id) }}">
             <i class="fa fa-remove"></i>
@@ -79,8 +79,11 @@
 
   <tr>
     <th>liczba uczniów</th>
-    <td>{{ $group->students->count() }}</td>
+    <td class="c">{{ $group->students->count() }}</td>
   </tr>
 </table>
 
-<p><button class="btn btn-primary" id="groupExtension">Przedłuż grupę</button> do <input type="date" id="dateGroupExtension" value="{{$group->end}}"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> </p>
+<p>Przedłuż grupę do <input type="date" id="dateGroupExtension" value="{{$group->end}}"><input class="hidden" type="text" id="groupExtensionId" value="{{$group->id}}"> <button class="btn btn-primary" id="groupExtension">przedłuż</button>
+  <button class="btn btn-primary" id="groupExtension4">przedłuż do 2023-04-28</button>
+  <button class="btn btn-primary" id="groupExtension123">przedłuż do 2023-06-23</button>
+</p>

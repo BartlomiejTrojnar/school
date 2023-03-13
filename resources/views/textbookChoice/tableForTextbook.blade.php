@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 15.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ********************** -->
 <section id="textbookChoicesTable">
    <h2>Wybory podręcznika</h2>
    <table id="textbookChoices">
@@ -45,6 +45,7 @@
          @endforeach
          <tr class="create"><td colspan="7">
                <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+               <var id="countChoices" hidden>{{ $count }}</var>
          </td></tr>
       </tbody>
    </table>

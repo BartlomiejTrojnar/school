@@ -6,6 +6,7 @@ section#taughtSubjectsList, section#subjectTeachersList {
     text-align: center;
     border: 2px dashed #777;
     padding: 10px;
+    
 }
 section#subjectsList, section#unlearningTeachersList {
     float: right;
@@ -21,14 +22,14 @@ section#taughtSubjectsList li, section#subjectsList li, section#subjectTeachersL
     border-radius: 15px;
 }
 section#subjectsList li, section#unlearningTeachersList li {
-    width: 45%;
-    float: left;
+    display:inline-block;
+    min-width: 200px;
+    margin: 5px;
 }
-section#subjectsList li:nth-child(2n), section#unlearningTeachersList li:nth-child(2n) {
-    float: right;
-}
+section#subjectsList li:nth-child(2n) { float: right; }
 section#taughtSubjectsList li span, section#subjectTeachersList li span, div#token, div#url,
-div#subject-id, div#teacher-id
-{
-    display: none;
-}
+div#subject-id, div#teacher-id  { display: none; }
+li var { display: none; }
+
+section#unlearningTeachersList li:hover { background: #fa0; }
+section#subjectTeachersList li:hover    { background: #00f; color: white; }

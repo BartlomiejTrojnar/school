@@ -1,12 +1,9 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.08.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
 
-use App\Models\ExamDescription;
-use App\Models\SchoolYear;
-use App\Models\Session;
 use App\Models\TaughtSubject;
 use App\Repositories\ExamDescriptionRepository;
 use App\Repositories\GradeRepository;
@@ -18,10 +15,68 @@ use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
+    public function create() {  return view('subject.create');  }
+
+    public function store(Request $request) {
+        $this->validate($request, [
+            'name' => 'required|max:60',
+            'short_name' => 'max:15',
+            'order_in_the_sheet' => 'integer|between:1,99',
+        ]);
+
+        $subject = new Subject;
+        $subject->name = $request->name;
+        $subject->short_name = $request->short_name;
+        $subject->actual = $request->actual;
+        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
+        $subject->order_in_the_sheet = $request->order_in_the_sheet;
+        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
+        $subject->expanded = $request->expanded;
+        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
+        $subject -> save();
+
+        return $subject->id;
+    }
+
+    public function edit(Request $request, Subject $subject) {
+        $subject = $subject -> find($request->id);
+        return view('subject.edit', ["subject"=>$subject, "lp"=>$request->lp]);
+    }
+
+    public function update($id, Request $request, Subject $subject) {
+        $subject = $subject -> find($id);
+        $this->validate($request, [
+            'name' => 'required|max:60',
+            'short_name' => 'max:15',
+            'order_in_the_sheet' => 'integer|between:1,25',
+        ]);
+
+        $subject->name = $request->name;
+        $subject->short_name = $request->short_name;
+        if($request->actual=="true") $subject->actual=1;    else $subject->actual=0;
+        $subject->order_in_the_sheet = $request->order_in_the_sheet;
+        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
+        $subject->expanded = $request->expanded;
+        if($request->expanded=="true") $subject->expanded=1;    else $subject->expanded=0;
+        $subject -> save();
+
+        return $subject->id;
+    }
+
+    public function destroy($id, Subject $subject) {
+        $subject = $subject -> find($id);
+        $subject -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, SubjectRepository $subjectRepo) {
+        $this->subject = $subjectRepo -> find($request->id);
+        return view('subject.row', ["subject"=>$this->subject, "lp"=>$request->lp]);
+    }
+
     public function index(SubjectRepository $subjectRepo) {
         $subjects = $subjectRepo -> getAllSortedAndPaginate();
-        return view('subject.index')
-            -> nest('subjectTable', 'subject.table', ["subjects"=>$subjects, "subTitle"=>"", "links"=>true]);
+        return view('subject.index', ["subjects"=>$subjects]);
     }
 
     public function orderBy($column) {
@@ -40,31 +95,8 @@ class SubjectController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create() {  return view('subject.create');  }
-
-    public function store(Request $request) {
-        $this->validate($request, [
-          'name' => 'required|max:60',
-          'short_name' => 'max:15',
-          'order_in_the_sheet' => 'integer|between:1,25',
-        ]);
-
-        $subject = new Subject;
-        $subject->name = $request->name;
-        $subject->short_name = $request->short_name;
-        if($request->actual=="on") $subject->actual = true; else $subject->actual = false;
-        $subject->order_in_the_sheet = $request->order_in_the_sheet;
-        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        if($request->expanded=="on") $subject->expanded = true; else $subject->expanded = false;
-        $subject->save();
-
-        return redirect($request->history_view);
-    }
-
-    public function change($id) {  session()->put('subjectSelected', $id);   }
-
-    public function show($id, SubjectRepository $subjectRepo, SchoolYearRepository $syR, GradeRepository $gradeRepo, TeacherRepository $tR, GroupRepository $groupRepo, $view='') {
-        if(empty(session()->get('subjectView')) || session()->get('subjectView')=='change')  session()->put('subjectView', 'showInfo');
+    public function show($id, SubjectRepository $subjectRepo, SchoolYearRepository $syR, GradeRepository $gradeRepo, TeacherRepository $tR, GroupRepository $groupRepo, SessionRepository $sessionRepo, ExamDescriptionRepository $edR, $view='') {
+        if(empty(session()->get('subjectView')) || session()->get('subjectView')=='change')  session()->put('subjectView', 'info');
         if($view)  session()->put('subjectView', $view);
         session() -> put('subjectSelected', $id);
         $this->subject = $subjectRepo -> find($id);
@@ -73,121 +105,91 @@ class SubjectController extends Controller
         list($this->previous, $this->next) = $subjectRepo -> nextAndPreviousRecordId($subjects, $id);
 
         switch(session()->get('subjectView')) {
-            case 'showInfo':   return $this -> showInfo($this->subject);
-            case 'showTeachers': return $this -> showTeachers($this->subject);
-            case 'showGroups':   return $this -> showGroups($subjectRepo, $syR, $gradeRepo, $tR, $groupRepo);
-            case 'showExamDescriptions':   return $this -> showExamDescriptions($subject);
-            case 'showTextbooks':   return $this -> showTextbooks($subject);
+            case 'info':            return $this -> showInfo();
+            case 'nauczyciele':     return $this -> showTeachers($syR);
+            case 'grupy':           return $this -> showGroups($syR, $gradeRepo, $tR, $groupRepo);
+            case 'opisy-egzaminow': return $this -> showExamDescriptions($sessionRepo, $edR);
+            case 'podreczniki':     return $this -> showTextbooks();
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('subjectView'));
         }
     }
 
-    private function showInfo($subject) {
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'subject.showInfo', ["subject"=>$subject]);
+    private function showInfo() {
+        $subjectInfo = view('subject.info', ["subject"=>$this->subject]);
+        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "js"=>"", "subView"=>$subjectInfo]);
     }
 
-    private function showTeachers($subject) {
-        $schoolYearRepo = new SchoolYearRepository(new SchoolYear);
+    private function showTeachers($schoolYearRepo) {
         $schoolYears = $schoolYearRepo->getAllSorted();
-        $subjectTeachers = $subject -> teachers;
-        $schoolYear_id = session() -> get('schoolYearSelected');
-        if(!$schoolYear_id) $schoolYear_id=0;
-        else for($i=0; $i<sizeof($subjectTeachers); $i++) {
-            if($subjectTeachers[$i]->teacher->first_year_id > $schoolYear_id ||
-              ($subjectTeachers[$i]->teacher->last_year_id!= "" && $subjectTeachers[$i]->teacher->last_year_id < $schoolYear_id))
-                unset($subjectTeachers[$i]);
-        }
+        $subjectTeachers = $this->subject -> teachers;
+        $js = "teacher/forSubject.js";
+        //$schoolYear_id = session() -> get('schoolYearSelected');
+        //if(!$schoolYear_id) $schoolYear_id=0;
+        //else for($i=0; $i<sizeof($subjectTeachers); $i++) {
+        //    if($subjectTeachers[$i]->teacher->first_year_id > $schoolYear_id ||
+        //      ($subjectTeachers[$i]->teacher->last_year_id!= "" && $subjectTeachers[$i]->teacher->last_year_id < $schoolYear_id))
+        //        unset($subjectTeachers[$i]);
+        //}
         $unlearningTeachers = TaughtSubject::unlearningTeachers($subjectTeachers);
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'subject.showTeachers', ["subject"=>$subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSelectField"=>$schoolYearSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session()->get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
+        $subjectTeachersView = view('teacher.viewForSubject', ["subject"=>$this->subject, "subjectTeachers"=>$subjectTeachers, "unlearningTeachers"=>$unlearningTeachers, "schoolYearSF"=>$schoolYearSF]);
+        return view('subject.show', ["subject"=>$this->subject, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$subjectTeachersView]);
     }
 
-    private function showGroups($subjectRepo, $syRepo, $gradeRepo, $teacherRepo, $groupRepo) {
+    private function showGroups($syRepo, $gradeRepo, $teacherRepo, $groupRepo) {
+        printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok grup do poprawy.</p>');
+        return;
+
         $gradeSelected = session()->get('gradeSelected');
         $levelSelected = session()->get('levelSelected');
-        $dateStart = session() -> get('dateView');
-        if(!empty(session() -> get('dateEnd'))) $dateEnd = session() -> get('dateEnd'); else $dateEnd=$dateStart;
-        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $this->subject->id, $levelSelected, $dateStart, $dateEnd);
+        $start = session() -> get('dateView');
+        if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $this->subject->id, $levelSelected, $start, $end);
         $schoolYear = session()->get('schoolYearSelected');
         if( !empty($schoolYear) )  $schoolYear = $syRepo -> find( $schoolYear );
         $grades = $gradeRepo -> getFilteredAndSorted(substr($schoolYear->date_end, 0, 4), 0);
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>substr($schoolYear->date_end, 0, 4)]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>substr($schoolYear->date_end, 0, 4)]);
         $levels = array('rozszerzony', 'podstawowy');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
         $teachers = $teacherRepo -> getAll();
         $teacherSelected = session()->get('teacherSelected');
-        $teacherSelectField = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
-        $groupTable = view('group.table', ["subTitle"=>"grupy przedmiotu", "subject"=>$this->subject, "groups"=>$groups, "link"=>true, "dateStart"=>$dateStart, "dateEnd"=>$dateEnd,
-            "grade_id"=>$gradeSelected, "gradeSelectField"=>$gradeSelectField, "subjectSelectField"=>"", "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField]);
-        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupTable]);
+        $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
+        $groupTable = view('group.table', ["subTitle"=>"grupy przedmiotu", "groups"=>$groups, "link"=>true, "start"=>$start, "end"=>$end,
+            "grade_id"=>$gradeSelected, "gradeSF"=>$gradeSF, "subjectSF"=>"",
+            "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>"", "version"=>"forSubject"]);
+        return view('subject.show', ["subject"=>$this->subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupTable, "js"=>""]);
     }
 
-    private function showExamDescriptions($subject) {
-        $sessionRepo = new SessionRepository(new Session);
-        $examDescriptionRepo = new ExamDescriptionRepository(new ExamDescription);
+    private function showExamDescriptions($subject, $sessionRepo, $examDescriptionRepo) {
+        printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok opisów egzaminu do poprawy.</p>');
+        return;
+
         $sessions = $sessionRepo -> getAllSorted();
         $sessionSelected = session()->get('sessionSelected');
-        $sessionSelectField = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
+        $sessionSF = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
 
         $examTypes = array('pisemny', 'ustny');
         $examTypeSelected = session()->get('examTypeSelected');;
-        $examTypeSelectField = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
+        $examTypeSF = view('examDescription.examTypeSelectField', ["examTypes"=>$examTypes, "examTypeSelected"=>$examTypeSelected]);
 
         $levels = array('rozszerzony', 'podstawowy', 'nieustalony');
         $levelSelected = session()->get('levelSelected');;
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $examDescriptions = $examDescriptionRepo -> getFilteredAndSorted($subject->id, $sessionSelected, $examTypeSelected, $levelSelected);
+        $countDesc = count($examDescriptions);
+        $examDescriptionsTable = view('examDescription.tableForSubject', ["countDesc"=>$countDesc, "sessionSF"=>$sessionSF, "examTypeSF"=>$examTypeSF, "levelSF"=>$levelSF, "examDescriptions"=>$examDescriptions]);
 
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'examDescription.table', ["examDescriptions"=>$examDescriptions, "subTitle"=>"opisy egzaminów",
-                "sessionSelectField"=>$sessionSelectField, "subjectSelectField"=>"",
-                "examTypeSelectField"=>$examTypeSelectField, "levelSelectField"=>$levelSelectField]);
+        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$examDescriptionsTable]);
     }
 
     private function showTextbooks($subject) {
-        $subjectRepo = new SubjectRepository(new Subject);
-        $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSelected = session()->get('subjectSelected');
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
-
         $subTitle = "podręczniki dla przedmiotu";
         $textbooks = $subject -> textbooks;
-        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'textbook.table', ["subTitle"=>$subTitle, "textbooks"=>$textbooks, "subjectSelectField"=>$subjectSelectField]);
+        $textbookTable = view('textbook.tableForSubject', ["subTitle"=>$subTitle, "textbooks"=>$textbooks]);
+        return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable, "js"=>""]);
     }
 
-
-    public function edit($id, Subject $subject) {
-        $subject = $subject -> find($id);
-        return view('subject.edit', ["subject"=>$subject]);
-    }
-
-    public function update($id, Request $request, Subject $subject) {
-        $subject = $subject -> find($id);
-        $this->validate($request, [
-          'name' => 'required|max:60',
-          'short_name' => 'max:15',
-          'order_in_the_sheet' => 'integer|between:1,25',
-        ]);
-
-        $subject->name = $request->name;
-        $subject->short_name = $request->short_name;
-        if($request->actual=="on") $subject->actual = true; else $subject->actual = false;
-        $subject->order_in_the_sheet = $request->order_in_the_sheet;
-        if( empty($request->order_in_the_sheet) ) $subject->order_in_the_sheet = NULL;
-        if($request->expanded=="on") $subject->expanded = true; else $subject->expanded = false;
-        $subject->save();
-
-        return redirect($request->history_view);
-    }
-
-    public function destroy($id, Subject $subject) {
-        $subject = $subject -> find($id);
-        $subject->delete();
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
+    //  public function change($id) {  session()->put('subjectSelected', $id);   }
 }

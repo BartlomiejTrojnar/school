@@ -1,5 +1,6 @@
-// ----------------------- (C) mgr inż. Bartłomiej Trojnar; (I) maj 2020 ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.01.2023 ------------------------ //
 // ------------ wydarzenia na stronie ustalania kolejnośc nauczycieli na wydrukach ------------- //
+
 
 function dragTeacher() {  // podnoszenie pola z nauczycielem
     $('div.teacher').attr('draggable', 'true');
@@ -17,7 +18,7 @@ function dropTeacher() {  // opuszczenie nauczyciela na polu kolejności
         var order = $(this).data('order');
         var teacher = data.getData('teacher');
         var oldOrder = data.getData('oldOrder');
-        if(setPrintOrder(teacher, order))  moveTeacher(teacher, order, oldOrder);
+        setPrintOrder(teacher, order, oldOrder);
         if(event.preventDefault) event.preventDefault();
         return false;
     });
@@ -27,19 +28,19 @@ function dropTeacher() {  // opuszczenie nauczyciela na polu kolejności
     });
 }
 
-function setPrintOrder(teacher, order) {  // zapamiętanie kolejności nauczyciela w bazie danych
+function setPrintOrder(teacher, order, oldOrder) {  // zapamiętanie kolejności nauczyciela w bazie danych
     $.ajax({
         type: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/nauczyciel/setPrintOrder",
         data: { teacher_id: teacher, order: order },
         success: function(result) {
-            if(result) return true;
+            if(result) return  moveTeacher(teacher, order, oldOrder);
             return false;
         },
         error: function(result) { alert('Błąd: teacherPrintOrder.js - funkcja setPrintOrder'); alert(result); return false; }
     });
-    return true;
+    //return true;
 }
 
 function moveTeacher(teacher, order, oldOrder) {  // przesunięcie nauczyciela
@@ -49,6 +50,7 @@ function moveTeacher(teacher, order, oldOrder) {  // przesunięcie nauczyciela
     $('li[data-order="'+order+'"]').append(div);
     dragTeacher();
 }
+
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {

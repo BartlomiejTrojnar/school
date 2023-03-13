@@ -1,5 +1,5 @@
 <?php
-// ----------------------- (C) mgr inż. Bartłomiej Trojnar; (I) grudzień 2020 ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Repositories\TermRepository;
@@ -16,22 +16,22 @@ class TermController extends Controller
     public function index(TermRepository $termRepo, ExamDescriptionRepository $examDescriptionRepo, ClassroomRepository $classroomRepo, SessionRepository $sessionRepo) {
         $examDescriptions = $examDescriptionRepo -> getAllSorted();
         $examDescriptionSelected = session()->get('examDescriptionSelected');
-        $examDescriptionSelectField = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$examDescriptionSelected]);
+        $examDescriptionSF = view('examDescription.selectField', ["examDescriptions"=>$examDescriptions, "examDescriptionSelected"=>$examDescriptionSelected]);
 
         $classroomSelected = session()->get('classroomSelected');
         $classrooms = $classroomRepo -> getAllSorted();
-        $classroomSelectField = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$classroomSelected]);
+        $classroomSF = view('classroom.selectField', ["classrooms"=>$classrooms, "classroomSelected"=>$classroomSelected]);
 
         $sessionSelected = session()->get('sessionSelected');
         $sessions = $sessionRepo -> getAllSorted();
-        $sessionSelectField = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
+        $sessionSF = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
         $terms = $termRepo -> getFilteredAndSorted($sessionSelected, $examDescriptionSelected, $classroomSelected);
         $examDescriptions = $examDescriptionRepo -> getAllSorted();
         $classrooms = $classroomRepo -> getAllSorted();
 
         return view('term.index')
-            -> nest('termTable', 'term.table', ["terms"=>$terms, "subTitle"=>"", "links"=>true, "examDescriptionSelectField"=>$examDescriptionSelectField,
-            "classroomSelectField"=>$classroomSelectField, "sessionSelectField"=>$sessionSelectField]);
+            -> nest('termTable', 'term.table', ["terms"=>$terms, "subTitle"=>"", "links"=>true, "examDescriptionSF"=>$examDescriptionSF,
+            "classroomSF"=>$classroomSF, "sessionSF"=>$sessionSF]);
     }
 
     public function orderBy($column) {
@@ -80,15 +80,15 @@ class TermController extends Controller
     }
 
     public function show($id, TermRepository $termRepo, $view='') {
-        if( empty(session() -> get('termView')) )  session() -> put('termView', 'showInfo');
+        if( empty(session() -> get('termView')) )  session() -> put('termView', 'info');
         if($view)  session() -> put('termView', $view);
         $this->term = $termRepo -> find($id);
         $terms = $termRepo -> getFilteredAndSorted(0,0,0);
         list($this->previous, $this->next) = $termRepo -> nextAndPreviousRecordId($terms, $id);
 
         switch(session()->get('termView')) {
-            case 'showInfo':    return $this -> showInfo();
-            case 'showExams':   return $this -> showExams();
+            case 'info':        return $this -> showInfo();
+            case 'egzaminy':    return $this -> showExams();
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', $view);
         }
@@ -102,14 +102,14 @@ class TermController extends Controller
     private function showExams() {
         $examRepo = new ExamRepository(new Exam);
         $exams = $examRepo -> getFilteredAndSorted(0, 0, $this->term->id, 0);
-        $declarationSelectField = "";
-        $examDescriptionSelectField = "";
-        $termSelectField = "";
-        $examTypeSelectField = "";
+        $declarationSF = "";
+        $examDescriptionSF = "";
+        $termSF = "";
+        $examTypeSF = "";
 
         return view('term.show', ["term"=>$this->term, "previous"=>$this->previous, "next"=>$this->next])
-            -> nest('subView', 'exam.table', ["exams"=>$exams, "declarationSelectField"=>$declarationSelectField, "examDescriptionSelectField"=>$examDescriptionSelectField,
-                "termSelectField"=>$termSelectField, "examTypeSelectField"=>$examTypeSelectField]);
+            -> nest('subView', 'exam.table', ["exams"=>$exams, "declarationSF"=>$declarationSF, "examDescriptionSF"=>$examDescriptionSF,
+                "termSF"=>$termSF, "examTypeSF"=>$examTypeSF]);
     }
 
     public function edit($id, Term $term, ExamDescriptionRepository $examDescriptionRepo, ClassroomRepository $classroomRepo) {

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\StudentGrade;
 use App\Repositories\StudentGradeRepository;
@@ -11,21 +11,6 @@ use Illuminate\Http\Request;
 
 class StudentGradeController extends Controller
 {
-    public function orderBy($column) {
-        if(session()->get('StudentGradeOrderBy[0]') == $column)
-            if(session()->get('StudentGradeOrderBy[1]') == 'desc') session()->put('StudentGradeOrderBy[1]', 'asc');
-            else session()->put('StudentGradeOrderBy[1]', 'desc');
-        else {
-            session()->put('StudentGradeOrderBy[4]', session()->get('StudentGradeOrderBy[2]'));
-            session()->put('StudentGradeOrderBy[2]', session()->get('StudentGradeOrderBy[0]'));
-            session()->put('StudentGradeOrderBy[0]', $column);
-            session()->put('StudentGradeOrderBy[5]', session()->get('StudentGradeOrderBy[3]'));
-            session()->put('StudentGradeOrderBy[3]', session()->get('StudentGradeOrderBy[1]'));
-            session()->put('StudentGradeOrderBy[1]', 'asc');
-        }
-        return redirect( $_SERVER['HTTP_REFERER'] );
-    }
-
     public function create(Request $request, StudentRepository $studentRepo, GradeRepository $gradeRepo, SchoolYearRepository $syRepo) {
         if( $request->version=="forStudent" )   return $this -> createForStudent($request->student_id, $studentRepo, $gradeRepo, $syRepo);
         if( $request->version=="forGrade" )     return $this -> createForGrade($request->grade_id, $gradeRepo, $studentRepo, $syRepo);
@@ -73,24 +58,15 @@ class StudentGradeController extends Controller
     }
 */
     public function store(Request $request) {
-        $this->validate($request, [
-          'student_id' => 'required',
-          'grade_id' => 'required',
-          'start' => 'required|date',
-          'end' => 'required|date',
-        ]);
-
+        $this->validate($request, [  'student_id' => 'required', 'grade_id' => 'required', 'start' => 'required|date', 'end' => 'required|date', ]);
         $StudentGrade = new StudentGrade;
-        $StudentGrade->student_id = $request->student_id;
-        $StudentGrade->grade_id = $request->grade_id;
-        $StudentGrade->start = $request->start;
-        $StudentGrade->end = $request->end;
-        $StudentGrade->confirmation_start = $request->confirmation_start == 'on' ? true : false;
-          if( $request->confirmation_start == 1 ) $StudentGrade->confirmation_start = true;
-        $StudentGrade->confirmation_end   = $request->confirmation_end   == 'on' ? true : false;
-          if( $request->confirmation_end == 1 ) $StudentGrade->confirmation_end = true;
+        $StudentGrade->student_id   = $request->student_id;
+        $StudentGrade->grade_id     = $request->grade_id;
+        $StudentGrade->start        = $request->start;
+        $StudentGrade->end          = $request->end;
+        $StudentGrade->confirmation_start = $request->confirmation_start;
+        $StudentGrade->confirmation_end   = $request->confirmation_end;
         $StudentGrade -> save();
-
         return $StudentGrade->id;
     }
 /*
@@ -131,18 +107,18 @@ class StudentGradeController extends Controller
     private function editForGrade($id, $sgRepo, $studentRepo, $syRepo) {
         $studentGrade = $sgRepo -> find($id);
         $students = $studentRepo -> getAllSorted();
-        $studentSelectField = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentGrade->student_id]);
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentGrade->student_id]);
         $proposedDates = $syRepo -> getDatesOfSchoolYear( $studentGrade->end );
-        return view('studentGrade.editForGrade', ["studentGrade"=>$studentGrade, "studentSelectField"=>$studentSelectField, "proposedDates"=>$proposedDates]);
+        return view('studentGrade.editForGrade', ["studentGrade"=>$studentGrade, "studentSF"=>$studentSF, "proposedDates"=>$proposedDates]);
     }
 
     private function editForStudent($id, $lp, $sgRepo, $gradeRepo, $syRepo) {
         $studentGrade = $sgRepo -> find($id);
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = $studentGrade->grade_id;
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
         $proposedDates = $syRepo -> getDatesOfSchoolYear( $studentGrade->end );
-        return view('studentGrade.editForStudent', ["studentGrade"=>$studentGrade, "gradeSelectField"=>$gradeSelectField, "proposedDates"=>$proposedDates, "lp"=>$lp]);
+        return view('studentGrade.editForStudent', ["studentGrade"=>$studentGrade, "gradeSF"=>$gradeSF, "proposedDates"=>$proposedDates, "lp"=>$lp]);
     }
 
     public function editAll(Request $request) {
@@ -155,13 +131,7 @@ class StudentGradeController extends Controller
 
     public function update(Request $request, $id, StudentGrade $studentGrade) {
         $studentGrade = StudentGrade::find($id);
-        $this->validate($request, [
-          'student_id' => 'required',
-          'grade_id' => 'required',
-          'start' => 'required|date',
-          'end' => 'required|date',
-        ]);
-
+        $this->validate($request, [ 'student_id' => 'required', 'grade_id' => 'required', 'start' => 'required|date', 'end' => 'required|date', ]);
         $studentGrade->student_id = $request->student_id;
         $studentGrade->grade_id = $request->grade_id;
         $studentGrade->start = $request->start;
@@ -206,7 +176,7 @@ class StudentGradeController extends Controller
         $schoolYearSelected = session()->get('schoolYearSelected');
         if($schoolYearSelected) {
             $schoolYear = $schoolYearRepo -> find($schoolYearSelected);
-            $year = substr($schoolYear->end, 0, 4);
+            $year = substr($schoolYear->date_end, 0, 4);
         }
         else $year=0;
 
@@ -217,7 +187,23 @@ class StudentGradeController extends Controller
         $studentGrade = $studentGrade -> find($request->id);
         return view('studentGrade.row', ["studentGrade"=>$studentGrade]);
     }
-/*
+
+    public function orderBy($column) {
+        if(session()->get('StudentGradeOrderBy[0]') == $column)
+            if(session()->get('StudentGradeOrderBy[1]') == 'desc') session()->put('StudentGradeOrderBy[1]', 'asc');
+            else session()->put('StudentGradeOrderBy[1]', 'desc');
+        else {
+            session()->put('StudentGradeOrderBy[4]', session()->get('StudentGradeOrderBy[2]'));
+            session()->put('StudentGradeOrderBy[2]', session()->get('StudentGradeOrderBy[0]'));
+            session()->put('StudentGradeOrderBy[0]', $column);
+            session()->put('StudentGradeOrderBy[5]', session()->get('StudentGradeOrderBy[3]'));
+            session()->put('StudentGradeOrderBy[3]', session()->get('StudentGradeOrderBy[1]'));
+            session()->put('StudentGradeOrderBy[1]', 'asc');
+        }
+        return redirect( $_SERVER['HTTP_REFERER'] );
+    }
+
+    /*
     public function refreshTable(Request $request, StudentRepository $studentRepo, StudentGradeRepository $sgRepo, SchoolYearRepository $schoolYearRepo) {
         if($request->version=="forStudent") {
             $student = $studentRepo -> find($request->student_id);

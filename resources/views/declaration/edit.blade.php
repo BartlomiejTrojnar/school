@@ -1,5 +1,5 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
-<tr class="editRow" data-declaration_id="{{$declaration->id}}">>
+<tr class="editRow" data-declaration_id="{{$declaration->id}}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 10.11.2022 *********************** -->
    <form action="{{ route('deklaracja.update', $declaration->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}

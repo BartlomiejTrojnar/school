@@ -1,8 +1,7 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 
-use App\Models\StudentGrade;
 use App\Models\StudentNumber;
 use App\Repositories\StudentNumberRepository;
 
@@ -13,7 +12,6 @@ use Illuminate\Http\Request;
 
 class StudentNumberController extends Controller
 {
-    /*
     public function orderBy($column) {
         if(session()->get('StudentNumberOrderBy[0]') == $column)
             if(session()->get('StudentNumberOrderBy[1]') == 'desc')  session()->put('StudentNumberOrderBy[1]', 'asc');
@@ -26,7 +24,7 @@ class StudentNumberController extends Controller
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-*/
+
     public function create(Request $request, StudentNumberRepository $snRepo, GradeRepository $gradeRepo, StudentGradeRepository $studentGradeRepo, SchoolYearRepository $syRepo) {
         if( $request->version=="forStudent" )   return $this -> createForStudent($request->student_id, $snRepo, $gradeRepo, $syRepo);
         if( $request->version=="forGrade" )     return $this -> createForGrade($request->grade_id, $snRepo, $studentGradeRepo, $syRepo);
@@ -48,28 +46,23 @@ class StudentNumberController extends Controller
     }
 
     public function createForStudent($student_id, $snRepo, $gradeRepo, $syRepo) {
+        $schoolYear = session()->get('schoolYearSelected');
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$schoolYear+1900]);
 
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYear = session()->get('schoolYearSelected');
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear, "name"=>"school_year_id"]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear, "name"=>"school_year_id"]);
 
         $proposedNumber = $snRepo -> getLastNumber() + 1;
 
-        return view('studentNumber.createForStudent', ["student_id"=>$student_id, "gradeSelectField"=>$gradeSelectField,
-            "schoolYearSelectField"=>$schoolYearSelectField, "proposedNumber"=>$proposedNumber]);
+        return view('studentNumber.createForStudent', ["student_id"=>$student_id, "gradeSF"=>$gradeSF,
+            "schoolYearSF"=>$schoolYearSF, "proposedNumber"=>$proposedNumber]);
     }
 
     public function store(Request $request) {
-        $this->validate($request, [
-          'student_id' => 'required',
-          'grade_id' => 'required',
-          'school_year_id' => 'required',
-          'number' => 'required|integer|between:1,99',
-        ]);
-
+        $this->validate($request, [  'student_id' => 'required', 'grade_id' => 'required', 'school_year_id' => 'required', 'number' => 'required|integer|between:1,99', ]);
         $StudentNumber = new StudentNumber;
         $StudentNumber->student_id = $request->student_id;
         $StudentNumber->grade_id = $request->grade_id;
@@ -77,7 +70,6 @@ class StudentNumberController extends Controller
         $StudentNumber->number = $request->number;
         $StudentNumber->confirmation_number = $request->confirmationNumber;
         $StudentNumber -> save();
-
         return $StudentNumber->id;
     }
 
@@ -98,16 +90,19 @@ class StudentNumberController extends Controller
     }
 
     public function addNumbersForGrade(Request $request, StudentGradeRepository $studentGradeRepo) {
+        $dateView = session()->get('dateView');
         $studentGrades = $studentGradeRepo -> getStudentsFromGradeOrderByLastName($request->grade_id);
         $number = 1;
         foreach ($studentGrades as $studentGrade) {
-            $studentNumber = new StudentNumber;
-            $studentNumber->student_id = $studentGrade->student_id;
-            $studentNumber->grade_id = $request->grade_id;
-            $studentNumber->school_year_id = $request->schoolYear_id;
-            $studentNumber->number = $number++;
-            $studentNumber->confirmation_number = false;
-            $studentNumber -> save();
+            if($studentGrade->start <= $dateView && $studentGrade->end >= $dateView) {
+                $studentNumber = new StudentNumber;
+                $studentNumber->student_id = $studentGrade->student_id;
+                $studentNumber->grade_id = $request->grade_id;
+                $studentNumber->school_year_id = $request->schoolYear_id;
+                $studentNumber->number = $number++;
+                $studentNumber->confirmation_number = false;
+                $studentNumber -> save();    
+            }
         }
         return 1;
     }
@@ -133,14 +128,15 @@ class StudentNumberController extends Controller
     }
 
     public function editForStudent($id, $snRepo, $gradeRepo, $syRepo) {
+        $year = session()->get('schoolYearSelected')+1900;
         $studentNumber = $snRepo -> find($id);
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = $studentNumber->grade_id;
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year]);
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYearSelected = $studentNumber->school_year_id;
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
-        return view('studentNumber.editForStudent', ["studentNumber"=>$studentNumber, "gradeSelectField"=>$gradeSelectField, "schoolYearSelectField"=>$schoolYearSelectField]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        return view('studentNumber.editForStudent', ["studentNumber"=>$studentNumber, "gradeSF"=>$gradeSF, "schoolYearSF"=>$schoolYearSF]);
     }
 
     public function update($id, Request $request, StudentNumber $studentNumber) {
@@ -188,21 +184,22 @@ class StudentNumberController extends Controller
     public function refreshTableForGrade($grade_id, $snRepo, $schoolYearRepo, $gradeRepo) {
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSelected = session()->get('schoolYearSelected');
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
         if( $schoolYearSelected ) {
             $schoolYear = $schoolYearRepo -> find( $schoolYearSelected );
             $studentNumbers = $snRepo -> getGradeNumbersForSchoolYear($grade_id, $schoolYear->id);
         }
         else {
             $schoolYear = $schoolYearRepo -> find( $schoolYearRepo -> getSchoolYearIdForDate(date('Y-m-d')) );
-            $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>"school_year_id" ]);
+            $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>"school_year_id" ]);
             $studentNumbers = $snRepo -> getGradeNumbers($grade_id);
         }
         $grade = $gradeRepo -> find($grade_id);
         $yearOfStudy = substr($schoolYear->date_end,0,4) - ($grade->year_of_beginning+1);
         if(substr($schoolYear->date_end,5,2)) $yearOfStudy++;
-        $tableForGrade = view('studentNumber.tableForGrade', ["schoolYearSelectField"=>$schoolYearSelectField, "studentNumbers"=>$studentNumbers, "grade"=>$grade]);
+        $tableForGrade = view('studentNumber.tableForGrade', ["schoolYearSF"=>$schoolYearSF, "studentNumbers"=>$studentNumbers, "grade"=>$grade, "dateView"=>'2022-09-16']);
         $count = count($studentNumbers);
+        return $tableForGrade;
         return view('studentNumber.sectionForGrade', ["grade"=>$grade, "yearOfStudy"=>$yearOfStudy, "tableForGrade"=>$tableForGrade, "count"=>$count]);
     }
 /*

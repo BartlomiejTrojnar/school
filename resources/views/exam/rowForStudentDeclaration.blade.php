@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 17.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.09.2022 *********************** -->
 <tr data-exam_id="{{$exam->id}}">
    <td>
       {{ $exam->examDescription->session->year }} {{ $exam->examDescription->session->type }}

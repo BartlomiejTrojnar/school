@@ -1,22 +1,67 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.12.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 20.02.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Command;
 use App\Repositories\CommandRepository;
-
-use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 
-class CommandController extends Controller
-{
-/*
-    public function index(CommandRepository $commandRepo)
-    {
-        $commands = $commandRepo->getAllSorted();
-        return view('command.index')
-            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
+class CommandController extends Controller {
+    public function create() {
+        $task = session()->get('taskSelected');
+        return view('command.create', ["task"=>$task]);
     }
-*/
+
+    public function store(Request $request) {
+        $this -> validate($request, [
+            'task_id' => 'required',
+            'number' => 'required|integer|min:1|max:20',
+            'command' => 'required|max:25',
+            'description' => 'max:65',
+            'points' => 'required|min:1',
+        ]);
+        $command = new Command;
+        $command->task_id = $request->task_id;
+        $command->number = $request->number;
+        $command->command = $request->command;
+        $command->description = $request->description;
+        $command->points = $request->points;
+        $command -> save();
+        return $command->id;
+    }
+
+    public function edit(Request $request, Command $command) {
+        $command = $command -> find($request->id);
+        return view('command.edit', ["command"=>$command, "lp"=>$request->lp]);
+    }
+
+    public function update($id, Request $request, Command $command) {
+        $command = $command -> find($id);
+        $this -> validate($request, [
+            'task_id' => 'required',
+            'number' => 'required|integer|min:1|max:20',
+            'command' => 'required|max:25',
+            'description' => 'max:65',
+            'points' => 'required|min:1',
+        ]);
+        $command->task_id = $request->task_id;
+        $command->number = $request->number;
+        $command->command = $request->command;
+        $command->description = $request->description;
+        $command->points = $request->points;
+        $command -> save();
+        return $command->id;
+    }
+
+    public function destroy($id, Command $command) {
+        $command = $command -> find($id);
+        $command -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, Command $command) {
+        $command = $command -> find($request->id);
+        return view('command.row', ["command"=>$command, "lp"=>$request->lp]);
+    }
 
     public function orderBy($column) {
         if(session()->get('CommandOrderBy[0]') == $column)
@@ -33,33 +78,16 @@ class CommandController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
-    public function create() {
-        $task = session()->get('taskSelected');
-        return view('command.create', ["task"=>$task]);
+    /*
+    public function index(CommandRepository $commandRepo)
+    {
+        $commands = $commandRepo->getAllSorted();
+        return view('command.index')
+            -> nest('commandTable', 'command.table', ["commands"=>$commands, "subTitle"=>""]);
     }
-
-    public function store(Request $request) {
-        $this -> validate($request, [
-          'task_id' => 'required',
-          'number' => 'required|integer|min:1|max:20',
-          'command' => 'required|max:25',
-          'description' => 'max:65',
-          'points' => 'required|min:1',
-        ]);
-
-        $command = new Command;
-        $command->task_id = $request->task_id;
-        $command->number = $request->number;
-        $command->command = $request->command;
-        $command->description = $request->description;
-        $command->points = $request->points;
-        $command -> save();
-
-        return $command->id;
-    }
-
+*/
     public function show($id, CommandRepository $commandRepo, $view='') {
-        if( empty(session() -> get('commandView')) )  session() -> put('commandView', 'showInfo');
+        if( empty(session() -> get('commandView')) )  session() -> put('commandView', 'info');
         if($view)  session() -> put('commandView', $view);
         session() -> put('commandSelected', $id);
         $command = $commandRepo -> find($id);
@@ -67,48 +95,14 @@ class CommandController extends Controller
         list($this->previous, $this->next) = $commandRepo -> nextAndPreviousRecordId($commands, $id);
 
         switch(session()->get('commandView')) {
-            case 'showInfo':
+            case 'info':
                 return view('command.show', ["command"=>$command, "previous"=>$this->previous, "next"=>$this->next])
                     -> nest('subView', 'command.showInfo', ["command"=>$command]);
+            case 'oceny':
+                printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
             default:
                 printf('<p style="background: #bb0; color: #f00; font-size: x-large; text-align: center; border: 3px solid red; padding: 5px;">Widok %s nieznany</p>', session()->get('commandView'));
         }
-    }
-
-    public function edit(Request $request, Command $command, TaskRepository $taskRepo) {
-        $command = $command -> find($request->id);
-        return view('command.edit', ["command"=>$command]);
-    }
-
-    public function update($id, Request $request, Command $command) {
-        $command = $command -> find($id);
-        $this -> validate($request, [
-          'task_id' => 'required',
-          'number' => 'required|integer|min:1|max:20',
-          'command' => 'required|max:25',
-          'description' => 'max:65',
-          'points' => 'required|min:1',
-        ]);
-
-        $command->task_id = $request->task_id;
-        $command->number = $request->number;
-        $command->command = $request->command;
-        $command->description = $request->description;
-        $command->points = $request->points;
-        $command -> save();
-
-        return $command->id;
-    }
-
-    public function destroy($id, Command $command) {
-        $command = $command -> find($id);
-        $command -> delete();
-        return 1;
-    }
-
-    public function refreshRow(Request $request, Command $command) {
-        $command = $command -> find($request->id);
-        return view('command.row', ["command"=>$command, "lp"=>$request->lp]);
     }
 
     /*

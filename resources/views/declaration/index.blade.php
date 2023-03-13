@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -39,8 +39,8 @@
 
          <tr>
             <td></td>
-            <td><?php print_r($gradeSelectField); print_r($studentSelectField); ?></td>
-            <td><?php print_r($sessionSelectField); ?></td>
+            <td><?php print_r($gradeSF); print_r($studentSF); ?></td>
+            <td><?php print_r($sessionSF); ?></td>
             <td colspan="6"></td>
          </tr>
       </thead>

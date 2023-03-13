@@ -1,4 +1,4 @@
-<!-- ******************  (C) mgr inż. Bartłomiej Trojnar; (III) czerwiec 2021 ****************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -19,9 +19,9 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showInfo') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showStudents') }}">uczniowie <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/showGrades') }}">klasy</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/uczniowie') }}">uczniowie <i class='fa fa-users'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('szkola/'.$school->id.'/klasy') }}">klasy</a></li>
       <li class="nav-item"><a class="nav-link" href="{{ route('szkola.index') }}">powrót <i class='fa fa-undo'></i></a></li>
    </ul>
 

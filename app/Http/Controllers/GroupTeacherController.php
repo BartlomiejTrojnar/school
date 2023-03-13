@@ -30,19 +30,19 @@ class GroupTeacherController extends Controller
     public function changeTeacher(Request $request, GroupTeacher $groupTeacher, GroupTeacherRepository $groupTeacherRepo, GroupRepository $groupRepo, TeacherRepository $teacherRepo) {
         $group = $groupRepo -> find($request->group_id);
         //sprawdzenie czy wpisane są poprawne daty
-        if( $request->date_start > $request->date_end ||
-            $request->date_start == '' ||
-            $request->date_end   == '' ||
-            $request->date_start < $group->date_start ||
-            $request->date_end > $group->date_end )
+        if( $request->start > $request->end ||
+            $request->start == '' ||
+            $request->end   == '' ||
+            $request->start < $group->start ||
+            $request->end > $group->end )
         {
             //$groups = $groupRepo -> getAll();
             $teachers = $teacherRepo -> getAll();
-            $date_start[0] = $request->date_start;
-            $date_start[1] = $group->date_start;
-            $date_start[2] = date('Y-m-d');
-            $date_end[0] = $request->date_end;
-            $date_end[1] = $group->date_end;
+            $start[0] = $request->start;
+            $start[1] = $group->start;
+            $start[2] = date('Y-m-d');
+            $end[0] = $request->end;
+            $end[1] = $group->end;
             return view('groupTeacher.addTeacher', ["groupTeacher"=>$groupTeacher, "group_id"=>$request->group_id, "date_start"=>$date_start, "date_end"=>$date_end, "history_view"=>$request->history_view])
                 -> nest('teacherSelectField', 'teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$request->teacher_id ]);
         }
@@ -51,14 +51,14 @@ class GroupTeacherController extends Controller
         $groupTeachers = $groupTeacherRepo -> getGroupTeacherForGroup($request->group_id);
         foreach($groupTeachers as $gt) {
             // zignorowanie nauczycieli, którzy rozpoczęli naukę grupy później niż podana data początkowa
-            if($gt->date_start > $request->date_start) continue;
+            if($gt->start > $request->start) continue;
             // zignorowanie nauczycieli, którzy zakończyli naukę grupy wcześniej niż podana data początkowa
-            $dateEnd =  date('Y-m-d', strtotime('-1 day', strtotime($request->date_start)));
-            if($gt->date_end <= $dateEnd) continue;
+            $end =  date('Y-m-d', strtotime('-1 day', strtotime($request->start)));
+            if($gt->end <= $end) continue;
 
             // zmiana daty zakończenia nauki dla pozostałych nauczycieli
             $groupTeacher = $groupTeacher -> find($gt->id);
-            $groupTeacher->date_end = $dateEnd;
+            $groupTeacher->end = $end;
             $groupTeacher -> save();
         }
 
@@ -66,8 +66,8 @@ class GroupTeacherController extends Controller
         $groupTeacher = new GroupTeacher;
         $groupTeacher->group_id = $request->group_id;
         $groupTeacher->teacher_id = $request->teacher_id;
-        $groupTeacher->date_start = $request->date_start;
-        $groupTeacher->date_end = $request->date_end;
+        $groupTeacher->start = $request->start;
+        $groupTeacher->end = $request->end;
         $groupTeacher -> save();
 
         echo $request->history_view;

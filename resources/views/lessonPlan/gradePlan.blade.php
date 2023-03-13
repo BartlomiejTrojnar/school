@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -10,7 +10,7 @@
       <input type="date" id="dateView" value="{{ $dateView }}" />
    </strong>
    <div id="completeRemove">upuść lekcję tutaj by całkiem usunąć</div>
-   <ul id="schoolYearEnds">
+   <ul id="schoolYearEnds" class="hidden">
       @foreach($schoolYearEnds as $syEnd)
          <li>{{$syEnd->date_of_graduation}}</li>
       @endforeach
@@ -24,8 +24,8 @@
          $studyYear = substr($dateView, 0, 4) - $group->grades[0]->grade->year_of_beginning;
          if( substr($dateView, 5, 2)>=8 ) $studyYear++;
       ?>
-      <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}" style="background: brown; padding: 0;">
-         <span class="groupDates"><span class="start">{{$group->start}}</span> : <span class="end">{{$group->end }}</span></span><br />
+      <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
+         <span class="groupDates"><time class="start">{{$group->start}}</time> : <time class="end">{{$group->end }}</time></span><br />
          {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
          {{ $group->subject->short_name }} 
          <em style="font-size: 0.8em;">
@@ -41,16 +41,14 @@
          @foreach($group->teachers as $groupTeacher)
             <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">/{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/</span>
          @endforeach
-
          <!-- uczniowie -->
          <ol class="groupStudents hidden" style="padding: 10px; text-align: left;">
             @foreach($group->students as $groupStudent)
-               @foreach($groupStudent->student->grades as $studentGrade)
-                  <li class="gradeInfo" data-start="{{$studentGrade->start}}" data-end="{{$studentGrade->end}}">{{ $studentGrade->grade->id }}</li>
-               @endforeach
-
                <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">
                   {{ $groupStudent->student->first_name }} {{ $groupStudent->student->last_name }}
+                  @foreach($groupStudent->student->grades as $studentGrade)
+                     <em class="gradeInfo" data-start="{{$studentGrade->start}}" data-end="{{$studentGrade->end}}">{{ $studentGrade->grade->id }}</em>
+                  @endforeach
                </li>
             @endforeach
          </ol>
@@ -80,7 +78,7 @@
                @if($lesson->lesson_hour_id == $i+$dzien)
                   <li data-lesson_id="{{ $lesson->id }}" data-type="lesson" data-group_id="{{ $lesson->group_id }}">
                      <!-- data lekcji w planie -->
-                     <span class="lessonDates"><span class="start">{{$lesson->start}}</span>-<span class="end">{{$lesson->end}}</span></span><br />
+                     <span class="lessonDates"><time class="start">{{$lesson->start}}</time> : <time class="end">{{$lesson->end}}</time></span><br />
                      <!-- klasy -->
                      {{ $studyYear }}@foreach($lesson->group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
                      <!-- przedmiot i komentarz grupy -->

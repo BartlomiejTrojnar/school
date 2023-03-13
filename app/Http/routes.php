@@ -38,13 +38,15 @@ Route::post('/type/change/{type}', 'SessionVariablesController@typeChange');
 /* --------------------------------------------------------------------------- */
 
 Route::resource('/szkola', 'SchoolController');
-Route::post('/szkola/change/{id}', 'SchoolController@change');
 Route::get('/szkola/orderBy/{column}', array('as'=>'szkola.orderBy', 'uses'=>'SchoolController@orderBy'));
 Route::get('/szkola/{id}/{view?}', 'SchoolController@show');
+Route::post('/szkola/change/{id}', 'SchoolController@change');
+Route::post('/szkola/refreshRow', 'SchoolController@refreshRow');
 
 Route::resource('/rok_szkolny', 'SchoolYearController');
 Route::post('/rok_szkolny/change/{id}', 'SchoolYearController@change');
 Route::get('/rok_szkolny/{id}/{view?}', 'SchoolYearController@show');
+Route::post('/rok_szkolny/refreshRow', 'SchoolYearController@refreshRow');
 
 Route::get('/uczen/import', array('as'=>'uczen.import', 'uses'=>'StudentImportController@import'));
 Route::get('/uczen/search', array('as'=>'uczen.search', 'uses'=>'StudentController@search'));
@@ -53,10 +55,11 @@ Route::resource('/uczen', 'StudentController');
 Route::get('/uczen/orderBy/{column}', array('as'=>'uczen.orderBy', 'uses'=>'StudentController@orderBy'));
 Route::post('/uczen/change/{id}', 'StudentController@change');
 Route::get('/uczen/{id}/{view?}', 'StudentController@show');
+Route::post('/uczen/refreshRow', 'StudentController@refreshRow');
 
-Route::post('/book_of_student/refreshRow', 'BookOfStudentController@refreshRow');
 Route::resource('/ksiega_uczniow', 'BookOfStudentController');
 Route::get('/ksiega_uczniow/orderBy/{column}', array('as'=>'ksiega_uczniow.orderBy', 'uses'=>'BookOfStudentController@orderBy'));
+Route::post('/ksiega_uczniow/refreshRow', 'BookOfStudentController@refreshRow');
 
 Route::post('/klasa/refreshRow', 'GradeController@refreshRow');
 Route::get('/klasa/orderBy/{column}', array('as'=>'klasa.orderBy', 'uses'=>'GradeController@orderBy'));
@@ -83,7 +86,7 @@ Route::get('/numery_ucznia/orderBy/{column}', array('as'=>'numery_ucznia.orderBy
 Route::post('/student_numbers/confirmNumbers/{grade_id}/{school_year_id}', 'StudentNumberController@confirmNumbers');
 Route::post('/student_numbers/copy', array('as'=>'numery_ucznia.copy', 'uses'=>'StudentNumberController@copy'));
 Route::post('/student_numbers/refreshSection', 'StudentNumberController@refreshSection');
-Route::post('/student_numbers/refreshRow', 'StudentNumberController@refreshRow');
+Route::post('/numery_ucznia/refreshRow', 'StudentNumberController@refreshRow');
 Route::post('/student_numbers/updateNumber', 'StudentNumberController@updateNumber');
 Route::post('/student_numbers/addNumbersForGrade', 'StudentNumberController@addNumbersForGrade');
 
@@ -92,28 +95,36 @@ Route::post('/historia_ucznia/refreshRow', 'StudentHistoryController@refreshRow'
 
 
 // -------------------------------------------------------------------------------------------------------- //
-
 Route::resource('/sala', 'ClassroomController');
 Route::get('/sala/orderBy/{column}', array('as'=>'sala.orderBy', 'uses'=>'ClassroomController@orderBy'));
-Route::post('/sala/change/{id}', 'ClassroomController@change');
 Route::get('/sala/{id}/{view?}', 'ClassroomController@show');
+Route::post('/sala/change/{id}', 'ClassroomController@change');
+Route::post('/sala/refreshRow', 'ClassroomController@refreshRow');
 Route::post('/classroomPlan/showStudentListForGroup', 'LessonPlanController@showStudentListForGroup');
 
 Route::resource('/przedmiot', 'SubjectController');
 Route::post('/przedmiot/change/{id}', 'SubjectController@change');
 Route::get('/przedmiot/orderBy/{column}', array('as'=>'przedmiot.orderBy', 'uses'=>'SubjectController@orderBy'));
 Route::get('/przedmiot/{id}/{view?}', 'SubjectController@show');
+Route::post('/przedmiot/refreshRow', 'SubjectController@refreshRow');
 
-Route::post('/nauczyciel/change/{id}', 'TeacherController@change');
 Route::get('/nauczyciel/printOrder', array('as'=>'nauczyciel.printOrder', 'uses'=>'TeacherController@printOrder'));
-Route::post('/nauczyciel/setPrintOrder', 'TeacherController@setPrintOrder');
 Route::resource('/nauczyciel', 'TeacherController');
 Route::get('/nauczyciel/orderBy/{column}', array('as'=>'nauczyciel.orderBy', 'uses'=>'TeacherController@orderBy'));
 Route::get('/nauczyciel/{id}/{view?}', 'TeacherController@show');
+Route::post('/nauczyciel/change/{id}', 'TeacherController@change');
+Route::post('/nauczyciel/setPrintOrder', 'TeacherController@setPrintOrder');
+Route::post('/nauczyciel/refreshRow', 'TeacherController@refreshRow');
 
 Route::resource('/nauczany_przedmiot', 'TaughtSubjectController');
 Route::delete('/nauczany_przedmiot/delete/{id}', 'TaughtSubjectController@destroy');
 // -------------------------------------------------------------------------------------------------------- //
+
+Route::post('/rozszerzenie/exchangeStore', array('as'=>'rozszerzenie.exchangeStore', 'uses'=>'EnlargementController@exchangeStore'));
+Route::resource('/rozszerzenie', 'EnlargementController');
+Route::get('/rozszerzenie/exchange/{id}', 'EnlargementController@exchange');
+Route::put('/rozszerzenie/exchangeUpdate/{id}', 'EnlargementController@exchangeUpdate');
+Route::post('/rozszerzenie/refreshRow', 'EnlargementController@refreshRow');
 
 Route::get('/grupa/editComments', array('as'=>'grupa.editComments', 'uses'=>'GroupController@editComments'));
 Route::post('/grupa/updateComments', array('as'=>'grupa.updateComments', 'uses'=>'GroupController@updateComments'));
@@ -147,6 +158,7 @@ Route::delete('/grupa_klasy/{GroupGrade_id}', 'GroupGradeController@destroy');
 
 Route::get('/groupStudent/orderBy/{column}', array('as'=>'groupStudent.orderBy', 'uses'=>'GroupStudentController@orderBy'));
 Route::post('/groupStudent/refreshOtherGroupsInStudentsClass', 'GroupStudentController@refreshOtherGroupsInStudentsClass');
+Route::post('/groupStudent/getStudentsFromGroup', 'GroupStudentController@getStudentsFromGroup' );
 Route::post('/groupStudent/getOutsideGroupStudents', 'GroupStudentController@getOutsideGroupStudentsList' );
 Route::post('/groupStudent/removeYesterday', 'GroupStudentController@removeYesterday' );
 Route::post('/groupStudent/addStudent', 'GroupStudentController@addStudent');
@@ -159,7 +171,7 @@ Route::post('/grupa_uczniowie/getGroupStudents', 'GroupStudentController@getGrou
 Route::post('/grupa_uczniowie/getAnotherTimeGroupStudents', 'GroupStudentController@getAnotherTimeGroupStudents');
 Route::post('/grupa_uczniowie/getStudentGroups', 'GroupStudentController@getStudentGroups');
 Route::delete('/grupa_uczniowie/delete/{id}', 'GroupStudentController@delete');
-Route::get('/groupStudent/exportGroup/{group_id}', array('as'=>'groupStudent.exportGroup', 'uses'=>'GroupStudentExportController@group'));
+Route::get('/groupStudent/exportGroups', array('as'=>'groupStudent.exportGroups', 'uses'=>'GroupStudentExportController@groups'));
 
 
 // -------------------------------------------------------------------------------------------------------- //
@@ -193,9 +205,10 @@ Route::get('/zadanie/orderBy/{column}', array('as'=>'zadanie.orderBy', 'uses'=>'
 Route::get('/zadanie/{id}/{view?}', 'TaskController@show');
 
 
+Route::get('/polecenie/{id}/{view?}', 'CommandController@show');
 Route::post('/polecenie/storeFromImport', array('as'=>'polecenie.storeFromImport', 'uses'=>'CommandExportController@storeFromImport'));
 Route::resource('/polecenie', 'CommandController');
-Route::post('/command/refreshRow', 'CommandController@refreshRow');
+Route::post('/polecenie/refreshRow', 'CommandController@refreshRow');
 Route::get('/polecenie/orderBy/{column}', array('as'=>'polecenie.orderBy', 'uses'=>'CommandController@orderBy'));
 Route::get('/polecenie/taskCommandExport/{id}', array('as'=>'polecenie.taskCommandExport', 'uses'=>'CommandExportController@taskCommandExport'));
 Route::get('/polecenie/taskCommandImport/{id}', array('as'=>'polecenie.taskCommandImport', 'uses'=>'CommandExportController@taskCommandImport'));
@@ -224,6 +237,7 @@ Route::post('/ocena_zadania/writeInTheDiary/{id}', 'TaskRatingController@writeIn
 Route::post('/ocena_zadania/removeFromDiary/{id}', 'TaskRatingController@removeFromDiary');
 Route::post('/diaryYesNo/change/{value}', 'TaskRatingController@diaryYesNoChange');
 Route::get('/ocena_zadania/improvement/{id}', array('as'=>'ocena_zadania.improvement', 'uses'=>'TaskRatingController@improvement'));
+Route::post('/ocena_zadania/refreshRow', 'TaskRatingController@refreshRow');
 Route::post('/ocena_zadania/refreshTable', 'TaskRatingController@refreshTable');
 Route::resource('/ocena_zadania', 'TaskRatingController');
 Route::get('/ocena_zadania/orderBy/{column}', array('as'=>'ocena_zadania.orderBy', 'uses'=>'TaskRatingController@orderBy'));
@@ -240,8 +254,8 @@ Route::get('/podrecznik/orderBy/{column}', array('as'=>'podrecznik.orderBy', 'us
 Route::get('/podrecznik/{id}/{view?}', 'TextbookController@show');
 
 Route::post('/textbookChoice/refreshRow', 'TextbookChoiceController@refreshRow');
-Route::post('/textbookChoice/extension/{id}', 'TextbookChoiceController@extension');
-Route::post('/textbookChoice/verifyExtension/{id}', 'TextbookChoiceController@verifyExtension');
+Route::post('/textbookChoice/prolongate/{id}', 'TextbookChoiceController@prolongate');
+Route::post('/textbookChoice/verifyProlongate/{id}', 'TextbookChoiceController@verifyProlongate');
 Route::post('/wybor_podrecznika/refreshTableForTextbook', 'TextbookChoiceController@refreshTableForTextbook');
 Route::resource('/wybor_podrecznika', 'TextbookChoiceController');
 Route::get('/wybor_podrecznika/orderBy/{column}', array('as'=>'wybor_podrecznika.orderBy', 'uses'=>'TextbookChoiceController@orderBy'));
@@ -266,6 +280,7 @@ Route::post('/deklaracja/storeForGrade', array('as'=>'deklaracja.storeForGrade',
 Route::resource('/deklaracja', 'DeclarationController');
 Route::get('/deklaracja/orderBy/{column}', array('as'=>'deklaracja.orderBy', 'uses'=>'DeclarationController@orderBy'));
 Route::get('/deklaracja/change/{id}', 'DeclarationController@change');
+Route::put('/deklaracja/updateExams/{id}', 'DeclarationController@updateExams');
 Route::get('/deklaracja/{id}/{view?}', 'DeclarationController@show');
 Route::post('/declaration/refreshRow', 'DeclarationController@refreshRow');
 Route::post('/declaration/refreshForStudent', 'DeclarationController@refreshForStudent');
@@ -278,3 +293,9 @@ Route::get('/termin/{id}/{view?}', 'TermController@show');
 Route::post('/egzamin/refreshRow', 'ExamController@refreshRow');
 Route::resource('/egzamin', 'ExamController');
 Route::get('/egzamin/orderBy/{column}', array('as'=>'egzamin.orderBy', 'uses'=>'ExamController@orderBy'));
+Route::post('/exam/addExamsForDeclaration', 'ExamController@addExamsForDeclaration');
+
+
+// -------------------------------------------------------------------------------------------------------- //
+Route::resource('/certificate', 'CertificateController');
+Route::post('/certificate/refreshRow', 'CertificateController@refreshRow');

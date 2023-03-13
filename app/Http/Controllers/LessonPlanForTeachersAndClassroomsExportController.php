@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.04.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.09.2022 ------------------------ //
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -41,8 +41,8 @@ class LessonPlanForTeachersAndClassroomsExportController extends Controller
                 $this -> createClassroomSheet();
             });
             $excel->sheet('nauczyciele', function($sheet) {
-                $this->sheet = $sheet;
-                $this -> createTeachersSheet();
+                //$this->sheet = $sheet;
+                //$this -> createTeachersSheet();
             });
         })->export('xlsx');
     }

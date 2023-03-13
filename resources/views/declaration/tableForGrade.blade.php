@@ -1,7 +1,7 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.10.2022 *********************** -->
 <section id="declarationsTable">
    <h2>Deklaracje w klasie</h2>
-   <div><a class="btn btn-primary" href="{{route('deklaracja.create', 'version=forAllStudentFromGrade')}}">dodaj deklaracje dla klasy</a></div>
+   <div><a class="btn btn-primary" href="{{route('deklaracja.create', 'version=forGrade')}}">dodaj deklaracje dla klasy</a></div>
 
    <table id="declarations">
       <thead>

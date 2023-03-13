@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.10.2022 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -10,12 +10,13 @@
 @endsection
 
 @section('main-content')
+   <h1>Dodawanie dla klasy</h1>
    <form action="{{ route('deklaracja.storeForGrade') }}" method="post" role="form">
    {{ csrf_field() }}
       <table>
          <tr>
             <th><label for="session_id">sesja</label></th>
-            <td><?php  print_r($sessionSelectField);  ?></td>
+            <td><?php  print_r($sessionSF);  ?></td>
          </tr>
          <tr>
             <th><label for="application_number">numer zgłoszenia</label></th>
@@ -23,7 +24,7 @@
          </tr>
          <tr>
             <th><label for="session_id">klasa</label></th>
-            <td><?php  print_r($gradeSelectField);  ?></td>
+            <td><?php  print_r($gradeSF);  ?></td>
          </tr>
          <tr>
             <td colspan="2" id="studentsList">wczytuję listę uczniów</td>

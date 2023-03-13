@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.01.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\BookOfStudent;
 use App\Repositories\BookOfStudentRepository;
@@ -10,6 +10,76 @@ use Illuminate\Http\Request;
 
 class BookOfStudentController extends Controller
 {
+    public function create(Request $request, BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo, StudentRepository $studentRepo) {
+        if( $request->version=="forStudent" )   return $this -> createForStudent($bookOfStudentRepo, $schoolRepo, $request->student_id);
+        return $this -> createForIndex($bookOfStudentRepo, $schoolRepo, $studentRepo);
+    }
+
+    private function createForIndex($bookOfStudentRepo, $schoolRepo, $studentRepo) {
+        $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        $students = $studentRepo->getAllSorted();
+        $studentSelected = session()->get('studentSelected');
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
+        return view('bookOfStudent.create', ["schoolSF"=>$schoolSF, "studentSF"=>$studentSF, "proposedNumber"=>$proposedNumber]);
+    }
+
+    private function createForStudent($bookOfStudentRepo, $schoolRepo, $student_id) {
+        $schools = $schoolRepo->getAllSorted();
+        $schoolSelected = session()->get('schoolSelected');
+        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
+        
+        return view('bookOfStudent.createForStudent', ["proposedNumber"=>$proposedNumber, "schoolSelectField"=>$schoolSelectField, "student_id"=>$student_id]);
+    }
+
+    public function store(Request $request) {
+        $this->validate($request, [ 'school_id' => 'required', 'student_id' => 'required', 'number' => 'required|integer', ]);
+        $bookOfStudent = new BookOfStudent;
+        $bookOfStudent->school_id = $request->school_id;
+        $bookOfStudent->student_id = $request->student_id;
+        $bookOfStudent->number = $request->number;
+        $bookOfStudent -> save();
+        return $bookOfStudent->id;
+    }
+
+    public function edit(Request $request, BookOfStudent $bookOfStudent, SchoolRepository $schoolRepo, StudentRepository $studentRepo) {
+        if( $request->version == "forStudent" ) return $this -> editForStudent($request->id, $schoolRepo);
+        return $this -> editForIndex($request->id, $request->lp, $bookOfStudent, $schoolRepo, $studentRepo);
+    }
+
+    private function editForIndex($id, $lp, $bookOfStudent, $schoolRepo, $studentRepo) {
+        $bookOfStudent = $bookOfStudent -> find($id);
+        $schools = $schoolRepo -> getAllSorted();
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$bookOfStudent->school_id]);
+        $students = $studentRepo -> getAllSorted();
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$bookOfStudent->student_id]);
+        return view('bookOfStudent.edit', ["bookOfStudent"=>$bookOfStudent, "schoolSF"=>$schoolSF, "studentSF"=>$studentSF, "lp"=>$lp]);
+    }
+
+    public function update($id, Request $request, BookOfStudent $bookOfStudent) {
+        $bookOfStudent = $bookOfStudent -> find($id);
+        $this->validate($request, [ 'school_id' => 'required', 'student_id' => 'required', 'number' => 'required|integer', ]);
+        $bookOfStudent->school_id = $request->school_id;
+        $bookOfStudent->student_id = $request->student_id;
+        $bookOfStudent->number = $request->number;
+        $bookOfStudent -> save();
+        return $bookOfStudent->id;
+    }
+
+    public function destroy($id, BookOfStudent $bookOfStudent) {
+        $bookOfStudent = $bookOfStudent -> find($id);
+        $bookOfStudent -> delete();
+        return 1;
+    }
+
+    public function refreshRow(Request $request, BookOfStudent $bookOfStudent) {
+        $bookOfStudent = $bookOfStudent -> find($request->id);
+        return view('bookOfStudent.row', ["bookOfStudent"=>$bookOfStudent, "lp"=>$request->lp]);
+    }
+
     public function index(BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo) {
         if(isset($_GET['page']))  session()->put('bookOfStudentsPage', $_GET['page']);
         else session()->put('bookOfStudentsPage', 1);
@@ -20,8 +90,8 @@ class BookOfStudentController extends Controller
             $bookOfStudents = BookOfStudent::where('school_id', $schoolSelected);
             $bookOfStudents = $bookOfStudentRepo -> sortAndPaginateRecords($bookOfStudents);
         }
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
-        return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents, "schoolSelectField"=>$schoolSelectField]);
+        $schoolSF = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
+        return view('bookOfStudent.index', ["bookOfStudents"=>$bookOfStudents, "schoolSF"=>$schoolSF]);
     }
 
     public function orderBy($column) {
@@ -38,62 +108,7 @@ class BookOfStudentController extends Controller
         }
         return redirect( route('ksiega_uczniow.index') );
     }
-
-    public function create(Request $request, BookOfStudentRepository $bookOfStudentRepo, SchoolRepository $schoolRepo, StudentRepository $studentRepo) {
-        if( $request->version=="forIndex" )     return $this -> createForIndex($bookOfStudentRepo, $schoolRepo, $studentRepo);
-        if( $request->version=="forStudent" )   return $this -> createForStudent($bookOfStudentRepo, $schoolRepo, $request->student_id);
-        return $request->version;
-    }
-
-    private function createForIndex($bookOfStudentRepo, $schoolRepo, $studentRepo) {
-        $schools = $schoolRepo->getAllSorted();
-        $schoolSelected = session()->get('schoolSelected');
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
-        $students = $studentRepo->getAllSorted();
-        $studentSelected = session()->get('studentSelected');
-        $studentSelectField = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
-        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
-        return view('bookOfStudent.create', ["schoolSelectField"=>$schoolSelectField, "studentSelectField"=>$studentSelectField, "proposedNumber"=>$proposedNumber]);
-    }
-
-    private function createForStudent($bookOfStudentRepo, $schoolRepo, $student_id) {
-        $schools = $schoolRepo->getAllSorted();
-        $schoolSelected = session()->get('schoolSelected');
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$schoolSelected]);
-        $proposedNumber = $bookOfStudentRepo -> getLastNumber() + 1;
-        
-        return view('bookOfStudent.createForStudent', ["proposedNumber"=>$proposedNumber, "schoolSelectField"=>$schoolSelectField, "student_id"=>$student_id]);
-    }
-
-    public function store(Request $request) {
-        $this->validate($request, [
-          'school_id' => 'required',
-          'student_id' => 'required',
-          'number' => 'required|integer',
-        ]);
-
-        $bookOfStudent = new BookOfStudent;
-        $bookOfStudent->school_id = $request->school_id;
-        $bookOfStudent->student_id = $request->student_id;
-        $bookOfStudent->number = $request->number;
-        $bookOfStudent->save();
-
-        return $bookOfStudent->id;
-    }
-
-    public function edit(Request $request, BookOfStudent $bookOfStudent, SchoolRepository $schoolRepo, StudentRepository $studentRepo) {
-        if( $request->version == "forIndex" )   return $this -> editForIndex($request->id, $bookOfStudent, $schoolRepo, $studentRepo);
-        if( $request->version == "forStudent" ) return $this -> editForStudent($request->id, $schoolRepo);
-    }
-
-    private function editForIndex($id, $bookOfStudent, $schoolRepo, $studentRepo) {
-        $bookOfStudent = $bookOfStudent -> find($id);
-        $schools = $schoolRepo -> getAllSorted();
-        $schoolSelectField = view('school.selectField', ["schools"=>$schools, "schoolSelected"=>$bookOfStudent->school_id]);
-        $students = $studentRepo -> getAllSorted();
-        $studentSelectField = view('student.selectField', ["students"=>$students, "studentSelected"=>$bookOfStudent->student_id]);
-        return view('bookOfStudent.edit', ["bookOfStudent"=>$bookOfStudent, "schoolSelectField"=>$schoolSelectField, "studentSelectField"=>$studentSelectField]);
-    }
+/*
 
     private function editForStudent($id, $schoolRepo) {
         $bookOfStudent = new BookOfStudent;
@@ -103,31 +118,5 @@ class BookOfStudentController extends Controller
         return view('bookOfStudent.editForStudent', ["bookOfStudent"=>$bookOfStudent, "schoolSelectField"=>$schoolSelectField]);
     }
 
-    public function update($id, Request $request, BookOfStudent $bookOfStudent) {
-        $bookOfStudent = $bookOfStudent -> find($id);
-        $this->validate($request, [
-          'school_id' => 'required',
-          'student_id' => 'required',
-          'number' => 'required|integer',
-        ]);
-
-        $bookOfStudent->school_id = $request->school_id;
-        $bookOfStudent->student_id = $request->student_id;
-        $bookOfStudent->number = $request->number;
-        $bookOfStudent -> save();
-
-        return $bookOfStudent->id;
-    }
-
-    public function destroy($id, BookOfStudent $bookOfStudent) {
-        $bookOfStudent = $bookOfStudent -> find($id);
-        $bookOfStudent -> delete();
-        return 1;
-    }
-
-    public function refreshRow(Request $request, BookOfStudent $bookOfStudent) {
-        $bookOfStudent = $bookOfStudent -> find($request->id);
-        if($request->version = "forIndex")  return view('bookOfStudent.row', ["bookOfStudent"=>$bookOfStudent, "lp"=>$request->lp]);
-        return $request->version;
-    }
+*/
 }

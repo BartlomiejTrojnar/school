@@ -1,5 +1,5 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
 <tr data-exam_id="{{$exam->id}}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
    <td><a href="{{ route('egzamin.show', $exam->id) }}">{{$lp}}</a></td>
    @if($version!="forDeclaration")
       <td>{{ $exam->declaration->student->first_name }} {{ $exam->declaration->student->last_name }} {{ $exam->declaration->application_number }}</td>
@@ -20,8 +20,8 @@
    <td>{{ $exam->type }}</td>
    <td>{{ $exam->points }}</td>
    <td>{{ $exam->comments }}</td>
-   <td class="c">{{ substr($exam->created_at, 0, 10) }}</td>
-   <td class="c">{{ substr($exam->updated_at, 0, 10) }}</td>
+   <td class="small c">{{ substr($exam->created_at, 0, 10) }}</td>
+   <td class="small c">{{ substr($exam->updated_at, 0, 10) }}</td>
 
    <!-- modyfikowanie i usuwanie -->
    <td class="destroy edit c">

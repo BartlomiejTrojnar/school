@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 15.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupGrade;
 use App\Repositories\GradeRepository;
@@ -17,9 +17,11 @@ class GroupGradeController extends Controller
         $i=0;
         $gradesSelected[0] = "";
         foreach($group -> grades as $gradeSel)  $gradesSelected[++$i] = $gradeSel->grade_id;
-        if($i) $gradeSelectedYear = $group->grades[0]->grade->year_of_graduation; else $gradeSelectedYear=0;
+        if($i) $gradeSelectedYear = $group->grades[0]->grade->year_of_beginning; else $gradeSelectedYear=0;
+        if($schoolYear) $year = substr($schoolYear->date_end, 0, 4);  else $year=0;
+        $css = 'group/gradesList.css';
 
-        return view('groupGrade.gradesList', ["group_id"=>$id, "grades"=>$grades, "gradesSelected"=>$gradesSelected, "schoolYear"=>$schoolYear, "gradeSelectedYear"=>$gradeSelectedYear, "version"=>$version]);
+        return view('groupGrade.gradesList', ["group_id"=>$id, "grades"=>$grades, "gradesSelected"=>$gradesSelected, "year"=>$year, "gradeSelectedYear"=>$gradeSelectedYear, "version"=>$version, "css"=>$css]);
     }
 
     public function store(Request $request) {

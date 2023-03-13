@@ -1,5 +1,5 @@
 <section id="examsTable">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 24.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
    <p class="c" style="color: #ff9;"><strong><em>Znaleziono {{$countExams}} egzaminów.</em></strong></p>
    <table id="exams">
       <thead>
@@ -20,9 +20,9 @@
          @if($version!="forDeclaration")
             <tr>
                <td></td>
-               <td><?php  print_r($declarationSelectField);  ?></td>
-               <td><?php  print_r($termSelectField);  ?></td>
-               <td><?php  print_r($examTypeSelectField);  ?></td>
+               <td><?php  print_r($declarationSF);  ?></td>
+               <td><?php  print_r($termSF);  ?></td>
+               <td><?php  print_r($examTypeSF);  ?></td>
                <td colspan="5"></td>
             </tr>
          @endif
@@ -51,10 +51,15 @@
                   @endif
                </td>
                <td>{{ $exam->type }}</td>
-               <td class="c">{{ $exam->points }} ({{number_format($exam->points/$exam->examDescription->max_points*100, 0)}}%)</td>
+               @if($exam->examDescription->max_points)
+                  <td class="c">{{ $exam->points }} ({{number_format($exam->points/$exam->examDescription->max_points*100, 0)}}%)</td>
+               @else
+                  <td class="c">{{ $exam->points }}</td>
+               @endif
                <td>{{ $exam->comments }}</td>
-               <td class="c">{{ substr($exam->created_at, 0, 10) }}</td>
-               <td class="c">{{ substr($exam->updated_at, 0, 10) }}</td>
+               <td class="small c">{{ substr($exam->created_at, 0, 10) }}</td>
+               <td class="small c">{{ substr($exam->updated_at, 0, 10) }}</td>
+
                <!-- modyfikowanie i usuwanie -->
                <td class="destroy edit c">
                   <button class="edit btn btn-primary"    data-exam_id="{{ $exam->id }}" data-version="{{$version}}"><i class="fa fa-edit"></i></button>
@@ -72,10 +77,12 @@
    </table>
 
    <?php /* obliczenie średniej punktów */
-      $sum = 0;
-      foreach($exams as $exam)
-         $sum += $exam->points;
-      $max_points = $exam->examDescription->max_points;
+      $sum = 0; $avg = "N/N";
+      if($count)  {
+         foreach($exams as $exam)   $sum += $exam->points;
+         $max_points = $exam->examDescription->max_points;
+         if($max_points)  $avg = number_format((($sum/count($exams)) / $max_points)*100, 1);
+      }
    ?>
-   <p>Liczba egzaminów: {{ count($exams) }}, średnia: {{ number_format((($sum/count($exams)) / $max_points)*100, 1) }}%</p>
+   <p>Liczba egzaminów: {{ count($exams) }}, średnia: {{ $avg }}%</p>
 </section>

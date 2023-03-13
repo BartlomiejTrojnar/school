@@ -1,13 +1,13 @@
 <tr class="createRow c">
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 29.07.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 03.12.2021 ********************** -->
    <form action="{{ route('numery_ucznia.store') }}" method="post" role="form">
       {{ csrf_field() }}
       <!-- uczeń, klasa i rok szkolny -->
       <td>
          <input type="hidden" name="student_id" value="{{$student_id}}" />
-         <?php  echo $gradeSelectField;  ?>
+         <?php  echo $gradeSF;  ?>
       </td>
-      <td> <?php  echo $schoolYearSelectField;  ?> </td>
+      <td> <?php  echo $schoolYearSF;  ?> </td>
 
       <!-- pole z numerem ucznia -->
       <td>

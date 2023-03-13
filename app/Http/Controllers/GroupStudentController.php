@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupStudent;
 use App\Repositories\GroupStudentRepository;
@@ -28,6 +28,13 @@ class GroupStudentController extends Controller
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
 
+    public function getStudentsFromGroup(Request $request, GroupStudentRepository $groupStudentRepo) {
+        $groupStudents = $groupStudentRepo -> getStudentsFromGroup($request->group_id);
+        $students = [];
+        foreach($groupStudents as $gs)  $students[] = $gs->student_id;
+        return $students;
+    }
+
     public function getGroupStudents(Request $request, GroupStudentRepository $groupStudentRepo, GroupRepository $groupRepo, SchoolYearRepository $schoolYearRepo) {
         $groupStudents = $groupStudentRepo -> getGroupStudents($request->group_id, $request->dateView);
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($request->dateView);
@@ -45,11 +52,10 @@ class GroupStudentController extends Controller
     public function getOutsideGroupStudentsList(Request $request, Group $group, GroupStudentRepository $groupStudentRepo, SchoolYearRepository $schoolYearRepo) {
         $group = $group -> find($request->group_id);
         $outsideGroupStudents = $groupStudentRepo -> getOutsideGroupStudents($group, $request->dateView);
-
-        $schoolYearRepo = new SchoolYearRepository(new SchoolYear);
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($request->dateView);
-
-        return view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "dateView"=>$request->dateView, "schoolYear"=>$schoolYear]);
+        $year = substr($request->dateView, 0, 4);
+        if( substr($request->dateView, 5, 2)>=8 )  $year++;
+        return view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "year"=>$year]);
     }
 /*
     public function getStudentGroups(Request $request, GroupStudentRepository $groupStudentRepo, SchoolYearRepository $schoolYearRepo) {
@@ -71,7 +77,10 @@ class GroupStudentController extends Controller
         $groupStudent->end = $request->end;
         $groupStudent -> save();
         $schoolYear = session()->get('schoolYearSelected');
-        return view('groupStudent.liForStudentGroup', ["groupStudent"=>$groupStudent, "dateView"=>$request->start, "schoolYear"=>$schoolYear]);
+        $dateView = $request->start;
+        $year = substr($dateView, 0, 4);
+        if( substr($dateView, 5, 2) >= 8 )  $year++;
+        return view('groupStudent.liForStudentGroup', ["groupStudent"=>$groupStudent, "dateView"=>$request->start, "schoolYear"=>$schoolYear, "year"=>$year]);
     }
 
     public function addManyStudent(Request $request) {
@@ -175,11 +184,11 @@ class GroupStudentController extends Controller
     }
 
     public function removeYesterday(Request $request, GroupStudent $groupStudent) {
-        $dateEnd = $request->dateEnd;
+        $end = $request->end;
         $studentGroups = $groupStudent -> where('student_id', '=', $request->student_id) -> get();
         foreach($studentGroups as $studentGroup)
-            if($studentGroup->start <= $dateEnd && $studentGroup->end > $dateEnd) {
-                $studentGroup->end = $dateEnd;
+            if($studentGroup->start <= $end && $studentGroup->end > $end) {
+                $studentGroup->end = $end;
                 $studentGroup -> save();
             }
         return 1;

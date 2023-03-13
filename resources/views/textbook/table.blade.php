@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 13.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ********************** -->
 @if( !empty( $links ) )
    {!! $textbooks->render() !!}
 @endif
@@ -13,8 +13,8 @@
             echo view('layouts.thSorting', ["thName"=>"autor", "routeName"=>"podrecznik.orderBy", "field"=>"author", "sessionVariable"=>"TextbookOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"tytuł", "routeName"=>"podrecznik.orderBy", "field"=>"title", "sessionVariable"=>"TextbookOrderBy"]);
             echo view('layouts.thSorting', ["thName"=>"wydawnictwo", "routeName"=>"podrecznik.orderBy", "field"=>"publishing_house", "sessionVariable"=>"TextbookOrderBy"]);
+            echo view('layouts.thSorting', ["thName"=>"dopuszczenie", "routeName"=>"podrecznik.orderBy", "field"=>"admission", "sessionVariable"=>"TextbookOrderBy"]);
          ?>
-         <th>dopuszczenie</th>
          <th>uwagi</th>
          <th>ilość<br>wyborów</th>
          <th>aktualizacja</th>
@@ -23,7 +23,7 @@
 
       <tr>
          <td></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
          <td colspan="8"></td>
       </tr>
    </thead>
@@ -43,12 +43,15 @@
             <td class="c">{{ count($textbook->textbookChoices) }}</td>
             <td>{{ substr($textbook->updated_at, 0, 10) }}</td>
             <td class="edit destroy c">
-               <button class="edit btn btn-primary" data-textbook_id="{{ $textbook->id }}"><i class="fa fa-edit"></i></button>
+               <button class="edit btn btn-primary"    data-textbook_id="{{ $textbook->id }}"><i class="fa fa-edit"></i></button>
                <button class="destroy btn btn-primary" data-textbook_id="{{ $textbook->id }}"><i class="fas fa-remove"></i></button>
             </td>
          </tr>
       @endforeach
 
-      <tr class="create"><td colspan="10"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+      <tr class="create"><td colspan="10">
+         <button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+         <var id="countTextbooks" hidden>{{$count}}</var>
+      </td></tr>
    </tbody>
 </table>

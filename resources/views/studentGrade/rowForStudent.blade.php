@@ -1,16 +1,20 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.07.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 *********************** -->
 <!-- otwarcie wiersza dla ucznia -->
-@if($studentGrade->student->sex == 'mężczyzna')
-   <tr class="man c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
-@else
-   <tr class="woman c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
-@endif
+<?php
+   if($studentGrade->student->sex == 'mężczyzna')  $class = "man";
+   else $class = "woman";
+   $dateView = session()->get('dateView'); 
+?>
 
-   <td>{{$lp}}</td>
+<tr class="{{ $class }} c" data-start="{{ $studentGrade->start }}" data-end="{{ $studentGrade->end }}" data-student_grade_id="{{ $studentGrade->id }}">
+   <td>{{ $lp }}</td>
    <!-- numer z księgi ucznia -->
-   <td>
+   <td class="showCreateFormForBookOfStudent">
       @foreach($studentGrade->student->bookOfStudents as $book) {{ $book->number }} @endforeach
-      @if(count($studentGrade->student->bookOfStudents)==0) <a href="{{ route('ksiega_uczniow.create', "student_id=".$studentGrade->student->id) }}"><i class="fas fa-plus"></i></a> @endif
+      @if(count($studentGrade->student->bookOfStudents)==0)
+         <button class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+         <aside class="createForm"></aside>
+      @endif
    </td>
 
    <!-- klasa ucznia -->
@@ -34,7 +38,8 @@
 
    <!-- modyfikowanie i usuwanie -->
    <td class="destroy edit c">
-      <button class="edit btn btn-primary"    data-student_grade_id="{{ $studentGrade->id }}"><i class="fa fa-edit"></i></button>
-      <button class="destroy btn btn-primary" data-student_grade_id="{{ $studentGrade->id }}"><i class="fas fa-remove"></i></button>
+      <button class="edit btn btn-primary"            data-student_grade_id="{{ $studentGrade->id }}"><i class="fa fa-edit"></i></button>
+      <button class="destroy btn btn-primary"         data-student_grade_id="{{ $studentGrade->id }}"><i class="fa fa-remove"></i></button>
+      <button class="removeYesterday btn btn-primary" data-student_grade_id="{{ $studentGrade->id }}" title="usuń z klasy od wczoraj [{{date('Y-m-d', strtotime('-1 day', strtotime($dateView)))}}] (wraz z usunięciem z grup)"><i class="fa fa-user-times"></i></button>
    </td>
 </tr>

@@ -1,16 +1,16 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 28.07.2021 ********************** -->
-<tr class="editRow c" data-student_grade_id="{{$studentGrade->id}}">
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 ********************** -->
+<tr class="editRow c" data-student_grade_id="{{ $studentGrade->id }}">
    <form action="{{ route('klasy_ucznia.update', $studentGrade->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
       <!-- id i uczeń (ukryte) oraz klasa -->
       <td>
-         <input type="hidden" name="id" value="{{$studentGrade->id}}" />
-         {{$studentGrade->student->first_name}} {{$studentGrade->student->last_name}}
-         <input type="hidden" name="student_id" value="{{$studentGrade->student_id}}" />
-         <input type="hidden" name="lp" value="{{$lp}}" />
+         <input type="hidden" name="id" value="{{ $studentGrade->id }}" />
+         {{ $studentGrade->student->first_name }} {{ $studentGrade->student->last_name }}
+         <input type="hidden" name="student_id" value="{{ $studentGrade->student_id }}" />
+         <input type="hidden" name="lp" value="{{ $lp }}" />
       </td>
-      <td colspan="2"> <?php  echo $gradeSelectField;  ?> </td>
+      <td colspan="2"> <?php  echo $gradeSF;  ?> </td>
 
       <!-- data początkowa przynależności ucznia do klasy -->
       <td>
@@ -26,14 +26,14 @@
 
       <!-- komórka z przyciskami potwierdzenia zmiany i anulowania -->
       <td colspan="2" rowspan="2">
-         <button data-student_grade_id="{{$studentGrade->id}}" class="update btn btn-primary">zapisz zmiany</button>
-         <button data-student_grade_id="{{$studentGrade->id}}" class="cancelUpdate btn btn-primary">anuluj</button>
+         <button data-student_grade_id="{{ $studentGrade->id }}" class="update btn btn-primary">zapisz zmiany</button>
+         <button data-student_grade_id="{{ $studentGrade->id }}" class="cancelUpdate btn btn-primary">anuluj</button>
       </td>
   </form>
 </tr>
 
 <!-- wiersz z propozycjami dat do wstawienia -->
-<tr class="c proposedDates" data-student_grade_id="{{$studentGrade->id}}">
+<tr class="c proposedDates" data-student_grade_id="{{ $studentGrade->id }}">
    <td colspan="3"></td>
    <td>
       @if( session()->get('dateSession') )

@@ -1,30 +1,32 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.03.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.02.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Student;
 
 class StudentRepository extends BaseRepository {
    public function __construct(Student $model)  { $this->model = $model; }
 
-   public function getFilteredAndSorted($grade_id=0, $group_id=0, $schoolYear=0) {
-      $records = $this->model;
-      if($grade_id) //$records = $records
-         //-> where('year_of_beginning', '<', $year)
-         //-> where('year_of_graduation', '>=', $year);
-         print 'Dokończ funkcję';
-      if($group_id) //$records = $records -> where('school_id', '=', $school_id);
-          print 'Dokończ funkcję';
-      if($schoolYear) $records = $records
-         -> join('student_grades', 'students.id', '=', 'student_grades.student_id')
-         //-> select('students.*')
-         -> where('start', '>=', $schoolYear->date_start)
-         -> where('end', '<=', $schoolYear->date_end);
+   private function filteredAndSortedRecords($grade_id=0, $group_id=0) {
+      $records = $this->model->select('students.*');
+      if($grade_id) $records = $records -> join('student_grades', 'students.id', '=', 'student_grades.student_id')
+         -> where('student_grades.grade_id', '=', $grade_id);
+      if($group_id) $records = $records -> join('group_students', 'students.id', '=', 'group_students.student_id')
+         -> where('group_students.group_id', '=', $group_id);
       $records = $records
          -> orderBy( session() -> get('StudentOrderBy[0]'), session() -> get('StudentOrderBy[1]') )
          -> orderBy( session() -> get('StudentOrderBy[2]'), session() -> get('StudentOrderBy[3]') )
-         -> orderBy( session() -> get('StudentOrderBy[4]'), session() -> get('StudentOrderBy[5]') )
-         -> paginate(20);
+         -> orderBy( session() -> get('StudentOrderBy[4]'), session() -> get('StudentOrderBy[5]') );
       return $records;
+   }
+
+   public function getFilteredAndSorted($grade_id=0, $group_id=0) {
+      $records = $this -> filteredAndSortedRecords($grade_id, $group_id);
+      return $records -> get();
+   }
+
+   public function getFilteredAndSortedAndPaginate($grade_id=0, $group_id=0) {
+      $records = $this -> filteredAndSortedRecords($grade_id, $group_id);
+      return $records -> paginate(30);
    }
 
    public function getAllSorted() {

@@ -1,11 +1,11 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.02.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 
 class GroupRepository extends BaseRepository {
    public function __construct(Group $model)  { $this->model = $model; }
-
+/*
    public function getGroups($start=0, $end=0, $grade_id=0) {    // pobieranie odfiltrowanych grup
       $records = $this->model;
 
@@ -32,13 +32,20 @@ class GroupRepository extends BaseRepository {
          -> orderBy( session()->get('GroupOrderBy[4]'), session()->get('GroupOrderBy[5]') )
          -> paginate(20);
    }
+*/
+   public function getFilteredAndSortedAndPaginate($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
+      return $this -> findGroups($grade_id, $subject_id, $level, $start, $end, $teacher_id) -> paginate(20);
+   }
 
-   public function getFilteredAndSorted($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
+   public function getAllFilteredAndSorted($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
+      return $this -> findGroups($grade_id, $subject_id, $level, $start, $end, $teacher_id) -> get();
+   }
+
+   public function findGroups($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
       $records = $this->model -> select('groups.*') -> leftjoin('subjects', 'groups.subject_id', '=', 'subjects.id')
          -> join('group_grades', 'groups.id', '=', 'group_grades.group_id');
       if($grade_id)
          $records = $records -> where('group_grades.grade_id', '=', $grade_id);
-
       if($teacher_id)  {
          $records = $records -> select('groups.*')
             -> join('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
@@ -53,11 +60,10 @@ class GroupRepository extends BaseRepository {
       if($end)          $records = $records -> where('groups.end', '>=', $start);
       if($start)        $records = $records -> where('groups.start', '<=', $end);
 
-      $records = $records
+      $records = $records -> groupBy('groups.id')
          -> orderBy( session()->get('GroupOrderBy[0]'), session()->get('GroupOrderBy[1]') )
          -> orderBy( session()->get('GroupOrderBy[2]'), session()->get('GroupOrderBy[3]') )
-         -> orderBy( session()->get('GroupOrderBy[4]'), session()->get('GroupOrderBy[5]') )
-         -> distinct() -> paginate(20);
+         -> orderBy( session()->get('GroupOrderBy[4]'), session()->get('GroupOrderBy[5]') );
       return $records;
    }
 

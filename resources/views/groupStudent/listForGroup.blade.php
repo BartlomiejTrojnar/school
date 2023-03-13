@@ -1,5 +1,5 @@
 <section id="studentsListForGroup">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 *********************** -->
 <div>sortowanie:
    <a href="{{ route('groupStudent.orderBy', 'grade_id') }}">klasa
       @if( session()->get('GroupStudentOrderBy[0]') == 'grade_id' )
@@ -21,7 +21,7 @@
 <ol>
    @foreach($groupStudents as $groupStudent)
       @foreach($groupStudent->student->grades as $studentGrade)
-         <li data-group_student_id="{{$groupStudent->id}}" data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}"
+         <li data-group_student_id="{{$groupStudent->id}}" data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}" data-student_id="{{ $groupStudent->student_id }}"
             data-grade_id="{{ $studentGrade->grade_id }}" data-grade_start="{{ $studentGrade->start }}" data-grade_end="{{ $studentGrade->end }}" >
             <button class="edit"    data-group_student_id="{{ $groupStudent->id }}"><i class="fa fa-edit"></i></button>
             <button class="delete"  data-group_student_id="{{ $groupStudent->id }}"><i class="fa fa-remove"></i></button>

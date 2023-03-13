@@ -1,5 +1,5 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
 <tr class="editRow" data-exam_id="{{$exam->id}}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
    <form action="{{ route('egzamin.update', $exam->id) }}" method="post" role="form">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
@@ -15,8 +15,8 @@
             <?php  print_r($declaration);  ?>
          @endif
       </td>
-      <td><?php  print_r($termSelectField);  ?></td>
-      <td><?php  print_r($examTypeSelectField);  ?></td>
+      <td><?php  print_r($termSF);  ?></td>
+      <td><?php  print_r($examTypeSF);  ?></td>
       <td><input type="text" name="points" size="5" maxlength="6" value="{{$exam->points}}" /></td>
       <td><input type="text" name="comments" size="10" maxlength="15" value="{{$exam->comments}}" /></td>
 

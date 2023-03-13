@@ -11,4 +11,5 @@
 
 @section('main-content')
    <?php echo $groupTable; ?>
+   <a class="btn btn-primary" href="{{ route('groupStudent.exportGroups') }}">eksportuj (Excel)</a>
 @endsection

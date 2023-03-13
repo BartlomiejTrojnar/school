@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -13,6 +13,7 @@ use App\Repositories\GroupTeacherRepository;
 use App\Repositories\LessonRepository;
 use App\Repositories\LessonPlanRepository;
 use App\Repositories\SchoolYearRepository;
+use App\Repositories\StudentGradeRepository;
 use App\Repositories\SubjectRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Http\Request;
@@ -27,29 +28,29 @@ class GroupController extends Controller
         }
         $grades = $gradeRepo -> getFilteredAndSorted($year, 0);
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year]);
+        $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected, "year"=>$year]);
 
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelected = session()->get('subjectSelected');
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
 
         $levels = array('rozszerzony', 'podstawowy');
         $levelSelected = session()->get('levelSelected');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $teachers = $teacherRepo -> getAll();
         $teacherSelected = session()->get('teacherSelected');
-        $teacherSelectField = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
+        $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
 
         $schoolYears = $syRepo -> getAllSorted();
         $schoolYearSelected = session()->get('schoolYearSelected');
-        $schoolYearSelectField = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>'schoolYear']);
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>'schoolYear']);
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
-        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
+        $groups = $groupRepo -> getFilteredAndSortedAndPaginate($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
         $groupTable = view('group.table', ["groups"=>$groups, "links"=>true, "subTitle"=>"", "start"=>$start, "end"=>$end, "grade_id"=>$gradeSelected, "version"=>"forIndex",
-            "gradeSelectField"=>$gradeSelectField, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField, "teacherSelectField"=>$teacherSelectField, "schoolYearSelectField"=>$schoolYearSelectField]);
+            "gradeSF"=>$gradeSF, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>$schoolYearSF]);
 
         return view('group.index', ["groupTable"=>$groupTable]);
     }
@@ -73,8 +74,8 @@ class GroupController extends Controller
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelected = session() -> get('subjectSelected');
         $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
-        $levels = array('podstawowy', 'rozszerzony', 'nieokreślony');
-        $levelSelected = 'podstawowy';
+        $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
+        $levelSelected = '';
         $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
         $teacher = session()->get('teacherSelected');
 
@@ -197,15 +198,15 @@ class GroupController extends Controller
 
     public function change($id) {  session()->put('groupSelected', $id);  }
 
-    public function show($id, GroupRepository $groupRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, GroupStudentRepository $groupStudentRepo, LessonPlanRepository $lessonPlanRepo, LessonRepository $lessonRepo, $view='') {
+    public function show($id, GroupRepository $groupRepo, GradeRepository $gradeRepo, SchoolYearRepository $schoolYearRepo, GroupStudentRepository $groupStudentRepo, StudentGradeRepository $studentGradeRepo, LessonPlanRepository $lessonPlanRepo, LessonRepository $lessonRepo, $view='') {
         session()->put('groupSelected', $id);
-        if(empty( session()->get('groupView') ))  session()->put('groupView', 'showInfo');
+        if(empty( session()->get('groupView') ))  session()->put('groupView', 'info');
         if($view) session()->put('groupView', $view);
         $this->group = $groupRepo -> find($id);
 
         $gradeSelected = session()->get('gradeSelected');
         $subjectSelected = session()->get('subjectSelected');
-        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected);
+        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected);
         list($this->previous, $this->next) = $groupRepo -> nextAndPreviousRecordId($groups, $id);
 
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
@@ -216,13 +217,13 @@ class GroupController extends Controller
         }
 
         switch( session() -> get('groupView') ) {
-            case 'showInfo':        return $this -> showInfo($gradeRepo);
-            case 'showStudents':    return $this -> showStudents($schoolYearRepo, $groupStudentRepo);
-            case 'showLessonPlan':  return $this -> showLessonPlan($lessonPlanRepo);
-            case 'showLessons':     return $this -> showLessons($lessonRepo);
+            case 'info':        return $this -> showInfo($gradeRepo);
+            case 'uczniowie':   return $this -> showStudents($groupRepo, $schoolYearRepo, $groupStudentRepo);
+            case 'planlekcji':  return $this -> showLessonPlan($lessonPlanRepo);
+            case 'lekcje':      return $this -> showLessons($lessonRepo);
             default:
                 printf('<p>Widok %s nieznany</p>', session() -> get('groupView'));
-                session() -> put('groupView', 'showInfo');
+                session() -> put('groupView', 'info');
                 printf('<p>Odśwież by zobaczyć domyślny widok</p>');
             break;
         }
@@ -236,14 +237,23 @@ class GroupController extends Controller
         return view('group.show', ["group"=>$this->group, "year"=>$this->year, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupInfo]);
     }
 
-    private function showStudents($schoolYearRepo, $groupStudentRepo) {
+    private function showStudents($groupRepo, $schoolYearRepo, $groupStudentRepo) {
         $dateView = session()->get('dateView');
         $schoolYear = $schoolYearRepo -> getSchoolYearIdForDate($dateView);
         $groupStudents = $groupStudentRepo -> getGroupStudents($this->group->id);
-        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group, "year"=>$this->year]);
+        $year = substr($dateView,0,4);
+        if( substr($dateView,5,2)>=8 )  $year++;
+        $listGroupStudents = view('groupStudent.listForGroup', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "group"=>$this->group, "year"=>$year]);
         $listGroupStudentsInOtherTime = view('groupStudent.listGroupStudentsInOtherTime', ["groupStudents"=>$groupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
         $outsideGroupStudents = $groupStudentRepo -> getOutsideGroupStudents($this->group, $dateView);
-        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView]);
+
+        $gradeSelected   = session()->get('gradeSelected');
+        $subjectSelected = 0;
+        $levelSelected   = 0;
+        $teacherSelected = 0;
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $dateView, $dateView, $teacherSelected);
+        $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id]);
+        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "groupSF"=>$groupSF]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);
@@ -274,7 +284,7 @@ class GroupController extends Controller
         $group = $group -> find($request->id);
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$group->subject_id]);
-        $levels = array('podstawowy', 'rozszerzony', 'nieokreślony');
+        $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
         $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$group->level]);
         return view('group.editRow', ["version"=>$request->version, "group"=>$group, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField]);
     }
@@ -367,8 +377,10 @@ class GroupController extends Controller
         // przedłużenie czasu przynależności uczniów do grupy (tych, którzy należeli do dotychczasowej daty końcowej grupy)
         $groupStudents = $groupStudentRepo -> getGroupStudents($request->group_id, $group->end);
         foreach($groupStudents as $groupStudent) {
-            $groupStudent->end = $request->dateGroupExtension;
-            $groupStudent -> save();
+            if($groupStudent->end == $group->end) {
+                $groupStudent->end = $request->dateGroupExtension;
+                $groupStudent -> save();
+            }
         }
 
         $group->end = $request->dateGroupExtension;

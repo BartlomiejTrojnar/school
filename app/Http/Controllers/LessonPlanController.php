@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.06.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.07.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\LessonPlan;
 use App\Repositories\LessonPlanRepository;
@@ -49,6 +49,7 @@ class LessonPlanController extends Controller
 
     public function cloneLesson(Request $request, LessonPlan $lessonPlan) {
         $oldLessonPlan = $lessonPlan -> find($request->lesson_id);
+
         $newLessonPlan = new LessonPlan;
         $newLessonPlan->group_id = $oldLessonPlan->group_id;
         $newLessonPlan->lesson_hour_id = $request->lesson_hour_id;
@@ -57,6 +58,7 @@ class LessonPlanController extends Controller
         if( $request->classroom_id==-1 ) $newLessonPlan->classroom_id = NULL;
         $newLessonPlan->start = $request->start;
         $newLessonPlan->end = $oldLessonPlan->end;
+        if($request->end) $newLessonPlan->end = $request->end;
 
         if( $newLessonPlan->start > $newLessonPlan->end ) return -9;
         if( $newLessonPlan->start < $newLessonPlan->group->start) return -1;
@@ -98,20 +100,14 @@ class LessonPlanController extends Controller
     }
 
     public function update($id, Request $request, LessonPlan $lessonPlan) {
-        $this -> validate($request, [
-          'group_id' => 'required',
-          'lesson_hour_id' => 'required',
-          'start' => 'required|date',
-          'end' => 'required|date',
-        ]);
-
         $lessonPlan = $lessonPlan -> find($id);
-        $lessonPlan->group_id = $request->group_id;
-        $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
+
+        if(isset($request->group_id))   $lessonPlan->group_id = $request->group_id;
+        if(isset($request->lesson_hour_id))   $lessonPlan->lesson_hour_id = $request->lesson_hour_id;
         if($request->classroom_id==0) $lessonPlan->classroom_id=NULL;
         else $lessonPlan->classroom_id = $request->classroom_id;
-        $lessonPlan->start = $request->start;
-        $lessonPlan->end = $request->end;
+        if(isset($request->start))   $lessonPlan->start = $request->start;
+        if(isset($request->end))   $lessonPlan->end = $request->end;
         $lessonPlan -> save();
         return $lessonPlan->id;
     }

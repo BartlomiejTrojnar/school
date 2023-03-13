@@ -1,5 +1,5 @@
 <table>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
    <tr>
       <th>lp</th>
       <?php
@@ -12,10 +12,9 @@
 
    <tr>
       <td colspan="2"></td>
-      <td><?php  print_r($schoolYearSelectField);  ?></td>
+      <td><?php  print_r($schoolYearSF);  ?></td>
       <td colspan="2"></td>
    </tr>
-
    <?php $count = 0; ?>
    @foreach($studentNumbers as $sn)
       <tr class="number_row confirmation{{$sn->confirmation_number}}" data-student_number_id="{{ $sn->id }}" data-school_year_id="{{ $sn->school_year_id }}" >
@@ -23,7 +22,7 @@
          <td>
             <?php $style = "text-decoration: line-through; color: #f77;"; ?>
             @foreach($sn->student->grades as $studentGrade)
-               @if($studentGrade->grade_id == $grade->id && ($studentGrade->date_start <= session()->get('dateView') && $studentGrade->date_end >= session()->get('dateView')) )
+               @if($studentGrade->grade_id == $grade->id && ($studentGrade->start <= $dateView && $studentGrade->end >= $dateView) )
                   <?php $style = ""; ?>
                @endif
             @endforeach
@@ -41,7 +40,7 @@
          </td>
          <td class="destroy edit c">
             <button class="edit btn btn-primary"    data-student_number_id="{{ $sn->id }}"><i class="fa fa-edit"></i></button>
-            <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fas fa-remove"></i></button>
+            <button class="destroy btn btn-primary" data-student_number_id="{{ $sn->id }}"><i class="fa fa-remove"></i></button>
          </td>
       </tr>
    @endforeach

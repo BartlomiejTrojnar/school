@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.11.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 27.09.2022 *********************** -->
 <section id="declarationsTable">
    {!! $declarations->render() !!}
    @if( !count($declarations) && (empty($_GET['page']) || $_GET['page']>1) )
@@ -27,7 +27,7 @@
 
          <tr>
             <td></td>
-            <td><?php print_r($gradeSelectField); ?></td>
+            <td><?php print_r($gradeSF); ?></td>
             <td colspan="6"></td>
          </tr>
       </thead>

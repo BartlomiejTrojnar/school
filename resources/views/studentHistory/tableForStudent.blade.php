@@ -19,7 +19,7 @@
                <!-- modyfikowanie i usuwanie -->
                <td class="destroy edit c">
                   <button class="edit btn btn-primary"    data-student_history_id="{{ $sh->id }}"><i class="fa fa-edit"></i></button>
-                  <button class="destroy btn btn-primary" data-student_history_id="{{ $sh->id }}"><i class="fas fa-remove"></i></button>
+                  <button class="destroy btn btn-primary" data-student_history_id="{{ $sh->id }}"><i class="fa fa-remove"></i></button>
                </td>
             </tr>
          @endforeach

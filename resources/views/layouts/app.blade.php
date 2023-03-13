@@ -8,12 +8,15 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
+  @section('title')
+    @show
+
   <title>{{ config('app.name', 'Group Manager') }}</title>
 
   <!-- Styles -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   <link href="{{ url('public/css/app.css') }}" rel="stylesheet">
   @section('css')
     @show
@@ -105,7 +108,7 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('rok_szkolny.index') }}">lata szkolne</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('sala.index') }}">sale lekcyjne</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('przedmiot.index') }}">przedmioty</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}">nauczyciele</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('nauczyciel.index') }}@if(!empty( session()->get('TeacherPage') ))?page={{session()->get('TeacherPage')}} @endif">nauczyciele</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('uczen.index') }}">uczniowie</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('ksiega_uczniow.index') }}">księga uczniów</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">klasy</a></li>

@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.09.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 22.02.2023 ********************** -->
 @extends('layouts.app')
 
 @section('css')
@@ -6,7 +6,7 @@
 @endsection
 
 @section('java-script')
-   <script src="{{ asset('public/js/'.$js) }}"></script>
+   <script language="javascript" type="module" src="{{ asset('public/js/'.$js) }}"></script>
 @endsection
 
 
@@ -24,20 +24,18 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/uczniowie') }}">uczniowie w klasie <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/daneuczniow') }}">uczniowie klasy <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/numery') }}">numery w klasie <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/grupy') }}">grupy <i class='fa fa-users'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/nauczyciele') }}">nauczyciele <i class='fas fa-chalkboard-teacher'></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/zadania') }}">zadania <i class='fa fa-tasks'></i></a></li>
-      <?php /*
-         <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/showEnlargements') }}">rozszerzenia</a></li>
-      */ ?>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/oceny') }}">oceny <i class="fa fa-star-half-empty"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/deklaracje') }}">deklaracje <i class="far fa-newspaper"></i></a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">powrót <i class='fa fa-undo'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/info') }}">informacje <i class="bi bi-info-circle"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/uczniowie') }}">uczniowie w klasie <i class="bi bi-people-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/daneuczniow') }}">uczniowie klasy <i class="bi bi-people-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/numery') }}">numery w klasie <i class="bi bi-123"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/grupy') }}">grupy <i class="bi bi-people-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/planlekcji') }}">plan lekcji <i class="bi bi-calendar2-range-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/nauczyciele') }}">nauczyciele <i class="bi bi-tablet-landscape"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/zadania') }}">zadania <i class="bi bi-list-task"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/rozszerzenia') }}">rozszerzenia <i class="bi bi-palette2"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/oceny') }}">oceny <i class="bi bi-star-half"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('klasa/'.$grade->id.'/deklaracje') }}">deklaracje <i class="bi bi-motherboard-fill"></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ route('klasa.index') }}">powrót <i class="bi bi-arrow-up-square"></i></a></li>
    </ul>
 
    <?php  echo $subView;  ?>

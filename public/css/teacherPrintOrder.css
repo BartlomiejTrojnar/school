@@ -1,29 +1,30 @@
 /* -------------- STYLE DLA strony ustawiania kolejności nauczycieli na wydrukach -------------- */
-/* --------------------- (C) mgr inż. Bartłomiej Trojnar; (II) marzec 2020 --------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 19.01.2023 ------------------------ */
 
 ol#printOrder {
-    background: blue;
+    background: #444;
     padding: 0;
 }
 
 ol#printOrder li {
     display: inline-block;
-    background: coral;
     border: 2px solid #f44;
     border-radius: 3px;
     margin: 0 10px 10px 0;
-    width: 214px;
+    width: 250px;
     min-height: 48px;
     text-align: center;
 }
 
 div.teacher {
-    border: 1px solid #00f;
+    background: #222;
+    border: 2px solid #99f;
     border-radius: 5px;
-    margin-bottom: 5px;
+    box-shadow: #222 7px 5px;
+    margin: 10px 0;
     height: 30px;
     line-height: 30px;
 }
 div.teacher:hover {
-    background-color: chocolate;
+    background-color: #888;
 }

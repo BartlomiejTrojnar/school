@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 13.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.07.2022 ********************** -->
 <div class="c">{!! $grades->render() !!}</div>
 <table id="grades">
    <thead>
@@ -30,8 +30,8 @@
             @endif
             <td><a href="{{ route('szkola.show', $grade->school_id) }}">{{ $grade->school->name }}</a></td>
             <td class="edit destroy c">
-               <button class="edit btn btn-primary" data-grade_id="{{ $grade->id }}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-grade_id="{{ $grade->id }}"><i class="fas fa-remove"></i></button>
+               <button class="edit btn btn-primary"      data-grade_id="{{ $grade->id }}"><i class="fa fa-edit"></i></button>
+               <button class="destroy btn btn-primary"   data-grade_id="{{ $grade->id }}"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach

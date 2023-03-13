@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 *********************** -->
 <div>
    <h2 style="display: inline-block;">stan dla daty: <input type="date" id="dateView" value="{{ $dateView }}" /></h2>
    <p style="display: inline-block;"><datalist></datalist> istnienia grupy: <span id="groupStart">{{ $group->start }}</span> - <span id="groupEnd">{{ $group->end }}</span></p>
@@ -12,7 +12,6 @@
 <p id="buttons">
    <button class="btn btn-primary" id="addAllStudents">dodaj wszystkich</button>
    <button class="btn btn-primary" id="addCheckedStudents">dodaj zaznaczonych</button>
-   <a class="btn btn-primary" href="{{ route('groupStudent.exportGroup', $group->id) }}">eksportuj (Excel)</a>
 </p>
 
 <div class="col-md-6">

@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 01.12.2021 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.09.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $examDescriptions->render() !!}
 @endif
@@ -23,9 +23,9 @@
       </tr>
       <tr>
          <td></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
-         <td><?php  print_r($examTypeSelectField);  ?></td>
-         <td><?php  print_r($levelSelectField);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
+         <td><?php  print_r($examTypeSF);  ?></td>
+         <td><?php  print_r($levelSF);  ?></td>
          <td colspan="6"></td>
       </tr>
    </thead>
@@ -49,8 +49,11 @@
                $sum = 0;
                foreach($examDescription->exams as $exam)
                   $sum += $exam->points;
+               if($examDescription->max_points && count($examDescription->exams))
+                  $avg = number_format((($sum/count($examDescription->exams)) / $examDescription->max_points)*100, 1);
+               else $avg="N/N";
             ?>
-            <td class="c">{{ number_format((($sum/count($examDescription->exams)) / $examDescription->max_points)*100, 1) }}%</td>
+            <td class="c">{{ $avg }}%</td>
             <td class="small c">{{ substr($examDescription->created_at, 0, 10) }}</td>
             <td class="small c">{{ substr($examDescription->updated_at, 0, 10) }}</td>
 

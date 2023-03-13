@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 19.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -62,16 +62,16 @@
 
       <tr>
          <td></td>
-         <td><?php  print_r($gradeSelectField);  ?></td>
-         <td><?php  print_r($subjectSelectField);  ?></td>
-         <td><?php  print_r($levelSelectField);  ?></td>
+         <td><?php  print_r($gradeSF);  ?></td>
+         <td><?php  print_r($subjectSF);  ?></td>
+         <td><?php  print_r($levelSF);  ?></td>
          <td></td>
          <td colspan="2" class="small">
             między <input type="date" id="start" name="start" value="{{ $start }}" />
             a <input type="date" id="end" name="end" value="{{ $end }}" />
             <input type="hidden" id="rememberDates" value="1" />
          </td>
-         <td colspan="2"><?php  print_r($teacherSelectField);  ?></td>
+         <td colspan="2"><?php  print_r($teacherSF);  ?></td>
          <td colspan="5"></td>
       </tr>
    </thead>

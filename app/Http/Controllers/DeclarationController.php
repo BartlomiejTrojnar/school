@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 01.12.2021 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.10.2022 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Declaration;
 use App\Repositories\DeclarationRepository;
@@ -19,7 +19,7 @@ class DeclarationController extends Controller
         $studentSelected = session()->get('studentSelected');
 
         $grades = $gradeRepo -> getAllSorted();
-        $gradeSelectField = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
         if($gradeSelected) {
             $grades2[0] = $gradeSelected;
             $studentGrades = $studentGradeRepo -> getStudentsFromGrades($grades2, 0);
@@ -27,12 +27,12 @@ class DeclarationController extends Controller
         }
         else  $students = $studentRepo -> getAllSorted();
 
-        $studentSelectField = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
+        $studentSF = view('student.selectField', ["students"=>$students, "studentSelected"=>$studentSelected]);
         $sessions = $sessionRepo -> getAllSorted();
-        $sessionSelectField = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
+        $sessionSF = view('session.selectField', ["sessions"=>$sessions, "sessionSelected"=>$sessionSelected]);
 
         $declarations = $declarationRepo -> getFilteredAndSortedAndPaginate($sessionSelected, $gradeSelected, $studentSelected);
-        return view('declaration.index', ["declarations"=>$declarations, "gradeSelectField"=>$gradeSelectField, "studentSelectField"=>$studentSelectField, "sessionSelectField"=>$sessionSelectField]);
+        return view('declaration.index', ["declarations"=>$declarations, "gradeSF"=>$gradeSF, "studentSF"=>$studentSF, "sessionSF"=>$sessionSF]);
     }
 
     public function orderBy($column) {
@@ -58,8 +58,8 @@ class DeclarationController extends Controller
         if($request->version=="forGrade") {
             $grades = $gradeRepo -> getFilteredAndSorted(date('Y'));
             $gradeSelected = session()->get('gradeSelected');
-            $gradeSelectField = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
-            return view('declaration.createForGrade', ["sessionSelectField"=>$session, "gradeSelectField"=>$gradeSelectField]);
+            $gradeSF = view('grade.selectField', ["name"=>"grade_id", "grades"=>$grades, "gradeSelected"=>$gradeSelected]);
+            return view('declaration.createForGrade', ["sessionSF"=>$session, "gradeSF"=>$gradeSF]);
         }
 
         if($request->version == "forStudent") {
@@ -114,9 +114,7 @@ class DeclarationController extends Controller
 
     public function change($id) {  session()->put('declarationSelected', $id);  }
 
-    public function show($id, DeclarationRepository $declarationRepo, ExamRepository $examRepo, $view='') {
-        if(empty(session()->get('declarationView')))  session()->put('declarationView', 'showInfo');
-        if($view)  session()->put('declarationView', $view);
+    public function show($id, DeclarationRepository $declarationRepo, ExamRepository $examRepo) {
         $declaration = $declarationRepo -> find($id);
         $declarations = $declarationRepo -> getFilteredAndSorted(session()->get('sessionSelected'), session()->get('gradeSelected'), session()->get('studentSelected'));
         list($this->previous, $this->next) = $declarationRepo -> nextAndPreviousRecordId($declarations, $id);
@@ -172,6 +170,13 @@ class DeclarationController extends Controller
         $declaration->student_code = $request->student_code;
         $declaration -> save();
 
+        return $declaration->id;
+    }
+
+    public function updateExams($id, Declaration $declaration) {      // zmiana daty modyfikowania deklaracji po zmianie egzaminów dla deklaracji
+        $declaration = $declaration -> find($id);
+        $declaration->updated_at = date('Y-m-d');
+        $declaration -> save();
         return $declaration->id;
     }
 

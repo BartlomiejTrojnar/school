@@ -26,7 +26,7 @@ class StudentImportController extends Controller {
 
         echo '<p><a href="'.route('uczen.index').'">uczniowie</a></p>';
 
-        Excel::selectSheets('Uczniowie')->load('C:\dane\nauczyciele\ksiegauczniow\KsiegaUczniowMSP.xlsx', function($reader) {
+        Excel::selectSheets('Uczniowie')->load('C:\dane\nauczyciele\ksiegauczniow\KsiegaUczniow2LO.xlsx', function($reader) {
             $students = $reader->get();
             foreach($students as $student) {
                 printf('<p>Sprawdzam ucznia %s %s %s.</p>', $student['imie'], $student['imie2'], $student['nazwisko']);
@@ -35,7 +35,7 @@ class StudentImportController extends Controller {
                     // printf('<p><a href="%s">przejdź do %s %s %s</a>.</p>', route('uczen.show', $student_id), $student['imie'], $student['imie2'], $student['nazwisko']);
                     $this -> checkBookOfStudent($student_id, $student['szkola'], $student['numer_ksiegi']);
                     $this -> checkStudentHistory($student_id, $student['data_przyjecia'], $student['data_opuszczenia'], $student['powod_opuszczenia']);
-                    // $this -> checkStudentGrade($student_id, $student['oddzial'], $student['od'], $student['do']);
+                    $this -> checkStudentGrade($student_id, $student['oddzial'], $student['od'], $student['do']);
                 }
                 echo '<br />**********<br />';
             }
@@ -106,9 +106,9 @@ class StudentImportController extends Controller {
         $data_przyjecia = substr($przyjecie,6,4) .'-'. substr($przyjecie,3,2) .'-'. substr($przyjecie,0,2);
         // sprawdzenie czy w bazie danych uczeń ma odpowiedni wpis w swojej historii
         $studentHistory = StudentHistory::where('student_id', '=', $student_id) -> where('date', '=', $data_przyjecia) -> get();
-        if(count($studentHistory) && $studentHistory[0]['event'] == 'przyjęto do MSP') ;
+        if(count($studentHistory) && $studentHistory[0]['event'] == 'przyjęto do II LO') ;
         else if(count($studentHistory)) {
-            printf('<p style="color: blue;">Podany wpis historii ucznia (%s) jest inna niż "przyjęto do MSP" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
+            printf('<p style="color: blue;">Podany wpis historii ucznia (%s) jest inna niż "przyjęto do II LO" dla ucznia id=%d.</p>', $studentHistory[0]['event'], $student_id);
             exit;
         }
         else 
@@ -134,7 +134,7 @@ class StudentImportController extends Controller {
         $newStudentHistory = new StudentHistory;
         $newStudentHistory->student_id = $student_id;
         $newStudentHistory->date = $data_przyjecia;
-        $newStudentHistory->event = 'przyjęto do MSP';
+        $newStudentHistory->event = 'przyjęto do II LO';
         $newStudentHistory->confirmation_date = 1;
         $newStudentHistory->confirmation_event = 1;
         $newStudentHistory->save();
@@ -153,6 +153,7 @@ class StudentImportController extends Controller {
     }
 
     private function checkStudentGrade($student_id, $grade_name, $od, $do) {
+        printf('Sprawdzam klasę dla %s, %s, %s - %s', $student_id, $grade_name, $od, $do);
         if($grade_name == NULL) return;
         //$year_of_beginning = date('Y') - intval(substr($grade_name, 0, 1)/2+0.5);
         $year_of_beginning = date('Y') - intval(substr($grade_name, 0, 1)-1);
@@ -164,25 +165,27 @@ class StudentImportController extends Controller {
         if(count($studentGrade)==0) {
             printf('<p>BRAK KLAS dla ucznia. Dodaję.</p>');
             $this -> addStudentGrade($student_id, $grade_id, $od, $do);
-            return; }
+            return;
+        }
         if(count($studentGrade)!=1) { echo '<p>Znaleziono NIEWŁAŚCIWĄ ilość klas ucznia.</p>'; return; }
         $od = substr($od, 0, 10);
         $do = substr($do, 0, 10);
-        if($studentGrade[0]['date_start'] != $od) { printf('<p>Data początkowa ucznia w klasie: w bazie %s, w pliku %s.</p>', $studentGrade[0]['date_start'], $od); return; }
-        if($studentGrade[0]['date_end'] != $do) { printf('<p>Data końcowa ucznia w klasie: w bazie %s, w pliku %s.</p>', $studentGrade[0]['date_end'], $do); return; }
-        if($studentGrade[0]['confirmation_date_start'] != 1) { printf('<p>Data początkowa ucznia w klasie NIEPOTWIERDZONA.</p>', $studentGrade[0]['date_end'], $do); return; }
-        if($studentGrade[0]['date_end'] != '2022-04-29' && $studentGrade[0]['confirmation_date_end'] != 1) { printf('<p>Data końcowa %s ucznia w klasie NIEPOTWIERDZONA.</p>', $studentGrade[0]['date_end']); return; }
-        if($studentGrade[0]['date_end'] == '2022-04-29' && $studentGrade[0]['confirmation_date_end'] != 0) { printf('<p>Data końcowa %s ucznia w klasie POTWIERDZONA.</p>', $studentGrade[0]['date_end']); return; }
+        if($studentGrade[0]['start'] != $od) { printf('<p>Data początkowa ucznia w klasie: w bazie %s, w pliku %s.</p>', $studentGrade[0]['start'], $od); return; }
+        if($studentGrade[0]['end'] != $do) { printf('<p>Data końcowa ucznia w klasie: w bazie %s, w pliku %s.</p>', $studentGrade[0]['end'], $do); return; }
+        if($studentGrade[0]['confirmation_start'] != 1) { printf('<p>Data początkowa ucznia w klasie NIEPOTWIERDZONA.</p>', $studentGrade[0]['end'], $do); return; }
+        if($studentGrade[0]['end'] != '2026-04-24' && $studentGrade[0]['confirmation_end'] != 1) { printf('<p>Data końcowa %s ucznia w klasie NIEPOTWIERDZONA.</p>', $studentGrade[0]['end']); return; }
+        if($studentGrade[0]['end'] == '2026-04-24' && $studentGrade[0]['confirmation_end'] != 0) { printf('<p>Data końcowa %s ucznia w klasie POTWIERDZONA.</p>', $studentGrade[0]['end']); return; }
     }
 
-    private function addStudentGrade($student_id, $grade_id, $date_start, $date_end) {
+    private function addStudentGrade($student_id, $grade_id, $start, $end) {
         $newStudentGrade = new StudentGrade;
         $newStudentGrade->student_id = $student_id;
         $newStudentGrade->grade_id = $grade_id;
-        $newStudentGrade->date_start = $date_start;
-        $newStudentGrade->confirmation_date_start = 1;
-        $newStudentGrade->date_end = $date_end;
-        $newStudentGrade->confirmation_date_end = 0;
+        $newStudentGrade->start = $start;
+        $newStudentGrade->confirmation_start = 1;
+        $newStudentGrade->end = $end;
+        $newStudentGrade->confirmation_end = 0;
+        //print_r($newStudentGrade);
         $newStudentGrade->save();
     }
 }

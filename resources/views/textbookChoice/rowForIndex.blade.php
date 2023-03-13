@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.10.2021 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 05.07.2022 ********************** -->
 <tr data-textbookChoice_id="{{ $textbookChoice->id }}" data-lp="{{$lp}}">
    <td>{{$lp}}</td>
    <td><a href="{{ route('podrecznik.show', $textbookChoice->textbook_id) }}">{{$textbookChoice->textbook->title}}</a> {{substr($textbookChoice->textbook->author, 0, 12)}} {{$textbookChoice->textbook->admission}}</td>
