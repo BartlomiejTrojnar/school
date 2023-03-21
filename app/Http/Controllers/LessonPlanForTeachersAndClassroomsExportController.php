@@ -41,8 +41,8 @@ class LessonPlanForTeachersAndClassroomsExportController extends Controller
                 $this -> createClassroomSheet();
             });
             $excel->sheet('nauczyciele', function($sheet) {
-                //$this->sheet = $sheet;
-                //$this -> createTeachersSheet();
+                $this->sheet = $sheet;
+                $this -> createTeachersSheet();
             });
         })->export('xlsx');
     }

@@ -234,7 +234,7 @@ class GradeController extends Controller
         $js = "grade/studentNumbers.js";
         return view('grade.show', ["grade"=>$this->grade, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "year"=>$this->year, "subView"=>$sectionForGrade]);
     }
-
+*/
     private function showGroups($subjectRepo, $teacherRepo, $groupRepo) {
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();
@@ -250,7 +250,7 @@ class GradeController extends Controller
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
-        $groups = $groupRepo -> getFilteredAndSorted($this->grade->id, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
+        $groups = $groupRepo -> getFilteredAndSortedAndPaginate($this->grade->id, $subjectSelected, $levelSelected, $start, $end, $teacherSelected);
 
         $groupTable = view('group.table', ["version"=>"forGrade", "subTitle"=>"grupy klasy", "groups"=>$groups, "links"=>true, "start"=>$start, "end"=>$end, "grade_id"=>$this->grade->id,
             "gradeSF"=>"", "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>$teacherSF, "schoolYearSF"=>""]);
@@ -258,7 +258,7 @@ class GradeController extends Controller
 
         return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$groupTable]);
     }
-*/
+
     private function showLessonPlan($groupRepo, $lessonPlanRepo, $schoolYearRepo) {
         $gradeLessons = $lessonPlanRepo -> getGradeLessons($this->grade->id);
         $dateView = session()->get('dateView'); if($dateView=="") $dateView = date('Y-m-d');

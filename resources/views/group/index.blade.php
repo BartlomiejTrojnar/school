@@ -2,7 +2,7 @@
 
 @section('java-script')
    <script src="{{ asset('public/js/rememberDates.js') }}"></script>
-   <script src="{{ asset('public/js/group/operations.js') }}"></script>
+   <script src="{{ asset('public/js/group/index.js') }}"></script>
 @endsection
 
 @section('header')
