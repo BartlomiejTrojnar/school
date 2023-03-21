@@ -17,11 +17,11 @@
     <th>godziny</th>
     <td class="c" data-group_id="{{$group->id}}" data-url="{{ url('grupa') }}">
       <button id="hourSubtract" class="btn-xs btn-primary" data-group_id="{{$group->id}}">
-        <i class="fas fa-minus"></i>
+        <i class="fa fa-minus"></i>
       </button>
       <span style="font-size: 1.25em;">{{ $group->hours }}</span>
       <button id="hourAdd" class="btn-xs btn-primary" data-group_id="{{$group->id}}">
-        <i class="fas fa-plus"></i>
+        <i class="fa fa-plus"></i>
       </button>
     </td>
   </tr>
@@ -34,7 +34,7 @@
     <td class="teachers" style="min-width: 400px;">
       <aside style="float: right; margin-left: 10px;">
         <a href="{{ url('grupa_nauczyciele/addTeacher/'. $group->id) }}">zmień
-           <i class='fas fa-chalkboard-teacher' style="font-size: 24px;"></i>
+           <i class='fa fa-chalkboard-teacher' style="font-size: 24px;"></i>
         </a>
       </aside>
       @foreach($group->teachers as $groupTeacher)
