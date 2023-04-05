@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 09.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -128,9 +128,9 @@ class GradeController extends Controller
         }
         return redirect( $_SERVER['HTTP_REFERER'] );
     }
-/*
+
     public function change($id) {  session()->put('gradeSelected', $id);  }
-*/
+
     public function show($id, GradeRepository $gradeRepo, SchoolYearRepository $syR, StudentGradeRepository $sgR, StudentNumberRepository $snR,
             GroupRepository $gR, LessonPlanRepository $lpR, DeclarationRepository $dR, SubjectRepository $subR, teacherRepository $tR,
             EnlargementRepository $eR, TaskRatingRepository $tRR,  $view='') {
@@ -138,7 +138,7 @@ class GradeController extends Controller
         if($view)  session()->put('gradeView', $view);
         if(!empty($id)) {
             $this->grade = $gradeRepo -> find($id);
-            session()->put('gradeSelected', $id);    
+            session()->put('gradeSelected', $id);
         }
 
         $schoolYearSelected = session()->get('schoolYearSelected');

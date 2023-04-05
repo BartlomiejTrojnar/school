@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.04.2023 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -147,15 +147,14 @@
          </tr>
       @endforeach
 
-      <tr class="create"><td colspan="13">
-         <a class="btn btn-primary" href="{{ route('grupa.create') }}"><i class="fa fa-plus"></i></a>
-      </td></tr>
+      <tr class="create"><td colspan="12"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
    </tbody>
 </table>
+
 <a class="btn btn-danger" href="{{ route('grupa.editComments') }}">zmień uwagi</a>
 <?php
    $countHours=0;
    foreach($groups as $group)    $countHours += $group->hours;
 ?>
-<p>Liczba godzin: {{$countHours}}</p>
+<p>Liczba godzin: {{ $countHours }}</p>
 <a class="btn btn-primary" href="{{ route('groupStudent.exportGroups') }}">eksportuj (Excel)</a>

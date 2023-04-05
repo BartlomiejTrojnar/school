@@ -1,5 +1,5 @@
-<tr data-group_id="{{$group->id}}" style="display: none;">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.04.2022 *********************** -->
+<tr data-group_id="{{ $group->id }}">
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.03.2023 *********************** -->
    <td><a href="{{ route('grupa.show', $group->id) }}">{{ $lp }}</a></td>
    <td>
       <?php
@@ -51,6 +51,6 @@
    <td class="destroy edit copy c">
       <a style="display: inline;" class="btn btn-primary" href="{{ route('grupa.copy', $group->id) }}"><i class="fa fa-copy"></i></a>
       <button class="edit btn btn-primary"    data-group_id="{{ $group->id }}" data-version="{{$version}}"><i class="fa fa-edit"></i></button>
-      <button class="destroy btn btn-primary" data-group_id="{{ $group->id }}"><i class="fas fa-remove"></i></button>
+      <button class="destroy btn btn-primary" data-group_id="{{ $group->id }}"><i class="fa fa-remove"></i></button>
    </td>
 </tr>

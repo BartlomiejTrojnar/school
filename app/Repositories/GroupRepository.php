@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 31.12.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.04.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 
@@ -43,7 +43,7 @@ class GroupRepository extends BaseRepository {
 
    public function findGroups($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
       $records = $this->model -> select('groups.*') -> leftjoin('subjects', 'groups.subject_id', '=', 'subjects.id')
-         -> join('group_grades', 'groups.id', '=', 'group_grades.group_id');
+         -> leftjoin('group_grades', 'groups.id', '=', 'group_grades.group_id');
       if($grade_id)
          $records = $records -> where('group_grades.grade_id', '=', $grade_id);
       if($teacher_id)  {

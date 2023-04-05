@@ -130,7 +130,7 @@ Route::get('/grupa/editComments', array('as'=>'grupa.editComments', 'uses'=>'Gro
 Route::post('/grupa/updateComments', array('as'=>'grupa.updateComments', 'uses'=>'GroupController@updateComments'));
 Route::get('/grupa/compare', array('as'=>'grupa.compare', 'uses'=>'GroupCompareController@compare'));
 Route::resource('/grupa', 'GroupController');
-Route::post('/group/refreshRow', 'GroupController@refreshRow');
+Route::post('/grupa/refreshRow', 'GroupController@refreshRow');
 Route::get('/grupa/copy/{id}', array('as'=>'grupa.copy', 'uses'=>'GroupController@copy'));
 Route::post('/grupa/copyStore', array('as'=>'grupa.copyStore', 'uses'=>'GroupController@copyStore'));
 Route::get('/grupa/orderBy/{column}', array('as'=>'grupa.orderBy', 'uses'=>'GroupController@orderBy'));

@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 05.04.2023 ------------------------ //
 // ------ skrypt zawierający wzory najczęściej wykonywanych operacji w widokach "/index" ------- //
 const FADE_OUT=575, FADE_IN=1275;
 
@@ -10,11 +10,16 @@ export class RefreshRowService {
         this.dataName = dataName;
     }
 
-    error(id, operation, communique) {  // błąd w trakcie odświeżania
+    refreshError(id, operation, communique) {  // błąd w trakcie odświeżania
         var error = '<tr data-' +this.dataName+ '="' +id+ '"><td class="error" colspan="' +this.numberOfFields+ '">' +communique+ '</td></tr>';
         if(operation=="add") $('tr.create').before(error);
         else $('tr[data-' +this.dataName+ '="'+id+'"]').replaceWith(error);
         $('td.error').hide(5).fadeIn(FADE_IN);
+    }
+
+    refreshSuccess(id, operation, result) {  // powodzenie odświeżania
+        if(operation=="add") $('tr.create').before(result);
+        else $('tr[data-' +this.dataName+ '="'+id+'"]').replaceWith(result);
     }
 
     addError(communique) {              // niepowodzenie wstawienia rekordu do bazy danych
@@ -24,28 +29,17 @@ export class RefreshRowService {
         $('td.error').hide().fadeIn(FADE_IN);
     }
 
-    updateError(id, communique) {       // niepowodzenie w czasie zapisywania zmian w bazie danych
-            var error = '<tr><td colspan="' +this.numberOfFields+ '" class="error">' +communique+ '</td></tr>';
-            $('tr[data-' +this.dataName+ '='+id+']').before(error);
-            $('td.error').hide().fadeIn(FADE_IN);
-    }
-
-    destroyError(id, communique) {      // niepowodzenie usuwania rekordu
-        var error = '<tr data-' +this.dataName+ '="'+id+'"><td colspan="' +this.numberOfFields+ '" class="error">' +communique+ '</td></tr>';
-        $('tr[data-' +this.dataName+ '='+id+']').before(error);
-        $('td.error').hide().fadeIn(FADE_IN);
-    }
-
-    success(id, result, operation) {    // udane przygotowanie wiersza z odświeżonym rekordem
-        if(operation=="add")    { this.addSuccess(result); }
-        else                    { this.updateSuccess(id, result); }
-    }
-
     addSuccess(result) {                // odświeżanie rekordu w przypadku udanego dodawania - dodanie wiersza do tabeli
         $('tr#createRow').remove();
         $('tr.create').before(result);
         $('tr[data-' +this.dataName+ '="' +id+ '"]').fadeIn(FADE_IN);
         $('#showCreateRow').show();
+    }
+
+    updateError(id, communique) {       // niepowodzenie w czasie zapisywania zmian w bazie danych
+        var error = '<tr><td colspan="' +this.numberOfFields+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +this.dataName+ '='+id+']').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
     }
 
     updateSuccess(id, result) {         // odświeżanie rekordu w przypadku udanej modyfikacji - odświeżenie wiersza w tabeli
@@ -54,6 +48,13 @@ export class RefreshRowService {
             $('tr[data-' +dataName+ '="' +id+ '"]').replaceWith(result);
             $('tr[data-' +dataName+ '="' +id+ '"]').hide().fadeIn(FADE_IN);
         });
+    }
+
+    destroyError(id, communique) {      // niepowodzenie usuwania rekordu
+        var error = '<tr data-' +this.dataName+ '="'+id+'"><td colspan="' +this.numberOfFields+ '" class="error">' +communique+ '</td></tr>';
+        $('tr[data-' +this.dataName+ '='+id+']').before(error);
+        $('td.error').hide().fadeIn(FADE_IN);
+
     }
 
     destroySuccess(id) {                // udane usunięcie rekordu - usunięcie wiersza z tabeli
@@ -103,7 +104,6 @@ export class CreateRowService {
 // ---------------------------- tworzenie formularza modyfikowania ----------------------------- //
 export class EditRowService {
     constructor(numberOfFields, dataName, communique, inputName) {
-        alert(numberOfFields);
         this.numberOfFields = numberOfFields;
         this.dataName = dataName;
         this.communique = communique;
