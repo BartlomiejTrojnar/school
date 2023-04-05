@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.01.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Repositories\SubjectRepository;
@@ -191,5 +191,5 @@ class SubjectController extends Controller
         return view('subject.show', ["subject"=>$subject, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$textbookTable, "js"=>""]);
     }
 
-    //  public function change($id) {  session()->put('subjectSelected', $id);   }
+    public function change($id) {  session()->put('subjectSelected', $id);   }
 }

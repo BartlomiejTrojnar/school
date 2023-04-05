@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 05.04.2023 *********************** -->
 @if( !empty( $links ) )
    {!! $groups->render() !!}
 @endif
@@ -142,20 +142,19 @@
             <td class="destroy edit c" style="min-width: 130px;">
                <a style="display: inline;" class="btn btn-primary" href="{{ route('grupa.copy', $group->id) }}"><i class="fa fa-copy"></i></a>
                <button class="edit btn btn-primary"    data-group_id="{{ $group->id }}" data-version="{{$version}}"><i class="fa fa-edit"></i></button>
-               <button class="destroy btn btn-primary" data-group_id="{{ $group->id }}"><i class="fas fa-remove"></i></button>
+               <button class="destroy btn btn-primary" data-group_id="{{ $group->id }}"><i class="fa fa-remove"></i></button>
             </td>
          </tr>
       @endforeach
 
-      <tr class="create"><td colspan="13">
-         <a class="btn btn-primary" href="{{ route('grupa.create') }}"><i class="fa fa-plus"></i></a>
-      </td></tr>
+      <tr class="create"><td colspan="12"><button id="showCreateRow" class="btn btn-primary"><i class="fa fa-plus"></i></button>
    </tbody>
 </table>
+
 <a class="btn btn-danger" href="{{ route('grupa.editComments') }}">zmień uwagi</a>
 <?php
    $countHours=0;
    foreach($groups as $group)    $countHours += $group->hours;
 ?>
-<p>Liczba godzin: {{$countHours}}</p>
+<p>Liczba godzin: {{ $countHours }}</p>
 <a class="btn btn-primary" href="{{ route('groupStudent.exportGroups') }}">eksportuj (Excel)</a>

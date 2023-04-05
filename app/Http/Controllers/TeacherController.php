@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -228,7 +228,5 @@ class TeacherController extends Controller
         return redirect( route('nauczyciel.index', 'page='.session()->get('TeacherPage')) );
     }
 
-/*
     public function change($id) { session()->put('teacherSelected', $id); }
-*/
 }

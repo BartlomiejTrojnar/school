@@ -1,4 +1,4 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
@@ -69,7 +69,7 @@
             @if( $type=="abled" )
                <i class="fa fa-plus"></i>
             @elseif( $type=="disabled" )
-               <i class="fas fa-lock"></i>
+               <i class="fa fa-lock"></i>
             @else
                <i class="fa fa-remove"></i>
             @endif

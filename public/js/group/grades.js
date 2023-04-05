@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania klas w grupie ---------------------- //
 
 // --------------------------- DODAWANIE LUB USUWANIE KLASY Z GRUPY ---------------------------- //
@@ -30,6 +30,7 @@ function gradeClick() {
 }
 
 function addGradeToGroup(grade_id)  {
+    alert(grade_id);
     var group_id = $('input[name="group_id"]').val();
     $.ajax({
         type: "POST",
@@ -61,10 +62,6 @@ function removeGradeFromGroup(grade_id)  {
             $('button[data-grade="' +grade_id+ '"]').attr('data-id', 0);
             $('button[data-grade="' +grade_id+ '"] i').removeClass('fa-remove');
             $('button[data-grade="' +grade_id+ '"] i').addClass('fa-plus');
-            $('button[data-grade="' +grade_id+ '"]').bind('click', function() {
-                addGradeToGroup( $(this).data('grade') );
-                return false;
-            });
             return;
         },
         error: function(result) {  alert("Błąd: "+result);  },

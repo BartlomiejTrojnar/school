@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.03.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -73,10 +73,10 @@ class GroupController extends Controller
     public function create(SubjectRepository $subjectRepo, SchoolYearRepository $syRepo, TeacherRepository $teacherRepo) {
         $subjects = $subjectRepo -> getActualAndSorted();
         $subjectSelected = session() -> get('subjectSelected');
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$subjectSelected]);
         $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
         $levelSelected = '';
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
         $teacher = session()->get('teacherSelected');
 
         if( !empty(session() -> get('schoolYearSelected')) ) {
@@ -91,7 +91,7 @@ class GroupController extends Controller
             $teacher = $teacherRepo -> find( session()->get('teacherSelected') );
         else $teacher = 0;
 
-        return view('group.create', ["proposedDates"=>$proposedDates, "teacher"=>$teacher, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField]);
+        return view('group.create', ["proposedDates"=>$proposedDates, "teacher"=>$teacher, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF]);
     }
 
     public function copy($id, Group $group, SubjectRepository $subjectRepo, SchoolYearRepository $syRepo, TeacherRepository $teacherRepo) {
@@ -119,13 +119,8 @@ class GroupController extends Controller
 
     public function store(Request $request) {
         if( $request->start > $request->end )  return redirect($request->history_view);
-        $this -> validate($request, [
-          'subject_id' => 'required',
-          'start' => 'required|date',
-          'end' => 'required|date',
-          'comments' => 'max:30',
-          'hours' => 'integer|max:9',
-        ]);
+        $this -> validate($request, [   'subject_id' => 'required', 'start' => 'required|date', 'end' => 'required|date',
+            'comments' => 'max:30', 'hours' => 'integer|max:9', ]);
 
         $group = new Group;
         $group->subject_id = $request->subject_id;
@@ -136,10 +131,10 @@ class GroupController extends Controller
         $group->hours = $request->hours;
         $group -> save();
 
-        if($request->teacher_id)
-            return redirect( route('grupa_nauczyciele.automaticallyAddTeacher', ['group_id'=>$group->id, 'teacher_id'=>$request->teacher_id, 'start'=>$group->start, 'end'=>$group->end]) );
-        $url = 'grupa_nauczyciele/addTeacher/'.$group->id;
-        return redirect($url);
+        return $group->id;
+
+        // if($request->teacher_id)
+            // return redirect( route('grupa_nauczyciele.automaticallyAddTeacher', ['group_id'=>$group->id, 'teacher_id'=>$request->teacher_id, 'start'=>$group->start, 'end'=>$group->end]) );
     }
 
     public function copyStore(Request $request) {
@@ -234,7 +229,7 @@ class GroupController extends Controller
         $js = "/group/info.js";
         $grades = $gradeRepo -> getGroupGrades($this->group->id);
         $groupInfo = view('group.showInfo', ["group"=>$this->group, "grades"=>$grades, "year"=>$this->year]);
-        return view('group.show', ["group"=>$this->group, "year"=>$this->year, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupInfo]);
+        return view('group.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "year"=>$this->year, "group"=>$this->group, "subView"=>$groupInfo]);
     }
 
     private function showStudents($groupRepo, $schoolYearRepo, $groupStudentRepo) {
@@ -283,10 +278,10 @@ class GroupController extends Controller
     public function edit(Request $request, Group $group, SubjectRepository $subjectRepo) {
         $group = $group -> find($request->id);
         $subjects = $subjectRepo -> getActualAndSorted();
-        $subjectSelectField = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$group->subject_id]);
+        $subjectSF = view('subject.selectField', ["subjects"=>$subjects, "subjectSelected"=>$group->subject_id]);
         $levels = array('podstawowy', 'rozszerzony', 'dwujęzyczny', 'nieokreślony');
-        $levelSelectField = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$group->level]);
-        return view('group.editRow', ["version"=>$request->version, "group"=>$group, "subjectSelectField"=>$subjectSelectField, "levelSelectField"=>$levelSelectField]);
+        $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$group->level]);
+        return view('group.editRow', ["version"=>$request->version, "group"=>$group, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "lp"=>$request->lp]);
     }
 
     public function update($id, Request $request, Group $group) {
