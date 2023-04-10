@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
 // ---------------- wydarzenia na stronie wyświetlania planu lekcji nauczyciela ---------------- //
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
@@ -21,6 +21,11 @@ function showOrHideLesson() {
             $('#teacherGroups li[data-group_id="'+group_id+'"] span.hours').html(hours);
             if(hours==0) $('#teacherGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
         }
+        var teacher_id = $('#teacher_id').val();
+        var teacherStart = $(this).children('span.teacher[data-teacher_id="' +teacher_id+ '"]').data('start');
+        if(teacherStart > dateView) $(this).hide();
+        var teacherEnd = $(this).children('span.teacher[data-teacher_id="' +teacher_id+ '"]').data('end');
+        if(teacherEnd < dateView) $(this).hide();
     });
 }
 
@@ -156,8 +161,9 @@ function dropInLessonPlan() {  // opuszczenie lekcji/grupy na planie lekcji nauc
     });
 }
 
-/*
 function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // zapisanie zmian lekcji w bazie danych
+    alert('Sprawdzić funkcję update w lessonPlna/forTeacher.js');
+    return;
     $.ajax({
         method: "PUT",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
@@ -167,7 +173,7 @@ function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // za
         error: function() { alert('Błąd: lessonPlan/forTeacher.js - funkcja update'); return false; }
     });
 }
-*/
+
 function dragLesson() {  // podnoszenie lekcji z planu lekcji
     $('#teacherPlan li').attr('draggable', 'true');
     $('#teacherPlan').delegate('li', 'dragstart', function(event) {
@@ -283,10 +289,10 @@ function dateViewChange() {
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     showOrHideLesson();
-    // dragTeacherGroup();
-    // dragLesson();
-    // dropInLessonPlan();
-    // dropLessonInTeacherGroupList();
-    // dropLessonInCompleteRemoveField();
+    dragTeacherGroup();
+    dragLesson();
+    dropInLessonPlan();
+    dropLessonInTeacherGroupList();
+    dropLessonInCompleteRemoveField();
     dateViewChange();
 });

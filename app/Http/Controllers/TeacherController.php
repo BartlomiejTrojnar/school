@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 29.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -189,7 +189,7 @@ class TeacherController extends Controller
         $year = substr($dateView, 0, 4);
         if( substr($dateView, 5, 2)>=8 ) $year++;
         $schoolYearEnds = $schoolYearRepo -> getSchoolYearEnds($year-1, $year);     // znalezienie dat końcowych roku szkolnego w czasie istnienia klasy
-        $teacherLessonPlan = view('lessonPlan.teacherPlan', ["lessons"=>$lessons, "groups"=>$groups, "dateView"=>$dateView, "schoolYearEnds"=>$schoolYearEnds, "year"=>$year]);
+        $teacherLessonPlan = view('lessonPlan.teacherPlan', ["lessons"=>$lessons, "groups"=>$groups, "dateView"=>$dateView, "schoolYearEnds"=>$schoolYearEnds, "year"=>$year, "teacher_id"=>$this->teacher->id]);
         $js = "lessonPlan/forTeacher.js";
         return view('teacher.show', ["teacher"=>$this->teacher, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$teacherLessonPlan]);
     }

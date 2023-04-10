@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -14,15 +14,29 @@
    <div id="completeRemove">upuść lekcję tutaj by całkiem usunąć</div>
    <ul id="schoolYearEnds" class="hidden">
       @foreach($schoolYearEnds as $syEnd)
-         <li>{{$syEnd->date_of_graduation}}</li>
+         <li>{{ $syEnd->date_of_graduation }}</li>
       @endforeach
    </ul>
 </section>
 
 <section id="teacherGroups"><ul>
    @foreach($groups as $group)
-      <li class="teacherGroup" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
-         <span class="groupDates"><time class="start">{{$group->start}}</time> : <time class="end">{{$group->end }}</time></span><br />
+      <li class="teacherGroup" data-group_id="{{ $group->id }}" data-type="group" data-hours="{{ $group->hours }}">
+
+
+
+         <span class="teacherDates" hidden>
+            @foreach($group->teachers as $groupTeacher)
+               @if( $teacher_id == $groupTeacher->teacher_id )
+                  <time class="start">{{ $groupTeacher->start }}</time>
+                  <time class="end">{{ $groupTeacher->end }}</time>
+               @endif
+            @endforeach
+         </span>
+
+
+
+         <span class="groupDates"><time class="start">{{ $group->start }}</time> : <time class="end">{{ $group->end }}</time></span><br />
          {{ $year - $group->grades[0]->grade->year_of_beginning }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
          {{ $group->subject->name }}<br />
          <em style="font-size: 0.8em;">
@@ -83,7 +97,7 @@
                            <code class="studentsCount" title="liczba uczniów"></code>
                            <!-- nauczyciel -->
                            @foreach($lesson->group->teachers as $groupTeacher)
-                           <span class="teacher" hidden2 data-teacher_id="{{ $groupTeacher->teacher_id }}" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">
+                           <span class="teacher" hidden data-teacher_id="{{ $groupTeacher->teacher_id }}" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">
                               /{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/
                            </span>
                            @endforeach
