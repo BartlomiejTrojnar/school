@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 // ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
@@ -58,7 +58,8 @@ function showOrHideLesson() {
         if(start > dateView)    { $(this).hide(); return; }
         $(this).removeClass('bg-warning');
         $(this).children('.glyphicon-alert').remove();
-        if(changeAndFormatDate(start, 7) >= dateView) {
+        var group_start = $('li[data-group_id="' +group_id+ '"] .groupDates .start').html();
+        if(changeAndFormatDate(start, 7) >= dateView && group_start != dateView) {
             $(this).addClass('bg-warning');
             $(this).prepend('<span class="glyphicon glyphicon-alert"></span>');
         }
@@ -72,7 +73,7 @@ function showOrHideLesson() {
         });
 
         if(start <= dateView && end >= dateView) {
-                var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
+            var hours = parseInt( $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html() ) - 1;
             $('#gradeGroups li[data-group_id="'+group_id+'"] .hours var').html(hours);
             if(hours<1) $('#gradeGroups li[data-group_id="'+group_id+'"]').fadeOut(1000);
         }
