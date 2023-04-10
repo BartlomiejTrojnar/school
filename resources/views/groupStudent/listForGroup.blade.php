@@ -1,5 +1,5 @@
 <section id="studentsListForGroup">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 06.04.2023 *********************** -->
 <div>sortowanie:
    <a href="{{ route('groupStudent.orderBy', 'grade_id') }}">klasa
       @if( session()->get('GroupStudentOrderBy[0]') == 'grade_id' )
@@ -28,7 +28,7 @@
 
             <!-- klasa i numer ucznia -->
             <span class="grade">
-               @if($studentGrade->start > $dateView || $studentGrade->end < $dateView) <i class='fas fa-exclamation-triangle'></i> @endif
+               @if($studentGrade->start > $dateView || $studentGrade->end < $dateView) <i class='fa fa-exclamation-triangle'></i> @endif
                @if($dateView >= $studentGrade->grade->year_of_beginning."-09-01" && $dateView <= $studentGrade->grade->year_of_graduation."-08-31")
                   {{$year-$studentGrade->grade->year_of_beginning}}{{ $studentGrade->grade->symbol }}
                @else
