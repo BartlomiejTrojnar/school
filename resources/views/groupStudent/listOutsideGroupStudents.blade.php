@@ -5,13 +5,14 @@
    <p>Dla podanej daty nie znaleziono uczniów należących do klasy.</p>
 @endif
 <ul id="listOutsideGroupStudents">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 08.04.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.04.2023 *********************** -->
    @foreach($outsideGroupStudents as $outsideGroupStudent)
-      @foreach($outsideGroupStudent->grades as $studentGrade)
+      @foreach($outsideGroupStudent -> grades as $studentGrade)
       <?php /*
          @foreach($grades as $grade)   <!-- sprawdzanie czy klasa ucznia jest jedną z klas grupy -->
       */ ?>
             @if($grade==$studentGrade->grade_id)
+*/ ?>
                <li data-student_id="{{ $outsideGroupStudent->id }}" data-grade_id="{{ $studentGrade->grade_id }}" data-grade_start="{{ $studentGrade->start }}" data-grade_end="{{ $studentGrade->end }}">
                   <!--klasa ucznia-->
                   <a href="{{ route('klasa.show', $studentGrade->grade_id) }}">
@@ -28,6 +29,7 @@
                   <!--imię i nazwisko ucznia-->
                   <a href="{{ route('uczen.show', $outsideGroupStudent->id) }}">{{ $outsideGroupStudent->first_name }} {{ $outsideGroupStudent->last_name }}</a>
                </li>
+               <?php /*
             @endif
             <?php /*
          @endforeach <!-- sprawdzanie klasy -->
