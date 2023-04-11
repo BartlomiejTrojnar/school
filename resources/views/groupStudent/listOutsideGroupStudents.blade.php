@@ -6,7 +6,7 @@
 @endif
 
 <ul id="listOutsideGroupStudents">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.04.2023 *********************** -->
    @foreach($outsideGroupStudents as $outsideGroupStudent)
       @foreach($outsideGroupStudent -> grades as $studentGrade)
       <?php /*
