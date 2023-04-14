@@ -92,7 +92,7 @@ class TeacherController extends Controller
 
     public function index(TeacherRepository $teacherRepo, SchoolYearRepository $schoolYearRepo) {
         if( isset($_GET['page']) )  session()->put('TeacherPage', $_GET['page']);
-        $teachers = $teacherRepo -> getFilteredAndPaginate();
+        $teachers = $teacherRepo -> getFilteredAndPaginate( session()->get('schoolYearSelected') );
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>session() -> get('schoolYearSelected'), "name"=>"schoolYear_id" ]);
         return view('teacher.index', ["teachers"=>$teachers, "schoolYearSF"=>$schoolYearSF]);
