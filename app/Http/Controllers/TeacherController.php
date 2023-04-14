@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 14.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -106,7 +106,7 @@ class TeacherController extends Controller
         $this->teacher = $teacherRepo -> find($id);
         session()->put('teacherSelected', $id);
 
-        $teachers = $teacherRepo -> getAllSortedAndPaginate();
+        $teachers = $teacherRepo -> getFiltered(session()->get('schoolYearSelected'));
         list($this->previous, $this->next) = $teacherRepo -> nextAndPreviousRecordId($teachers, $id);
 
         switch( session()->get('teacherView') ) {

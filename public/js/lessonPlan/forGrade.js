@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.04.2023 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
 
 // ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
@@ -59,7 +59,7 @@ function showOrHideLesson() {
         $(this).removeClass('bg-warning');
         $(this).children('.glyphicon-alert').remove();
         var group_start = $('li[data-group_id="' +group_id+ '"] .groupDates .start').html();
-        if(changeAndFormatDate(start, 7) >= dateView && group_start != dateView) {
+        if(changeAndFormatDate(start, 7) > dateView && group_start != dateView) {
             $(this).addClass('bg-warning');
             $(this).prepend('<span class="glyphicon glyphicon-alert"></span>');
         }
@@ -147,6 +147,7 @@ function addLessonToTable(id, group_id, lessonhour_id, start, end) {
 
 function moveLesson(lesson_id, lessonhour_id, old_lessonhour_id, start='') {
     $('li[data-lesson_id="'+lesson_id+'"]').clone().appendTo('td[data-lessonhour_id="'+lessonhour_id+'"] ul').hide();
+    $('li[data-lesson_id="'+lesson_id+'"]').addClass('bg-primary').removeClass('bg-warning');
     if(start)  {
         $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"] .start').html(start);
         var end = changeAndFormatDate(start, -1);
@@ -195,7 +196,10 @@ function cloneLesson(lesson_id, lessonhour_id, old_lessonhour_id, start) {     /
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/lessonPlan/cloneLesson",
         data: { lesson_id: lesson_id, lesson_hour_id: lessonhour_id, start: start, end: end },
-        success: function(result) { $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"]').attr('data-lesson_id', result).fadeIn(1000); },
+        success: function(result) {
+            $('td[data-lessonhour_id="'+lessonhour_id+'"] li[data-lesson_id="'+lesson_id+'"]').attr('data-lesson_id', result).fadeIn(1000);
+            $('li[data-lesson_id="'+result+'"]').addClass('bg-primary');
+        },
         error: function() { alert('Błąd: gradePlan.js - funkcja cloneLesson'); return 0; }
     });
 }
