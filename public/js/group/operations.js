@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.04.2023 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania grup dla klasy --------------------- //
 // ------------------------------ wybór klasy w polu select ------------------------------------ //
 function gradeChanged() {
@@ -106,7 +106,7 @@ function refreshRow(id, version, type, lp=0) {  // odświeżenie wiersza z grup�
     $.ajax({
         method: "POST",
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/group/refreshRow",
+        url: "http://localhost/school/grupa/refreshRow",
         data: { id: id, version: version, lp: lp },
         success: function(result) {
             if(type=="add"){

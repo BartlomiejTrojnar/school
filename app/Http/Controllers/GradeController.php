@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 10.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -245,7 +245,7 @@ class GradeController extends Controller
         $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
         $teacherSelected = session()->get('teacherSelected');
-        $teachers = $teacherRepo -> getAll();
+        $teachers = $teacherRepo -> getFiltered( session()->get('schoolYearSelected') );
         $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
 
         $start = session() -> get('dateView');

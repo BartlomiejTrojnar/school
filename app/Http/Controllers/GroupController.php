@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -38,7 +38,7 @@ class GroupController extends Controller
         $levelSelected = session()->get('levelSelected');
         $levelSF = view('layouts.levelSelectField', ["levels"=>$levels, "levelSelected"=>$levelSelected]);
 
-        $teachers = $teacherRepo -> getAll();
+        $teachers = $teacherRepo -> getFiltered( session()->get('schoolYearSelected') );
         $teacherSelected = session()->get('teacherSelected');
         $teacherSF = view('teacher.selectField', ["teachers"=>$teachers, "teacherSelected"=>$teacherSelected]);
 
