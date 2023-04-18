@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">

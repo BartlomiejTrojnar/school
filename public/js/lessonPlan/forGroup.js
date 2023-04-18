@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania planu lekcji grupy ------------------- //
 import '../groupGrade/checkGrades.js';
 

@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 /*
     skrypt oznacza klasy przypisane do grupy:
     1. brak uczniów danej klasy w grupie - class 'no-students' (początkowa domyślna klasa css)

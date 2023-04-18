@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 // ------------------------- wydarzenia na stronie informacji o grupie ------------------------- //
 import '../groupGrade/checkGrades.js';
 
