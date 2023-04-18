@@ -1,5 +1,5 @@
 /* ---------------------------------- STYLE DLA PLANU LEKCJI  ---------------------------------- */
-/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.02.2022 ------------------------ */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ */
 
 h2#dateForView {
     display: none;
@@ -130,3 +130,7 @@ aside#studentListForGroup span.dates {
     font-size: 0.65em;
     color: #fdd;
 }
+
+/* --------------------------------- oznaczenie klas w grupie ---------------------------------- */
+li.no-students   { display: none !important; }
+.inactive      { opacity: 0.2; }

@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 25.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
@@ -185,7 +185,7 @@ class StudentController extends Controller
         $js = "student/studentGrades.js";
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentGradeTable]);
     }
-/*
+
     private function showGroups($groupStudentRepo, $schoolYearRepo) {
         $dateView = session() -> get('dateView');
         // znalezienie grup ucznia
@@ -221,7 +221,7 @@ class StudentController extends Controller
         $studentPlan = view('lessonPlan.studentPlan', ["lessons"=>$lessons, "dateView"=>$dateView]);
         return view('student.show', ["student"=>$this->student, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$studentPlan]);
     }
-
+/*
     private function showCertificates($certificateRepo) {
         $css = "";
         $js = "certificate/forStudent.js";

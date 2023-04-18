@@ -1,0 +1,8 @@
+/* --------------------------- STYLE DLA STRON WYŚWIETLAJĄCYCH GRUPĘ --------------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ */
+
+/* ------------------------------- skrypt /grupa_klasy/gradesList ------------------------------ */
+tr:hover    { background: #222; }
+a.no-students   { color: #00f; text-shadow: #f60 1px 1px; font-size: 100%; text-decoration: line-through;}
+a.inactive      { color: #f80; text-shadow: #fb0 1px 1px; font-size: 120%; }
+a.active        { color: #88f; text-shadow: #88f 1px 1px; font-size: 150%; }

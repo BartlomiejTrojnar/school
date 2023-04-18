@@ -1,5 +1,5 @@
 /* ------------------------------ STYLE DLA PLANU LEKCJI DLA GRUPY ------------------------------ */
-/* --------------------- (C) mgr inż. Bartłomiej Trojnar; (II) styczeń 2020 --------------------- */
+/* ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ */
 
 /* ----------- nagłówek z datą widoku, paskiem postępu i polem całkowitego usunięcia ------------ */
 div#completeRemove, div#todayRemove {
@@ -36,3 +36,8 @@ td.lesson button {
 td.lesson button:hover {
     background: #227;
 }
+
+/* --------------------------------- oznaczenie klas w grupie ---------------------------------- */
+.no-students   { display: none; }
+.inactive      { opacity: 0.2; }
+.active        { color: #88f; font-size: 120%; }

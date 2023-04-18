@@ -1,11 +1,11 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.04.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 *********************** -->
 @extends('layouts.app')
 
 @section('css')
    <link href="{{ asset('public/css/'.$css) }}" rel="stylesheet">
 @endsection
 @section('java-script')
-   <script src="{{ asset('public/js/'.$js) }}"></script>
+   <script type="module" src="{{ asset('public/js/'.$js) }}"></script>
 @endsection
 
 @section('header')

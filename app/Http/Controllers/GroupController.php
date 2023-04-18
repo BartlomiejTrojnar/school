@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Repositories\GroupRepository;
 use App\Models\Group;
@@ -201,7 +201,7 @@ class GroupController extends Controller
 
         $gradeSelected = session()->get('gradeSelected');
         $subjectSelected = session()->get('subjectSelected');
-        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected);
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected);
         list($this->previous, $this->next) = $groupRepo -> nextAndPreviousRecordId($groups, $id);
 
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
@@ -225,11 +225,11 @@ class GroupController extends Controller
     }
 
     private function showInfo($gradeRepo) {
-        $css = "";
+        $css = "/group/info.css";
         $js = "/group/info.js";
         $grades = $gradeRepo -> getGroupGrades($this->group->id);
-        $groupInfo = view('group.showInfo', ["group"=>$this->group, "grades"=>$grades, "year"=>$this->year]);
-        return view('group.show', ["css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "year"=>$this->year, "group"=>$this->group, "subView"=>$groupInfo]);
+        $groupInfo = view('group.showInfo', ["group"=>$this->group, "grades"=>$grades, "year"=>$this->year, "dateView"=>session()->get('dateView')]);
+        return view('group.show', ["group"=>$this->group, "year"=>$this->year, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupInfo]);
     }
 
     private function showStudents($groupRepo, $schoolYearRepo, $groupStudentRepo) {
@@ -246,8 +246,8 @@ class GroupController extends Controller
         $subjectSelected = 0;
         $levelSelected   = 0;
         $teacherSelected = 0;
-        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $dateView, $dateView, $teacherSelected);
-        $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id, "year"=>$year]);
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $dateView, $dateView, $teacherSelected);
+        $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id]);
         $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "groupSF"=>$groupSF, "year"=>$year]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,

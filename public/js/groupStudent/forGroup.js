@@ -1,11 +1,10 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideStudents() {
     var dateView = $('#dateView').val();
-    var count=0, countStudents=0;
+    var count=0;
     var groupGrades = [];
-    var hide=false;
 
     $('#groupGrades button.off').each(function() {
         groupGrades[count++] = $(this).data('grade_id');
@@ -17,6 +16,8 @@ function showOrHideStudents() {
 }
 
 function showOrHideStudentsInGroupList(dateView, count, groupGrades) {
+    var countStudents=0;
+    var hide=false;
     $('#studentsListForGroup li').each(function() {    // sprawdzenie i wyświetlenie odpowiednich uczniów
         $(this).removeClass('hide');
         hide = false;
@@ -24,13 +25,13 @@ function showOrHideStudentsInGroupList(dateView, count, groupGrades) {
         if( $(this).data('end') < dateView )    hide=true;
         if( $(this).data('grade_start') > dateView )  hide=true;
         if( $(this).data('grade_end') < dateView )    hide=true;
-        for(i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  hide=true;
+        for(var i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  hide=true;
         if(hide) $(this).addClass('hide');
         else {
             countStudents++;
             // ukrycie ucznia na liście innych uczniów
             $('#listOutsideGroupStudents li[data-student_id="'+ $(this).data("student_id") +'"]').fadeOut(1000);
-        }
+        }                
     });
     $('#countStudents').html(countStudents);
 }
@@ -42,7 +43,7 @@ function showOrHideStudentsInOtherTimeList(dateView, count, groupGrades) {
         if( $(this).data('end') < dateView )    $(this).removeClass('hide');
         if( $(this).data('grade_start') > dateView )  $(this).addClass('hide');
         if( $(this).data('grade_end') < dateView )    $(this).addClass('hide');
-        for(i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  $(this).addClass('hide');
+        for(var i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  $(this).addClass('hide');
     });
 }
 
@@ -51,7 +52,7 @@ function showOrHideStudentsInOutsideGroupList(dateView, count, groupGrades) {
         $(this).removeClass('hide');
         if( $(this).data('grade_start') > dateView )  $(this).addClass('hide');
         if( $(this).data('grade_end') < dateView )    $(this).addClass('hide');
-        for(i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  $(this).addClass('hide');
+        for(var i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  $(this).addClass('hide');
     });
 }
 

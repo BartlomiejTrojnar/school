@@ -1,18 +1,27 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.04.2023 ------------------------ //
-// ----------------------- wydarzenia na stronie wyświetlania deklaracji ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
+// ----------------------- wydarzenia na stronie wyświetlania grup ----------------------- //
+import '../groupGrade/checkGrades.js';
+
 
 // ----------- pokazanie lub ukrycie grup, które mają już wszystkie lekcje na planie ----------- //
 function countStudents(group, dateView) {
     var countStudents = 0, countGradeStudents = 0;
     var grade_id = $('#grade_id').val();
-    $('li[data-group_id='+group+'] .groupStudents li').each(function() {
-        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
-        $(this).children('em.gradeInfo').each(function() {
-            if( $(this).html() == grade_id && $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countGradeStudents++;
+    var studentGroupStart, studentGroupEnd, studentGradeStart, studentGradeEnd, studentGradeId;
+    $('li[data-group_id='+group+'] .groupStudents li.student').each(function() {
+        studentGroupStart = $(this).children('.studentGroupStart').html();
+        studentGroupEnd = $(this).children('.studentGroupEnd').html();
+        if( studentGroupStart <= dateView && studentGroupEnd >= dateView ) countStudents++;
+        $(this).children('ul').children('li').each(function() {
+            studentGradeStart = $(this).children('.studentGradeStart').html();
+            studentGradeEnd = $(this).children('.studentGradeEnd').html();
+            studentGradeId = $(this).children('.grade_id').html();
+            if(studentGradeId==grade_id && studentGroupStart <= dateView && studentGroupEnd >= dateView && studentGradeStart <= dateView && studentGradeEnd >= dateView)    countGradeStudents++;
         });
     });
     if(countStudents == countGradeStudents)     $('li[data-group_id='+group+'] .studentsCount').html(countStudents);
     else $('li[data-group_id='+group+'] .studentsCount').html(countGradeStudents+"("+countStudents+")");
+    if(countGradeStudents==0) $('td.lesson li[data-group_id="' +group+ '"]').addClass('no-students');
 }
 
 function showOrHideGroup() {
