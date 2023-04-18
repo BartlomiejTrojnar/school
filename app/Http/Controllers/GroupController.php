@@ -206,7 +206,7 @@ class GroupController extends Controller
 
         $gradeSelected = session()->get('gradeSelected');
         $subjectSelected = session()->get('subjectSelected');
-        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected);
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected);
         list($this->previous, $this->next) = $groupRepo -> nextAndPreviousRecordId($groups, $id);
 
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
@@ -230,10 +230,10 @@ class GroupController extends Controller
     }
 
     private function showInfo($gradeRepo) {
-        $css = "";
+        $css = "/group/info.css";
         $js = "/group/info.js";
         $grades = $gradeRepo -> getGroupGrades($this->group->id);
-        $groupInfo = view('group.showInfo', ["group"=>$this->group, "grades"=>$grades, "year"=>$this->year]);
+        $groupInfo = view('group.showInfo', ["group"=>$this->group, "grades"=>$grades, "year"=>$this->year, "dateView"=>session()->get('dateView')]);
         return view('group.show', ["group"=>$this->group, "year"=>$this->year, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "subView"=>$groupInfo]);
     }
 
@@ -253,7 +253,7 @@ class GroupController extends Controller
         $teacherSelected = 0;
         $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $dateView, $dateView, $teacherSelected);
         $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id]);
-        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "groupSF"=>$groupSF]);
+        $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "groupSF"=>$groupSF, "year"=>$year]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
             "listGroupStudents"=>$listGroupStudents, "listGroupStudentsInOtherTime"=>$listGroupStudentsInOtherTime, "listOutsideGroupStudents"=>$listOutsideGroupStudents]);

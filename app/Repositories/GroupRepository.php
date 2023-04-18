@@ -37,7 +37,7 @@ class GroupRepository extends BaseRepository {
       return $this -> findGroups($grade_id, $subject_id, $level, $start, $end, $teacher_id) -> paginate(20);
    }
 
-   public function getAllFilteredAndSorted($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
+   public function getFilteredAndSorted($grade_id=0, $subject_id=0, $level=0, $start='', $end='', $teacher_id=0) {
       return $this -> findGroups($grade_id, $subject_id, $level, $start, $end, $teacher_id) -> get();
    }
 

@@ -20,7 +20,7 @@
    ?>
    <div id="groupInfo" class="hidden">
       <!-- klasy -->
-      {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
+      {{ $studyYear }}@foreach($group->grades as $groupGrade)<span data-grade_id="{{ $groupGrade->grade->id }}" class="no-students">{{ $groupGrade->grade->symbol }}</span>@endforeach
       <!-- przedmiot i komentarz grupy -->
       {{ $group->subject->short_name }}
       <em style="font-size: 0.8em;">
@@ -44,13 +44,18 @@
    </div>
 
    <!-- uczniowie -->
-   <ol id="groupStudents" class="hidden">
-      @foreach($group->students as $groupStudent)
-         <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">   
-            {{ $groupStudent->start }} {{ $groupStudent->end}} {{ $groupStudent->student_id }}
-         </li>
-      @endforeach
-   </ol>
+   <ol id="groupStudents" class="hidden">@foreach($group->students as $gs)
+      <li class="student">{{ $gs->student_id }} 
+         <time class="studentGroupStart">{{ $gs->start }}</time> <time class="studentGroupEnd">{{ $gs->end }}</time>
+         <ul>@foreach($gs->student->grades as $studentGrade)
+            <li>
+               <var class="grade_id">{{ $studentGrade->grade_id }}</var>
+               <time class="studentGradeStart">{{ $studentGrade->start }}</time> <time class="studentGradeEnd">{{ $studentGrade->end }}</time>
+            </li>
+         @endforeach</ul>
+      </li>
+   @endforeach</ol>
+
 </section>
 
 <section id="groupLessons">

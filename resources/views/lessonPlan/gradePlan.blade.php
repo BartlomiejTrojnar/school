@@ -24,15 +24,15 @@
          $studyYear = substr($dateView, 0, 4) - $group->grades[0]->grade->year_of_beginning;
          if( substr($dateView, 5, 2)>=8 ) $studyYear++;
       ?>
-      <li class="group" data-group_id="{{$group->id}}" data-type="group" data-hours="{{$group->hours}}">
-         <span class="groupDates"><time class="start">{{$group->start}}</time> : <time class="end">{{$group->end }}</time></span><br />
+      <li class="group" data-group_id="{{ $group->id }}" data-type="group" data-hours="{{ $group->hours }}">
+         <span class="groupDates"><time class="start">{{ $group->start }}</time> : <time class="end">{{ $group->end }}</time></span><br />
          {{ $studyYear }}@foreach($group->grades as $groupGrade){{ $groupGrade->grade->symbol }}@endforeach
          {{ $group->subject->short_name }} 
          <em style="font-size: 0.8em;">
             @if($group->level == 'rozszerzony') R @endif
             @if($group->level == 'podstawowy') P @endif
             @if($group->level == 'nieokreślony') <span style="background: #333;">nieokr</span> @endif
-            @if($group->comments) ({{$group->comments}}) @endif
+            @if($group->comments) ({{ $group->comments }}) @endif
          </em>
          <span class="hours">{<var>{{ $group->hours }}</var>}</span>
          <!-- liczba uczniów -->
@@ -42,16 +42,17 @@
             <span class="teacher" data-start="{{$groupTeacher->start}}" data-end="{{$groupTeacher->end}}">/{{ $groupTeacher->teacher->first_name }} {{ $groupTeacher->teacher->last_name }}/</span>
          @endforeach
          <!-- uczniowie -->
-         <ol class="groupStudents hidden" style="padding: 10px; text-align: left;">
-            @foreach($group->students as $groupStudent)
-               <li data-start="{{ $groupStudent->start }}" data-end="{{ $groupStudent->end }}">
-                  {{ $groupStudent->student->first_name }} {{ $groupStudent->student->last_name }}
-                  @foreach($groupStudent->student->grades as $studentGrade)
-                     <em class="gradeInfo" data-start="{{$studentGrade->start}}" data-end="{{$studentGrade->end}}">{{ $studentGrade->grade->id }}</em>
-                  @endforeach
-               </li>
-            @endforeach
-         </ol>
+         <ol hidden class="groupStudents" @if($group->id!=921) hidden @endif>@foreach($group->students as $gs)
+            <li class="student">{{ $gs->student->first_name }} {{ $gs->student->last_name }}
+               <time class="studentGroupStart">{{ $gs->start }}</time> <time class="studentGroupEnd">{{ $gs->end }}</time>
+               <ul>@foreach($gs->student->grades as $studentGrade)
+                  <li>
+                     <var class="grade_id">{{ $studentGrade->grade_id }}</var>
+                     <time style="background: #000;" class="studentGradeStart">{{ $studentGrade->start }}</time> <time class="studentGradeEnd">{{ $studentGrade->end }}</time>
+                  </li>
+               @endforeach</ul>
+            </li>
+         @endforeach</ol>
       </li>
    @endforeach
 </ul></section>

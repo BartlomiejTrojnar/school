@@ -1,5 +1,6 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 07.01.2022 ------------------------ //
 // ------------------------- wydarzenia na stronie informacji o grupie ------------------------- //
+import '../groupGrade/checkGrades.js';
 
 // ------------------------------- ZMIANA LICZBY GODZIN W GRUPIE ------------------------------- //
 // ----------------------------- przypisanie operacji do kliknięć ------------------------------ //

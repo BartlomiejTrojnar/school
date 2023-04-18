@@ -130,3 +130,7 @@ aside#studentListForGroup span.dates {
     font-size: 0.65em;
     color: #fdd;
 }
+
+/* --------------------------------- oznaczenie klas w grupie ---------------------------------- */
+li.no-students   { display: none !important; }
+.inactive      { opacity: 0.2; }

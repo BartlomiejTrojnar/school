@@ -1,12 +1,15 @@
 // ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.09.2022 ------------------------ //
 // ------------------- wydarzenia na stronie wyświetlania planu lekcji grupy ------------------- //
-
+import '../groupGrade/checkGrades.js';
 
 // -------------- pokazanie aktualnych lekcji lub ukrycie lekcji z innych terminów ------------- //
 function countStudents(dateView) {
     var countStudents = 0;
+    var studentGroupStart, studentGroupEnd;
     $('#groupStudents li').each(function() {
-        if( $(this).data('start')<=dateView && $(this).data('end')>=dateView ) countStudents++;
+        studentGroupStart = $(this).children('.studentGroupStart').html();
+        studentGroupEnd = $(this).children('.studentGroupEnd').html();
+        if( studentGroupStart<=dateView && studentGroupEnd>=dateView ) countStudents++;
     });
     $('#groupInfo .studentsCount').html(countStudents);
 }

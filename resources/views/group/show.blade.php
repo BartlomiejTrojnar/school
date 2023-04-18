@@ -5,7 +5,7 @@
    <link href="{{ asset('public/css/'.$css) }}" rel="stylesheet">
 @endsection
 @section('java-script')
-   <script src="{{ asset('public/js/'.$js) }}"></script>
+   <script type="module" src="{{ asset('public/js/'.$js) }}"></script>
 @endsection
 
 @section('header')
@@ -36,7 +36,7 @@
 
 @section('main-content')
    <ul class="nav nav-tabs nav-justified">
-      <li class="nav-item"><a class="nav-link" href="{{ url('grupa/'.$group->id.'/info') }}">informacje <i class='fas fa-info-circle'></i></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url('grupa/'.$group->id.'/info') }}">informacje <i class='fa fa-info-circle'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('grupa/'.$group->id.'/uczniowie') }}">uczniowie <i class='fa fa-users'></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('grupa/'.$group->id.'/planlekcji') }}">plan lekcji <i class="fa fa-calendar"></i></a></li>
       <li class="nav-item"><a class="nav-link" href="{{ url('grupa/'.$group->id.'/lekcje') }}">lekcje <i class="fa fa-calendar"></i></a></li>

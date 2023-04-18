@@ -36,3 +36,8 @@ td.lesson button {
 td.lesson button:hover {
     background: #227;
 }
+
+/* --------------------------------- oznaczenie klas w grupie ---------------------------------- */
+.no-students   { display: none; }
+.inactive      { opacity: 0.2; }
+.active        { color: #88f; font-size: 120%; }
