@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 17.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.04.2023 ------------------------ //
 // -------------------- wydarzenia na stronie wyświetlania numerów uczniów --------------------- //
 function helpButtonsClick() { // obsługa kliknięcia w któryś z przycisków pomocy
     $('.answer').hide();
