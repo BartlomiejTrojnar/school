@@ -252,7 +252,7 @@ class GroupController extends Controller
         $levelSelected   = 0;
         $teacherSelected = 0;
         $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $dateView, $dateView, $teacherSelected);
-        $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id]);
+        $groupSF = view('group.selectField', ["name"=>"selectedGroupID", "groups"=>$groups, "groupSelected"=>$this->group->id, "year"=>$year]);
         $listOutsideGroupStudents = view('groupStudent.listOutsideGroupStudents', ["outsideGroupStudents"=>$outsideGroupStudents, "schoolYear"=>$schoolYear, "dateView"=>$dateView, "groupSF"=>$groupSF, "year"=>$year]);
 
         $groupStudentTable = view('groupStudent.sectionListsForGroup', ["group"=>$this->group, "dateView"=>$dateView, "year"=>$this->year,
