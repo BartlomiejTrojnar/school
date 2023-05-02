@@ -88,7 +88,7 @@ function refreshOutsideGroupStudentsList(group_id, dateView) {      // odśwież
         error: function(result) { alert('Błąd: forGroup.js - funkcja refreshOutsideGroupStudentsList'); alert(result); }
     });
 }
-/*
+
 function outsideGroupStudentClick() {  // kliknięcie w ucznia nienależącego do grupy: zaznaczenie ucznia
     $('#listOutsideGroupStudents').delegate('li', 'click', function(){
         if( $(this).hasClass('checked') ) {
@@ -101,7 +101,7 @@ function outsideGroupStudentClick() {  // kliknięcie w ucznia nienależącego d
         return false;
     });
 }
-*/
+
 function checkTheValuesForAddStudentsToGroup(group_id, start, end) {  // funkcja sprawdza czy ustawiono prawidłowe daty by wprowadzić ucznia do grupy
     $('p.btn-danger').remove();
     var error=false;
@@ -132,7 +132,7 @@ function checkTheValuesForAddStudentsToGroup(group_id, start, end) {  // funkcja
     $('p.btn-danger').fadeOut(7500);
     return error;
 }
-/*
+
 function addStudent(student_id, group_id, start, end) {  // dodanie serii uczniów do grupy wg podanych dat
     $.ajax({
         type: "POST",
@@ -210,7 +210,7 @@ function addAllStudentClick() {  // kliknięcie w przycisk "Dodaj wszystkich"
         else alert('Brak uczniów do dodania');
     });
 }
-*/
+
 function groupStudentEditClick()  {     // kliknięcie w przycisk modyfikowania ucznia w grupie
     $('div').delegate('.edit', 'click', function(mouse) {
         var group_student_id = $(this).data('group_student_id');
@@ -337,7 +337,7 @@ function update(id) {   // zapisanie zmian przynależności ucznia do grupy w ba
         error: function() {  alert('Błąd modyfikowania przynależności ucznia do grupy.');  },
     });
 }
-/*
+
 function completeRemoveClick() {    // całkowite usunięcie ucznia z grupy
     $('#groupStudentDeleteForm .completeRemove').click(function() {
         var group_student_id = $('.completeRemove').data('group_student_id');
@@ -404,7 +404,7 @@ function groupStudentDeleteClick()  {   // kliknięcie w przycisk usuwania uczni
         return false;
     });
 }
-*/
+
 function gradeClick() {
     $("#groupGrades button").click(function() {
         if( $(this).hasClass('on') )   $(this).addClass('off').removeClass('on');
@@ -412,7 +412,7 @@ function gradeClick() {
         showOrHideStudents();
     });
 }
-/*
+
 function selectStudentsFromGroupClick() {
     $("#selectStudentsFromGroup").click(function() {
         var group_id = $('select[name="selectedGroupID"]').val();
@@ -433,17 +433,17 @@ function selectStudentsFromGroupClick() {
         });
     });
 }
-*/
+
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     showOrHideStudents();
     dateViewChange();
-    // outsideGroupStudentClick();
-    // addAllStudentClick();
-    // addCheckedStudentClick();
+    outsideGroupStudentClick();
+    addAllStudentClick();
+    addCheckedStudentClick();
     groupStudentEditClick();
-    // groupStudentDeleteClick();
+    groupStudentDeleteClick();
     gradeClick();
-    // selectStudentsFromGroupClick();
+    selectStudentsFromGroupClick();
 });

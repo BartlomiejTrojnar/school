@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -211,7 +211,7 @@ class GradeController extends Controller
          $js = "student/forGrade.js";
          return view('grade.show', ["grade"=>$this->grade, "year"=>$this->year, "previous"=>$this->previous, "next"=>$this->next, "css"=>"", "js"=>$js, "subView"=>$studentsTable, "subView2"=>$studentsOutOfDateTable]);
     }
-/*
+
     private function showNumbers($schoolYearRepo, $studentNumberRepo) {
         $schoolYears = $schoolYearRepo -> getAllSorted();
         if(session()->get('schoolYearSelected')) {
@@ -234,7 +234,7 @@ class GradeController extends Controller
         $js = "grade/studentNumbers.js";
         return view('grade.show', ["grade"=>$this->grade, "css"=>$css, "js"=>$js, "previous"=>$this->previous, "next"=>$this->next, "year"=>$this->year, "subView"=>$sectionForGrade]);
     }
-*/
+
     private function showGroups($subjectRepo, $teacherRepo, $groupRepo) {
         $subjectSelected = session()->get('subjectSelected');
         $subjects = $subjectRepo -> getActualAndSorted();

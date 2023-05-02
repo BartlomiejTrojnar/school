@@ -86,7 +86,7 @@ Route::get('/numery_ucznia/orderBy/{column}', array('as'=>'numery_ucznia.orderBy
 Route::post('/student_numbers/confirmNumbers/{grade_id}/{school_year_id}', 'StudentNumberController@confirmNumbers');
 Route::post('/student_numbers/copy', array('as'=>'numery_ucznia.copy', 'uses'=>'StudentNumberController@copy'));
 Route::post('/student_numbers/refreshSection', 'StudentNumberController@refreshSection');
-Route::post('/numery_ucznia/refreshRow', 'StudentNumberController@refreshRow');
+Route::post('/student_numbers/refreshRow', 'StudentNumberController@refreshRow');
 Route::post('/student_numbers/updateNumber', 'StudentNumberController@updateNumber');
 Route::post('/student_numbers/addNumbersForGrade', 'StudentNumberController@addNumbersForGrade');
 

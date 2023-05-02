@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 02.05.2023 ********************** -->
 @section('css')
    <link href="{{ asset('public/css/lessonPlan.css') }}" rel="stylesheet">
    <link href="{{ asset('public/css/lessonPlanPrint.css') }}" rel="stylesheet" media="print">
@@ -112,6 +112,9 @@
    </tbody>
 </table>
 
+<div>
+   <input type="checkbox" id="showEmptyGroups" /> <label>pokaż puste grupy</label>
+</div>
 <div>
    <a class="btn btn-primary" href="{{ route('lessonPlan.exportPlanForGrades', $dateView) }}">eksportuj (Excel) wszystkie klasy</a>
    <a class="btn btn-primary" href="{{ route('lessonPlan.exportPlanForGradesOldVersion', $dateView) }}">eksportuj (stara wersja)</a>

@@ -1,5 +1,5 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
-// ----------------------- wydarzenia na stronie wyświetlania grup ----------------------- //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2023 ------------------------ //
+// -------------------------- wydarzenia na stronie wyświetlania grup -------------------------- //
 import '../groupGrade/checkGrades.js';
 
 
@@ -334,6 +334,13 @@ function update(id, group_id, lessonhour_id, classroom_id, start, end) {   // za
     });
 }
 
+function showEmptyGroups() {
+    $('#showEmptyGroups').bind('click', function() {
+        if( $(this).is(':checked') )    $('li.no-students').removeClass('no-students').addClass('show-no-students');
+        else $('li.no-students').removeClass('show-no-students').addClass('no-students');
+    });
+}
+
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     showOrHideGroup();
@@ -344,4 +351,5 @@ $(document).ready(function() {
     dropInLessonPlan();
     dropLessonInCompleteRemoveField();
     dropLessonInGradeGroupList();
+    showEmptyGroups();
 });
