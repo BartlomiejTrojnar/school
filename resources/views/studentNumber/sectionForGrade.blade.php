@@ -1,5 +1,5 @@
 <section id="studentNumbers">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.05.2023 *********************** -->
    <h3>numery uczniów w dziennikach</h3>
    <div id="tips">
       @if( !empty($grade) && !empty($yearOfStudy) && $yearOfStudy>1 )
@@ -29,6 +29,12 @@
          <button class="run btn btn-primary"><i class="fa fa-plus-square"></i> dodaj numery dla wszystkich uczniów klasy</button>
          <button class="help"><i class='fa fa-question-circle' style='font-size:24px'></i></button>
          <div class="answer">Funkcja znajduje wszystkich uczniów bieżącej klasy w kolejności alfabetycznej i nadaje im numery na bieżący rok szkolny.</div>
+      </section>
+
+      <section id="importNumbers">
+         <button class="run btn btn-primary"><i class="fa fa-map-signs" aria-hidden="true"></i> <a href="{{ url('numery_ucznia/importMenu') }}">importuj</a></button>
+         <button class="help"><i class='fa fa-question-circle' style='font-size:24px'></i></button>
+         <div class="answer">Po naciśnięciu przejdziesz do strony importowania numerów uczniów.</div>
       </section>
    </div>
 
