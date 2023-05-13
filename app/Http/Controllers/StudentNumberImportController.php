@@ -5,24 +5,38 @@ namespace App\Http\Controllers;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use App\Models\StudentNumber;
+use App\Repositories\GradeRepository;
 use App\Repositories\StudentRepository;
+use App\Repositories\SchoolYearRepository;
+use Illuminate\Http\Request;
 //use mysqli;
 
 class StudentNumberImportController extends Controller {
-    public function importMenu() {
-        return view('studentNumber.importMenu');
+    public function importMenu(SchoolYearRepository $schoolYearRepo, GradeRepository $gradeRepo) {
+        $schoolYearSelected = session()->get('schoolYearSelected');
+        $schoolYears = $schoolYearRepo -> getAllSorted();
+        $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        $grades = $gradeRepo -> getAllSorted();
+        $gradeSelected = session()->get('gradeSelected');
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
+
+        Excel::load('C:\dane\nauczyciele\numery_uczniow\importujNumery.xlsx', function($reader) {
+            $this->sheets = $reader->get();
+        });
+
+        return view('studentNumber.importMenu', ['schoolYearSF'=>$schoolYearSF, 'gradeSF'=>$gradeSF, 'sheets'=>$this->sheets]);
     }
 
-    public function import(StudentRepository $studentRepo) {
+    public function import(Request $request, StudentRepository $studentRepo) {
         $this->studentRepo = $studentRepo;
-        $this->grade = session()->get('gradeSelected');
-        $this->schoolYear = session()->get('schoolYearSelected');
+        $this->grade = $request->grade_id;
+        $this->schoolYear = $request->school_year_id;
+        $sheet_name = $request->sheet_name;
 
         echo '<section style="background: #bbb;">';
-        echo '<strong>Uzupełnij import o automatyczen czytanie id klasy. Import dla klasy id=250</strong>';
         printf('<p>Trwa import dla klasy %s i roku szkolnego %s...</p>', $this->grade, $this->schoolYear);
 
-        Excel::selectSheets('importuj')->load('C:\dane\nauczyciele\numery_uczniow\importujNumery.xlsx', function($reader) {
+        Excel::selectSheets($sheet_name)->load('C:\dane\nauczyciele\numery_uczniow\importujNumery.xlsx', function($reader) {
             $students = $reader->get();
             foreach($students as $student) {
                 echo '<hr />';
@@ -57,10 +71,10 @@ class StudentNumberImportController extends Controller {
             -> where('school_year_id', '=', $this->schoolYear) -> get();
         foreach($numbers as $number) {
             if($number['number'] == $student['nr'])
-                printf('<p>Dla ucznia %s %s %s numer w bazie zgadza się z importowanym [%s = %s].</p>',
+                printf('<p>Dla ucznia <strong>%s %s %s</strong> numer w bazie zgadza się z importowanym [%s = %s].</p>',
                     $student['nazwisko'], $student['imie'], $student['drugie_imie'], $number['number'], $student['nr']);
             else {
-                printf('<p style="background: orange;">Dla ucznia %s %s %s numer w bazie %s nie zgadza się z importowanym %s.</p>',
+                printf('<p style="background: orange;">Dla ucznia <strong>%s %s %s</strong> numer w bazie %s nie zgadza się z importowanym %s.</p>',
                     $student['nazwisko'], $student['imie'], $student['drugie_imie'], $number['number'], $student['nr']);
                 printf('<p style="background: red;">Dopisz odpowiednią funkcję dla tego przypadku</p>');
             }

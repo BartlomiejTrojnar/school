@@ -82,7 +82,7 @@ Route::post('/klasy_ucznia/storeFromPreviousYear', array('as'=>'klasy_ucznia.sto
 Route::put('/studentGrade/updateEnd', 'StudentGradeController@updateEnd');
 
 Route::get('/numery_ucznia/importMenu', 'StudentNumberImportController@importMenu');
-Route::get('/numery_ucznia/importuj', 'StudentNumberImportController@import');
+Route::get('/numery_ucznia/import', array('as'=>'numery_ucznia.import', 'uses'=>'StudentNumberImportController@import'));
 Route::resource('/numery_ucznia', 'StudentNumberController');
 Route::get('/numery_ucznia/orderBy/{column}', array('as'=>'numery_ucznia.orderBy', 'uses'=>'StudentNumberController@orderBy'));
 Route::post('/student_numbers/confirmNumbers/{grade_id}/{school_year_id}', 'StudentNumberController@confirmNumbers');

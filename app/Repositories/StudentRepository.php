@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.05.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Student;
 
@@ -113,7 +113,8 @@ class StudentRepository extends BaseRepository {
 
    public function findStudentIdByGradeAndName($grade_id, $last_name, $first_name, $second_name='') {
       $records = $this->model -> join('student_grades', 'students.id', '=', 'student_grades.student_id')
-         -> where('student_grades.grade_id', '=', $grade_id) -> where('last_name', '=', $last_name) -> where('first_name', '=', $first_name);
+         -> where('student_grades.grade_id', '=', $grade_id)
+         -> where('last_name', '=', $last_name) -> where('first_name', '=', $first_name);
       if($second_name)  $records =$records -> where('second_name', '=', $second_name);
       $records = $records -> get();
       if(count($records)==0) return 0;
