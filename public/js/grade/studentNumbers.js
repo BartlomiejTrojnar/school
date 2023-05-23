@@ -1,11 +1,13 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
+
 // -------------------- wydarzenia na stronie wyświetlania numerów uczniów --------------------- //
 function helpButtonsClick() { // obsługa kliknięcia w któryś z przycisków pomocy
     $('.answer').hide();
+    helpCopyStudentNumbersClick();
     helpMoveNumbersClick();
     helpConfirmNumbersClick();
-    helpCopyStudentNumbersClick();
     helpAddNumbersForGradeClick();
+    helpImportNumbersClick();
 }
 function helpMoveNumbersClick() {   // pokazanie pola z podpowiedzią dla przycisków "w górę, w dół"
     $('#moveNumbers .help').bind('click', function(){
@@ -31,6 +33,12 @@ function helpAddNumbersForGradeClick() {   // pokazanie pola z podpowiedzią dla
         $('#addNumbersForGrade .answer').slideDown(2000);
     });
 }
+function helpImportNumbersClick() {   // pokazanie pola z podpowiedzią dla przycisku "dodaj numery dla wszystkich uczniów klasy"
+    $('#importNumbers .help').bind('click', function(){
+        $('.answer').slideUp(1000);
+        $('#importNumbers .answer').slideDown(2000);
+    });
+}
 
 
 function schoolYearChanged() {  // wybór roku szkolnego w polu select
@@ -39,12 +47,15 @@ function schoolYearChanged() {  // wybór roku szkolnego w polu select
             type: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url: "http://localhost/school/rok_szkolny/change/"+ $(this).val(),
-            success: function() {   refreshSection( $('input#grade_id').val() ); }
+            success: function() {
+                //refreshSection( $('input#grade_id').val() );
+                showAndHideStudentNumbers();
+            }
         });
         return false;
     });
 }
-
+/*
 function refreshSection(grade_id) {  // odświeżenie tabeli z numerami uczniów
     $.ajax({
         method: "POST",
@@ -56,23 +67,23 @@ function refreshSection(grade_id) {  // odświeżenie tabeli z numerami uczniów
                 $('#studentNumbers').hide();
                 $('#studentNumbers').slideDown(1500);
             });
-            schoolYearChanged();
-            showCreateRowClick();
-            editClick();
-            destroyClick();
-            helpButtonsClick();
-            copyStudentNumbersClick();
-            trNumberClick();
-            confirmNumbersClick();
-            addNumbersForGradeClick();
+            // schoolYearChanged();
+            // showCreateRowClick();
+            // editClick();
+            // destroyClick();
+            // helpButtonsClick();
+            // copyStudentNumbersClick();
+            // trNumberClick();
+            // confirmNumbersClick();
+            // addNumbersForGradeClick();
         },
-        error: function(wynik) {
+        error: function() {
             var error = '<p class="error">Błąd odświeżania tabeli z numerami ucznia.</p>';
             $('section#main-content ul.nav').after(error);
         },
     });
 }
-
+*/
 function refreshRow(id, type="add", lp=99) {  // odświeżenie wiersza tabeli z numerem ucznia (w klasie)
     $.ajax({
         method: "POST",
@@ -98,7 +109,7 @@ function refreshRow(id, type="add", lp=99) {  // odświeżenie wiersza tabeli z 
     });
 }
 
-
+/*
 // -------------- kopiowanie numerów uczniów dla wybranej klasy i roku szkolnego --------------- //
 function copyStudentNumbersClick() {
     $('#copyStudentNumbers .run').bind('click', function(){
@@ -123,7 +134,7 @@ function copyStudentNumbersClick() {
         return false;
     });
 }
-
+*/
 
 // ------------------------ dodawanie, zmiana i usuwanie numerów uczniów ----------------------- //
 function showCreateRowClick() {
@@ -286,7 +297,7 @@ function destroyClick() {  // usunięcie numeru ucznia (z bazy danych)
     });
 }
 
-
+/*
 // -------------------------- potwierdzenie widocznych numerów uczniów ------------------------- //
 function confirmNumbersClick() {    // wybór właściwych numerów
     $('#confirmNumbers .run').click(function() {
@@ -309,7 +320,7 @@ function confirmNumbersClick() {    // wybór właściwych numerów
         return false;
     });
 }
-
+*/
 
 function trNumberClick() {  // kliknięcie w wiersz z numerem ucznia w tabeli z numerami uczniów (widok numerów dla klasy)
     $('#studentNumbers').delegate('tr.number_row td:not(.edit)', 'click', function() {
@@ -434,7 +445,7 @@ function addNumbersForGradeClick() {
                     $('#studentNumbers').before('<p class="info"><i class="glyphicon-saved"></i> Numery utworzone!</p>');
                     refreshSection(grade_id);
                 }
-                else $('#copyStudentNumbers .answer').html(result).slideDown(250);
+                else $('#addNumbersForGrade .answer').html(result).slideDown(250);
                 return true;
             },
             error: function() { alert('Błąd tworzenia numerów'); },
@@ -443,9 +454,19 @@ function addNumbersForGradeClick() {
     });
 }
 
+function showAndHideStudentNumbers() {
+    var school_year_id = $('select[name="school_year_id"]').val();
+    var number_school_year_id;
+    $('#studentNumbers table tr.number_row').each(function() {
+        number_school_year_id = $(this).data('school_year_id');
+        if(number_school_year_id != school_year_id) $(this).hide(1500);
+        else $(this).show(1500);
+    });
+}
 
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
+    showAndHideStudentNumbers();
     schoolYearChanged();
     showCreateRowClick();
     addClick();
@@ -453,10 +474,10 @@ $(document).ready(function() {
     destroyClick();
 
     helpButtonsClick();
-    confirmNumbersClick();
+    // confirmNumbersClick();
     trNumberClick();
     buttonUpClick();
     buttonDownClick();
-    copyStudentNumbersClick();
+    // copyStudentNumbersClick();
     addNumbersForGradeClick();
 });

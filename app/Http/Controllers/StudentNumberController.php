@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\StudentNumber;
@@ -89,12 +89,23 @@ class StudentNumberController extends Controller
         return 1;
     }
 
-    public function addNumbersForGrade(Request $request, StudentGradeRepository $studentGradeRepo) {
-        $dateView = session()->get('dateView');
-        $studentGrades = $studentGradeRepo -> getStudentsFromGradeOrderByLastName($request->grade_id);
+    public function addNumbersForGrade(Request $request, StudentGradeRepository $studentGradeRepo, SchoolYearRepository $schoolYearRepo, GradeRepository $gradeRepo) {
+        // ustalenie klasy dla uczniów
+        $grade = $gradeRepo->find($request->grade_id);
+        $grades[] = $grade->id;
+        // ustalenie daty początku i końca klasy w roku szkolnym
+        $year = session()->get('schoolYearSelected')+1900;
+        $datka = $year.'-01-01';
+        $datesOfSchoolYear = $schoolYearRepo->getDatesOfSchoolYear($datka);
+        $start = $datesOfSchoolYear['dateOfStartSchoolYear'];
+        $end = $datesOfSchoolYear['dateOfGraduationSchoolYear'];
+        if($year==$grade->year_of_graduation)   $end = $datesOfSchoolYear['dateOfGraduationOfTheLastGrade'];
+        // pobranie uczniów z wybranego roku szkolnego
+        $studentGrades = $studentGradeRepo -> getStudentsFromGradesOrderByLastName($grades, $start, $end);
         $number = 1;
         foreach ($studentGrades as $studentGrade) {
-            if($studentGrade->start <= $dateView && $studentGrade->end >= $dateView) {
+            if($studentGrade->start <= $end && $studentGrade->end >= $end) {
+                print_r($studentGrade->student->last_name);
                 $studentNumber = new StudentNumber;
                 $studentNumber->student_id = $studentGrade->student_id;
                 $studentNumber->grade_id = $request->grade_id;

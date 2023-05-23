@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 02.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Repositories\GradeRepository;
@@ -217,15 +217,14 @@ class GradeController extends Controller
         if(session()->get('schoolYearSelected')) {
             $schoolYear = $schoolYearRepo -> find( session()->get('schoolYearSelected') );
             $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYear->id, "name"=>"school_year_id" ]);
-            $studentNumbers = $studentNumberRepo -> getGradeNumbersForSchoolYear($this->grade->id, $schoolYear->id);
         }
         else {
             $schoolYear = $schoolYearRepo -> find( $schoolYearRepo -> getSchoolYearIdForDate(date('Y-m-d')) );
             $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>0, "name"=>"school_year_id" ]);
-            $studentNumbers = $studentNumberRepo -> getGradeNumbers($this->grade->id);
         }
         $yearOfStudy = substr($schoolYear->date_end,0,4) - ($this->grade->year_of_beginning+1);
         if(substr($schoolYear->date_end,5,2)) $yearOfStudy++;
+        $studentNumbers = $studentNumberRepo -> getGradeNumbers($this->grade->id);
 
         $tableForGrade = view('studentNumber.tableForGrade', ["schoolYearSF"=>$schoolYearSF, "studentNumbers"=>$studentNumbers, "grade"=>$this->grade, "dateView"=>session()->get('dateView')]);
         $count = count($studentNumbers);

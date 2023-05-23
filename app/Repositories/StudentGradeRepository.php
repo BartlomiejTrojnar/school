@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 13.09.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\StudentGrade;
 
@@ -24,12 +24,6 @@ class StudentGradeRepository extends BaseRepository {
          -> get();
    }
 */
-   public function getStudentsFromGradeOrderByLastName($grade_id) {
-      $records = $this->model -> select('student_grades.*') -> join('students', 'students.id', '=', 'student_grades.student_id') -> where('grade_id', '=', $grade_id)
-         -> orderBy( 'last_name', 'asc' ) -> orderBy( 'first_name', 'asc' ) -> orderBy( 'second_name', 'asc' ) -> get();
-      return $records;
-   }
-
    public function getStudentsFromGrades($grades, $start=0, $end=0) {
       $records = $this->model -> select('student_grades.*')
          -> join('students', 'students.id', '=', 'student_grades.student_id');

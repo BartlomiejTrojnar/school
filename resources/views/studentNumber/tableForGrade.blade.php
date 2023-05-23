@@ -1,5 +1,5 @@
 <table>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 03.12.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 *********************** -->
    <tr>
       <th>lp</th>
       <?php
@@ -17,17 +17,22 @@
    </tr>
    <?php $count = 0; ?>
    @foreach($studentNumbers as $sn)
-      <tr class="number_row confirmation{{$sn->confirmation_number}}" data-student_number_id="{{ $sn->id }}" data-school_year_id="{{ $sn->school_year_id }}" >
+      <tr class="number_row confirmation{{ $sn->confirmation_number }}" data-student_number_id="{{ $sn->id }}" data-school_year_id="{{ $sn->school_year_id }}">
          <td class="lp">{{ ++$count }}</td>
          <td>
-            <?php $style = "text-decoration: line-through; color: #f77;"; ?>
-            @foreach($sn->student->grades as $studentGrade)
-               @if($studentGrade->grade_id == $grade->id && ($studentGrade->start <= $dateView && $studentGrade->end >= $dateView) )
-                  <?php $style = ""; ?>
-               @endif
-            @endforeach
-            <a href="{{ route('uczen.show', $sn->student_id) }}" style="{{$style}}">
+            <?php
+            $del = false;
+            foreach($sn->student->grades as $sg) if($sg->grade_id == $grade->id) {
+               if( substr($sn->school_year->date_of_graduation,0,4)==$grade->year_of_graduation )
+                  $grade_end = $sn->school_year->date_of_graduation_of_the_last_grade;
+               else $grade_end = $sn->school_year->date_of_graduation;
+               if($sg->end < $grade_end || $sg->end < $grade_end)    $del = true;
+            }
+            ?>
+            <a href="{{ route('uczen.show', $sn->student_id) }}">
+               @if($del) <del style="color: #66b;"> @endif
                {{ $sn->student->first_name }} {{ $sn->student->second_name }} {{ $sn->student->last_name }}
+               @if($del) </del> @endif
             </a>
          </td>
          <td class="c">{{ substr($sn->school_year->date_start, 0, 4) }}/{{ substr($sn->school_year->date_end, 0, 4) }}</td>
