@@ -45,7 +45,7 @@ class StudentNumberImportController extends Controller {
                     $this->wynik.= $this -> checkStudentNumber($student_id, $student);
             }
         });
-        $this->wynik.= '</ol><a style="color: #009; border: 2px solid #009; padding: 5px; border-radius: 5px; background: #88f; position: relative; left: 750px; bottom: 225px;" href="'.url("numery_ucznia/importMenu").'">wróć do importu</a></section>';
+        $this->wynik.= '</ol><a style="color: #009; border: 2px solid #009; padding: 5px; border-radius: 5px; background: #88f; position: relative; left: 750px; bottom: 225px;" href="'.url("klasa/$this->grade").'">wróć do importu</a></section>';
         return view('studentNumber.import', ['result'=>$this->wynik]);
     }
 
