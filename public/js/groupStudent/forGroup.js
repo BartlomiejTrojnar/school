@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2023 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideStudents() {
@@ -161,7 +161,7 @@ function addCheckedStudentClick() {  // kliknięcie w przycisk "Dodaj zaznaczony
         if(count<=5) {
             // dodanie każdego znalezionego ucznia do grupy
             $('#listOutsideGroupStudents li.checked').each(function() {
-                student_id = $(this).data('student_id');
+                var student_id = $(this).data('student_id');
                 addStudent(student_id, group_id, start, end);
             });
         }

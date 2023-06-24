@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\StudentGrade;
 
@@ -34,7 +34,7 @@ class StudentGradeRepository extends BaseRepository {
       if($end)
          $records = $records -> where('end', '>=', $end);
       return $records
-         -> orderBy( 'last_name', 'asc')
+         -> orderBy( session()->get('StudentGradeOrderBy[0]'), session()->get('StudentGradeOrderBy[1]') )
          -> orderBy( session()->get('StudentGradeOrderBy[2]'), session()->get('StudentGradeOrderBy[3]') )
          -> orderBy( session()->get('StudentGradeOrderBy[4]'), session()->get('StudentGradeOrderBy[5]') )
          -> get();
