@@ -1,5 +1,5 @@
 <table>
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 *********************** -->
    <tr>
       <th>lp</th>
       <?php
@@ -15,6 +15,7 @@
       <td><?php  print_r($schoolYearSF);  ?></td>
       <td colspan="2"></td>
    </tr>
+
    <?php $count = 0; ?>
    @foreach($studentNumbers as $sn)
       <tr class="number_row confirmation{{ $sn->confirmation_number }}" data-student_number_id="{{ $sn->id }}" data-school_year_id="{{ $sn->school_year_id }}">

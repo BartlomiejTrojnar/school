@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\StudentNumber;
@@ -176,8 +176,10 @@ class StudentNumberController extends Controller
     }
 
     public function confirmNumbers($grade_id, $school_year_id, StudentNumber $studentNumber) {    // potwierdzenie numerów w klasie dla wskazanego roku szkolnego
-        $studentNumber -> where('grade_id', '=', $grade_id) -> where('school_year_id', '=', $school_year_id)
-            -> where('confirmation_number', '=', 0) -> update(['confirmation_number'=>1]);
+        if($school_year_id) 
+            $studentNumber -> where('grade_id', '=', $grade_id) -> where('school_year_id', '=', $school_year_id)
+                -> where('confirmation_number', '=', 0) -> update(['confirmation_number'=>1]);
+        else $studentNumber -> where('grade_id', '=', $grade_id) -> where('confirmation_number', '=', 0) -> update(['confirmation_number'=>1]);
         return 1;
     }
 

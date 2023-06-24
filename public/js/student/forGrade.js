@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 22.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2023 ------------------------ //
 // ---------------------------- wydarzenia dla widoku uczen/index  ----------------------------- //
 const FADE_OUT=575, SLIDE_UP=1250, SLIDE_DOWN=1250;
 const NUMBER_OF_FIELDS=11, TABLE_NAME="#students", DATA_NAME="student_id", INPUT_NAME="first_name", ROUTE_NAME="uczen";
@@ -133,9 +133,25 @@ function clickDestroyButton() {
     });
 }
 
+function dateViewChange() {     // po zmianie widocznej na stronie daty widoku
+    $('#dateView').bind('blur', function() {
+        // zapamiętanie wybranej daty widoku
+        $.ajax({
+            type: "POST",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "http://localhost/school/rememberDates",
+            data: { dateView: $('#dateView').val() },
+            success: function()  {
+                alert('odśwież');
+            },
+        });
+    });
+}
+
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     clickCreateRowButtons();
     clickEditRowButtons();
     clickDestroyButton();
+    dateViewChange();
 });

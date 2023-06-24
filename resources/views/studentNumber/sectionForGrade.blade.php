@@ -1,5 +1,5 @@
 <section id="studentNumbers">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 11.05.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 *********************** -->
    <h3>numery uczniów w dziennikach</h3>
    <div id="tips">
       @if( !empty($grade) && !empty($yearOfStudy) && $yearOfStudy>1 )

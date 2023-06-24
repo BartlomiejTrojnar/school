@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 11.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,9 +16,10 @@ class StudentNumberImportController extends Controller {
         $schoolYearSelected = session()->get('schoolYearSelected');
         $schoolYears = $schoolYearRepo -> getAllSorted();
         $schoolYearSF = view('schoolYear.selectField', ["schoolYears"=>$schoolYears, "schoolYearSelected"=>$schoolYearSelected, "name"=>"school_year_id"]);
+        $year = $schoolYearSelected+1900;
         $grades = $gradeRepo -> getAllSorted();
         $gradeSelected = session()->get('gradeSelected');
-        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id"]);
+        $gradeSF = view('grade.selectField', ["grades"=>$grades, "gradeSelected"=>$gradeSelected, "name"=>"grade_id", "year"=>$year]);
 
         Excel::load('C:\dane\nauczyciele\numery_uczniow\importujNumery.xlsx', function($reader) {
             $this->sheets = $reader->get();
@@ -33,22 +34,19 @@ class StudentNumberImportController extends Controller {
         $this->schoolYear = $request->school_year_id;
         $sheet_name = $request->sheet_name;
 
-        echo '<section style="background: #bbb;">';
-        printf('<p>Trwa import dla klasy %s i roku szkolnego %s...</p>', $this->grade, $this->schoolYear);
-
+        $this->wynik = '<section style="background: #bbb;"><p>Trwa import dla klasy '.$this->grade.' i roku szkolnego '.$this->schoolYear.'...</p>';
+        $this->wynik.= '<ol>';
         Excel::selectSheets($sheet_name)->load('C:\dane\nauczyciele\numery_uczniow\importujNumery.xlsx', function($reader) {
             $students = $reader->get();
             foreach($students as $student) {
-                echo '<hr />';
                 $student_id = $this -> findStudent($student);
                 if($student_id)
                     // sprawdzenie czy numer ucznia w bazie danych się zgadza
-                    $this -> checkStudentNumber($student_id, $student);
-                else    printf('<p>Błąd importu numeru %d dla ucznia %s %s %s.</p>', $student['nr'], $student['nazwisko'], $student['imie'], $student['drugie_imie']);
+                    $this->wynik.= $this -> checkStudentNumber($student_id, $student);
             }
         });
-        echo '</section>';
-        return view('studentNumber.import');
+        $this->wynik.= '</ol><a style="color: #009; border: 2px solid #009; padding: 5px; border-radius: 5px; background: #88f; position: relative; left: 750px; bottom: 225px;" href="'.url("numery_ucznia/importMenu").'">wróć do importu</a></section>';
+        return view('studentNumber.import', ['result'=>$this->wynik]);
     }
 
     private function findStudent($student) {
@@ -56,11 +54,12 @@ class StudentNumberImportController extends Controller {
         // sprawdzenie czy jest osoba o podanym nazwisku i imionach
         $student_id = $this->studentRepo -> findStudentIdByGradeAndName($this->grade, $student['nazwisko'], $student['imie'], $student['drugie_imie']);
         if($student_id < 0) {
-            printf('<p style="color: blue; background: #aaf;">Znaleziono kilku uczniów z podanym nazwiskiem %s i imionami %s %s.</p>', $student['nazwisko'], $student['imie'], $student['drugie_imie']);
+            $this->wynik.= '<li style="color: blue; background: #aaf;">Znaleziono kilku uczniów z podanym nazwiskiem '.$student['nazwisko'].' i imionami '.$student['imie'].' '.$student['drugie_imie'].'.</li>';
             return 0;
         }
         if($student_id == 0) {
-            printf('<p style="color: #f60;">Nie znaleziono ucznia %s %s %s.</p>', $student['nazwisko'], $student['imie'], $student['drugie_imie']);
+            $this->wynik.= '<li>Klasa: '.$this->grade.'</li>';
+            $this->wynik.= '<li style="color: #f60;">Nie znaleziono ucznia '.$student['nazwisko'].' '.$student['imie'].' '.$student['drugie_imie'].'.</li>';
             return 0;
         }    
         return $student_id;
@@ -70,15 +69,20 @@ class StudentNumberImportController extends Controller {
         $numbers = StudentNumber::where('student_id', '=', $student_id) -> where('grade_id', '=', $this->grade)
             -> where('school_year_id', '=', $this->schoolYear) -> get();
         foreach($numbers as $number) {
-            if($number['number'] == $student['nr'])
-                printf('<p>Dla ucznia <strong>%s %s %s</strong> numer w bazie zgadza się z importowanym [%s = %s].</p>',
-                    $student['nazwisko'], $student['imie'], $student['drugie_imie'], $number['number'], $student['nr']);
+            if($number['number'] == $student['nr']) {
+                $wynik = '<li style="color: #444;">Dla ucznia <strong>'.$student['nazwisko'].' '.$student['imie'].' '.$student['drugie_imie'].'</strong> ';
+                $wynik.= 'numer w bazie zgadza się z importowanym ['.$number['number'].' = '.$student['nr'].'].</li>';
+                return $wynik;
+            }
             else {
-                printf('<p style="background: orange;">Dla ucznia <strong>%s %s %s</strong> numer w bazie %s nie zgadza się z importowanym %s.</p>',
-                    $student['nazwisko'], $student['imie'], $student['drugie_imie'], $number['number'], $student['nr']);
-                printf('<p style="background: red;">Dopisz odpowiednią funkcję dla tego przypadku</p>');
+                $wynik = '<li class="danger">Dla ucznia <strong>'.$student['nazwisko'].' '.$student['imie'].' '.$student['drugie_imie'].'</strong> ';
+                $wynik.= 'numer w bazie '.$number['number'].' nie zgadza się z importowanym '.$student['nr'].'.</li>';
+                $wynik.= '<li style="background: red;">Dopisz odpowiednią funkcję dla tego przypadku</li>';
+                return $wynik;
             }
         }
+        if(count($numbers)==0) $this->addNumberForStudent($student_id, $student);
+        echo '<p style="background: #f66;">Brak numeru</p>';
         return;
         // $grade_id = $grade[0]['id'];
 
@@ -98,74 +102,17 @@ class StudentNumberImportController extends Controller {
         // if($studentGrade[0]['end'] == '2026-04-24' && $studentGrade[0]['confirmation_end'] != 0) { printf('<p>Data końcowa %s ucznia w klasie POTWIERDZONA.</p>', $studentGrade[0]['end']); return; }
     }
 
-/*
-    private function addStudent($student) {
-        $newStudent = new Student;
-        $newStudent->first_name = $student['imie'];
-        $newStudent->second_name = $student['imie2'];
-        $newStudent->last_name = $student['nazwisko'];
-        $newStudent->family_name = $student['rodowe'];
-        $newStudent->sex = $student['plec'];
-        $newStudent->PESEL = $student['pesel'];
-        $newStudent->place_of_birth = $student['miejsce_urodzenia'];
-        $newStudent->save();
-        return $newStudent->id;
-    }
 
-    private function checkBookOfStudent($student_id, $school_name, $number) {
-        // pobranie identyfikatora szkoły
-        $school_id = $this->schoolRepo -> findSchoolIdByName($school_name);
-        // sprawdzenie czy w bazie danych uczeń ma numer księgi
-        $book_number = $this->bookRepo -> checkStudentNumber($student_id, $school_id);
-        if($book_number < 0) { printf('<p style="color: #aaf; background: #55a;">Znaleziono kilka numerów w księdze ucznia dla ucznia id=%d.</p>', $student_id); exit; }
-        if($book_number == 0) $this -> addBookOfStudent($school_id, $student_id, $number);
-        else if($book_number != $number) {
-            printf('<p style="color: blue;">Podany numer(%d) jest inny niż numer(%d) w bazie danych dla ucznia id=%d.</p>', $number, $book_number, $student_id); exit;
-        }
+    private function addNumberForStudent($student_id, $student) {
+        $newStudentNumber = new StudentNumber;
+        $newStudentNumber->student_id = $student_id;
+        $newStudentNumber->grade_id = $this->grade;
+        $newStudentNumber->school_year_id = $this->schoolYear;
+        $newStudentNumber->number = $student['nr'];
+        $newStudentNumber->confirmation_number = 0;
+        printf('<p style="background: grey;">');
+        print_r($newStudentNumber);
+        printf('</p>');
+        $newStudentNumber->save();
     }
-
-    private function addBookOfStudent($school_id, $student_id, $number) {
-        printf('<p style="background: #a44;">Dodaję numer księgi</p>');
-        $newBookOfStudent = new BookOfStudent;
-        $newBookOfStudent->school_id    = $school_id;
-        $newBookOfStudent->student_id   = $student_id;
-        $newBookOfStudent->number       = $number;
-        $newBookOfStudent->save();
-    }
-
-    private function addStudentHistoryDateOfAdmission($student_id, $data_przyjecia) {
-        $newStudentHistory = new StudentHistory;
-        $newStudentHistory->student_id = $student_id;
-        $newStudentHistory->date = $data_przyjecia;
-        $newStudentHistory->event = 'przyjęto do II LO';
-        $newStudentHistory->confirmation_date = 1;
-        $newStudentHistory->confirmation_event = 1;
-        $newStudentHistory->save();
-    }
-
-    private function addStudentHistoryDateOfDeparture($student_id, $data_opuszczenia, $powod_opuszczenia) {
-        if($powod_opuszczenia==NULL) $powod_opuszczenia = 'rezygnacja z nauki(?)';
-        $newStudentHistory = new StudentHistory;
-        $newStudentHistory->student_id = $student_id;
-        $newStudentHistory->date = $data_opuszczenia;
-        $newStudentHistory->event = $powod_opuszczenia;
-        $newStudentHistory->confirmation_date = 1;
-        $newStudentHistory->confirmation_event = 1;
-        if($powod_opuszczenia=='rezygnacja z nauki(?)')     $newStudentHistory->confirmation_event=0;
-        $newStudentHistory->save();
-    }
-
-
-    private function addStudentGrade($student_id, $grade_id, $start, $end) {
-        $newStudentGrade = new StudentGrade;
-        $newStudentGrade->student_id = $student_id;
-        $newStudentGrade->grade_id = $grade_id;
-        $newStudentGrade->start = $start;
-        $newStudentGrade->confirmation_start = 1;
-        $newStudentGrade->end = $end;
-        $newStudentGrade->confirmation_end = 0;
-        //print_r($newStudentGrade);
-        $newStudentGrade->save();
-    }
-*/
 }

@@ -10,4 +10,5 @@
 
 @section('main-content')
    <h1>Zaimportowano:</h1>
+   <?php echo $result; ?>
 @endsection

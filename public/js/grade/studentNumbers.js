@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 23.05.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 ------------------------ //
 
 // -------------------- wydarzenia na stronie wyświetlania numerów uczniów --------------------- //
 function helpButtonsClick() { // obsługa kliknięcia w któryś z przycisków pomocy
@@ -297,7 +297,7 @@ function destroyClick() {  // usunięcie numeru ucznia (z bazy danych)
     });
 }
 
-/*
+
 // -------------------------- potwierdzenie widocznych numerów uczniów ------------------------- //
 function confirmNumbersClick() {    // wybór właściwych numerów
     $('#confirmNumbers .run').click(function() {
@@ -320,7 +320,6 @@ function confirmNumbersClick() {    // wybór właściwych numerów
         return false;
     });
 }
-*/
 
 function trNumberClick() {  // kliknięcie w wiersz z numerem ucznia w tabeli z numerami uczniów (widok numerów dla klasy)
     $('#studentNumbers').delegate('tr.number_row td:not(.edit)', 'click', function() {
@@ -459,7 +458,7 @@ function showAndHideStudentNumbers() {
     var number_school_year_id;
     $('#studentNumbers table tr.number_row').each(function() {
         number_school_year_id = $(this).data('school_year_id');
-        if(number_school_year_id != school_year_id) $(this).hide(1500);
+        if(number_school_year_id != school_year_id && school_year_id!=0) $(this).hide(1500);
         else $(this).show(1500);
     });
 }
@@ -474,7 +473,7 @@ $(document).ready(function() {
     destroyClick();
 
     helpButtonsClick();
-    // confirmNumbersClick();
+    confirmNumbersClick();
     trNumberClick();
     buttonUpClick();
     buttonDownClick();
