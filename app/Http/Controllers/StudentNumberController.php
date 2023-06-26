@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.06.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\StudentNumber;
@@ -105,7 +105,6 @@ class StudentNumberController extends Controller
         $number = 1;
         foreach ($studentGrades as $studentGrade) {
             if($studentGrade->start <= $end && $studentGrade->end >= $end) {
-                print_r($studentGrade->student->last_name);
                 $studentNumber = new StudentNumber;
                 $studentNumber->student_id = $studentGrade->student_id;
                 $studentNumber->grade_id = $request->grade_id;
@@ -215,19 +214,7 @@ class StudentNumberController extends Controller
         return $tableForGrade;
         return view('studentNumber.sectionForGrade', ["grade"=>$grade, "yearOfStudy"=>$yearOfStudy, "tableForGrade"=>$tableForGrade, "count"=>$count]);
     }
-/*
-    public function refreshTableForStudent($student_id, $snRepo, $schoolYearRepo) {
-        $studentNumbers = $snRepo -> getStudentNumbers($student_id);
-        $year = 0;
-        if( !empty(session()->get('schoolYearSelected')) ) {
-            $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
-            $this->year = substr($schoolYear->date_end, 0, 4);
-        }
 
-        return view('studentNumber.tableForStudent', ["subTitle"=>"numery ucznia", "studentNumbers"=>$studentNumbers, "grade"=>0,
-            "schoolYearSelectField"=>"", "student"=>$student_id, "yearOfStudy"=>$year]);
-    }
-*/
     public function refreshRow(Request $request, StudentNumber $studentNumber, SchoolYearRepository $schoolYearRepo) {
         $studentNumber = $studentNumber -> find($request->id);
         $year = 0;

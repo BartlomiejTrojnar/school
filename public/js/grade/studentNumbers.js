@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 16.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.06.2023 ------------------------ //
 
 // -------------------- wydarzenia na stronie wyświetlania numerów uczniów --------------------- //
 function helpButtonsClick() { // obsługa kliknięcia w któryś z przycisków pomocy
@@ -40,7 +40,6 @@ function helpImportNumbersClick() {   // pokazanie pola z podpowiedzią dla przy
     });
 }
 
-
 function schoolYearChanged() {  // wybór roku szkolnego w polu select
     $('select[name="school_year_id"]').bind('change', function(){
         $.ajax({
@@ -55,35 +54,7 @@ function schoolYearChanged() {  // wybór roku szkolnego w polu select
         return false;
     });
 }
-/*
-function refreshSection(grade_id) {  // odświeżenie tabeli z numerami uczniów
-    $.ajax({
-        method: "POST",
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        url: "http://localhost/school/student_numbers/refreshSection",
-        data: { grade_id: grade_id, version: "forGrade" },
-        success: function(result) {
-            $.when( $('#studentNumbers').replaceWith(result) ).then(function() {
-                $('#studentNumbers').hide();
-                $('#studentNumbers').slideDown(1500);
-            });
-            // schoolYearChanged();
-            // showCreateRowClick();
-            // editClick();
-            // destroyClick();
-            // helpButtonsClick();
-            // copyStudentNumbersClick();
-            // trNumberClick();
-            // confirmNumbersClick();
-            // addNumbersForGradeClick();
-        },
-        error: function() {
-            var error = '<p class="error">Błąd odświeżania tabeli z numerami ucznia.</p>';
-            $('section#main-content ul.nav').after(error);
-        },
-    });
-}
-*/
+
 function refreshRow(id, type="add", lp=99) {  // odświeżenie wiersza tabeli z numerem ucznia (w klasie)
     $.ajax({
         method: "POST",
@@ -109,7 +80,6 @@ function refreshRow(id, type="add", lp=99) {  // odświeżenie wiersza tabeli z 
     });
 }
 
-/*
 // -------------- kopiowanie numerów uczniów dla wybranej klasy i roku szkolnego --------------- //
 function copyStudentNumbersClick() {
     $('#copyStudentNumbers .run').bind('click', function(){
@@ -124,7 +94,7 @@ function copyStudentNumbersClick() {
             success: function(result) {
                 if(result==1) {
                     $('#tips').prepend('<p class="info"><i class="glyphicon-saved"></i> skopiowano!</p>');
-                    refreshSection(grade_id);
+                    location.reload();
                 }
                 else $('#copyStudentNumbers .answer').html(result).slideDown(250);
                 return true;
@@ -134,7 +104,6 @@ function copyStudentNumbersClick() {
         return false;
     });
 }
-*/
 
 // ------------------------ dodawanie, zmiana i usuwanie numerów uczniów ----------------------- //
 function showCreateRowClick() {
@@ -297,7 +266,6 @@ function destroyClick() {  // usunięcie numeru ucznia (z bazy danych)
     });
 }
 
-
 // -------------------------- potwierdzenie widocznych numerów uczniów ------------------------- //
 function confirmNumbersClick() {    // wybór właściwych numerów
     $('#confirmNumbers .run').click(function() {
@@ -427,7 +395,6 @@ function updateRecordNumber(id, number) {   // zmiana numeru w bazie danych
     return false;
 }
 
-
 // --------- nadawanie numerów dla wszystkich uczniów bieżącej klasy i roku szkolnego ---------- //
 function addNumbersForGradeClick() {
     $('#addNumbersForGrade .run').bind('click', function(){
@@ -442,7 +409,7 @@ function addNumbersForGradeClick() {
             success: function(result) {
                 if(result==1) {
                     $('#studentNumbers').before('<p class="info"><i class="glyphicon-saved"></i> Numery utworzone!</p>');
-                    refreshSection(grade_id);
+                    location.reload();
                 }
                 else $('#addNumbersForGrade .answer').html(result).slideDown(250);
                 return true;
@@ -477,6 +444,6 @@ $(document).ready(function() {
     trNumberClick();
     buttonUpClick();
     buttonDownClick();
-    // copyStudentNumbersClick();
+    copyStudentNumbersClick();
     addNumbersForGradeClick();
 });

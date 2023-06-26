@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 09.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.06.2023 ------------------------ //
 // ---------------------- wydarzenia na stronie wyświetlania klas ucznia ----------------------- //
 const SLIDE_UP=750, SLIDE_DOWN=750, FADE_IN=1275, FADE_OUT=750;
 const TABLE_NAME="#studentGradesTable", ROUTE_NAME="klasy_ucznia", DATA_NAME="student_grade_id";

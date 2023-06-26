@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 08.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.06.2023 ------------------------ //
 // ---------------------------------- obsługa numerów ucznia ---------------------------------- //
 const SHOW = 1275, HIDE=750;
 const NUMBER_OF_FIELDS=4, TABLE_NAME="#studentNumbersTable", DATA_NAME="student_number_id", INPUT_NAME="number", ROUTE_NAME="numery_ucznia";
@@ -239,10 +239,10 @@ class ShowResultForOperation {
         $.ajax({
             method: "POST",
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url: "http://localhost/school/" +ROUTE_NAME+ "/refreshRow",
+            url: "http://localhost/school/student_numbers/refreshRow",
             data: { id: id, version: "forStudent" },
             success: function(result) { updateElement.showSuccess(result); },
-            error: function() {  updateElement.showError();  },
+            error: function(wyn) {  alert(wyn); updateElement.showError();  },
         });
     }
 
