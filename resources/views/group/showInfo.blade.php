@@ -62,6 +62,7 @@
                <button class="gradeRemove" data-groupGrade_id="{{ $groupGrade->id }}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_klasy.destroy', $groupGrade->id) }}">
                   <i class="fa fa-remove"></i>
                </button>
+               @if($groupGrade->name) ({{ $groupGrade->name }}) @endif
                <aside style="display: inline;" class="no-students" data-grade_id="{{ $groupGrade->grade_id }}">brak uczniów</aside>
             </div>
          @endforeach
