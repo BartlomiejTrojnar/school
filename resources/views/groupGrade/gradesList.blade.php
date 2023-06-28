@@ -1,8 +1,8 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
-   <script src="{{ asset('public/js/group/grades.js') }}"></script>
+   <script src="{{ asset('public/js/groupGrade/forGroup.js') }}"></script>
 @endsection
 
 @section('css')
@@ -74,6 +74,9 @@
                <i class="fa fa-remove"></i>
             @endif
          </button>
+         @if($type!="disabled")
+            <input type="text" name="name{{ $grade->id }}" placeholder="nazwa grupy w klasie" size="18">
+         @endif
       </li>
       <?php
    }

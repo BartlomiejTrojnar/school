@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania klas w grupie ---------------------- //
 
 // --------------------------- DODAWANIE LUB USUWANIE KLASY Z GRUPY ---------------------------- //
@@ -45,6 +45,8 @@ function addGradeToGroup(grade_id)  {
                 removeGradeFromGroup( $(this).data('grade') );
                 return false;
             });
+            var name = $('input[name="name'+grade_id+'"]').val();
+            updateGroupGradeName(group_id, grade_id, name);
             return;
         },
         error: function(result) {  alert("Błąd: "+result);  },
@@ -75,7 +77,31 @@ function unblockButtonsIfNoneSelected()  {
     if( buttonList.length < 1)  $('button[data-year]').removeClass('disabled').addClass("abled");
 }
 
+// ------------------------------------ ZMIANA NAZWY GRUPY ------------------------------------- //
+function changeGroupGradeName() {
+    $('#gradesTable input').bind('change', function(){
+        var name = $(this).val();
+        var grade_id = parseInt($(this).attr('name').substr(4));
+        var group_id = $('input[name="group_id"]').val();
+        updateGroupGradeName(group_id, grade_id, name);
+    });
+}
+
+function updateGroupGradeName(group_id, grade_id, name) {
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/school/grupa_klasy/changeName",
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        data: { "group_id": group_id, "grade_id": grade_id, name: name },
+        success: function() { 
+            $('input[name="name'+grade_id+'"]').animate({ 'opacity': '0' }, 200).animate({ 'opacity': '1' }, 200).animate({ 'opacity': '0' }, 200).animate({ 'opacity': '1' }, 200);
+        },
+        error: function(result) {  alert("Błąd: "+result);  },
+    });
+}
+
 // ---------------------- wydarzenia wywoływane po załadowaniu dokumnetu ----------------------- //
 $(document).ready(function() {
     gradeClick();
+    changeGroupGradeName();
 });

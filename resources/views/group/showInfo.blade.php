@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ********************** -->
 <h2>Informacje o grupie</h2>
 <input type="date" id="dateView" value="{{ session()->get('dateView') }}" hidden />
 

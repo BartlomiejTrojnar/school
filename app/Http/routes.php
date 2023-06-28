@@ -154,6 +154,7 @@ Route::resource('/grupa_klasy', 'GroupGradeController');
 Route::get('/grupa_klasy/gradesList/{group_id}/{new?}', array('as'=>'grupa_klasy.gradesList', 'uses'=>'GroupGradeController@gradesList') );
 Route::post('/grupa_klasy/addGrade', 'GroupGradeController@store');
 Route::post('/grupa_klasy/removeGrade', 'GroupGradeController@removeGrade');
+Route::post('/grupa_klasy/changeName', 'GroupGradeController@changeName');
 Route::delete('/grupa_klasy/{GroupGrade_id}', 'GroupGradeController@destroy');
 
 Route::get('/groupStudent/orderBy/{column}', array('as'=>'groupStudent.orderBy', 'uses'=>'GroupStudentController@orderBy'));

@@ -1,4 +1,5 @@
 <?php
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\SchoolYear;
 
@@ -28,6 +29,18 @@ class SchoolYearRepository extends BaseRepository {
       $end = $year_end."-09-01";
       $ends = $this->model -> select('date_of_graduation') -> where('date_start', '>', $start) -> where('date_end', '<=', $end) -> get();
       return $ends;
+   }
+
+   public function getYear() {
+      $year = 0;
+      $dateView = session()->get('dateView');
+      $year = substr($dateView,0,4);
+      if( substr($dateView,5,2)>=8 )  $year++;
+      if( !empty(session()->get('schoolYearSelected')) ) {
+          $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
+          $year = substr($schoolYear->date_end, 0, 4);
+      }
+      return $year;
    }
 }
 ?>

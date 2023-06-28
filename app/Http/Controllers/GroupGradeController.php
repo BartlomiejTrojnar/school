@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\GroupGrade;
 use App\Repositories\GradeRepository;
@@ -13,14 +13,12 @@ class GroupGradeController extends Controller
         session() -> put('groupSelected', $id);
         $group = $groupRepo -> find( $id );
         $grades = $gradeRepo -> getGradesInYear($group->end);
-        $schoolYear = $schoolYearRepo -> find( session()->get('schoolYearSelected') );
         $i=0;
         $gradesSelected[0] = "";
         foreach($group -> grades as $gradeSel)  $gradesSelected[++$i] = $gradeSel->grade_id;
         if($i) $gradeSelectedYear = $group->grades[0]->grade->year_of_beginning; else $gradeSelectedYear=0;
-        if($schoolYear) $year = substr($schoolYear->date_end, 0, 4);  else $year=0;
+        $year = $schoolYearRepo -> getYear();
         $css = 'group/gradesList.css';
-
         return view('groupGrade.gradesList', ["group_id"=>$id, "grades"=>$grades, "gradesSelected"=>$gradesSelected, "year"=>$year, "gradeSelectedYear"=>$gradeSelectedYear, "version"=>$version, "css"=>$css]);
     }
 
@@ -37,7 +35,7 @@ class GroupGradeController extends Controller
         print_r($groupGrade->id);
     }
 
-    public function removeGrade(Request $request, GroupGrade $groupGrade) {
+    public function removeGrade(Request $request) {
         GroupGrade::where('group_id', '=', $request->group_id)
             -> where('grade_id', '=', $request->grade_id) -> delete();
         return;
@@ -47,5 +45,12 @@ class GroupGradeController extends Controller
         $groupGrade = $groupGrade -> find($id);
         $groupGrade -> delete();
         return;
+    }
+
+    public function changeName(Request $request) {
+        $name = $request->name;
+        if($request->name=="")  $name=NULL;
+        GroupGrade::where('group_id', '=', $request->group_id)
+            -> where('grade_id', '=', $request->grade_id) -> update(['name'=>$name]);
     }
 }
