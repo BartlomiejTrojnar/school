@@ -1,5 +1,5 @@
 <section id="groupStudentDeleteForm">
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 18.02.2022 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 *********************** -->
    <table>
       <tr>
          <th>grupa</th>
@@ -14,7 +14,7 @@
       </tr>
 
       <tr>
-         <th>uczeń  fsdgfsdgsdfgfd</th>
+         <th>uczeń</th>
          <td colspan="2">
             {{ $groupStudent->student->first_name }} {{ $groupStudent->student->last_name }}
             <input type="hidden" name="student_id" value="{{$groupStudent->student_id}}" />

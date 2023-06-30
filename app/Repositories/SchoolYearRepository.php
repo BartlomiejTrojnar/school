@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\SchoolYear;
 
@@ -37,8 +37,8 @@ class SchoolYearRepository extends BaseRepository {
       $year = substr($dateView,0,4);
       if( substr($dateView,5,2)>=8 )  $year++;
       if( !empty(session()->get('schoolYearSelected')) ) {
-          $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
-          $year = substr($schoolYear->date_end, 0, 4);
+          $schoolYear = $this -> find(session()->get('schoolYearSelected'));
+          $year = substr($schoolYear->date_end,0,4);
       }
       return $year;
    }

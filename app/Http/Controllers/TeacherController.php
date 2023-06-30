@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 04.02.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
 namespace App\Http\Controllers;
 use App\Models\Teacher;
 use App\Repositories\TeacherRepository;
@@ -155,7 +155,7 @@ class TeacherController extends Controller
 
         $start = session() -> get('dateView');
         if(!empty(session() -> get('dateEnd'))) $end = session() -> get('dateEnd'); else $end=$start;
-        $groups = $groupRepo -> getAllFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $this->teacher->id);
+        $groups = $groupRepo -> getFilteredAndSorted($gradeSelected, $subjectSelected, $levelSelected, $start, $end, $this->teacher->id);
         $teacherGroups = view('group.table', ["groups"=>$groups, "subTitle"=>"grupy nauczyciela", "version"=>"forTeacher", "start"=>$start, "end"=>$end,
             "gradeSF"=>$gradeSF, "subjectSF"=>$subjectSF, "levelSF"=>$levelSF, "teacherSF"=>"", "schoolYearSF"=>"", "grade_id"=>0]);
         $js = "group/operations.js";

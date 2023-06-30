@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
 // --------------------- wydarzenia na stronie wyświetlania klas w grupie ---------------------- //
 
 // --------------------------- DODAWANIE LUB USUWANIE KLASY Z GRUPY ---------------------------- //

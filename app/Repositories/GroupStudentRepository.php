@@ -1,9 +1,8 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 28.10.2022 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 use App\Models\GroupStudent;
-use App\Models\StudentGrade;
 
 class GroupStudentRepository extends BaseRepository {
    public function __construct(GroupStudent $model)  { $this->model = $model; }
@@ -27,39 +26,6 @@ class GroupStudentRepository extends BaseRepository {
 
    public function getStudentsFromGroup($group_id) {  //pobranie tylko identyfikatorów uczniów ze wskazanej grupy
       $records = $this->model -> where('group_students.group_id', '=', $group_id) -> get();
-      return $records;
-   }
-/*
-   public function getGroupStudentsInOtherTime($group_id, $dateView) {
-      $records = $this->model
-         -> select('group_students.*', 'students.*', 'group_students.id')
-         -> join('students', 'students.id', '=', 'group_students.student_id')
-         -> where('group_id', '=', $group_id)
-         -> where(function ($query) use ($dateView) { $query -> where('start', '>', $dateView) -> orWhere('end', '<', $dateView); })
-         -> orderby('students.last_name') -> orderby('students.first_name')
-         -> get();
-      return $records;
-   }
-*/
-   public function getOutsideGroupStudents($group, $dateView) {
-      $records = [];
-      $studentGradeRepo = new StudentGradeRepository(new StudentGrade);
-
-      foreach($group->grades as $groupGrade)
-         $grades[] = $groupGrade->grade_id;
-      $studentGrades = $studentGradeRepo -> getStudentsFromGradesOrderByLastName($grades, $dateView);
-      if(empty($studentGrades)) return [];
-
-      foreach($studentGrades as $studentGrade) {
-         if($studentGrade->end < $dateView) continue;
-         if($studentGrade->start > $dateView) continue;
-         $s = $this->model -> where('group_id', '=', $group->id) -> where('group_students.student_id', '=', $studentGrade->student_id)
-            -> where('start', '<=', $dateView) -> where('end', '>=', $dateView) -> get();
-         if(!sizeof($s))   $records[] = $studentGrade->student;
-      }
-      //$records = $records
-      //   -> orderby('students.last_name') -> orderby('students.first_name')
-      //   -> distinct() -> get();
       return $records;
    }
 
