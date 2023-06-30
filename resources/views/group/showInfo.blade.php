@@ -1,4 +1,4 @@
-<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 18.04.2023 ********************** -->
+<!-- **********************  (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ********************** -->
 <h2>Informacje o grupie</h2>
 <input type="date" id="dateView" value="{{ session()->get('dateView') }}" hidden />
 
@@ -62,6 +62,7 @@
                <button class="gradeRemove" data-groupGrade_id="{{ $groupGrade->id }}" data-token="{{ csrf_token() }}" data-url="{{ route('grupa_klasy.destroy', $groupGrade->id) }}">
                   <i class="fa fa-remove"></i>
                </button>
+               @if($groupGrade->name) ({{ $groupGrade->name }}) @endif
                <aside style="display: inline;" class="no-students" data-grade_id="{{ $groupGrade->grade_id }}">brak uczniów</aside>
             </div>
          @endforeach

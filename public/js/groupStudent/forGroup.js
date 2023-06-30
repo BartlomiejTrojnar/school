@@ -1,4 +1,4 @@
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 24.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
 // ----------------------- wydarzenia na stronie wyświetlania grup ucznia ---------------------- //
 
 function showOrHideStudents() {
@@ -16,7 +16,6 @@ function showOrHideStudents() {
 }
 
 function showOrHideStudentsInGroupList(dateView, count, groupGrades) {
-    var countStudents=0;
     var hide=false;
     $('#studentsListForGroup li').each(function() {    // sprawdzenie i wyświetlenie odpowiednich uczniów
         $(this).removeClass('hide');
@@ -28,10 +27,17 @@ function showOrHideStudentsInGroupList(dateView, count, groupGrades) {
         for(var i=0; i<count; i++)  if(groupGrades[i] == $(this).data('grade_id'))  hide=true;
         if(hide) $(this).addClass('hide');
         else {
-            countStudents++;
             // ukrycie ucznia na liście innych uczniów
             $('#listOutsideGroupStudents li[data-student_id="'+ $(this).data("student_id") +'"]').fadeOut(1000);
         }                
+    });
+    countStudents();
+}
+
+function countStudents() {
+    var countStudents = 0;
+    $('#studentsListForGroup li').each(function() {
+       if( !$(this).hasClass('hide') ) countStudents++;
     });
     $('#countStudents').html(countStudents);
 }
@@ -92,12 +98,14 @@ function refreshOutsideGroupStudentsList(group_id, dateView) {      // odśwież
 function outsideGroupStudentClick() {  // kliknięcie w ucznia nienależącego do grupy: zaznaczenie ucznia
     $('#listOutsideGroupStudents').delegate('li', 'click', function(){
         if( $(this).hasClass('checked') ) {
-            $(this).animate({ marginLeft: "-=10px"}, "slow").removeClass('checked');
+            $(this).animate({ marginLeft: "0px"}, "slow").removeClass('checked');
             $(this).children('span').remove();
+            $(this).animate({ backgroundColor: "transparent" }, 500);
         }
-        else
-            $(this).animate({ marginLeft: "+=10px"}, "slow").addClass('checked').prepend('<span class="glyphicon glyphicon-ok"></span>');
+        else {
+            $(this).animate({ marginLeft: "10px"}, "slow").addClass('checked').prepend('<span class="glyphicon glyphicon-ok"></span>');
             $(this).animate({ backgroundColor: "#004400" }, 500);
+        }
         return false;
     });
 }
@@ -142,7 +150,7 @@ function addStudent(student_id, group_id, start, end) {  // dodanie serii uczni�
         success: function(result) {
             $('li[data-student_id="'+student_id+'"').hide(2000);
             $("#studentsListForGroup ol").append(result);
-            $('#countStudents').html( parseInt($('#countStudents').html())+1 );
+            countStudents();
         },
         error: function() { alert('Błąd: groupStudent.js - funkcja addStudent'); }
     });
@@ -171,8 +179,12 @@ function addCheckedStudentClick() {  // kliknięcie w przycisk "Dodaj zaznaczony
             // zapamiętanie wszystkich uczniów
             $('#listOutsideGroupStudents li.checked').each(function() {  students[count++] = $(this).data('student_id');  });
             addStudentsToGroup(students, group_id, start, end);
-            $('#countStudents').html( parseInt($('#countStudents').html())+count );
         }
+        // $('#listOutsideGroupStudents li').removeClass('checked');
+        $('#listOutsideGroupStudents li').animate({ marginLeft: "0px"}, "slow").removeClass('checked');
+        $('#listOutsideGroupStudents li').children('span').remove();
+        $('#listOutsideGroupStudents li').animate({ backgroundColor: "transparent" }, 500);
+
     });
 }
 
@@ -182,7 +194,7 @@ function addStudentsToGroup(students, group_id, start, end) {  // dodanie ucznia
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
         url: "http://localhost/school/groupStudent/addManyStudent",
         data: { group_id: group_id, students: students, start: start, end: end },
-        success: function(result) {
+        success: function() {
             location.reload();
         },
         error: function() { alert('Błąd: groupStudent.js - funkcja addStudentToGroup'); }
@@ -222,7 +234,7 @@ function groupStudentEditClick()  {     // kliknięcie w przycisk modyfikowania 
             data: { version: "forGroup" },
             success: function(result)  { 
                 $('#main-content').append(result);
-                $('aside#studentEditForm').css('top', mouse.pageY-300);
+                $('aside#studentEditForm').css('top', mouse.pageY-500);
                 $('aside#studentEditForm').css('left', mouse.pageX-150);
                 editFormClick();
             },
@@ -306,16 +318,16 @@ function showOrHideOneStudent(group_student_id, start, end) {
     if(start>dateView || end<dateView) {
         $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").addClass('hide');
         $("#listGroupStudentsInOtherTime li[data-group_student_id='"+group_student_id+"']").removeClass('hide');
-        student_id = $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").data('student_id');
+        var student_id = $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").data('student_id');
         $("#listOutsideGroupStudents li[data-student_id='"+student_id+"']").fadeIn(2500);
-        $("#countStudents").html( $("#countStudents").html()-1 );
     }
     else {
         $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").removeClass('hide');
         $("#listGroupStudentsInOtherTime li[data-group_student_id='"+group_student_id+"']").addClass('hide');
-        student_id = $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").data('student_id');
+        var student_id = $("#studentsListForGroup li[data-group_student_id='"+group_student_id+"']").data('student_id');
         $("#listOutsideGroupStudents li[data-student_id='"+student_id+"']").fadeOut(2500);
     }
+    countStudents();
 }
 
 function update(id) {   // zapisanie zmian przynależności ucznia do grupy w bazie danych
@@ -351,7 +363,7 @@ function completeRemoveClick() {    // całkowite usunięcie ucznia z grupy
                 var student_id = $('li[data-group_student_id=' +group_student_id+ ']').data("student_id");
                 $('#listOutsideGroupStudents li[data-student_id="'+ student_id +'"]').fadeIn(2500); // pokazanie ucznia na liście uczniów spoza grupy
                 $('li[data-group_student_id=' +group_student_id+ ']').remove();     // usunięcie ucznia z listy uczniów grupy
-                $('#countStudents').html( $('#countStudents').html()-1 );
+                countStudents();
             },
             error: function() { alert('Błąd: groupStudent.js - funkcja removeStudentFromGroup'); }
         });
@@ -364,6 +376,7 @@ function removeFromDate() {       // usunięcie ucznia z grupy od wybranego dnia
         var group_id = $('#group_id').val();
         var start = $("li[data-group_student_id='"+group_student_id+"']").data('start');
         var end = $('input[name="end"]').val();
+
         if(checkTheValuesForAddStudentsToGroup(group_id, start, end)) {
             $('#groupStudentDeleteForm').remove();
             return;

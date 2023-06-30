@@ -1,8 +1,8 @@
-<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 21.03.2023 *********************** -->
+<!-- ********************** (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 *********************** -->
 @extends('layouts.app')
 
 @section('java-script')
-   <script src="{{ asset('public/js/group/grades.js') }}"></script>
+   <script src="{{ asset('public/js/groupGrade/forGroup.js') }}"></script>
 @endsection
 
 @section('css')
@@ -27,10 +27,10 @@
          </tr>
 
          <tr>
-            {{ createTD(1, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
-            {{ createTD(2, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
-            {{ createTD(3, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
-            {{ createTD(4, $year-$gradeSelectedYear, $year, $grades, $gradesSelected) }}
+            {{ createTD(1, $year-$gradeSelectedYear, $year, $grades, $gradesSelected, $group_id) }}
+            {{ createTD(2, $year-$gradeSelectedYear, $year, $grades, $gradesSelected, $group_id) }}
+            {{ createTD(3, $year-$gradeSelectedYear, $year, $grades, $gradesSelected, $group_id) }}
+            {{ createTD(4, $year-$gradeSelectedYear, $year, $grades, $gradesSelected, $group_id) }}
 
             <td id="grades_list_5"><ul class="list-group">
                @foreach($grades as $grade)
@@ -61,7 +61,7 @@
 @endsection
 
 <?php
-   function createLi($grade, $year, $type) {
+   function createLi($grade, $year, $type, $group=0) {
       ?>
       <li class="list-group-item">
          <button class="{{ $type }}" data-grade="{{ $grade->id }}" data-year="{{ $grade->year_of_beginning }}">
@@ -74,11 +74,18 @@
                <i class="fa fa-remove"></i>
             @endif
          </button>
+         @if($type!="disabled")
+            @foreach($grade->groups as $gg)
+               @if($gg->group_id == $group)
+                  <input type="text" name="name{{ $grade->id }}" placeholder="nazwa grupy w klasie" size="18" value="{{ $gg->name }}">
+               @endif
+            @endforeach
+         @endif
       </li>
       <?php
    }
 
-   function createTD($yearOfStudy, $yearSelected, $year, $grades, $gradesSelected) {
+   function createTD($yearOfStudy, $yearSelected, $year, $grades, $gradesSelected, $group_id) {
       if($yearOfStudy==$yearSelected) {   $type1 = "checked";  $type2 = "abled"; }
       else {   $type1 = "errorChecked";   $type2 = "disabled"; }
       ?>
@@ -86,9 +93,9 @@
          @foreach($grades as $grade)
             @if( $grade->school_id==1 && $grade->year_of_beginning==$year-$yearOfStudy )
                @if( array_search($grade->id, $gradesSelected) )
-                  {{ createLi($grade, $year, $type1) }}
+                  {{ createLi($grade, $year, $type1, $group_id) }}
                @else
-                  {{ createLi($grade, $year, $type2) }}
+                  {{ createLi($grade, $year, $type2, $group_id) }}
                @endif   <!-- koniec sprawdzenia czy klasa jest zaznaczona (wybrana do grupy) -->
             @endif   <!-- koniec sprawdzenia czy szkoła to II LO -->
          @endforeach
