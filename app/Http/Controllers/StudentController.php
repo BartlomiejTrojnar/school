@@ -1,12 +1,11 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 26.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.07.2023 ------------------------ //
 namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Repositories\StudentRepository;
 
 use App\Models\StudentHistory;
-use App\Models\TaskRating;
 use App\Repositories\CertificateRepository;
 use App\Repositories\EnlargementRepository;
 use App\Repositories\GradeRepository;
@@ -118,11 +117,7 @@ class StudentController extends Controller
         list($this->previous, $this->next) = $studentRepo -> nextAndPreviousRecordId($students, $id);
 
         // pobranie informacji o roku szkolnym (aby wyświetlać rocznik klasy, jeżeli jest wybrany)
-        $this->year = 0;
-        if( !empty(session()->get('schoolYearSelected')) ) {
-            $schoolYear = $schoolYearRepo -> find(session()->get('schoolYearSelected'));
-            $this->year = substr($schoolYear->date_end, 0, 4);
-        }
+        $this->year = $schoolYearRepo -> getYear();
 
         switch(session() -> get('studentView')) {
             case 'info':        return $this -> showInfo();

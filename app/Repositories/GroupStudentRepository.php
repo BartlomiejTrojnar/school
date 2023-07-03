@@ -1,5 +1,5 @@
 <?php
-// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 30.06.2023 ------------------------ //
+// ------------------------ (C) mgr inż. Bartłomiej Trojnar; 03.07.2023 ------------------------ //
 namespace App\Repositories;
 use App\Models\Group;
 use App\Models\GroupStudent;
@@ -30,7 +30,9 @@ class GroupStudentRepository extends BaseRepository {
    }
 
    public function getStudentGroups($student_id) {    // pobranie wszystkich grup ucznia
-      return $this->model -> where('student_id', '=', $student_id) -> orderby('start') -> orderby('group_id') -> get();
+      return $this->model -> select('group_students.*')
+         -> leftjoin('groups', 'groups.id', '=', 'group_students.group_id')
+         -> where('student_id', '=', $student_id) -> orderby('groups.subject_id') -> orderby('group_students.start') -> get();
    }
 
    public function getOtherGroupsInGrade($student, $grade, $date) {  // pobranie grup z klasy ucznia, do których nigdy nie należał

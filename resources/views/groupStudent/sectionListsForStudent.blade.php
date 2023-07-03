@@ -1,4 +1,4 @@
-<!--------------------- (C) mgr inż. Bartłomiej Trojnar; (I) kwiecień 2021 ---------------------->
+<!------------------------- (C) mgr inż. Bartłomiej Trojnar; 03.07.2023 -------------------------->
 <section id="studentGroupsSection">
    <p><strong>Uczeń należy do grup</strong> (stan na <input type="date" id="dateView" value="{{ $dateView }}" /> )</p>
    <p class="hidden"><input name="student_id" value="{{$student_id}}" /></p>
